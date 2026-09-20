@@ -14,14 +14,14 @@ namespace LogiSyn.Services
             User? user = null;
 
             string query =
-                "SELECT Id, Name, Password, Role " +
+                "SELECT Id, Username, Password, Role " +
                 "FROM [User] " +
-                "WHERE Name = @Name AND Password = @Password";
+                "WHERE Username = @Username AND Password = @Password";
 
             using (var conn = new SqlConnection(_connectionString))
             using (var cmd = new SqlCommand(query, conn))
             {
-                cmd.Parameters.AddWithValue("@Name", name);
+                cmd.Parameters.AddWithValue("@Username", name);
                 cmd.Parameters.AddWithValue("@Password", password);
 
                 try
@@ -35,7 +35,7 @@ namespace LogiSyn.Services
                             user = new User
                             {
                                 Id = (int)reader["Id"],
-                                Username = reader["Name"] as string ?? string.Empty,
+                                Username = reader["Username"] as string ?? string.Empty,
                                 Password = reader["Password"] as string ?? string.Empty,
                                 Role = reader["Role"] as string ?? string.Empty
                             };
