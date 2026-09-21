@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\DashBoardView.xaml||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:LogiSyn\\Views\\DashBoardView.xaml||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Model\\UiModels.cs||{8B382828-6202-11D1-8870-0000F87579D2}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:LogiSyn\\Model\\UiModels.cs||{8B382828-6202-11D1-8870-0000F87579D2}"
     },
@@ -39,6 +43,19 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "DashBoardView.xaml",
+              "DocumentMoniker": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\DashBoardView.xaml",
+              "RelativeDocumentMoniker": "LogiSyn\\Views\\DashBoardView.xaml",
+              "ToolTip": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\DashBoardView.xaml",
+              "RelativeToolTip": "LogiSyn\\Views\\DashBoardView.xaml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAG0AAAAOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-09-21T11:07:18.363Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
               "Title": "UiModels.cs",
               "DocumentMoniker": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Model\\UiModels.cs",
               "RelativeDocumentMoniker": "LogiSyn\\Model\\UiModels.cs",
@@ -51,7 +68,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "Theme.xaml",
               "DocumentMoniker": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Styles\\Theme.xaml",
               "RelativeDocumentMoniker": "LogiSyn\\Styles\\Theme.xaml",
@@ -64,7 +81,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "Icons.xaml",
               "DocumentMoniker": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Styles\\Icons.xaml",
               "RelativeDocumentMoniker": "LogiSyn\\Styles\\Icons.xaml",
@@ -77,7 +94,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "LoginWindow.xaml.cs",
               "DocumentMoniker": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\LoginWindow.xaml.cs",
               "RelativeDocumentMoniker": "LogiSyn\\Views\\LoginWindow.xaml.cs",
