@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\ManageProductsView.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:LogiSyn\\Views\\ManageProductsView.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\ManageProductsView.xaml||{8B382828-6202-11D1-8870-0000F87579D2}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:LogiSyn\\Views\\ManageProductsView.xaml||{8B382828-6202-11D1-8870-0000F87579D2}"
     },
@@ -115,6 +119,19 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "ManageProductsView.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\ManageProductsView.xaml.cs",
+              "RelativeDocumentMoniker": "LogiSyn\\Views\\ManageProductsView.xaml.cs",
+              "ToolTip": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\ManageProductsView.xaml.cs",
+              "RelativeToolTip": "LogiSyn\\Views\\ManageProductsView.xaml.cs",
+              "ViewState": "AgIAADQAAAAAAAAAAAAAwFkAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-21T11:33:34.062Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
               "Title": "ManageProductsView.xaml",
               "DocumentMoniker": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\ManageProductsView.xaml",
               "RelativeDocumentMoniker": "LogiSyn\\Views\\ManageProductsView.xaml",
@@ -127,7 +144,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "OrderBreakdownView.xaml.cs",
               "DocumentMoniker": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\OrderBreakdownView.xaml.cs",
               "RelativeDocumentMoniker": "LogiSyn\\Views\\OrderBreakdownView.xaml.cs",
@@ -140,7 +157,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "OrderBreakdownView.xaml",
               "DocumentMoniker": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\OrderBreakdownView.xaml",
               "RelativeDocumentMoniker": "LogiSyn\\Views\\OrderBreakdownView.xaml",
@@ -153,7 +170,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "HistoryView.xaml.cs",
               "DocumentMoniker": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\HistoryView.xaml.cs",
               "RelativeDocumentMoniker": "LogiSyn\\Views\\HistoryView.xaml.cs",
@@ -166,7 +183,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "HistoryView.xaml",
               "DocumentMoniker": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\HistoryView.xaml",
               "RelativeDocumentMoniker": "LogiSyn\\Views\\HistoryView.xaml",
@@ -179,7 +196,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 6,
               "Title": "OrderSheetsView.xaml.cs",
               "DocumentMoniker": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\OrderSheetsView.xaml.cs",
               "RelativeDocumentMoniker": "LogiSyn\\Views\\OrderSheetsView.xaml.cs",
@@ -192,7 +209,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 7,
               "Title": "OrderSheetsView.xaml",
               "DocumentMoniker": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\OrderSheetsView.xaml",
               "RelativeDocumentMoniker": "LogiSyn\\Views\\OrderSheetsView.xaml",
@@ -205,7 +222,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 8,
               "Title": "SheetPaper.xaml.cs",
               "DocumentMoniker": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\SheetPaper.xaml.cs",
               "RelativeDocumentMoniker": "LogiSyn\\Views\\SheetPaper.xaml.cs",
@@ -218,7 +235,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 9,
               "Title": "SheetPaper.xaml",
               "DocumentMoniker": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\SheetPaper.xaml",
               "RelativeDocumentMoniker": "LogiSyn\\Views\\SheetPaper.xaml",
@@ -231,7 +248,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 10,
               "Title": "RawMaterialPaper.xaml.cs",
               "DocumentMoniker": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\RawMaterialPaper.xaml.cs",
               "RelativeDocumentMoniker": "LogiSyn\\Views\\RawMaterialPaper.xaml.cs",
@@ -244,7 +261,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 11,
               "Title": "RawMaterialPaper.xaml",
               "DocumentMoniker": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\RawMaterialPaper.xaml",
               "RelativeDocumentMoniker": "LogiSyn\\Views\\RawMaterialPaper.xaml",
@@ -257,7 +274,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 12,
               "Title": "SumaryPaper.xaml.cs",
               "DocumentMoniker": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\SumaryPaper.xaml.cs",
               "RelativeDocumentMoniker": "LogiSyn\\Views\\SumaryPaper.xaml.cs",
@@ -270,7 +287,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 13,
               "Title": "SummaryPaper.xaml",
               "DocumentMoniker": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\SummaryPaper.xaml",
               "RelativeDocumentMoniker": "LogiSyn\\Views\\SummaryPaper.xaml",
@@ -283,7 +300,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 14,
               "Title": "CreateOrderView.xaml.cs",
               "DocumentMoniker": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\CreateOrderView.xaml.cs",
               "RelativeDocumentMoniker": "LogiSyn\\Views\\CreateOrderView.xaml.cs",
@@ -296,7 +313,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 15,
               "Title": "CreateOrderView.xaml",
               "DocumentMoniker": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\CreateOrderView.xaml",
               "RelativeDocumentMoniker": "LogiSyn\\Views\\CreateOrderView.xaml",
@@ -309,7 +326,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 16,
               "Title": "AdminOrdersView.xaml.cs",
               "DocumentMoniker": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\AdminOrdersView.xaml.cs",
               "RelativeDocumentMoniker": "LogiSyn\\Views\\AdminOrdersView.xaml.cs",
@@ -322,7 +339,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 16,
+              "DocumentIndex": 17,
               "Title": "AdnimOrdersView.xaml",
               "DocumentMoniker": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\AdnimOrdersView.xaml",
               "RelativeDocumentMoniker": "LogiSyn\\Views\\AdnimOrdersView.xaml",
@@ -335,7 +352,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 17,
+              "DocumentIndex": 18,
               "Title": "DashBoardView.xaml.cs",
               "DocumentMoniker": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\DashBoardView.xaml.cs",
               "RelativeDocumentMoniker": "LogiSyn\\Views\\DashBoardView.xaml.cs",
@@ -348,7 +365,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 18,
+              "DocumentIndex": 19,
               "Title": "DashBoardView.xaml",
               "DocumentMoniker": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\DashBoardView.xaml",
               "RelativeDocumentMoniker": "LogiSyn\\Views\\DashBoardView.xaml",
@@ -361,7 +378,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 19,
+              "DocumentIndex": 20,
               "Title": "UiModels.cs",
               "DocumentMoniker": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Model\\UiModels.cs",
               "RelativeDocumentMoniker": "LogiSyn\\Model\\UiModels.cs",
@@ -374,7 +391,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 20,
+              "DocumentIndex": 21,
               "Title": "Theme.xaml",
               "DocumentMoniker": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Styles\\Theme.xaml",
               "RelativeDocumentMoniker": "LogiSyn\\Styles\\Theme.xaml",
@@ -387,7 +404,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 21,
+              "DocumentIndex": 22,
               "Title": "Icons.xaml",
               "DocumentMoniker": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Styles\\Icons.xaml",
               "RelativeDocumentMoniker": "LogiSyn\\Styles\\Icons.xaml",
@@ -400,7 +417,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 22,
+              "DocumentIndex": 23,
               "Title": "LoginWindow.xaml.cs",
               "DocumentMoniker": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\LoginWindow.xaml.cs",
               "RelativeDocumentMoniker": "LogiSyn\\Views\\LoginWindow.xaml.cs",
