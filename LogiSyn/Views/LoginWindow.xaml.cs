@@ -1,10 +1,14 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using LogiSyn.Model;
+using LogiSyn.Services;
 
 namespace LogiSyn.Views
 {
     public partial class LoginWindow : Window
     {
+        private readonly LoginService _loginService = new LoginService();
+
         private bool _passwordRevealed;
         private bool _syncing;
 
@@ -12,7 +16,6 @@ namespace LogiSyn.Views
         {
             InitializeComponent();
 
-            // Spreads "ANDERSON'S BAKERY" out letter by letter (WPF has no letter-spacing property)
             BrandLetters.ItemsSource = "ANDERSON'S BAKERY";
 
             UsernameBox.Focus();
@@ -50,7 +53,7 @@ namespace LogiSyn.Views
                 string.IsNullOrEmpty(PasswordBox.Password) ? Visibility.Visible : Visibility.Collapsed;
         }
 
-        // ---------- show / hide password (the eye icon) ----------
+        // ---------- show / hide password ----------
 
         private void ToggleReveal_Click(object sender, RoutedEventArgs e)
         {
@@ -75,7 +78,7 @@ namespace LogiSyn.Views
         private void LoginButton_Click(object sender, RoutedEventArgs e)
         {
             string username = UsernameBox.Text.Trim();
-            string password = PasswordBox.Password;
+            string password = _passwordRevealed ? PasswordRevealBox.Text : PasswordBox.Password;
 
             if (username.Length == 0 || password.Length == 0)
             {
@@ -84,10 +87,26 @@ namespace LogiSyn.Views
                 return;
             }
 
-            // TODO: check the credentials, then open the Admin / Manager / User window
-            // and close this one, e.g.:
-            // new MainWindow().Show();
-            // Close();
+            try
+            {
+                User? loggedInUser = _loginService.Authenticate(username, password);
+
+                if (loggedInUser != null)
+                {
+                    this.DialogResult = true;
+                    this.Close();
+                }
+                else
+                {
+                    MessageBox.Show("Invalid username or password.", "Login Failed",
+                                    MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Database Error",
+                                MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
     }
 }
