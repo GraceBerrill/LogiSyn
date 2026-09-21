@@ -16,13 +16,21 @@ namespace LogiSyn
             var login = new LoginWindow();
             bool? result = login.ShowDialog();
 
-            if (result == true)
+            if (result == true && login.LoggedInUser != null)
             {
+                var user = login.LoggedInUser;
+
                 Dispatcher.BeginInvoke(new Action(() =>
                 {
-                    var main = new MainWindow();
-                    Application.Current.MainWindow = main;
-                    main.Show();
+                    Window dashboard = user.Role?.ToLowerInvariant() switch
+                    {
+                        "admin" => new AdminWindow(user),
+                        "manager" => new ManagerWindow(user),
+                        _ => new UserWindow(user),
+                    };
+
+                    Application.Current.MainWindow = dashboard;
+                    dashboard.Show();
                 }), DispatcherPriority.ApplicationIdle);
             }
             else

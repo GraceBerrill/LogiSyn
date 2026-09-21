@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 using LogiSyn.Model;
 using LogiSyn.Services;
@@ -11,6 +12,8 @@ namespace LogiSyn.Views
 
         private bool _passwordRevealed;
         private bool _syncing;
+
+        public User? LoggedInUser { get; private set; }
 
         public LoginWindow()
         {
@@ -93,6 +96,8 @@ namespace LogiSyn.Views
 
                 if (loggedInUser != null)
                 {
+                    LoggedInUser = loggedInUser;
+
                     this.DialogResult = true;
                     this.Close();
                 }
