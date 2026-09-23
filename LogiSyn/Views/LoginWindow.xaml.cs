@@ -1,5 +1,6 @@
-﻿using System.Windows;
+using System.Windows;
 using System.Windows.Controls;
+using LogiSyn.Model;
 
 namespace LogiSyn.Views
 {
@@ -84,10 +85,10 @@ namespace LogiSyn.Views
                 return;
             }
 
-            // TODO: check the credentials, then open the Admin / Manager / User window
-            // and close this one, e.g.:
-            // new MainWindow().Show();
-            // Close();
+            // The current login screen does not yet load a role from the database.
+            // Open the shell as Admin for now so the navigation can be used.
+            new ShellWindow(AppRole.Admin).Show();
+            Close();
         }
     }
 }
