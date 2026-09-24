@@ -1,42 +1,43 @@
-name: CI/CD Pipeline
+name: LogiSyn CI/CD Pipeline
 
-# Triggers on push or pull request to ANY branch
+# Triggers on push or pull request across ALL developer branches
 on: [push, pull_request]
 
 jobs:
-  test:
-    name: Build, Test & Package WinForms App
-    runs-on: windows-latest   # Required for Windows Forms
+  build-and-test:
+    name: Build, Test & Package LogiSyn
+    runs-on: windows-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout Repository Code
         uses: actions/checkout@v4
 
-      - name: Set up .NET SDK
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '8.0.x'
+      - name: Setup MSBuild Tooling
+        uses: microsoft/setup-msbuild@v2
 
-      - name: Restore dependencies
-        run: dotnet restore
+      - name: Setup NuGet Package Manager
+        uses: NuGet/setup-nuget@v2
 
-      - name: Build WinForms Solution
-        run: dotnet build --configuration Release --no-restore
+      - name: Restore NuGet Packages
+        run: nuget restore LogiSyn.slnx
 
-      - name: Run Unit Tests
-        run: dotnet test --configuration Release --no-build --verbosity normal
+      - name: Build Solution with MSBuild
+        run: msbuild LogiSyn.slnx /p:Configuration=Release
 
-      # AUTOMATED DEPLOYMENT (Build Artifact)
+      - name: Setup VSTest Execution Runner
+        uses: microsoft/setup-vstest@v1
 
-      - name: Publish WinForms App
-        run: dotnet publish --configuration Release --output ./publish
+      - name: Execute Automated Unit Tests
+        run: vstest.console.exe **\bin\Release\*Test*.dll
 
-      - name: Zip Published Files
-        run: Compress-Archive -Path ./publish/* -DestinationPath ./WinFormsApp.zip
+      # AUTOMATED PACKAGING & DEPLOYMENT ARTIFACT
+
+      - name: Zip Release Binaries
+        run: Compress-Archive -Path .\LogiSyn\bin\Release\* -DestinationPath .\LogiSyn-Build.zip
 
       - name: Upload Deployment Artifact to GitHub
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         uses: actions/upload-artifact@v4
         with:
-          name: Completed-WinForms-Build
-          path: ./WinFormsApp.zip
+          name: LogiSyn-Release
+          path: .\LogiSyn-Build.zip
