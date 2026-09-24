@@ -26,19 +26,14 @@ jobs:
       - name: Run Unit Tests
         run: dotnet test --configuration Release --no-build --verbosity normal
 
-      # ==========================================
       # AUTOMATED DEPLOYMENT (Build Artifact)
-      # ==========================================
 
-      # 1. Compiles the app into a clean, ready-to-run release directory
       - name: Publish WinForms App
         run: dotnet publish --configuration Release --output ./publish
 
-      # 2. Zips up the published application folder
       - name: Zip Published Files
         run: Compress-Archive -Path ./publish/* -DestinationPath ./WinFormsApp.zip
 
-      # 3. Uploads the zip file as a downloadable build artifact on GitHub
       - name: Upload Deployment Artifact to GitHub
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         uses: actions/upload-artifact@v4
