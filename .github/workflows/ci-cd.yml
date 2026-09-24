@@ -1,0 +1,47 @@
+name: CI/CD Pipeline
+
+# Triggers on push or pull request to ANY branch
+on: [push, pull_request]
+
+jobs:
+  test:
+    name: Build, Test & Package WinForms App
+    runs-on: windows-latest   # Required for Windows Forms
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build WinForms Solution
+        run: dotnet build --configuration Release --no-restore
+
+      - name: Run Unit Tests
+        run: dotnet test --configuration Release --no-build --verbosity normal
+
+      # ==========================================
+      # AUTOMATED DEPLOYMENT (Build Artifact)
+      # ==========================================
+
+      # 1. Compiles the app into a clean, ready-to-run release directory
+      - name: Publish WinForms App
+        run: dotnet publish --configuration Release --output ./publish
+
+      # 2. Zips up the published application folder
+      - name: Zip Published Files
+        run: Compress-Archive -Path ./publish/* -DestinationPath ./WinFormsApp.zip
+
+      # 3. Uploads the zip file as a downloadable build artifact on GitHub
+      - name: Upload Deployment Artifact to GitHub
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        uses: actions/upload-artifact@v4
+        with:
+          name: Completed-WinForms-Build
+          path: ./WinFormsApp.zip
