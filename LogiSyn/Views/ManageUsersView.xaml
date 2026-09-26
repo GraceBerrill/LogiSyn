@@ -45,7 +45,7 @@
                             <ColumnDefinition Width="248.4"/>
                             <ColumnDefinition Width="194.3"/>
                             <ColumnDefinition Width="200"/>
-                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="152"/>
                         </Grid.ColumnDefinitions>
                         <TextBlock Grid.Column="0" Text="User ID" Style="{StaticResource HeadText}"/>
                         <TextBlock Grid.Column="1" Text="Name" Style="{StaticResource HeadText}"/>
@@ -67,7 +67,7 @@
                                             <ColumnDefinition Width="194.3"/>
                                             <ColumnDefinition Width="200"/>
                                             <ColumnDefinition Width="76"/>
-                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="76"/>
                                         </Grid.ColumnDefinitions>
                                         <TextBlock Grid.Column="0" Text="{Binding Id}" Style="{StaticResource CellText}"
                                                    VerticalAlignment="Bottom" Margin="0,0,0,1"/>

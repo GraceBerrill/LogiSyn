@@ -13,7 +13,8 @@ namespace LogiSyn.Services
         public List<User> GetAllUsers()
         {
             var users = new List<User>();
-            const string query = "SELECT Id, Username, Password, Role FROM [User] ORDER BY Id";
+            const string query =
+                "SELECT Id, Username, Password, Role, DateAdded FROM [User] ORDER BY Id";
 
             using var conn = new SqlConnection(_connectionString);
             using var cmd = new SqlCommand(query, conn);
@@ -27,7 +28,10 @@ namespace LogiSyn.Services
                     Id = (int)reader["Id"],
                     Username = reader["Username"] as string ?? string.Empty,
                     Password = reader["Password"] as string ?? string.Empty,
-                    Role = reader["Role"] as string ?? string.Empty
+                    Role = reader["Role"] as string ?? string.Empty,
+                    DateAdded = reader["DateAdded"] == DBNull.Value
+                                ? DateTime.MinValue
+                                : (DateTime)reader["DateAdded"]
                 });
             }
             return users;

@@ -1,7 +1,7 @@
-﻿using LogiSyn.Model;
-using LogiSyn.Services;
+﻿using System;
 using System.Windows;
 using System.Windows.Controls;
+using LogiSyn.Services;
 
 namespace LogiSyn.Views
 {
@@ -9,17 +9,19 @@ namespace LogiSyn.Views
     {
         private readonly UserService _userService = new UserService();
 
+        public event Action? Saved;
+        public event Action? Cancelled;
+
         public AddUserModal()
         {
             InitializeComponent();
-            AccessBox.SelectedIndex = 1; // default to "Staff"
+            AccessBox.SelectedIndex = 1;
             Loaded += (s, e) => UsernameBox.Focus();
         }
 
         private void Cancel_Click(object sender, RoutedEventArgs e)
         {
-            DialogResult = false;
-            Close();
+            Cancelled?.Invoke();
         }
 
         private void Save_Click(object sender, RoutedEventArgs e)
@@ -28,33 +30,13 @@ namespace LogiSyn.Views
 
             string username = UsernameBox.Text.Trim();
             string password = PasswordBox.Password;
-            string access = (AccessBox.SelectedItem as System.Windows.Controls.ComboBoxItem)
+            string access = (AccessBox.SelectedItem as ComboBoxItem)
                             ?.Content?.ToString() ?? "Staff";
 
-            // --- Validation ---
-            if (string.IsNullOrWhiteSpace(username))
-            {
-                ShowError("Username is required.");
-                return;
-            }
-
-            if (username.Length < 3)
-            {
-                ShowError("Username must be at least 3 characters.");
-                return;
-            }
-
-            if (string.IsNullOrWhiteSpace(password))
-            {
-                ShowError("Password is required.");
-                return;
-            }
-
-            if (password.Length < 4)
-            {
-                ShowError("Password must be at least 4 characters.");
-                return;
-            }
+            if (string.IsNullOrWhiteSpace(username)) { ShowError("Username is required."); return; }
+            if (username.Length < 3) { ShowError("Username must be at least 3 characters."); return; }
+            if (string.IsNullOrWhiteSpace(password)) { ShowError("Password is required."); return; }
+            if (password.Length < 4) { ShowError("Password must be at least 4 characters."); return; }
 
             try
             {
@@ -65,10 +47,9 @@ namespace LogiSyn.Views
                 }
 
                 _userService.AddUser(username, password, access);
-                DialogResult = true;
-                Close();
+                Saved?.Invoke();
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 ShowError("Could not save user: " + ex.Message);
             }

@@ -28,11 +28,10 @@ namespace LogiSyn.Views
                 _all = _userService.GetAllUsers()
                     .Select(u => new UserRow
                     {
-                        UserId = u.Id,
-                        Id = "USR-" + u.Id.ToString("D4"),
+                        Id = u.Id.ToString("D2"),
                         Name = u.Username,
                         Access = u.Role,
-                        DateAdded = DateTime.Now.ToString("yyyy-MM-dd") // or add a DateAdded column in DB
+                        DateAdded = u.DateAdded.ToString("yyyy-MM-dd")
                     })
                     .ToList();
             }
@@ -55,22 +54,32 @@ namespace LogiSyn.Views
                 q.Length == 0
                 || (u.Id ?? "").IndexOf(q, StringComparison.OrdinalIgnoreCase) >= 0
                 || (u.Name ?? "").IndexOf(q, StringComparison.OrdinalIgnoreCase) >= 0
-                || (u.Access ?? "").IndexOf(q, StringComparison.OrdinalIgnoreCase) >= 0).ToList();
+                || (u.Access ?? "").IndexOf(q, StringComparison.OrdinalIgnoreCase) >= 0
+            ).ToList();
         }
 
         private void SearchBox_TextChanged(object sender, TextChangedEventArgs e) => Refresh();
 
         private void AddUserButton_Click(object sender, RoutedEventArgs e)
         {
-            var dialog = new AddUserDialog
+            var modal = new AddUserModal();
+
+            var host = new Window
             {
-                Owner = Window.GetWindow(this)
+                Title = "Add User",
+                Content = modal,
+                SizeToContent = SizeToContent.WidthAndHeight,
+                WindowStartupLocation = WindowStartupLocation.CenterOwner,
+                Owner = Window.GetWindow(this),
+                ResizeMode = ResizeMode.NoResize,
+                Background = System.Windows.Media.Brushes.White
             };
 
-            if (dialog.ShowDialog() == true)
-            {
-                LoadUsers(); // reload from DB so the new user appears
-            }
+            modal.Saved += () => { host.DialogResult = true; host.Close(); };
+            modal.Cancelled += () => { host.DialogResult = false; host.Close(); };
+
+            if (host.ShowDialog() == true)
+                LoadUsers();
         }
 
         private void EditButton_Click(object sender, RoutedEventArgs e)
@@ -80,17 +89,25 @@ namespace LogiSyn.Views
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
-            var user = ((FrameworkElement)sender).DataContext as UserRow;
-            if (user == null) return;
+            var row = ((FrameworkElement)sender).DataContext as UserRow;
+            if (row == null) return;
 
-            var answer = MessageBox.Show("Delete " + user.Name + "?", "Delete user",
+            var answer = MessageBox.Show("Delete " + row.Name + "?", "Delete user",
                                          MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (answer != MessageBoxResult.Yes) return;
 
+            int id;
+            if (!int.TryParse(row.Id, out id))
+            {
+                MessageBox.Show("Could not determine user id.", "Error",
+                                MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
             try
             {
-                _userService.DeleteUser(user.UserId);
-                _all.Remove(user);
+                _userService.DeleteUser(id);
+                _all.Remove(row);
                 Refresh();
             }
             catch (Exception ex)
