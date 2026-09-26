@@ -31,11 +31,7 @@
         <StackPanel Grid.Row="3" Margin="0,0,0,15">
             <TextBlock Text="Access Level" FontWeight="SemiBold" Margin="0,0,0,5"/>
             <ComboBox x:Name="AccessBox" Height="38" FontSize="16"
-                      VerticalContentAlignment="Center">
-                <ComboBoxItem Content="Manager"/>
-                <ComboBoxItem Content="Staff"/>
-                <ComboBoxItem Content="Admin"/>
-            </ComboBox>
+                      VerticalContentAlignment="Center"/>
         </StackPanel>
 
         <TextBlock Grid.Row="4" x:Name="ErrorText" Foreground="Red"

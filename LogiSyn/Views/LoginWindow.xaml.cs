@@ -1,6 +1,7 @@
+using LogiSyn.Model;
+using LogiSyn.Services;
 using System.Windows;
 using System.Windows.Controls;
-using LogiSyn.Model;
 
 namespace LogiSyn.Views
 {
@@ -8,6 +9,7 @@ namespace LogiSyn.Views
     {
         private bool _passwordRevealed;
         private bool _syncing;
+        private readonly LoginService _loginService = new LoginService();
 
         public LoginWindow()
         {
@@ -85,9 +87,34 @@ namespace LogiSyn.Views
                 return;
             }
 
-            // The current login screen does not yet load a role from the database.
-            // Open the shell as Admin for now so the navigation can be used.
-            new ShellWindow(AppRole.Admin).Show();
+            User? user;
+            try
+            {
+                user = _loginService.Authenticate(username, password);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Could not reach the database:\n" + ex.Message,
+                                "Login error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            if (user == null)
+            {
+                MessageBox.Show("Invalid username or password.",
+                                "Login", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            // Map the DB string role to the AppRole enum the shell expects.
+            if (!Enum.TryParse<AppRole>(user.Role, out var role))
+            {
+                MessageBox.Show($"Unknown role '{user.Role}' for this account.",
+                                "Login", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            new ShellWindow(role).Show();
             Close();
         }
     }

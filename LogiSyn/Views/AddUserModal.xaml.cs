@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
+using LogiSyn.Model;
 using LogiSyn.Services;
 
 namespace LogiSyn.Views
@@ -15,7 +16,11 @@ namespace LogiSyn.Views
         public AddUserModal()
         {
             InitializeComponent();
-            AccessBox.SelectedIndex = 1;
+
+            AccessBox.ItemsSource = Enum.GetValues(typeof(AppRole));
+
+            AccessBox.SelectedItem = AppRole.User;
+
             Loaded += (s, e) => UsernameBox.Focus();
         }
 
@@ -30,8 +35,8 @@ namespace LogiSyn.Views
 
             string username = UsernameBox.Text.Trim();
             string password = PasswordBox.Password;
-            string access = (AccessBox.SelectedItem as ComboBoxItem)
-                            ?.Content?.ToString() ?? "Staff";
+
+            string access = AccessBox.SelectedItem?.ToString() ?? nameof(AppRole.User);
 
             if (string.IsNullOrWhiteSpace(username)) { ShowError("Username is required."); return; }
             if (username.Length < 3) { ShowError("Username must be at least 3 characters."); return; }

@@ -13,8 +13,8 @@ namespace LogiSyn.Services
         {
             User? user = null;
 
-            string query =
-                "SELECT Id, Username, Password, Role " +
+            const string query =
+                "SELECT Id, Username, Password, Role, DateAdded " +
                 "FROM [User] " +
                 "WHERE Username = @Username AND Password = @Password";
 
@@ -37,15 +37,17 @@ namespace LogiSyn.Services
                                 Id = (int)reader["Id"],
                                 Username = reader["Username"] as string ?? string.Empty,
                                 Password = reader["Password"] as string ?? string.Empty,
-                                Role = reader["Role"] as string ?? string.Empty
+                                Role = reader["Role"] as string ?? string.Empty,
+                                DateAdded = reader["DateAdded"] == DBNull.Value
+                                            ? DateTime.MinValue
+                                            : (DateTime)reader["DateAdded"]
                             };
                         }
                     }
                 }
                 catch (Exception ex)
                 {
-                    throw new Exception(
-                        "Database connection error: " + ex.Message);
+                    throw new Exception("Database connection error: " + ex.Message);
                 }
             }
 
