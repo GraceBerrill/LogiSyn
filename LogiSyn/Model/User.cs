@@ -14,5 +14,7 @@ namespace LogiSyn.Model
 
         public string Role { get; set; } = string.Empty;
 
+        public DateTime DateAdded { get; set; }
+
     }
 }
