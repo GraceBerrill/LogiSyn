@@ -9,5 +9,12 @@ Post-Deployment Script Template
                SELECT * FROM [$(TableName)]					
 --------------------------------------------------------------------------------------
 */
-INSERT INTO [dbo].[User] ([Username], [Password], [Role]) 
-VALUES ('admin', '1234', 'Admin');
+IF NOT EXISTS (
+    SELECT 1
+    FROM [dbo].[User]
+    WHERE [Username] = 'admin'
+)
+BEGIN
+    INSERT INTO [dbo].[User] ([Username], [Password], [Role])
+    VALUES ('admin', '1234', 'Admin');
+END

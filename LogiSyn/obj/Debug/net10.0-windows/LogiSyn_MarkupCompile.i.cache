@@ -10,11 +10,11 @@ none
 false
 TRACE;DEBUG;NET;NET10_0;NETCOREAPP;WINDOWS;WINDOWS7_0;NET5_0_OR_GREATER;NET6_0_OR_GREATER;NET7_0_OR_GREATER;NET8_0_OR_GREATER;NET9_0_OR_GREATER;NET10_0_OR_GREATER;NETCOREAPP1_0_OR_GREATER;NETCOREAPP1_1_OR_GREATER;NETCOREAPP2_0_OR_GREATER;NETCOREAPP2_1_OR_GREATER;NETCOREAPP2_2_OR_GREATER;NETCOREAPP3_0_OR_GREATER;NETCOREAPP3_1_OR_GREATER;WINDOWS7_0_OR_GREATER
 C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\App.xaml
-251931504785
+26-1746669498
 
-32-311787808
+33-344123055
 2212023798361
-LoginWindow.xaml;MainWindow.xaml;Styles\Icons.xaml;Styles\Theme.xaml;Views\AddProductModal.xaml;Views\AddUserModal.xaml;Views\AdminOrdersView.xaml;Views\CreateOrderView.xaml;Views\DashBoardView.xaml;Views\HistoryView.xaml;Views\LoginWindow.xaml;Views\MainWindow.xaml;Views\ManageProductsView.xaml;Views\ManageUsersView.xaml;Views\OrderBreakdownView.xaml;Views\OrderCompleteModal.xaml;Views\OrderSheetsView.xaml;Views\PrintEmailModal.xaml;Views\ProductDetailModal.xaml;Views\RawMaterialPaper.xaml;Views\SheetPaper.xaml;Views\ShellWindow.xaml;Views\SummaryPaper.xaml;Views\UserOrderSheet.xaml;Views\UserOrderView.xaml;
+LoginWindow.xaml;MainWindow.xaml;Styles\Icons.xaml;Styles\Theme.xaml;Views\AddProductModal.xaml;Views\AddUserModal.xaml;Views\AdminOrdersView.xaml;Views\CreateOrderView.xaml;Views\DashBoardView.xaml;Views\EditUserModal.xaml;Views\HistoryView.xaml;Views\LoginWindow.xaml;Views\MainWindow.xaml;Views\ManageProductsView.xaml;Views\ManageUsersView.xaml;Views\OrderBreakdownView.xaml;Views\OrderCompleteModal.xaml;Views\OrderSheetsView.xaml;Views\PrintEmailModal.xaml;Views\ProductDetailModal.xaml;Views\RawMaterialPaper.xaml;Views\SheetPaper.xaml;Views\ShellWindow.xaml;Views\SummaryPaper.xaml;Views\UserOrderSheet.xaml;Views\UserOrderView.xaml;
 
 False
 

@@ -87,7 +87,7 @@ namespace LogiSyn.Views
                 return;
             }
 
-            User? user;
+            UserRow? user;
             try
             {
                 user = _loginService.Authenticate(username, password);

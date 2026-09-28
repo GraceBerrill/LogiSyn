@@ -25,15 +25,7 @@ namespace LogiSyn.Views
         {
             try
             {
-                _all = _userService.GetAllUsers()
-                    .Select(u => new UserRow
-                    {
-                        Id = u.Id.ToString("D2"),
-                        Name = u.Username,
-                        Access = u.Role,
-                        DateAdded = u.DateAdded.ToString("yyyy-MM-dd")
-                    })
-                    .ToList();
+                _all = _userService.GetAllUsers();
             }
             catch (Exception ex)
             {
@@ -54,7 +46,7 @@ namespace LogiSyn.Views
                 q.Length == 0
                 || (u.Id ?? "").IndexOf(q, StringComparison.OrdinalIgnoreCase) >= 0
                 || (u.Name ?? "").IndexOf(q, StringComparison.OrdinalIgnoreCase) >= 0
-                || (u.Access ?? "").IndexOf(q, StringComparison.OrdinalIgnoreCase) >= 0
+                || (u.Role ?? "").IndexOf(q, StringComparison.OrdinalIgnoreCase) >= 0
             ).ToList();
         }
 
@@ -84,7 +76,35 @@ namespace LogiSyn.Views
 
         private void EditButton_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("The Edit User form will be added later.", "Edit user");
+            var row = ((FrameworkElement)sender).DataContext as UserRow;
+            if (row == null) return;
+
+            int id;
+            if (!int.TryParse(row.Id, out id))
+            {
+                MessageBox.Show("Could not determine user id.", "Error",
+                                MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            var modal = new EditUserModal(id, row.Name, row.Role);
+
+            var host = new Window
+            {
+                Title = "Edit User",
+                Content = modal,
+                SizeToContent = SizeToContent.WidthAndHeight,
+                WindowStartupLocation = WindowStartupLocation.CenterOwner,
+                Owner = Window.GetWindow(this),
+                ResizeMode = ResizeMode.NoResize,
+                Background = System.Windows.Media.Brushes.White
+            };
+
+            modal.Saved += () => { host.DialogResult = true; host.Close(); };
+            modal.Cancelled += () => { host.DialogResult = false; host.Close(); };
+
+            if (host.ShowDialog() == true)
+                LoadUsers();
         }
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
