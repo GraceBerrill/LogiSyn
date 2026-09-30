@@ -1,0 +1,110 @@
+<UserControl x:Class="LogiSyn.Views.DashboardView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Dashboard for Admin, Manager and User.
+         Admin also gets the Excel / Email buttons; Manager's first card says "On Going Orders:". -->
+    <Grid Margin="51,0,24,0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="111"/>
+            <RowDefinition Height="118"/>
+            <RowDefinition Height="46"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- title + date -->
+        <TextBlock Grid.Row="0" Text="Dashboard" Style="{StaticResource PageTitle}"
+                   VerticalAlignment="Top" Margin="0,11.7,0,0"/>
+        <TextBlock x:Name="DateText" Grid.Row="0" Style="{StaticResource PageDate}"
+                   VerticalAlignment="Top" Margin="2,65,0,0"/>
+
+        <!-- Excel / Email (Admin only) -->
+        <StackPanel x:Name="ExportButtons" Grid.Row="0" Orientation="Horizontal"
+                    HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,22,0,0">
+            <Button x:Name="ExcelButton" Style="{StaticResource OutlineButton}" Width="143.3"
+                    Click="ExcelButton_Click">
+                <Grid Width="143">
+                    <Image Source="{StaticResource IconExcel}" Width="26" Height="26"
+                           HorizontalAlignment="Left" Margin="18,0,0,0"/>
+                    <TextBlock Text="Excel" Margin="62,0,0,0" VerticalAlignment="Center"/>
+                </Grid>
+            </Button>
+            <Button x:Name="EmailButton" Style="{StaticResource OutlineButton}" Width="143.3"
+                    Margin="35,0,0,0" Click="EmailButton_Click">
+                <Grid Width="143">
+                    <Image Source="{StaticResource IconEmail}" Width="34" Height="34"
+                           HorizontalAlignment="Left" Margin="15,0,0,0"/>
+                    <TextBlock Text="Email" Margin="62,0,0,0" VerticalAlignment="Center"/>
+                </Grid>
+            </Button>
+        </StackPanel>
+
+        <!-- two stat cards -->
+        <ContentControl Grid.Row="1" Style="{StaticResource Card13}" Width="357.3"
+                        HorizontalAlignment="Left">
+            <Grid>
+                <TextBlock x:Name="NewOrdersLabel" Text="New Orders:" Style="{StaticResource HeadText}"
+                           VerticalAlignment="Top" Margin="23.6,17.4,0,0"/>
+                <TextBlock x:Name="NewOrdersValue" Text="12" FontSize="33.3"
+                           VerticalAlignment="Top" Margin="23.6,59,0,0"/>
+            </Grid>
+        </ContentControl>
+
+        <ContentControl Grid.Row="1" Style="{StaticResource Card13}" Width="357.3"
+                        HorizontalAlignment="Right">
+            <Grid>
+                <TextBlock Text="Completed Orders:" Style="{StaticResource HeadText}"
+                           VerticalAlignment="Top" Margin="23.6,17.4,0,0"/>
+                <TextBlock x:Name="CompletedValue" Text="6" FontSize="33.3"
+                           VerticalAlignment="Top" Margin="23.6,59,0,0"/>
+            </Grid>
+        </ContentControl>
+
+        <!-- recent orders -->
+        <ContentControl Grid.Row="3" Style="{StaticResource Card28}" Margin="0,0,0,60">
+            <Grid>
+                <TextBlock Text="Recent Orders" FontSize="26.7" VerticalAlignment="Top"
+                           HorizontalAlignment="Left" Margin="29,27,0,0"/>
+
+                <!-- column headings -->
+                <Border Style="{StaticResource RowLine}" Height="59.4" VerticalAlignment="Top"
+                        Margin="23.6,85,22.4,0">
+                    <Grid Margin="5.4,0,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="304"/>
+                            <ColumnDefinition Width="314.6"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Order" Style="{StaticResource HeadText}"/>
+                        <TextBlock Grid.Column="1" Text="Customer" Style="{StaticResource HeadText}"/>
+                        <TextBlock Grid.Column="2" Text="Status" Style="{StaticResource HeadText}"/>
+                    </Grid>
+                </Border>
+
+                <!-- rows -->
+                <ItemsControl x:Name="RecentList" VerticalAlignment="Top" Margin="23.6,144.4,22.4,0"
+                              Focusable="False">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Style="{StaticResource RowLine}" Height="62.3">
+                                <Grid Margin="5.4,0,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="304"/>
+                                        <ColumnDefinition Width="314.6"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="{Binding Number}" FontSize="26.7"
+                                               VerticalAlignment="Center"/>
+                                    <TextBlock Grid.Column="1" Text="{Binding Customer}" FontSize="26.7"
+                                               VerticalAlignment="Center"/>
+                                    <TextBlock Grid.Column="2" Text="{Binding Status}" FontSize="26.7"
+                                               Foreground="{Binding DashStatusBrush}" VerticalAlignment="Center"/>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </Grid>
+        </ContentControl>
+    </Grid>
+</UserControl>
