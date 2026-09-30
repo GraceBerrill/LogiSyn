@@ -6,7 +6,8 @@ using LogiSyn.Model;
 
 namespace LogiSyn.Views
 {
-    // Lightweight controller that exposes navigation and modal helpers to views.
+
+    //controller for main window nav
     public class ShellWindow
     {
         public static ShellWindow Current { get; set; }
@@ -20,11 +21,10 @@ namespace LogiSyn.Views
         public ShellWindow(Window owner)
         {
             _owner = owner;
-            // expect MainWindow to contain a ContentControl named MainContent
             _host = (ContentControl)owner.FindName("MainContent");
         }
 
-        // Navigate to a named page. Parameter is optional and passed to view if supported.
+        //navigate to a named page.
         public void Navigate(string page, object parameter = null)
         {
             UserControl view = null;
@@ -95,5 +95,15 @@ namespace LogiSyn.Views
             if (w != null && w.IsVisible)
                 w.Close();
         }
+
+        public void CloseAllModals()
+        {
+            while (_modals.Count > 0)
+            {
+                var w = _modals.Pop();
+                try { if (w != null && w.IsVisible) w.Close(); } catch { }
+            }
+        }
     }
 }
+/********************************************************************************************/

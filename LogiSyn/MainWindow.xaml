@@ -68,7 +68,7 @@
                         <TextBlock Text="&#xE77B;" FontFamily="Segoe MDL2 Assets" Foreground="#B0B0B0" 
                                    VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="16"/>
                     </Border>
-                    <TextBlock Text="Admin" Foreground="#E0E0E0" VerticalAlignment="Center" FontSize="14"/>
+                    <TextBlock x:Name="ProfileNameText" Text="Admin" Foreground="#E0E0E0" VerticalAlignment="Center" FontSize="14"/>
                 </StackPanel>
                 
                 <StackPanel Grid.Row="1" Margin="20,0,20,0">
@@ -94,12 +94,12 @@
                             Style="{StaticResource MenuButtonStyle}" Click="BtnManageUsers_Click"/>
 
                 </StackPanel>
-                <Button Grid.Row="2" 
+                <Button x:Name="BtnLogout" Grid.Row="2" 
                         Margin="20,0,20,30" 
                         Background="Transparent" 
                         BorderThickness="0" 
                         HorizontalContentAlignment="Left"
-                        Cursor="Hand">
+                        Cursor="Hand" Click="BtnLogout_Click">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="Log Out" Foreground="#E0E0E0" FontSize="14" Margin="0,0,5,0"/>
                     </StackPanel>

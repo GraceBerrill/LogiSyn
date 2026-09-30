@@ -82,7 +82,9 @@ namespace LogiSyn.Services
             {
                 var defaultUsers = new List<User>
                 {
-                    new User { Id = 1, Username = "admin", Password = "1234", Role = "Admin" }
+                    new User { Id = 1, Username = "admin",   Password = "1234", Role = "Admin" },
+                    new User { Id = 2, Username = "user",    Password = "1234", Role = "User" },
+                    new User { Id = 3, Username = "manager", Password = "1234", Role = "Manager" }
                 };
                 var options = new JsonSerializerOptions { WriteIndented = true };
                 File.WriteAllText(usersFile, JsonSerializer.Serialize(defaultUsers, options));
@@ -92,15 +94,42 @@ namespace LogiSyn.Services
             try
             {
                 var json = File.ReadAllText(usersFile);
-                var list = JsonSerializer.Deserialize<List<User>>(json);
-                return list ?? new List<User>();
+                var list = JsonSerializer.Deserialize<List<User>>(json) ?? new List<User>();
+
+                // Ensure test accounts exist (admin, user, manager).
+                bool changed = false;
+                if (!list.Any(u => string.Equals(u.Username, "admin", StringComparison.OrdinalIgnoreCase)))
+                {
+                    list.Add(new User { Id = (list.Count > 0 ? list.Max(x => x.Id) + 1 : 1), Username = "admin", Password = "1234", Role = "Admin" });
+                    changed = true;
+                }
+                if (!list.Any(u => string.Equals(u.Username, "user", StringComparison.OrdinalIgnoreCase)))
+                {
+                    list.Add(new User { Id = (list.Count > 0 ? list.Max(x => x.Id) + 1 : 2), Username = "user", Password = "1234", Role = "User" });
+                    changed = true;
+                }
+                if (!list.Any(u => string.Equals(u.Username, "manager", StringComparison.OrdinalIgnoreCase)))
+                {
+                    list.Add(new User { Id = (list.Count > 0 ? list.Max(x => x.Id) + 1 : 3), Username = "manager", Password = "1234", Role = "Manager" });
+                    changed = true;
+                }
+
+                if (changed)
+                {
+                    var options = new JsonSerializerOptions { WriteIndented = true };
+                    File.WriteAllText(usersFile, JsonSerializer.Serialize(list, options));
+                }
+
+                return list;
             }
             catch
             {
-                // If file corrupt, recreate with default
+                // If file corrupt, recreate with default set
                 var defaultUsers = new List<User>
                 {
-                    new User { Id = 1, Username = "admin", Password = "1234", Role = "Admin" }
+                    new User { Id = 1, Username = "admin",   Password = "1234", Role = "Admin" },
+                    new User { Id = 2, Username = "user",    Password = "1234", Role = "User" },
+                    new User { Id = 3, Username = "manager", Password = "1234", Role = "Manager" }
                 };
                 var options = new JsonSerializerOptions { WriteIndented = true };
                 File.WriteAllText(usersFile, JsonSerializer.Serialize(defaultUsers, options));
