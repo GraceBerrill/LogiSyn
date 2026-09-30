@@ -70,7 +70,7 @@
                     </Border>
                     <TextBlock Text="Admin" Foreground="#E0E0E0" VerticalAlignment="Center" FontSize="14"/>
                 </StackPanel>
-                
+
                 <StackPanel Grid.Row="1" Margin="20,0,20,0">
 
                     <Button Content="Dashboard" 
@@ -80,7 +80,7 @@
                             Foreground="#1B2136"/>
                     <Button Content="Orders" 
                             Tag="&#xE8A1;" 
-                            Style="{StaticResource MenuButtonStyle}"/>
+                            Style="{StaticResource MenuButtonStyle}" Click="Button_Click"/>
                     <Button Content="History" 
                             Tag="&#xE81C;" 
                             Style="{StaticResource MenuButtonStyle}"/>
@@ -103,6 +103,6 @@
 
             </Grid>
         </Border>
-        <ContentControl x:Name="MainContent" Grid.Column="1"/>
+        <Frame x:Name="MainContent" Grid.Column="1" NavigationUIVisibility="Hidden"/>
     </Grid>
 </Window>

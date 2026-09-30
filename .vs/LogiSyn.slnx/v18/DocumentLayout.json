@@ -1,7 +1,28 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "C:\\Users\\Adria\\source\\repos\\GraceBerrill\\LogiSyn\\",
-  "Documents": [],
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{FD01C211-13C6-B1A9-E190-BB5532D75860}|LogiSyn\\LogiSyn.csproj|c:\\users\\adria\\source\\repos\\graceberrill\\logisyn\\logisyn\\views\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{FD01C211-13C6-B1A9-E190-BB5532D75860}|LogiSyn\\LogiSyn.csproj|solutionrelative:logisyn\\views\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FD01C211-13C6-B1A9-E190-BB5532D75860}|LogiSyn\\LogiSyn.csproj|c:\\users\\adria\\source\\repos\\graceberrill\\logisyn\\logisyn\\views\\orderspage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{FD01C211-13C6-B1A9-E190-BB5532D75860}|LogiSyn\\LogiSyn.csproj|solutionrelative:logisyn\\views\\orderspage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FD01C211-13C6-B1A9-E190-BB5532D75860}|LogiSyn\\LogiSyn.csproj|c:\\users\\adria\\source\\repos\\graceberrill\\logisyn\\logisyn\\views\\orderspage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FD01C211-13C6-B1A9-E190-BB5532D75860}|LogiSyn\\LogiSyn.csproj|solutionrelative:logisyn\\views\\orderspage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FD01C211-13C6-B1A9-E190-BB5532D75860}|LogiSyn\\LogiSyn.csproj|c:\\users\\adria\\source\\repos\\graceberrill\\logisyn\\logisyn\\views\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FD01C211-13C6-B1A9-E190-BB5532D75860}|LogiSyn\\LogiSyn.csproj|solutionrelative:logisyn\\views\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FD01C211-13C6-B1A9-E190-BB5532D75860}|LogiSyn\\LogiSyn.csproj|c:\\users\\adria\\source\\repos\\graceberrill\\logisyn\\logisyn\\model\\ordermodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FD01C211-13C6-B1A9-E190-BB5532D75860}|LogiSyn\\LogiSyn.csproj|solutionrelative:logisyn\\model\\ordermodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -9,8 +30,46 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": -1,
+          "SelectedChildIndex": 5,
           "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "OrdersPage.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\Adria\\source\\repos\\GraceBerrill\\LogiSyn\\LogiSyn\\Views\\OrdersPage.xaml.cs",
+              "RelativeDocumentMoniker": "LogiSyn\\Views\\OrdersPage.xaml.cs",
+              "ToolTip": "C:\\Users\\Adria\\source\\repos\\GraceBerrill\\LogiSyn\\LogiSyn\\Views\\OrdersPage.xaml.cs",
+              "RelativeToolTip": "LogiSyn\\Views\\OrdersPage.xaml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-30T08:35:16.986Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "OrdersPage.xaml",
+              "DocumentMoniker": "C:\\Users\\Adria\\source\\repos\\GraceBerrill\\LogiSyn\\LogiSyn\\Views\\OrdersPage.xaml",
+              "RelativeDocumentMoniker": "LogiSyn\\Views\\OrdersPage.xaml",
+              "ToolTip": "C:\\Users\\Adria\\source\\repos\\GraceBerrill\\LogiSyn\\LogiSyn\\Views\\OrdersPage.xaml",
+              "RelativeToolTip": "LogiSyn\\Views\\OrdersPage.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-09-30T08:35:09.766Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "MainWindow.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\Adria\\source\\repos\\GraceBerrill\\LogiSyn\\LogiSyn\\Views\\MainWindow.xaml.cs",
+              "RelativeDocumentMoniker": "LogiSyn\\Views\\MainWindow.xaml.cs",
+              "ToolTip": "C:\\Users\\Adria\\source\\repos\\GraceBerrill\\LogiSyn\\LogiSyn\\Views\\MainWindow.xaml.cs",
+              "RelativeToolTip": "LogiSyn\\Views\\MainWindow.xaml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAqwBAAAAAZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-30T08:32:26.602Z",
+              "EditorCaption": ""
+            },
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
@@ -18,6 +77,31 @@
             {
               "$type": "Bookmark",
               "Name": "ST:128:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "MainWindow.xaml",
+              "DocumentMoniker": "C:\\Users\\Adria\\source\\repos\\GraceBerrill\\LogiSyn\\LogiSyn\\Views\\MainWindow.xaml",
+              "RelativeDocumentMoniker": "LogiSyn\\Views\\MainWindow.xaml",
+              "ToolTip": "C:\\Users\\Adria\\source\\repos\\GraceBerrill\\LogiSyn\\LogiSyn\\Views\\MainWindow.xaml",
+              "RelativeToolTip": "LogiSyn\\Views\\MainWindow.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-09-30T08:32:16.382Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "OrderModel.cs",
+              "DocumentMoniker": "C:\\Users\\Adria\\source\\repos\\GraceBerrill\\LogiSyn\\LogiSyn\\Model\\OrderModel.cs",
+              "RelativeDocumentMoniker": "LogiSyn\\Model\\OrderModel.cs",
+              "ToolTip": "C:\\Users\\Adria\\source\\repos\\GraceBerrill\\LogiSyn\\LogiSyn\\Model\\OrderModel.cs",
+              "RelativeToolTip": "LogiSyn\\Model\\OrderModel.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAADQAAABvAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-30T08:29:19.606Z",
+              "EditorCaption": ""
             }
           ]
         }
