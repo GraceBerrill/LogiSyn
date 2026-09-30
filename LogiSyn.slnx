@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="LogiSyn/LogiSyn.csproj" />
+  <Project Path="UserDB/LogiSynDB.sqlproj" Id="1ba9740e-8519-42f0-b792-ed1fd66c12a9">
+    <Build />
+    <Deploy />
+  </Project>
+</Solution>
