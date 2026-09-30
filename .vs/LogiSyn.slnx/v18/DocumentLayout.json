@@ -1,0 +1,684 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\OrderCompleteModal.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:LogiSyn\\Views\\OrderCompleteModal.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\OrderCompleteModal.xaml||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:LogiSyn\\Views\\OrderCompleteModal.xaml||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\AddProductModal.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:LogiSyn\\Views\\AddProductModal.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\AddProductModal.xaml||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:LogiSyn\\Views\\AddProductModal.xaml||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\PrintEmailModal.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:LogiSyn\\Views\\PrintEmailModal.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\PrintEmailModal.xaml||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:LogiSyn\\Views\\PrintEmailModal.xaml||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\ProductDetailModal.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:LogiSyn\\Views\\ProductDetailModal.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\ProductDetailModal.xaml||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:LogiSyn\\Views\\ProductDetailModal.xaml||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\UserOrderSheet.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:LogiSyn\\Views\\UserOrderSheet.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\UserOrderSheet.xaml||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:LogiSyn\\Views\\UserOrderSheet.xaml||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\UserOrderView.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:LogiSyn\\Views\\UserOrderView.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\UserOrderView.xaml||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:LogiSyn\\Views\\UserOrderView.xaml||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\ManageUsersView.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:LogiSyn\\Views\\ManageUsersView.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\ManageUsersView.xaml||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:LogiSyn\\Views\\ManageUsersView.xaml||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\ManageProductsView.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:LogiSyn\\Views\\ManageProductsView.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\ManageProductsView.xaml||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:LogiSyn\\Views\\ManageProductsView.xaml||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\OrderBreakdownView.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:LogiSyn\\Views\\OrderBreakdownView.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\OrderBreakdownView.xaml||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:LogiSyn\\Views\\OrderBreakdownView.xaml||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\HistoryView.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:LogiSyn\\Views\\HistoryView.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\HistoryView.xaml||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:LogiSyn\\Views\\HistoryView.xaml||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\OrderSheetsView.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:LogiSyn\\Views\\OrderSheetsView.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\OrderSheetsView.xaml||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:LogiSyn\\Views\\OrderSheetsView.xaml||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\SheetPaper.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:LogiSyn\\Views\\SheetPaper.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\SheetPaper.xaml||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:LogiSyn\\Views\\SheetPaper.xaml||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\RawMaterialPaper.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:LogiSyn\\Views\\RawMaterialPaper.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\RawMaterialPaper.xaml||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:LogiSyn\\Views\\RawMaterialPaper.xaml||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\SumaryPaper.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:LogiSyn\\Views\\SumaryPaper.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\SummaryPaper.xaml||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:LogiSyn\\Views\\SummaryPaper.xaml||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\CreateOrderView.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:LogiSyn\\Views\\CreateOrderView.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\CreateOrderView.xaml||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:LogiSyn\\Views\\CreateOrderView.xaml||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\AdminOrdersView.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:LogiSyn\\Views\\AdminOrdersView.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\AdnimOrdersView.xaml||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:LogiSyn\\Views\\AdnimOrdersView.xaml||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\DashBoardView.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:LogiSyn\\Views\\DashBoardView.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\DashBoardView.xaml||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:LogiSyn\\Views\\DashBoardView.xaml||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Model\\UiModels.cs||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:LogiSyn\\Model\\UiModels.cs||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Styles\\Theme.xaml||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:LogiSyn\\Styles\\Theme.xaml||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Styles\\Icons.xaml||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:LogiSyn\\Styles\\Icons.xaml||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\LoginWindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:LogiSyn\\Views\\LoginWindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 2,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{75188d03-9892-4ae2-abf1-207126247ce5}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{b1e99781-ab81-11d0-b683-00aa00a3ee26}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "OrderCompleteModal.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\OrderCompleteModal.xaml.cs",
+              "RelativeDocumentMoniker": "LogiSyn\\Views\\OrderCompleteModal.xaml.cs",
+              "ToolTip": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\OrderCompleteModal.xaml.cs",
+              "RelativeToolTip": "LogiSyn\\Views\\OrderCompleteModal.xaml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-21T11:45:15.61Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "OrderCompleteModal.xaml",
+              "DocumentMoniker": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\OrderCompleteModal.xaml",
+              "RelativeDocumentMoniker": "LogiSyn\\Views\\OrderCompleteModal.xaml",
+              "ToolTip": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\OrderCompleteModal.xaml",
+              "RelativeToolTip": "LogiSyn\\Views\\OrderCompleteModal.xaml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-09-21T11:44:46.023Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "AddProductModal.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\AddProductModal.xaml.cs",
+              "RelativeDocumentMoniker": "LogiSyn\\Views\\AddProductModal.xaml.cs",
+              "ToolTip": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\AddProductModal.xaml.cs",
+              "RelativeToolTip": "LogiSyn\\Views\\AddProductModal.xaml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABsAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-21T11:43:46.549Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "AddProductModal.xaml",
+              "DocumentMoniker": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\AddProductModal.xaml",
+              "RelativeDocumentMoniker": "LogiSyn\\Views\\AddProductModal.xaml",
+              "ToolTip": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\AddProductModal.xaml",
+              "RelativeToolTip": "LogiSyn\\Views\\AddProductModal.xaml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABoAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-09-21T11:42:56.833Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "PrintEmailModal.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\PrintEmailModal.xaml.cs",
+              "RelativeDocumentMoniker": "LogiSyn\\Views\\PrintEmailModal.xaml.cs",
+              "ToolTip": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\PrintEmailModal.xaml.cs",
+              "RelativeToolTip": "LogiSyn\\Views\\PrintEmailModal.xaml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABoAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-21T11:42:11.716Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "PrintEmailModal.xaml",
+              "DocumentMoniker": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\PrintEmailModal.xaml",
+              "RelativeDocumentMoniker": "LogiSyn\\Views\\PrintEmailModal.xaml",
+              "ToolTip": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\PrintEmailModal.xaml",
+              "RelativeToolTip": "LogiSyn\\Views\\PrintEmailModal.xaml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-09-21T11:41:39.968Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "ProductDetailModal.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\ProductDetailModal.xaml.cs",
+              "RelativeDocumentMoniker": "LogiSyn\\Views\\ProductDetailModal.xaml.cs",
+              "ToolTip": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\ProductDetailModal.xaml.cs",
+              "RelativeToolTip": "LogiSyn\\Views\\ProductDetailModal.xaml.cs",
+              "ViewState": "AgIAAAIAAAAAAAAAAAAAwCcAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-21T11:39:49.43Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "ProductDetailModal.xaml",
+              "DocumentMoniker": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\ProductDetailModal.xaml",
+              "RelativeDocumentMoniker": "LogiSyn\\Views\\ProductDetailModal.xaml",
+              "ToolTip": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\ProductDetailModal.xaml",
+              "RelativeToolTip": "LogiSyn\\Views\\ProductDetailModal.xaml",
+              "ViewState": "AgIAACIAAAAAAAAAAAAAwEcAAAAOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-09-21T11:39:10.108Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "UserOrderSheet.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\UserOrderSheet.xaml.cs",
+              "RelativeDocumentMoniker": "LogiSyn\\Views\\UserOrderSheet.xaml.cs",
+              "ToolTip": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\UserOrderSheet.xaml.cs",
+              "RelativeToolTip": "LogiSyn\\Views\\UserOrderSheet.xaml.cs",
+              "ViewState": "AgIAAA4AAAAAAAAAAAAAwCoAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-21T11:37:31.077Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "UserOrderSheet.xaml",
+              "DocumentMoniker": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\UserOrderSheet.xaml",
+              "RelativeDocumentMoniker": "LogiSyn\\Views\\UserOrderSheet.xaml",
+              "ToolTip": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\UserOrderSheet.xaml",
+              "RelativeToolTip": "LogiSyn\\Views\\UserOrderSheet.xaml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAAAOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-09-21T11:37:16.757Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "UserOrderView.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\UserOrderView.xaml.cs",
+              "RelativeDocumentMoniker": "LogiSyn\\Views\\UserOrderView.xaml.cs",
+              "ToolTip": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\UserOrderView.xaml.cs",
+              "RelativeToolTip": "LogiSyn\\Views\\UserOrderView.xaml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABgAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-21T11:36:23.121Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "UserOrderView.xaml",
+              "DocumentMoniker": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\UserOrderView.xaml",
+              "RelativeDocumentMoniker": "LogiSyn\\Views\\UserOrderView.xaml",
+              "ToolTip": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\UserOrderView.xaml",
+              "RelativeToolTip": "LogiSyn\\Views\\UserOrderView.xaml",
+              "ViewState": "AgIAAAcAAAAAAAAAAAAAwCwAAAAOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-09-21T11:35:59.431Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "ManageUsersView.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\ManageUsersView.xaml.cs",
+              "RelativeDocumentMoniker": "LogiSyn\\Views\\ManageUsersView.xaml.cs",
+              "ToolTip": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\ManageUsersView.xaml.cs",
+              "RelativeToolTip": "LogiSyn\\Views\\ManageUsersView.xaml.cs",
+              "ViewState": "AgIAAB8AAAAAAAAAAAAAwEQAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-21T11:35:01.756Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "ManageUsersView.xaml",
+              "DocumentMoniker": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\ManageUsersView.xaml",
+              "RelativeDocumentMoniker": "LogiSyn\\Views\\ManageUsersView.xaml",
+              "ToolTip": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\ManageUsersView.xaml",
+              "RelativeToolTip": "LogiSyn\\Views\\ManageUsersView.xaml",
+              "ViewState": "AgIAADsAAAAAAAAAAAAAwGAAAAAOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-09-21T11:34:41.564Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "ManageProductsView.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\ManageProductsView.xaml.cs",
+              "RelativeDocumentMoniker": "LogiSyn\\Views\\ManageProductsView.xaml.cs",
+              "ToolTip": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\ManageProductsView.xaml.cs",
+              "RelativeToolTip": "LogiSyn\\Views\\ManageProductsView.xaml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAFkAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-21T11:33:34.062Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "ManageProductsView.xaml",
+              "DocumentMoniker": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\ManageProductsView.xaml",
+              "RelativeDocumentMoniker": "LogiSyn\\Views\\ManageProductsView.xaml",
+              "ToolTip": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\ManageProductsView.xaml",
+              "RelativeToolTip": "LogiSyn\\Views\\ManageProductsView.xaml",
+              "ViewState": "AgIAAEAAAAAAAAAAAAAAwGUAAAAOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-09-21T11:33:11.638Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "OrderBreakdownView.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\OrderBreakdownView.xaml.cs",
+              "RelativeDocumentMoniker": "LogiSyn\\Views\\OrderBreakdownView.xaml.cs",
+              "ToolTip": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\OrderBreakdownView.xaml.cs",
+              "RelativeToolTip": "LogiSyn\\Views\\OrderBreakdownView.xaml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACMAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-21T11:32:20.04Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "OrderBreakdownView.xaml",
+              "DocumentMoniker": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\OrderBreakdownView.xaml",
+              "RelativeDocumentMoniker": "LogiSyn\\Views\\OrderBreakdownView.xaml",
+              "ToolTip": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\OrderBreakdownView.xaml",
+              "RelativeToolTip": "LogiSyn\\Views\\OrderBreakdownView.xaml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABkAAAAOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-09-21T11:31:51.976Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "HistoryView.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\HistoryView.xaml.cs",
+              "RelativeDocumentMoniker": "LogiSyn\\Views\\HistoryView.xaml.cs",
+              "ToolTip": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\HistoryView.xaml.cs",
+              "RelativeToolTip": "LogiSyn\\Views\\HistoryView.xaml.cs",
+              "ViewState": "AgIAACoAAAAAAAAAAAAAwEAAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-21T11:30:02.439Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "HistoryView.xaml",
+              "DocumentMoniker": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\HistoryView.xaml",
+              "RelativeDocumentMoniker": "LogiSyn\\Views\\HistoryView.xaml",
+              "ToolTip": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\HistoryView.xaml",
+              "RelativeToolTip": "LogiSyn\\Views\\HistoryView.xaml",
+              "ViewState": "AgIAADAAAAAAAAAAAAAAAE4AAAALAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-09-21T11:29:33.612Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "OrderSheetsView.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\OrderSheetsView.xaml.cs",
+              "RelativeDocumentMoniker": "LogiSyn\\Views\\OrderSheetsView.xaml.cs",
+              "ToolTip": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\OrderSheetsView.xaml.cs",
+              "RelativeToolTip": "LogiSyn\\Views\\OrderSheetsView.xaml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACIAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-21T11:28:29.177Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 21,
+              "Title": "OrderSheetsView.xaml",
+              "DocumentMoniker": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\OrderSheetsView.xaml",
+              "RelativeDocumentMoniker": "LogiSyn\\Views\\OrderSheetsView.xaml",
+              "ToolTip": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\OrderSheetsView.xaml",
+              "RelativeToolTip": "LogiSyn\\Views\\OrderSheetsView.xaml",
+              "ViewState": "AgIAAAQAAAAAAAAAAAAAwCkAAAAOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-09-21T11:28:02.427Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 22,
+              "Title": "SheetPaper.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\SheetPaper.xaml.cs",
+              "RelativeDocumentMoniker": "LogiSyn\\Views\\SheetPaper.xaml.cs",
+              "ToolTip": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\SheetPaper.xaml.cs",
+              "RelativeToolTip": "LogiSyn\\Views\\SheetPaper.xaml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-21T11:26:40.254Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 23,
+              "Title": "SheetPaper.xaml",
+              "DocumentMoniker": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\SheetPaper.xaml",
+              "RelativeDocumentMoniker": "LogiSyn\\Views\\SheetPaper.xaml",
+              "ToolTip": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\SheetPaper.xaml",
+              "RelativeToolTip": "LogiSyn\\Views\\SheetPaper.xaml",
+              "ViewState": "AgIAAIsAAAAAAAAAAAAAwLAAAAAOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-09-21T11:26:21.351Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 24,
+              "Title": "RawMaterialPaper.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\RawMaterialPaper.xaml.cs",
+              "RelativeDocumentMoniker": "LogiSyn\\Views\\RawMaterialPaper.xaml.cs",
+              "ToolTip": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\RawMaterialPaper.xaml.cs",
+              "RelativeToolTip": "LogiSyn\\Views\\RawMaterialPaper.xaml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-21T11:24:56.892Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 25,
+              "Title": "RawMaterialPaper.xaml",
+              "DocumentMoniker": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\RawMaterialPaper.xaml",
+              "RelativeDocumentMoniker": "LogiSyn\\Views\\RawMaterialPaper.xaml",
+              "ToolTip": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\RawMaterialPaper.xaml",
+              "RelativeToolTip": "LogiSyn\\Views\\RawMaterialPaper.xaml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB4AAAAOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-09-21T11:24:31.723Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 26,
+              "Title": "SumaryPaper.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\SumaryPaper.xaml.cs",
+              "RelativeDocumentMoniker": "LogiSyn\\Views\\SumaryPaper.xaml.cs",
+              "ToolTip": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\SumaryPaper.xaml.cs",
+              "RelativeToolTip": "LogiSyn\\Views\\SumaryPaper.xaml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-21T11:23:22.844Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 27,
+              "Title": "SummaryPaper.xaml",
+              "DocumentMoniker": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\SummaryPaper.xaml",
+              "RelativeDocumentMoniker": "LogiSyn\\Views\\SummaryPaper.xaml",
+              "ToolTip": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\SummaryPaper.xaml",
+              "RelativeToolTip": "LogiSyn\\Views\\SummaryPaper.xaml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-09-21T11:20:09.605Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 28,
+              "Title": "CreateOrderView.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\CreateOrderView.xaml.cs",
+              "RelativeDocumentMoniker": "LogiSyn\\Views\\CreateOrderView.xaml.cs",
+              "ToolTip": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\CreateOrderView.xaml.cs",
+              "RelativeToolTip": "LogiSyn\\Views\\CreateOrderView.xaml.cs",
+              "ViewState": "AgIAABQAAAAAAAAAAAAAwDkAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-21T11:16:22.8Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 29,
+              "Title": "CreateOrderView.xaml",
+              "DocumentMoniker": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\CreateOrderView.xaml",
+              "RelativeDocumentMoniker": "LogiSyn\\Views\\CreateOrderView.xaml",
+              "ToolTip": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\CreateOrderView.xaml",
+              "RelativeToolTip": "LogiSyn\\Views\\CreateOrderView.xaml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACkAAAAOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-09-21T11:15:39.977Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 30,
+              "Title": "AdminOrdersView.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\AdminOrdersView.xaml.cs",
+              "RelativeDocumentMoniker": "LogiSyn\\Views\\AdminOrdersView.xaml.cs",
+              "ToolTip": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\AdminOrdersView.xaml.cs",
+              "RelativeToolTip": "LogiSyn\\Views\\AdminOrdersView.xaml.cs",
+              "ViewState": "AgIAACEAAAAAAAAAAAAAABsAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-21T11:10:07.692Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 31,
+              "Title": "AdnimOrdersView.xaml",
+              "DocumentMoniker": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\AdnimOrdersView.xaml",
+              "RelativeDocumentMoniker": "LogiSyn\\Views\\AdnimOrdersView.xaml",
+              "ToolTip": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\AdnimOrdersView.xaml",
+              "RelativeToolTip": "LogiSyn\\Views\\AdnimOrdersView.xaml",
+              "ViewState": "AgIAADgAAAAAAAAAAAAAwF0AAAAOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-09-21T11:09:46.103Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 32,
+              "Title": "DashBoardView.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\DashBoardView.xaml.cs",
+              "RelativeDocumentMoniker": "LogiSyn\\Views\\DashBoardView.xaml.cs",
+              "ToolTip": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\DashBoardView.xaml.cs",
+              "RelativeToolTip": "LogiSyn\\Views\\DashBoardView.xaml.cs",
+              "ViewState": "AgIAAAEAAAAAAAAAAAAAwCYAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-21T11:08:14.211Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 33,
+              "Title": "DashBoardView.xaml",
+              "DocumentMoniker": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\DashBoardView.xaml",
+              "RelativeDocumentMoniker": "LogiSyn\\Views\\DashBoardView.xaml",
+              "ToolTip": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\DashBoardView.xaml",
+              "RelativeToolTip": "LogiSyn\\Views\\DashBoardView.xaml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAG0AAAAOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-09-21T11:07:18.363Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 34,
+              "Title": "UiModels.cs",
+              "DocumentMoniker": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Model\\UiModels.cs",
+              "RelativeDocumentMoniker": "LogiSyn\\Model\\UiModels.cs",
+              "ToolTip": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Model\\UiModels.cs",
+              "RelativeToolTip": "LogiSyn\\Model\\UiModels.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAEgBAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-21T10:54:23.371Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 35,
+              "Title": "Theme.xaml",
+              "DocumentMoniker": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Styles\\Theme.xaml",
+              "RelativeDocumentMoniker": "LogiSyn\\Styles\\Theme.xaml",
+              "ToolTip": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Styles\\Theme.xaml",
+              "RelativeToolTip": "LogiSyn\\Styles\\Theme.xaml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAPkBAAAVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-09-21T10:50:53.384Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 36,
+              "Title": "Icons.xaml",
+              "DocumentMoniker": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Styles\\Icons.xaml",
+              "RelativeDocumentMoniker": "LogiSyn\\Styles\\Icons.xaml",
+              "ToolTip": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Styles\\Icons.xaml",
+              "RelativeToolTip": "LogiSyn\\Styles\\Icons.xaml",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAADQAAAAVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-09-21T10:50:22.841Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 37,
+              "Title": "LoginWindow.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\LoginWindow.xaml.cs",
+              "RelativeDocumentMoniker": "LogiSyn\\Views\\LoginWindow.xaml.cs",
+              "ToolTip": "C:\\Users\\grace\\OneDrive\\Desktop\\prog7311-poe-part2-GraceBerrill\\LogiSyn\\LogiSyn\\Views\\LoginWindow.xaml.cs",
+              "RelativeToolTip": "LogiSyn\\Views\\LoginWindow.xaml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-21T10:28:30.825Z",
+              "EditorCaption": ""
+            }
+          ]
+        },
+        {
+          "DockedWidth": 988,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
