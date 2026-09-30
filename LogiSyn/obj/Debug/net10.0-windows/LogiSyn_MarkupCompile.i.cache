@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-C:\Users\grace\OneDrive\Documents\GitHub\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\
+D:\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\
 LogiSyn
 none
 false
 TRACE;DEBUG;NET;NET10_0;NETCOREAPP;WINDOWS;WINDOWS7_0;NET5_0_OR_GREATER;NET6_0_OR_GREATER;NET7_0_OR_GREATER;NET8_0_OR_GREATER;NET9_0_OR_GREATER;NET10_0_OR_GREATER;NETCOREAPP1_0_OR_GREATER;NETCOREAPP1_1_OR_GREATER;NETCOREAPP2_0_OR_GREATER;NETCOREAPP2_1_OR_GREATER;NETCOREAPP2_2_OR_GREATER;NETCOREAPP3_0_OR_GREATER;NETCOREAPP3_1_OR_GREATER;WINDOWS7_0_OR_GREATER
-C:\Users\grace\OneDrive\Documents\GitHub\LogiSyn\LogiSyn\App.xaml
-2-1457342498
+D:\LogiSyn\LogiSyn\App.xaml
+23101481657
 
-7-1375235989
-221-1009721392
-Views\LoginWindow.xaml;Views\MainWindow.xaml;
+30-735033272
+221-1162574491
+LoginWindow.xaml;MainWindow.xaml;Styles\Icons.xaml;Styles\Theme.xaml;Views\AddProductModal.xaml;Views\AdnimOrdersView.xaml;Views\CreateOrderView.xaml;Views\DashBoardView.xaml;Views\HistoryView.xaml;Views\LoginWindow.xaml;Views\MainWindow.xaml;Views\ManageProductsView.xaml;Views\ManageUsersView.xaml;Views\OrderBreakdownView.xaml;Views\OrderCompleteModal.xaml;Views\OrderSheetsView.xaml;Views\PrintEmailModal.xaml;Views\ProductDetailModal.xaml;Views\RawMaterialPaper.xaml;Views\SheetPaper.xaml;Views\SummaryPaper.xaml;Views\UserOrderSheet.xaml;Views\UserOrderView.xaml;
 
-False
+True
 

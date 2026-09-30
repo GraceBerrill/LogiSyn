@@ -4,6 +4,11 @@
              xmlns:local="clr-namespace:LogiSyn"
              StartupUri="Views/LoginWindow.xaml">
     <Application.Resources>
-         
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Styles/Icons.xaml" />
+                <ResourceDictionary Source="/Styles/Theme.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

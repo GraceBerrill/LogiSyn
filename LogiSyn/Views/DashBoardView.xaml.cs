@@ -1,39 +1,74 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using LogiSyn.Model;
+using System.Windows.Media;
 
 namespace LogiSyn.Views
 {
     public partial class DashboardView : UserControl
     {
-        public DashboardView(AppRole role)
+        public DashboardView()
         {
             InitializeComponent();
-
-            DateText.Text = SampleData.Today();
-
-            // Only the Admin has the Excel / Email buttons
-            ExportButtons.Visibility = role == AppRole.Admin ? Visibility.Visible : Visibility.Collapsed;
-
-            // The Manager's first card is worded differently in the design
-            NewOrdersLabel.Text = role == AppRole.Manager ? "On Going Orders:" : "New Orders:";
-
-            // TODO (backend): replace the sample numbers and rows with real data
-            NewOrdersValue.Text = "12";
-            CompletedValue.Text = "6";
-            RecentList.ItemsSource = SampleData.Orders();
         }
 
-        private void ExcelButton_Click(object sender, RoutedEventArgs e)
+        // this makes it so that the dashboard can be configured based on the role of the user
+        public void ConfigureRole(string role)
         {
-            // TODO (backend): export the orders to Excel
-            MessageBox.Show("Excel export will be connected later.", "Excel");
+            DateText.Text = DateTime.Now.ToString("dd/MM/yyyy");
+
+            switch (role?.Trim().ToLower())
+            {
+                case "admin":
+                    ExportButtons.Visibility = Visibility.Visible;
+                    NewOrdersLabel.Text = "New Orders:";
+                    break;
+
+                case "manager":
+                    ExportButtons.Visibility = Visibility.Collapsed;
+                    NewOrdersLabel.Text = "On Going Orders:";
+                    break;
+
+                case "user":
+                default:
+                    ExportButtons.Visibility = Visibility.Collapsed;
+                    NewOrdersLabel.Text = "New Orders:";
+                    break;
+            }
+
+            LoadDashboardData();
         }
 
-        private void EmailButton_Click(object sender, RoutedEventArgs e)
+        private void LoadDashboardData()
         {
-            // TODO (backend): email the orders
-            MessageBox.Show("Email will be connected later.", "Email");
+            var orders = GetDashboardOrders();
+
+            NewOrdersValue.Text = orders.Count(o => o.Status == "Pending").ToString();
+            CompletedValue.Text = orders.Count(o => o.Status == "Complete" || o.Status == "Completed").ToString();
+
+            RecentList.ItemsSource = orders;
         }
+
+        private List<DashboardOrderItem> GetDashboardOrders()
+        {
+            return new List<DashboardOrderItem>
+            {
+                new DashboardOrderItem { Number = "#001", Customer = "Checkers", Status = "Pending", DashStatusBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#C29D70")) },
+                new DashboardOrderItem { Number = "#002", Customer = "Spar", Status = "Complete", DashStatusBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#8DBE98")) }
+            };
+        }
+
+        private void ExcelButton_Click(object sender, RoutedEventArgs e) { }
+        private void EmailButton_Click(object sender, RoutedEventArgs e) { }
+    }
+
+    public class DashboardOrderItem
+    {
+        public string Number { get; set; } = string.Empty;
+        public string Customer { get; set; } = string.Empty;
+        public string Status { get; set; } = string.Empty;
+        public Brush DashStatusBrush { get; set; } = Brushes.Gray;
     }
 }

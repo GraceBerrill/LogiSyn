@@ -73,21 +73,25 @@
                 
                 <StackPanel Grid.Row="1" Margin="20,0,20,0">
 
-                    <Button Content="Dashboard" 
+                    <Button x:Name="BtnDashboard" Content="Dashboard" 
                             Tag="&#xE80F;" 
                             Style="{StaticResource MenuButtonStyle}"
                             Background="White" 
-                            Foreground="#1B2136"/>
-                    <Button Content="Orders" 
+                            Foreground="#1B2136" Click="BtnDashboard_Click"/>
+                    <Button x:Name="BtnOrders" Content="Orders" 
                             Tag="&#xE8A1;" 
-                            Style="{StaticResource MenuButtonStyle}"/>
-                    <Button Content="History" 
+                            Style="{StaticResource MenuButtonStyle}" Click="BtnOrders_Click"/>
+                    <Button x:Name="BtnHistory" Content="History" 
                             Tag="&#xE81C;" 
-                            Style="{StaticResource MenuButtonStyle}"/>
+                            Style="{StaticResource MenuButtonStyle}" Click="BtnHistory_Click"/>
 
-                    <Button Content="Manage Products" 
+                    <Button x:Name="BtnManageProducts" Content="Manage Products" 
                             Tag="&#xE7B8;" 
-                            Style="{StaticResource MenuButtonStyle}"/>
+                            Style="{StaticResource MenuButtonStyle}" Click="BtnManageProducts_Click"/>
+
+                    <Button x:Name="BtnManageUsers" Content="Manage Users" 
+                            Tag="&#xE77B;" 
+                            Style="{StaticResource MenuButtonStyle}" Click="BtnManageUsers_Click"/>
 
                 </StackPanel>
                 <Button Grid.Row="2" 
