@@ -75,6 +75,14 @@ namespace LogiSyn.Views
             ShellWindow.Current?.ShowModal(
                 new ProductDetailModal(SampleData.DetailFor(row), editable),
                 overlayScrim);
+            try
+            {
+                var updated = _service.GetAll();
+                _all.Clear();
+                _all.AddRange(updated);
+                Refresh();
+            }
+            catch { }
         }
 
         private void ViewButton_Click(object sender, RoutedEventArgs e)
@@ -98,7 +106,7 @@ namespace LogiSyn.Views
                                          MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (answer != MessageBoxResult.Yes) return;
 
-            // delete via service then refresh
+            //delete via service then refresh
             try { _service.DeleteByName(row.Name); }
             catch { }
             _all.Remove(row);

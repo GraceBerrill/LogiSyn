@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -11,7 +10,6 @@ namespace LogiSyn.Services
 {
     public class ProductService
     {
-        //connection string
         private string GetConnectionString()
         {
             var env = Environment.GetEnvironmentVariable("LOGISYN_CONNECTION");
@@ -20,8 +18,6 @@ namespace LogiSyn.Services
             return @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=LogiSynDb;Integrated Security=True;";
         }
 
-        /********************************************************************************************/
-        //path to the products.json file
         private string ProductsFilePath()
         {
             string dataFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data");
@@ -29,8 +25,7 @@ namespace LogiSyn.Services
             return Path.Combine(dataFolder, "products.json");
         }
 
-        /********************************************************************************************/
-        //get all products from SQL or json
+        // Get product rows for UI: prefer SQL, fall back to JSON. JSON may be either List<Product> or legacy List<ProductRow>.
         public List<ProductRow> GetAll()
         {
             try
@@ -53,9 +48,8 @@ namespace LogiSyn.Services
                 }
                 if (list.Count > 0) return list;
             }
-            catch
-            {
-            }
+            catch { }
+
             var file = ProductsFilePath();
             if (!File.Exists(file))
             {
@@ -69,10 +63,10 @@ namespace LogiSyn.Services
                 var json = File.ReadAllText(file);
                 try
                 {
-                    var prodList = JsonSerializer.Deserialize<List<LogiSyn.Model.Product>>(json);
+                    var prodList = JsonSerializer.Deserialize<List<Product>>(json);
                     if (prodList != null)
                     {
-                        var rows = prodList.ConvertAll(p => new ProductRow
+                        return prodList.ConvertAll(p => new ProductRow
                         {
                             Name = p.ProductName ?? string.Empty,
                             Price = p.PricePerUnit > 0 ? ("R" + p.PricePerUnit.ToString("0.00")) : string.Empty,
@@ -80,13 +74,9 @@ namespace LogiSyn.Services
                             BestBefore = p.BestBefore.ToString(),
                             Storage = p.StorageLocation ?? string.Empty
                         });
-                        return rows;
                     }
                 }
-                catch
-                {
-
-                }
+                catch { }
 
                 var list = JsonSerializer.Deserialize<List<ProductRow>>(json);
                 return list ?? SampleDefaults();
@@ -99,8 +89,55 @@ namespace LogiSyn.Services
             }
         }
 
-        /********************************************************************************************/
-        //create a new product
+        // Add a full Product model
+        public void Add(Product product)
+        {
+            if (product == null) return;
+            try
+            {
+                using var conn = new SqlConnection(GetConnectionString());
+                using var cmd = new SqlCommand("INSERT INTO Product (Name, Price, SellBy, BestBefore, Storage) VALUES (@Name,@Price,@SellBy,@BestBefore,@Storage)", conn);
+                cmd.Parameters.AddWithValue("@Name", product.ProductName ?? string.Empty);
+                cmd.Parameters.AddWithValue("@Price", product.PricePerUnit.ToString());
+                cmd.Parameters.AddWithValue("@SellBy", product.SellBy.ToString());
+                cmd.Parameters.AddWithValue("@BestBefore", product.BestBefore.ToString());
+                cmd.Parameters.AddWithValue("@Storage", product.StorageLocation ?? string.Empty);
+                conn.Open();
+                cmd.ExecuteNonQuery();
+                return;
+            }
+            catch { }
+
+            var file = ProductsFilePath();
+            List<Product> prodList;
+            if (File.Exists(file))
+            {
+                try { prodList = JsonSerializer.Deserialize<List<Product>>(File.ReadAllText(file)) ?? new List<Product>(); }
+                catch
+                {
+                    try
+                    {
+                        var rows = JsonSerializer.Deserialize<List<ProductRow>>(File.ReadAllText(file)) ?? new List<ProductRow>();
+                        prodList = rows.ConvertAll(r => new Product
+                        {
+                            ProductName = r.Name,
+                            PricePerUnit = ParsePrice(r.Price),
+                            SellBy = ParseInt(r.SellBy),
+                            BestBefore = ParseInt(r.BestBefore),
+                            StorageLocation = r.Storage
+                        });
+                    }
+                    catch { prodList = new List<Product>(); }
+                }
+            }
+            else prodList = new List<Product>();
+
+            product.ProductID = prodList.Count > 0 ? prodList[^1].ProductID + 1 : 1;
+            prodList.Add(product);
+            File.WriteAllText(file, JsonSerializer.Serialize(prodList, new JsonSerializerOptions { WriteIndented = true }));
+        }
+
+        // Add using older ProductRow (keeps backward compatibility)
         public void Add(ProductRow row)
         {
             if (row == null) return;
@@ -117,18 +154,13 @@ namespace LogiSyn.Services
                 cmd.ExecuteNonQuery();
                 return;
             }
-            catch
-            {
+            catch { }
 
-            }
             var file = ProductsFilePath();
             List<Product> prodList;
             if (File.Exists(file))
             {
-                try
-                {
-                    prodList = JsonSerializer.Deserialize<List<Product>>(File.ReadAllText(file)) ?? new List<Product>();
-                }
+                try { prodList = JsonSerializer.Deserialize<List<Product>>(File.ReadAllText(file)) ?? new List<Product>(); }
                 catch
                 {
                     try
@@ -143,10 +175,7 @@ namespace LogiSyn.Services
                             StorageLocation = r.Storage
                         });
                     }
-                    catch
-                    {
-                        prodList = new List<Product>();
-                    }
+                    catch { prodList = new List<Product>(); }
                 }
             }
             else prodList = new List<Product>();
@@ -160,16 +189,15 @@ namespace LogiSyn.Services
                 BestBefore = ParseInt(row.BestBefore),
                 StorageLocation = row.Storage,
                 Method = string.Empty,
-                Ingredients = new System.Collections.Generic.List<IngredientRequirement>()
+                Ingredients = new List<IngredientRequirement>()
             };
 
             prodList.Add(newProd);
             File.WriteAllText(file, JsonSerializer.Serialize(prodList, new JsonSerializerOptions { WriteIndented = true }));
         }
 
-        /********************************************************************************************/
-        //update an existing product by matching name
-        public void UpdateFromDetail(LogiSyn.Model.Product product)
+        // Update existing product by name
+        public void UpdateFromDetail(Product product)
         {
             if (product == null || string.IsNullOrEmpty(product.ProductName)) return;
             try
@@ -185,9 +213,7 @@ namespace LogiSyn.Services
                 cmd.ExecuteNonQuery();
                 return;
             }
-            catch
-            {
-            }
+            catch { }
 
             var file = ProductsFilePath();
             if (!File.Exists(file)) return;
@@ -201,6 +227,101 @@ namespace LogiSyn.Services
                     list[idx] = product;
                     File.WriteAllText(file, JsonSerializer.Serialize(list, new JsonSerializerOptions { WriteIndented = true }));
                 }
+            }
+            catch { }
+        }
+
+        // Get single product by name
+        public Product GetProductByName(string name)
+        {
+            if (string.IsNullOrEmpty(name)) return null;
+            try
+            {
+                using var conn = new SqlConnection(GetConnectionString());
+                using var cmd = new SqlCommand("SELECT Name, Price, SellBy, BestBefore, Storage FROM Product WHERE Name = @Name", conn);
+                cmd.Parameters.AddWithValue("@Name", name);
+                conn.Open();
+                using var reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    return new Product
+                    {
+                        ProductName = reader["Name"] as string ?? string.Empty,
+                        PricePerUnit = ParsePrice(reader["Price"] as string ?? string.Empty),
+                        SellBy = ParseInt(reader["SellBy"] as string ?? string.Empty),
+                        BestBefore = ParseInt(reader["BestBefore"] as string ?? string.Empty),
+                        StorageLocation = reader["Storage"] as string ?? string.Empty
+                    };
+                }
+            }
+            catch { }
+
+            var file = ProductsFilePath();
+            if (!File.Exists(file)) return null;
+            try
+            {
+                var json = File.ReadAllText(file);
+                try
+                {
+                    var list = JsonSerializer.Deserialize<List<Product>>(json) ?? new List<Product>();
+                    var prod = list.Find(p => string.Equals(p.ProductName, name, StringComparison.OrdinalIgnoreCase));
+                    if (prod != null) return prod;
+                }
+                catch { }
+
+                try
+                {
+                    var rows = JsonSerializer.Deserialize<List<ProductRow>>(json) ?? new List<ProductRow>();
+                    var row = rows.Find(r => string.Equals(r.Name, name, StringComparison.OrdinalIgnoreCase));
+                    if (row != null)
+                    {
+                        return new Product
+                        {
+                            ProductName = row.Name,
+                            PricePerUnit = ParsePrice(row.Price),
+                            SellBy = ParseInt(row.SellBy),
+                            BestBefore = ParseInt(row.BestBefore),
+                            StorageLocation = row.Storage
+                        };
+                    }
+                }
+                catch { }
+            }
+            catch { }
+            return null;
+        }
+
+        // Delete by name (works with Product JSON or legacy ProductRow JSON)
+        public void DeleteByName(string name)
+        {
+            if (string.IsNullOrEmpty(name)) return;
+            try
+            {
+                using var conn = new SqlConnection(GetConnectionString());
+                using var cmd = new SqlCommand("DELETE FROM Product WHERE Name = @Name", conn);
+                cmd.Parameters.AddWithValue("@Name", name);
+                conn.Open();
+                cmd.ExecuteNonQuery();
+                return;
+            }
+            catch { }
+
+            var file = ProductsFilePath();
+            if (!File.Exists(file)) return;
+            try
+            {
+                try
+                {
+                    var list = JsonSerializer.Deserialize<List<Product>>(File.ReadAllText(file)) ?? new List<Product>();
+                    var filtered = list.Where(p => !string.Equals(p.ProductName, name, StringComparison.OrdinalIgnoreCase)).ToList();
+                    File.WriteAllText(file, JsonSerializer.Serialize(filtered, new JsonSerializerOptions { WriteIndented = true }));
+                    return;
+                }
+                catch { }
+
+                var listRow = JsonSerializer.Deserialize<List<ProductRow>>(File.ReadAllText(file)) ?? new List<ProductRow>();
+                var filteredRow = listRow.Where(p => !string.Equals(p.Name, name, StringComparison.OrdinalIgnoreCase)).ToList();
+                File.WriteAllText(file, JsonSerializer.Serialize(filteredRow, new JsonSerializerOptions { WriteIndented = true }));
             }
             catch { }
         }
@@ -219,37 +340,6 @@ namespace LogiSyn.Services
             return 0;
         }
 
-        /********************************************************************************************/
-        //delete a product by name
-        public void DeleteByName(string name)
-        {
-            if (string.IsNullOrEmpty(name)) return;
-            try
-            {
-                using var conn = new SqlConnection(GetConnectionString());
-                using var cmd = new SqlCommand("DELETE FROM Product WHERE Name = @Name", conn);
-                cmd.Parameters.AddWithValue("@Name", name);
-                conn.Open();
-                cmd.ExecuteNonQuery();
-                return;
-            }
-            catch
-            {
-
-            }
-
-            var file = ProductsFilePath();
-            if (!File.Exists(file)) return;
-            try
-            {
-                var list = JsonSerializer.Deserialize<List<ProductRow>>(File.ReadAllText(file)) ?? new List<ProductRow>();
-                var filtered = list.Where(p => !string.Equals(p.Name, name, StringComparison.OrdinalIgnoreCase)).ToList();
-                File.WriteAllText(file, JsonSerializer.Serialize(filtered, new JsonSerializerOptions { WriteIndented = true }));
-            }
-            catch { }
-        }
-
-        //sample data
         private List<ProductRow> SampleDefaults()
         {
             return new List<ProductRow>
@@ -260,4 +350,3 @@ namespace LogiSyn.Services
         }
     }
 }
-/*********************************************MAR26EOF*******************************************/
