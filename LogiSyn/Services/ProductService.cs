@@ -30,7 +30,7 @@ namespace LogiSyn.Services
         }
 
         /********************************************************************************************/
-        //get all products from SQL or jason
+        //get all products from SQL or json
         public List<ProductRow> GetAll()
         {
             try
@@ -67,6 +67,27 @@ namespace LogiSyn.Services
             try
             {
                 var json = File.ReadAllText(file);
+                try
+                {
+                    var prodList = JsonSerializer.Deserialize<List<LogiSyn.Model.Product>>(json);
+                    if (prodList != null)
+                    {
+                        var rows = prodList.ConvertAll(p => new ProductRow
+                        {
+                            Name = p.ProductName ?? string.Empty,
+                            Price = p.PricePerUnit > 0 ? ("R" + p.PricePerUnit.ToString("0.00")) : string.Empty,
+                            SellBy = p.SellBy.ToString(),
+                            BestBefore = p.BestBefore.ToString(),
+                            Storage = p.StorageLocation ?? string.Empty
+                        });
+                        return rows;
+                    }
+                }
+                catch
+                {
+
+                }
+
                 var list = JsonSerializer.Deserialize<List<ProductRow>>(json);
                 return list ?? SampleDefaults();
             }
@@ -100,18 +121,102 @@ namespace LogiSyn.Services
             {
 
             }
-
             var file = ProductsFilePath();
-            List<ProductRow> list;
+            List<Product> prodList;
             if (File.Exists(file))
             {
-                try { list = JsonSerializer.Deserialize<List<ProductRow>>(File.ReadAllText(file)) ?? new List<ProductRow>(); }
-                catch { list = new List<ProductRow>(); }
+                try
+                {
+                    prodList = JsonSerializer.Deserialize<List<Product>>(File.ReadAllText(file)) ?? new List<Product>();
+                }
+                catch
+                {
+                    try
+                    {
+                        var rows = JsonSerializer.Deserialize<List<ProductRow>>(File.ReadAllText(file)) ?? new List<ProductRow>();
+                        prodList = rows.ConvertAll(r => new Product
+                        {
+                            ProductName = r.Name,
+                            PricePerUnit = ParsePrice(r.Price),
+                            SellBy = ParseInt(r.SellBy),
+                            BestBefore = ParseInt(r.BestBefore),
+                            StorageLocation = r.Storage
+                        });
+                    }
+                    catch
+                    {
+                        prodList = new List<Product>();
+                    }
+                }
             }
-            else list = new List<ProductRow>();
+            else prodList = new List<Product>();
 
-            list.Add(row);
-            File.WriteAllText(file, JsonSerializer.Serialize(list, new JsonSerializerOptions { WriteIndented = true }));
+            var newProd = new Product
+            {
+                ProductID = prodList.Count > 0 ? prodList[^1].ProductID + 1 : 1,
+                ProductName = row.Name,
+                PricePerUnit = ParsePrice(row.Price),
+                SellBy = ParseInt(row.SellBy),
+                BestBefore = ParseInt(row.BestBefore),
+                StorageLocation = row.Storage,
+                Method = string.Empty,
+                Ingredients = new System.Collections.Generic.List<IngredientRequirement>()
+            };
+
+            prodList.Add(newProd);
+            File.WriteAllText(file, JsonSerializer.Serialize(prodList, new JsonSerializerOptions { WriteIndented = true }));
+        }
+
+        /********************************************************************************************/
+        //update an existing product by matching name
+        public void UpdateFromDetail(LogiSyn.Model.Product product)
+        {
+            if (product == null || string.IsNullOrEmpty(product.ProductName)) return;
+            try
+            {
+                using var conn = new SqlConnection(GetConnectionString());
+                using var cmd = new SqlCommand("UPDATE Product SET Price=@Price, SellBy=@SellBy, BestBefore=@BestBefore, Storage=@Storage WHERE Name=@Name", conn);
+                cmd.Parameters.AddWithValue("@Name", product.ProductName ?? string.Empty);
+                cmd.Parameters.AddWithValue("@Price", product.PricePerUnit.ToString());
+                cmd.Parameters.AddWithValue("@SellBy", product.SellBy.ToString());
+                cmd.Parameters.AddWithValue("@BestBefore", product.BestBefore.ToString());
+                cmd.Parameters.AddWithValue("@Storage", product.StorageLocation ?? string.Empty);
+                conn.Open();
+                cmd.ExecuteNonQuery();
+                return;
+            }
+            catch
+            {
+            }
+
+            var file = ProductsFilePath();
+            if (!File.Exists(file)) return;
+            try
+            {
+                var list = JsonSerializer.Deserialize<List<Product>>(File.ReadAllText(file)) ?? new List<Product>();
+                var idx = list.FindIndex(p => string.Equals(p.ProductName, product.ProductName, StringComparison.OrdinalIgnoreCase));
+                if (idx >= 0)
+                {
+                    product.ProductID = list[idx].ProductID;
+                    list[idx] = product;
+                    File.WriteAllText(file, JsonSerializer.Serialize(list, new JsonSerializerOptions { WriteIndented = true }));
+                }
+            }
+            catch { }
+        }
+
+        private static decimal ParsePrice(string price)
+        {
+            if (string.IsNullOrWhiteSpace(price)) return 0m;
+            var cleaned = price.Replace("R", "").Replace("$", "").Trim();
+            if (decimal.TryParse(cleaned, out var v)) return v;
+            return 0m;
+        }
+
+        private static int ParseInt(string s)
+        {
+            if (int.TryParse(s, out var v)) return v;
+            return 0;
         }
 
         /********************************************************************************************/
