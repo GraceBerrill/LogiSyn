@@ -367,3 +367,6 @@ bin/
 obj/
 *.suo
 *.user
+
+*.dbmdl
+*.jfm
