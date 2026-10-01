@@ -1,63 +1,100 @@
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Globalization;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using LogiSyn.Model;
+using LogiSyn.Services;
 
 namespace LogiSyn.Views
 {
     public partial class AddProductModal : UserControl
     {
+        public ObservableCollection<IngredientInputRow> IngredientsList { get; set; } = new();
+
         public AddProductModal()
         {
             InitializeComponent();
+
+            IngredientsList.Add(new IngredientInputRow());
+            IngredientsList.Add(new IngredientInputRow());
+            IngredientsList.Add(new IngredientInputRow());
+
+            IngredientsItemsControl.ItemsSource = IngredientsList;
+
             Loaded += (s, e) => ProductBox.Focus();
         }
 
+        private void CancelButton_Click(object sender, RoutedEventArgs e)
+        {
+            ShellWindow.Current?.CloseModal();
+        }
+
+        private void AddIngredientButton_Click(object sender, RoutedEventArgs e)
+        {
+            IngredientsList.Add(new IngredientInputRow());
+        }
+
         /********************************************************************************************/
-        //add a product to the list and close the model
+        //remove ingredient row from the list
+        private void RemoveIngredientButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button btn && btn.DataContext is IngredientInputRow row)
+            {
+                if (IngredientsList.Count > 1)
+                {
+                    IngredientsList.Remove(row);
+                }
+                else
+                {
+                    row.Name = string.Empty;
+                    row.Quantity = string.Empty;
+                    row.Unit = string.Empty;
+                }
+            }
+        }
+
+        /********************************************************************************************/
+        // Add product to the list of products and save it to the file
         private void AddButton_Click(object sender, RoutedEventArgs e)
         {
-            var name = ProductBox.Text.Trim();
-            if (name.Length == 0)
+            string name = ProductBox.Text.Trim();
+            if (string.IsNullOrEmpty(name))
             {
-                MessageBox.Show("Please enter the product name.", "Add Product",
-                                MessageBoxButton.OK, MessageBoxImage.Information);
+                ShowValidationError("Please enter the product name.", ProductBox);
                 return;
             }
 
-            string method = string.Empty;
-            var methodBox = this.FindName("MethodBox") as TextBox;
-            if (methodBox != null) method = methodBox.Text.Trim();
+            string method = MethodBox.Text.Trim();
             if (string.IsNullOrEmpty(method))
             {
-                MessageBox.Show("Please enter the preparation method.", "Add Product",
-                                MessageBoxButton.OK, MessageBoxImage.Information);
+                ShowValidationError("Please enter the preparation method.", MethodBox);
                 return;
             }
 
-            if (!decimal.TryParse((ProductPriceBox?.Text ?? string.Empty).Replace("R", "").Trim(), out var price) || price <= 0)
+            if (!TryParseDecimal(ProductPriceBox.Text, out var price) || price <= 0)
             {
-                MessageBox.Show("Please enter a valid price greater than 0.", "Add Product",
-                                MessageBoxButton.OK, MessageBoxImage.Information);
+                ShowValidationError("Please enter a valid price greater than 0.", ProductPriceBox);
                 return;
             }
 
-            if (!int.TryParse(SellByBox?.Text.Trim() ?? string.Empty, out var sellBy) || sellBy <= 0)
+            if (!int.TryParse(SellByBox.Text.Trim(), out var sellBy) || sellBy <= 0)
             {
-                MessageBox.Show("Please enter a valid Sell By value greater than 0.", "Add Product",
-                                MessageBoxButton.OK, MessageBoxImage.Information);
+                ShowValidationError("Please enter a valid Sell By value (days) greater than 0.", SellByBox);
                 return;
             }
 
-            if (!int.TryParse(BestBeforeBox?.Text.Trim() ?? string.Empty, out var bestBefore) || bestBefore <= 0)
+            if (!int.TryParse(BestBeforeBox.Text.Trim(), out var bestBefore) || bestBefore <= 0)
             {
-                MessageBox.Show("Please enter a valid Best Before value greater than 0.", "Add Product",
-                                MessageBoxButton.OK, MessageBoxImage.Information);
+                ShowValidationError("Please enter a valid Best Before value (days) greater than 0.", BestBeforeBox);
                 return;
             }
 
-            var storage = string.Empty;
-            try { storage = (StorageBox.SelectedItem as ComboBoxItem)?.Content as string ?? string.Empty; } catch { }
+            var storage = (StorageBox.SelectedItem as ComboBoxItem)?.Content?.ToString() ?? string.Empty;
 
-            var prod = new LogiSyn.Model.Product
+            var product = new Product
             {
                 ProductName = name,
                 PricePerUnit = price,
@@ -65,32 +102,79 @@ namespace LogiSyn.Views
                 BestBefore = bestBefore,
                 StorageLocation = storage,
                 Method = method,
-                Ingredients = new System.Collections.Generic.List<LogiSyn.Model.IngredientRequirement>()
+                Ingredients = GetIngredientList()
             };
 
-            for (int i = 1; i <= 3; i++)
-            {
-                var inName = this.FindName($"Ing{i}Name") as TextBox;
-                var inQty = this.FindName($"Ing{i}Qty") as TextBox;
-                var inUnit = this.FindName($"Ing{i}Unit") as TextBox;
-                if (inName == null) break;
-                var iname = inName.Text.Trim();
-                if (string.IsNullOrEmpty(iname)) continue;
-                decimal qty = 0;
-                if (inQty != null) decimal.TryParse(inQty.Text.Trim(), out qty);
-                var unit = inUnit?.Text.Trim() ?? string.Empty;
-                prod.Ingredients.Add(new LogiSyn.Model.IngredientRequirement { IngredientName = iname, Quantity = qty, Unit = string.IsNullOrEmpty(unit) ? "units" : unit });
-            }
-
-            var svc = new LogiSyn.Services.ProductService();
             try
             {
-                svc.Add(prod);
+                var service = new ProductService();
+                service.Add(product);
+                ShellWindow.Current?.CloseModal();
             }
-            catch { }
-
-            ShellWindow.Current.CloseModal();
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error saving product: {ex.Message}", "Error",
+                                MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
+
+        /********************************************************************************************/
+        // List of ingredients for the product (parses dynamic list)
+        private List<IngredientRequirement> GetIngredientList()
+        {
+            var ingredients = new List<IngredientRequirement>();
+
+            foreach (var row in IngredientsList)
+            {
+                string name = row.Name?.Trim();
+                if (string.IsNullOrEmpty(name)) continue;
+
+                TryParseDecimal(row.Quantity, out decimal qty);
+                string unit = row.Unit?.Trim();
+
+                ingredients.Add(new IngredientRequirement
+                {
+                    IngredientName = name,
+                    Quantity = qty,
+                    Unit = string.IsNullOrEmpty(unit) ? "units" : unit
+                });
+            }
+
+            return ingredients;
+        }
+
+        private static void ShowValidationError(string message, Control controlToFocus)
+        {
+            MessageBox.Show(message, "Add Product", MessageBoxButton.OK, MessageBoxImage.Information);
+            controlToFocus?.Focus();
+        }
+
+        /********************************************************************************************/
+        // Makes decimals parseable
+        private static bool TryParseDecimal(string input, out decimal value)
+        {
+            value = 0m;
+            if (string.IsNullOrWhiteSpace(input)) return false;
+
+            string s = input.Trim().Replace("R", "").Replace("$", "").Replace("€", "").Replace("£", "").Trim();
+
+            if (decimal.TryParse(s, NumberStyles.Number | NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out value))
+                return true;
+
+            if (decimal.TryParse(s, NumberStyles.Number | NumberStyles.AllowDecimalPoint, CultureInfo.CurrentCulture, out value))
+                return true;
+
+            s = s.Replace(",", "");
+            return decimal.TryParse(s, NumberStyles.Number | NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out value);
+        }
+    }
+
+    /********************************************************************************************/
+    public class IngredientInputRow
+    {
+        public string Name { get; set; } = string.Empty;
+        public string Quantity { get; set; } = string.Empty;
+        public string Unit { get; set; } = string.Empty;
     }
 }
 /*********************************************MAR26EOF*******************************************/

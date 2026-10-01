@@ -72,17 +72,64 @@ namespace LogiSyn.Views
                 overlayScrim = new SolidColorBrush(Color.FromArgb(120, 0, 0, 0));
             }
 
-            ShellWindow.Current?.ShowModal(
-                new ProductDetailModal(SampleData.DetailFor(row), editable),
-                overlayScrim);
             try
             {
+                var prod = _service.GetProductByName(row.Name);
+                LogiSyn.Model.ProductDetail detail;
+                if (prod != null)
+                {
+                    var ingredients = new System.Collections.Generic.List<LogiSyn.Model.IngredientLine>();
+                    if (prod.Ingredients != null)
+                    {
+                        foreach (var ing in prod.Ingredients)
+                        {
+                            var qtyText = string.Empty;
+                            try
+                            {
+                                if (ing.Quantity > 0) qtyText = ing.Quantity.ToString();
+                            }
+                            catch { /* ignore if Quantity not numeric or missing */ }
+                            if (!string.IsNullOrEmpty(ing.Unit))
+                            {
+                                qtyText = string.IsNullOrEmpty(qtyText) ? ing.Unit : qtyText + " " + ing.Unit;
+                            }
+
+                            ingredients.Add(new LogiSyn.Model.IngredientLine { Name = ing.IngredientName, Quantity = qtyText });
+                        }
+                    }
+
+                    detail = new LogiSyn.Model.ProductDetail
+                    {
+                        Name = prod.ProductName,
+                        DateAdded = "",
+                        Ingredients = ingredients,
+                        Method = prod.Method,
+                        Storage = prod.StorageLocation
+                    };
+                }
+                else
+                {
+                    detail = SampleData.DetailFor(row);
+                }
+
+                ShellWindow.Current?.ShowModal(new ProductDetailModal(detail, editable), overlayScrim);
                 var updated = _service.GetAll();
                 _all.Clear();
                 _all.AddRange(updated);
                 Refresh();
             }
-            catch { }
+            catch
+            {
+                ShellWindow.Current?.ShowModal(new ProductDetailModal(SampleData.DetailFor(row), editable), overlayScrim);
+                try
+                {
+                    var updated = _service.GetAll();
+                    _all.Clear();
+                    _all.AddRange(updated);
+                    Refresh();
+                }
+                catch { }
+            }
         }
 
         private void ViewButton_Click(object sender, RoutedEventArgs e)
