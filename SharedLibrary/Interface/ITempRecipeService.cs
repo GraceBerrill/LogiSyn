@@ -1,0 +1,13 @@
+﻿using LogiSyn.Model;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace LogiSyn.Interface
+{
+    public interface ITempRecipeService
+    {
+        ProductRecipeModel? FindRecipeByProductName(string productName);
+        IEnumerable<ProductRecipeModel> GetAllRecipes();
+    }
+}

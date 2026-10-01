@@ -8,10 +8,23 @@
     ".NETCoreApp,Version=v10.0": {
       "LogiSyn/1.0.0": {
         "dependencies": {
-          "Microsoft.Data.SqlClient": "7.1.0"
+          "AndersonsBakeryAPI": "1.0.0",
+          "Microsoft.Data.SqlClient": "7.1.0",
+          "SharedLibrary": "1.0.0"
         },
         "runtime": {
           "LogiSyn.dll": {}
+        }
+      },
+      "Microsoft.AspNetCore.OpenApi/10.0.12": {
+        "dependencies": {
+          "Microsoft.OpenApi": "2.12.0"
+        },
+        "runtime": {
+          "lib/net10.0/Microsoft.AspNetCore.OpenApi.dll": {
+            "assemblyVersion": "10.0.12.0",
+            "fileVersion": "10.0.1226.42308"
+          }
         }
       },
       "Microsoft.Bcl.Cryptography/9.0.18": {
@@ -28,11 +41,9 @@
           "Microsoft.Data.SqlClient.Extensions.Abstractions": "7.1.0",
           "Microsoft.Data.SqlClient.Internal.Logging": "7.1.0",
           "Microsoft.Data.SqlClient.SNI.runtime": "7.1.0",
-          "Microsoft.Extensions.Caching.Memory": "9.0.18",
           "Microsoft.IdentityModel.JsonWebTokens": "8.16.0",
           "Microsoft.IdentityModel.Protocols.OpenIdConnect": "8.16.0",
-          "Microsoft.SqlServer.Server": "1.0.0",
-          "System.Threading.RateLimiting": "9.0.18"
+          "Microsoft.SqlServer.Server": "1.0.0"
         },
         "runtime": {
           "lib/net9.0/Microsoft.Data.SqlClient.dll": {
@@ -134,71 +145,6 @@
           }
         }
       },
-      "Microsoft.Extensions.Caching.Abstractions/9.0.18": {
-        "dependencies": {
-          "Microsoft.Extensions.Primitives": "9.0.18"
-        },
-        "runtime": {
-          "lib/net9.0/Microsoft.Extensions.Caching.Abstractions.dll": {
-            "assemblyVersion": "9.0.0.0",
-            "fileVersion": "9.0.1826.31522"
-          }
-        }
-      },
-      "Microsoft.Extensions.Caching.Memory/9.0.18": {
-        "dependencies": {
-          "Microsoft.Extensions.Caching.Abstractions": "9.0.18",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.0",
-          "Microsoft.Extensions.Logging.Abstractions": "10.0.0",
-          "Microsoft.Extensions.Options": "9.0.18",
-          "Microsoft.Extensions.Primitives": "9.0.18"
-        },
-        "runtime": {
-          "lib/net9.0/Microsoft.Extensions.Caching.Memory.dll": {
-            "assemblyVersion": "9.0.0.0",
-            "fileVersion": "9.0.1826.31522"
-          }
-        }
-      },
-      "Microsoft.Extensions.DependencyInjection.Abstractions/10.0.0": {
-        "runtime": {
-          "lib/net10.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll": {
-            "assemblyVersion": "10.0.0.0",
-            "fileVersion": "10.0.25.52411"
-          }
-        }
-      },
-      "Microsoft.Extensions.Logging.Abstractions/10.0.0": {
-        "dependencies": {
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.0"
-        },
-        "runtime": {
-          "lib/net10.0/Microsoft.Extensions.Logging.Abstractions.dll": {
-            "assemblyVersion": "10.0.0.0",
-            "fileVersion": "10.0.25.52411"
-          }
-        }
-      },
-      "Microsoft.Extensions.Options/9.0.18": {
-        "dependencies": {
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.0",
-          "Microsoft.Extensions.Primitives": "9.0.18"
-        },
-        "runtime": {
-          "lib/net9.0/Microsoft.Extensions.Options.dll": {
-            "assemblyVersion": "9.0.0.0",
-            "fileVersion": "9.0.1826.31522"
-          }
-        }
-      },
-      "Microsoft.Extensions.Primitives/9.0.18": {
-        "runtime": {
-          "lib/net9.0/Microsoft.Extensions.Primitives.dll": {
-            "assemblyVersion": "9.0.0.0",
-            "fileVersion": "9.0.1826.31522"
-          }
-        }
-      },
       "Microsoft.IdentityModel.Abstractions/8.16.0": {
         "runtime": {
           "lib/net10.0/Microsoft.IdentityModel.Abstractions.dll": {
@@ -254,13 +200,20 @@
       },
       "Microsoft.IdentityModel.Tokens/8.16.0": {
         "dependencies": {
-          "Microsoft.Extensions.Logging.Abstractions": "10.0.0",
           "Microsoft.IdentityModel.Logging": "8.16.0"
         },
         "runtime": {
           "lib/net10.0/Microsoft.IdentityModel.Tokens.dll": {
             "assemblyVersion": "8.16.0.0",
             "fileVersion": "8.16.0.26043"
+          }
+        }
+      },
+      "Microsoft.OpenApi/2.12.0": {
+        "runtime": {
+          "lib/net8.0/Microsoft.OpenApi.dll": {
+            "assemblyVersion": "2.12.0.0",
+            "fileVersion": "2.12.0.0"
           }
         }
       },
@@ -284,11 +237,83 @@
           }
         }
       },
-      "System.Threading.RateLimiting/9.0.18": {
+      "UglyToad.PdfPig/0.1.9-alpha001-patch1": {
+        "dependencies": {
+          "UglyToad.PdfPig.Core": "1.7.0-custom-5",
+          "UglyToad.PdfPig.Fonts": "1.7.0-custom-5",
+          "UglyToad.PdfPig.Tokenization": "1.7.0-custom-5",
+          "UglyToad.PdfPig.Tokens": "1.7.0-custom-5"
+        },
         "runtime": {
-          "lib/net9.0/System.Threading.RateLimiting.dll": {
-            "assemblyVersion": "9.0.0.0",
-            "fileVersion": "9.0.1826.31522"
+          "lib/net6.0/UglyToad.PdfPig.dll": {
+            "assemblyVersion": "0.1.9.0",
+            "fileVersion": "0.1.9.0"
+          }
+        }
+      },
+      "UglyToad.PdfPig.Core/1.7.0-custom-5": {
+        "runtime": {
+          "lib/net6.0/UglyToad.PdfPig.Core.dll": {
+            "assemblyVersion": "0.1.8.0",
+            "fileVersion": "0.1.8.0"
+          }
+        }
+      },
+      "UglyToad.PdfPig.Fonts/1.7.0-custom-5": {
+        "dependencies": {
+          "UglyToad.PdfPig.Core": "1.7.0-custom-5",
+          "UglyToad.PdfPig.Tokenization": "1.7.0-custom-5",
+          "UglyToad.PdfPig.Tokens": "1.7.0-custom-5"
+        },
+        "runtime": {
+          "lib/net6.0/UglyToad.PdfPig.Fonts.dll": {
+            "assemblyVersion": "0.1.8.0",
+            "fileVersion": "0.1.8.0"
+          }
+        }
+      },
+      "UglyToad.PdfPig.Tokenization/1.7.0-custom-5": {
+        "dependencies": {
+          "UglyToad.PdfPig.Core": "1.7.0-custom-5",
+          "UglyToad.PdfPig.Tokens": "1.7.0-custom-5"
+        },
+        "runtime": {
+          "lib/net6.0/UglyToad.PdfPig.Tokenization.dll": {
+            "assemblyVersion": "0.1.8.0",
+            "fileVersion": "0.1.8.0"
+          }
+        }
+      },
+      "UglyToad.PdfPig.Tokens/1.7.0-custom-5": {
+        "dependencies": {
+          "UglyToad.PdfPig.Core": "1.7.0-custom-5"
+        },
+        "runtime": {
+          "lib/net6.0/UglyToad.PdfPig.Tokens.dll": {
+            "assemblyVersion": "0.1.8.0",
+            "fileVersion": "0.1.8.0"
+          }
+        }
+      },
+      "AndersonsBakeryAPI/1.0.0": {
+        "dependencies": {
+          "Microsoft.AspNetCore.OpenApi": "10.0.12",
+          "Microsoft.Data.SqlClient": "7.1.0",
+          "SharedLibrary": "1.0.0",
+          "UglyToad.PdfPig": "0.1.9-alpha001-patch1"
+        },
+        "runtime": {
+          "AndersonsBakeryAPI.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "SharedLibrary/1.0.0": {
+        "runtime": {
+          "SharedLibrary.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
           }
         }
       }
@@ -299,6 +324,13 @@
       "type": "project",
       "serviceable": false,
       "sha512": ""
+    },
+    "Microsoft.AspNetCore.OpenApi/10.0.12": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-7RnQ/UKn+kK3JDLmTpW+vVqNErWthGPAVAy1aIiBzv4ucQ6g9NFvOJUuT0PHcpvcJxGVxctMxj6t+NESWMrgHQ==",
+      "path": "microsoft.aspnetcore.openapi/10.0.12",
+      "hashPath": "microsoft.aspnetcore.openapi.10.0.12.nupkg.sha512"
     },
     "Microsoft.Bcl.Cryptography/9.0.18": {
       "type": "package",
@@ -334,48 +366,6 @@
       "sha512": "sha512-rWunOb6Dby0lcI82PohARcRbF+4x4wNKxnKRSHXhuwZMu8/cCS68DCfhceq4bv1gUEfoL5dWXHYnfxVvLQUN+Q==",
       "path": "microsoft.data.sqlclient.sni.runtime/7.1.0",
       "hashPath": "microsoft.data.sqlclient.sni.runtime.7.1.0.nupkg.sha512"
-    },
-    "Microsoft.Extensions.Caching.Abstractions/9.0.18": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-Y8PnPKq+ASBazn0QA5d98/dWT0MAfv9CJYV6zPZ/TisZpAUe5zWgKldJLXkrmUuIzvUpQS7/SF7+1dld3OP/EQ==",
-      "path": "microsoft.extensions.caching.abstractions/9.0.18",
-      "hashPath": "microsoft.extensions.caching.abstractions.9.0.18.nupkg.sha512"
-    },
-    "Microsoft.Extensions.Caching.Memory/9.0.18": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-ZQ+x93CRR8DOGT+YPP4YXvwTAJ0MfvAghs5cwCSvtZFiORSfprAw9f67d0QDhf6PCIYyFsMKFB+PI3p9lpiMUQ==",
-      "path": "microsoft.extensions.caching.memory/9.0.18",
-      "hashPath": "microsoft.extensions.caching.memory.9.0.18.nupkg.sha512"
-    },
-    "Microsoft.Extensions.DependencyInjection.Abstractions/10.0.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-L3AdmZ1WOK4XXT5YFPEwyt0ep6l8lGIPs7F5OOBZc77Zqeo01Of7XXICy47628sdVl0v/owxYJTe86DTgFwKCA==",
-      "path": "microsoft.extensions.dependencyinjection.abstractions/10.0.0",
-      "hashPath": "microsoft.extensions.dependencyinjection.abstractions.10.0.0.nupkg.sha512"
-    },
-    "Microsoft.Extensions.Logging.Abstractions/10.0.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-FU/IfjDfwaMuKr414SSQNTIti/69bHEMb+QKrskRb26oVqpx3lNFXMjs/RC9ZUuhBhcwDM2BwOgoMw+PZ+beqQ==",
-      "path": "microsoft.extensions.logging.abstractions/10.0.0",
-      "hashPath": "microsoft.extensions.logging.abstractions.10.0.0.nupkg.sha512"
-    },
-    "Microsoft.Extensions.Options/9.0.18": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-HiA/R0jGR10TGuR6coM8KMUdJ5YlP3bhGxqEdGLkxFdBV1EFNdZMAajSEZHwkex4X/iMQwRCQVotqpElcxOImg==",
-      "path": "microsoft.extensions.options/9.0.18",
-      "hashPath": "microsoft.extensions.options.9.0.18.nupkg.sha512"
-    },
-    "Microsoft.Extensions.Primitives/9.0.18": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-hfHudMC5zDlwMrC0HiHOJesSHMvM+CdqjomjcV/YVzFq5dfSpBRvyRLm1n1Bfh41ZpQnyJzqX+YEo95BAmcDAQ==",
-      "path": "microsoft.extensions.primitives/9.0.18",
-      "hashPath": "microsoft.extensions.primitives.9.0.18.nupkg.sha512"
     },
     "Microsoft.IdentityModel.Abstractions/8.16.0": {
       "type": "package",
@@ -419,6 +409,13 @@
       "path": "microsoft.identitymodel.tokens/8.16.0",
       "hashPath": "microsoft.identitymodel.tokens.8.16.0.nupkg.sha512"
     },
+    "Microsoft.OpenApi/2.12.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-0xB/be+f6qYOhvQPUrVsLrau+fkowYv6gt9RIkajMhwT7sZnqtcA797yW3bS5kgSje+AQW4xZgyLnW641YFioQ==",
+      "path": "microsoft.openapi/2.12.0",
+      "hashPath": "microsoft.openapi.2.12.0.nupkg.sha512"
+    },
     "Microsoft.SqlServer.Server/1.0.0": {
       "type": "package",
       "serviceable": true,
@@ -433,12 +430,50 @@
       "path": "system.identitymodel.tokens.jwt/8.16.0",
       "hashPath": "system.identitymodel.tokens.jwt.8.16.0.nupkg.sha512"
     },
-    "System.Threading.RateLimiting/9.0.18": {
+    "UglyToad.PdfPig/0.1.9-alpha001-patch1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-pxuHw/tQXaHMRXEaKzzgpoGO8VeTPIzHbnp0KclXp6js5wPHn7VaqSCa8yRTAsZDcZ2XuIEnXGM2MbRDJFLBog==",
-      "path": "system.threading.ratelimiting/9.0.18",
-      "hashPath": "system.threading.ratelimiting.9.0.18.nupkg.sha512"
+      "sha512": "sha512-dayc8urhJp129XPTzYQr00wQmbmOxcIVZRqh/lL1Z12qrwN9zRmNFQR92WOQy0y6eSEokfuN0tdOJw1+eQwTaA==",
+      "path": "uglytoad.pdfpig/0.1.9-alpha001-patch1",
+      "hashPath": "uglytoad.pdfpig.0.1.9-alpha001-patch1.nupkg.sha512"
+    },
+    "UglyToad.PdfPig.Core/1.7.0-custom-5": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-bChQUAYApM6/vgBis0+fBTZyAVqjXdqshjZDCgI3dgwUplfLJxXRrnkCOdNj0a6JNcF32R4aLpnGpTc9QmmVmg==",
+      "path": "uglytoad.pdfpig.core/1.7.0-custom-5",
+      "hashPath": "uglytoad.pdfpig.core.1.7.0-custom-5.nupkg.sha512"
+    },
+    "UglyToad.PdfPig.Fonts/1.7.0-custom-5": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-Z6SBBAIL8wRkJNhXGYaz0CrHnNrNeuNtmwRbBtQUA1b3TDhRQppOmHCIuhjb6Vu/Rirp6FIOtzAU1lXsGik90w==",
+      "path": "uglytoad.pdfpig.fonts/1.7.0-custom-5",
+      "hashPath": "uglytoad.pdfpig.fonts.1.7.0-custom-5.nupkg.sha512"
+    },
+    "UglyToad.PdfPig.Tokenization/1.7.0-custom-5": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-U8VVH7VJjv6czP7qWyzDq6CRaiJQe7/sESUCL8H3kiEa3zi0l9TonIKlD/YidQ5DlgTumracii6zjLyKPEFKwA==",
+      "path": "uglytoad.pdfpig.tokenization/1.7.0-custom-5",
+      "hashPath": "uglytoad.pdfpig.tokenization.1.7.0-custom-5.nupkg.sha512"
+    },
+    "UglyToad.PdfPig.Tokens/1.7.0-custom-5": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-m/j5RVfL4eF/OwX6ASprzK+yzD3l7xdgQ7zQPgENhjxfuXD+hj6FSeZlmxSTt9ywvWcTCjGKAILl9XTK9iQgCQ==",
+      "path": "uglytoad.pdfpig.tokens/1.7.0-custom-5",
+      "hashPath": "uglytoad.pdfpig.tokens.1.7.0-custom-5.nupkg.sha512"
+    },
+    "AndersonsBakeryAPI/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "SharedLibrary/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
     }
   }
 }

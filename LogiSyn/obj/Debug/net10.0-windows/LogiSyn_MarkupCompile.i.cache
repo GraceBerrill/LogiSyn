@@ -1,5 +1,5 @@
 ﻿LogiSyn
-
+1.0.0.0
 
 winexe
 C#
@@ -10,19 +10,11 @@ none
 false
 TRACE;DEBUG;NET;NET10_0;NETCOREAPP;WINDOWS;WINDOWS7_0;NET5_0_OR_GREATER;NET6_0_OR_GREATER;NET7_0_OR_GREATER;NET8_0_OR_GREATER;NET9_0_OR_GREATER;NET10_0_OR_GREATER;NETCOREAPP1_0_OR_GREATER;NETCOREAPP1_1_OR_GREATER;NETCOREAPP2_0_OR_GREATER;NETCOREAPP2_1_OR_GREATER;NETCOREAPP2_2_OR_GREATER;NETCOREAPP3_0_OR_GREATER;NETCOREAPP3_1_OR_GREATER;WINDOWS7_0_OR_GREATER
 C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\App.xaml
-<<<<<<< HEAD
-51632640430
+7735986307
 
-111984893691
-2211864418395
-LoginWindow.xaml;MainWindow.xaml;Views\LoginWindow.xaml;Views\MainWindow.xaml;Views\OrdersPage.xaml;
-=======
-61724317200
-
-1032407381
+13-1335560475
 365358664323
-LoginWindow.xaml;MainWindow.xaml;Views\CreateOrderPage.xaml;Views\LoginWindow.xaml;Views\MainWindow.xaml;Views\OrderReviewPage.xaml;
->>>>>>> main
+LoginWindow.xaml;MainWindow.xaml;Views\CreateOrderPage.xaml;Views\LoginWindow.xaml;Views\MainWindow.xaml;Views\OrderReviewPage.xaml;Views\OrdersPage.xaml;
 
 False
 

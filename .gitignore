@@ -9,6 +9,19 @@
 *.user
 *.userosscache
 *.sln.docstates
+*.sql
+*.dbmdl
+
+# Ignore the entire UserDB folder and any db model metadata
+UserDB/
+*.dbmdl
+*.jfm
+*.dacpac
+*.mdf
+*.ldf
+*.ndf
+LogiSynDB/bin/
+LogiSynDB/obj/
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
