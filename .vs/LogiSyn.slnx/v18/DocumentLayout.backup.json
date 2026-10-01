@@ -3,59 +3,20 @@
   "WorkspaceRootPath": "C:\\Users\\Adria\\source\\repos\\GraceBerrill\\LogiSyn\\",
   "Documents": [
     {
-<<<<<<< HEAD
       "AbsoluteMoniker": "D:0:0:{FD01C211-13C6-B1A9-E190-BB5532D75860}|LogiSyn\\LogiSyn.csproj|c:\\users\\adria\\source\\repos\\graceberrill\\logisyn\\logisyn\\logisyn.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
       "RelativeMoniker": "D:0:0:{FD01C211-13C6-B1A9-E190-BB5532D75860}|LogiSyn\\LogiSyn.csproj|solutionrelative:logisyn\\logisyn.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
-=======
-      "AbsoluteMoniker": "D:0:0:{BEFAEA94-05CE-4044-A137-3515287FDD22}|AndersonsBakeryAPI\\AndersonsBakeryAPI.csproj|c:\\users\\adria\\source\\repos\\graceberrill\\logisyn\\andersonsbakeryapi\\services\\loginservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BEFAEA94-05CE-4044-A137-3515287FDD22}|AndersonsBakeryAPI\\AndersonsBakeryAPI.csproj|solutionrelative:andersonsbakeryapi\\services\\loginservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{77608DA4-8432-4890-947A-B236E2147999}|SharedLibrary\\SharedLibrary.csproj|c:\\users\\adria\\source\\repos\\graceberrill\\logisyn\\sharedlibrary\\interface\\iorderservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{77608DA4-8432-4890-947A-B236E2147999}|SharedLibrary\\SharedLibrary.csproj|solutionrelative:sharedlibrary\\interface\\iorderservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
->>>>>>> main
     },
     {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Adria\\source\\repos\\GraceBerrill\\LogiSyn\\.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}"
     },
     {
-<<<<<<< HEAD
-=======
-      "AbsoluteMoniker": "D:0:0:{BEFAEA94-05CE-4044-A137-3515287FDD22}|AndersonsBakeryAPI\\AndersonsBakeryAPI.csproj|c:\\users\\adria\\source\\repos\\graceberrill\\logisyn\\andersonsbakeryapi\\andersonsbakeryapi.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
-      "RelativeMoniker": "D:0:0:{BEFAEA94-05CE-4044-A137-3515287FDD22}|AndersonsBakeryAPI\\AndersonsBakeryAPI.csproj|solutionrelative:andersonsbakeryapi\\andersonsbakeryapi.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
-    },
-    {
->>>>>>> main
       "AbsoluteMoniker": "D:0:0:{FD01C211-13C6-B1A9-E190-BB5532D75860}|LogiSyn\\LogiSyn.csproj|c:\\users\\adria\\source\\repos\\graceberrill\\logisyn\\logisyn\\loginwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
       "RelativeMoniker": "D:0:0:{FD01C211-13C6-B1A9-E190-BB5532D75860}|LogiSyn\\LogiSyn.csproj|solutionrelative:logisyn\\loginwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{FD01C211-13C6-B1A9-E190-BB5532D75860}|LogiSyn\\LogiSyn.csproj|c:\\users\\adria\\source\\repos\\graceberrill\\logisyn\\logisyn\\views\\loginwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
       "RelativeMoniker": "D:0:0:{FD01C211-13C6-B1A9-E190-BB5532D75860}|LogiSyn\\LogiSyn.csproj|solutionrelative:logisyn\\views\\loginwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
-<<<<<<< HEAD
-=======
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{FD01C211-13C6-B1A9-E190-BB5532D75860}|LogiSyn\\LogiSyn.csproj|c:\\users\\adria\\source\\repos\\graceberrill\\logisyn\\logisyn\\views\\orderreviewpage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
-      "RelativeMoniker": "D:0:0:{FD01C211-13C6-B1A9-E190-BB5532D75860}|LogiSyn\\LogiSyn.csproj|solutionrelative:logisyn\\views\\orderreviewpage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{FD01C211-13C6-B1A9-E190-BB5532D75860}|LogiSyn\\LogiSyn.csproj|c:\\users\\adria\\source\\repos\\graceberrill\\logisyn\\logisyn\\logisyn.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
-      "RelativeMoniker": "D:0:0:{FD01C211-13C6-B1A9-E190-BB5532D75860}|LogiSyn\\LogiSyn.csproj|solutionrelative:logisyn\\logisyn.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{77608DA4-8432-4890-947A-B236E2147999}|SharedLibrary\\SharedLibrary.csproj|c:\\users\\adria\\source\\repos\\graceberrill\\logisyn\\sharedlibrary\\model\\ordermodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{77608DA4-8432-4890-947A-B236E2147999}|SharedLibrary\\SharedLibrary.csproj|solutionrelative:sharedlibrary\\model\\ordermodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{FD01C211-13C6-B1A9-E190-BB5532D75860}|LogiSyn\\LogiSyn.csproj|c:\\users\\adria\\source\\repos\\graceberrill\\logisyn\\logisyn\\views\\orderreviewpage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{FD01C211-13C6-B1A9-E190-BB5532D75860}|LogiSyn\\LogiSyn.csproj|solutionrelative:logisyn\\views\\orderreviewpage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{FD01C211-13C6-B1A9-E190-BB5532D75860}|LogiSyn\\LogiSyn.csproj|c:\\users\\adria\\source\\repos\\graceberrill\\logisyn\\logisyn\\views\\orderspage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{FD01C211-13C6-B1A9-E190-BB5532D75860}|LogiSyn\\LogiSyn.csproj|solutionrelative:logisyn\\views\\orderspage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
->>>>>>> main
     }
   ],
   "DocumentGroupContainers": [
@@ -65,7 +26,6 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-<<<<<<< HEAD
           "SelectedChildIndex": 2,
           "Children": [
             {
@@ -75,117 +35,23 @@
             {
               "$type": "Bookmark",
               "Name": "ST:128:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
-=======
-          "SelectedChildIndex": 1,
-          "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "OrderReviewPage.xaml",
-              "DocumentMoniker": "C:\\Users\\Adria\\source\\repos\\GraceBerrill\\LogiSyn\\LogiSyn\\Views\\OrderReviewPage.xaml",
-              "RelativeDocumentMoniker": "LogiSyn\\Views\\OrderReviewPage.xaml",
-              "ToolTip": "C:\\Users\\Adria\\source\\repos\\GraceBerrill\\LogiSyn\\LogiSyn\\Views\\OrderReviewPage.xaml",
-              "RelativeToolTip": "LogiSyn\\Views\\OrderReviewPage.xaml",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2026-09-30T15:13:23.72Z",
-              "IsPinned": true,
-              "EditorCaption": ""
->>>>>>> main
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
-<<<<<<< HEAD
               "Title": "LogiSyn.csproj",
-=======
-              "Title": "LoginService.cs",
-              "DocumentMoniker": "C:\\Users\\Adria\\source\\repos\\GraceBerrill\\LogiSyn\\AndersonsBakeryAPI\\Services\\LoginService.cs",
-              "RelativeDocumentMoniker": "AndersonsBakeryAPI\\Services\\LoginService.cs",
-              "ToolTip": "C:\\Users\\Adria\\source\\repos\\GraceBerrill\\LogiSyn\\AndersonsBakeryAPI\\Services\\LoginService.cs",
-              "RelativeToolTip": "AndersonsBakeryAPI\\Services\\LoginService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAaAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-10-01T09:30:47.033Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 10,
-              "Title": "OrdersPage.cs",
-              "DocumentMoniker": "C:\\Users\\Adria\\source\\repos\\GraceBerrill\\LogiSyn\\LogiSyn\\Views\\OrdersPage.cs",
-              "RelativeDocumentMoniker": "LogiSyn\\Views\\OrdersPage.cs",
-              "ToolTip": "C:\\Users\\Adria\\source\\repos\\GraceBerrill\\LogiSyn\\LogiSyn\\Views\\OrdersPage.cs",
-              "RelativeToolTip": "LogiSyn\\Views\\OrdersPage.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-10-01T09:32:30.625Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "OrderReviewPage.xaml.cs",
-              "DocumentMoniker": "C:\\Users\\Adria\\source\\repos\\GraceBerrill\\LogiSyn\\LogiSyn\\Views\\OrderReviewPage.xaml.cs",
-              "RelativeDocumentMoniker": "LogiSyn\\Views\\OrderReviewPage.xaml.cs",
-              "ToolTip": "C:\\Users\\Adria\\source\\repos\\GraceBerrill\\LogiSyn\\LogiSyn\\Views\\OrderReviewPage.xaml.cs",
-              "RelativeToolTip": "LogiSyn\\Views\\OrderReviewPage.xaml.cs",
-              "ViewState": "AgIAAHEAAAAAAAAAAIBTwAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-10-01T09:32:25.687Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "OrderModel.cs",
-              "DocumentMoniker": "C:\\Users\\Adria\\source\\repos\\GraceBerrill\\LogiSyn\\SharedLibrary\\Model\\OrderModel.cs",
-              "RelativeDocumentMoniker": "SharedLibrary\\Model\\OrderModel.cs",
-              "ToolTip": "C:\\Users\\Adria\\source\\repos\\GraceBerrill\\LogiSyn\\SharedLibrary\\Model\\OrderModel.cs",
-              "RelativeToolTip": "SharedLibrary\\Model\\OrderModel.cs",
-              "ViewState": "AgIAAA4AAAAAAAAAAABbwAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-10-01T09:31:53.071Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "LogiSyn",
->>>>>>> main
               "DocumentMoniker": "C:\\Users\\Adria\\source\\repos\\GraceBerrill\\LogiSyn\\LogiSyn\\LogiSyn.csproj",
               "RelativeDocumentMoniker": "LogiSyn\\LogiSyn.csproj",
               "ToolTip": "C:\\Users\\Adria\\source\\repos\\GraceBerrill\\LogiSyn\\LogiSyn\\LogiSyn.csproj",
               "RelativeToolTip": "LogiSyn\\LogiSyn.csproj",
-<<<<<<< HEAD
-              "ViewState": "AgIAAA8AAAAAAAAAAAAAAA8AAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
               "WhenOpened": "2026-10-01T16:25:38.175Z",
-=======
-              "ViewState": "AgIAABAAAAAAAAAAAABFwAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2026-10-01T09:30:57.344Z",
->>>>>>> main
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-<<<<<<< HEAD
-=======
-              "Title": "IOrderService.cs",
-              "DocumentMoniker": "C:\\Users\\Adria\\source\\repos\\GraceBerrill\\LogiSyn\\SharedLibrary\\Interface\\IOrderService.cs",
-              "RelativeDocumentMoniker": "SharedLibrary\\Interface\\IOrderService.cs",
-              "ToolTip": "C:\\Users\\Adria\\source\\repos\\GraceBerrill\\LogiSyn\\SharedLibrary\\Interface\\IOrderService.cs",
-              "RelativeToolTip": "SharedLibrary\\Interface\\IOrderService.cs",
-              "ViewState": "AgIAAAYAAAAAAAAAAAAzwAkAAAAIAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-10-01T09:28:18.944Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
->>>>>>> main
               "Title": ".gitignore",
               "DocumentMoniker": "C:\\Users\\Adria\\source\\repos\\GraceBerrill\\LogiSyn\\.gitignore",
               "RelativeDocumentMoniker": ".gitignore",
@@ -193,76 +59,29 @@
               "RelativeToolTip": ".gitignore",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAAKAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
-<<<<<<< HEAD
               "WhenOpened": "2026-10-01T16:25:38.265Z"
-=======
-              "WhenOpened": "2026-10-01T09:23:40.022Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{c6f34f0d-7ae5-4f3a-be61-fe0c21ae9eb8}"
->>>>>>> main
             },
             {
               "$type": "Document",
               "DocumentIndex": 3,
-<<<<<<< HEAD
-=======
-              "Title": "AndersonsBakeryAPI",
-              "DocumentMoniker": "C:\\Users\\Adria\\source\\repos\\GraceBerrill\\LogiSyn\\AndersonsBakeryAPI\\AndersonsBakeryAPI.csproj",
-              "RelativeDocumentMoniker": "AndersonsBakeryAPI\\AndersonsBakeryAPI.csproj",
-              "ToolTip": "C:\\Users\\Adria\\source\\repos\\GraceBerrill\\LogiSyn\\AndersonsBakeryAPI\\AndersonsBakeryAPI.csproj",
-              "RelativeToolTip": "AndersonsBakeryAPI\\AndersonsBakeryAPI.csproj",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2026-10-01T09:19:39.496Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
->>>>>>> main
               "Title": "LoginWindow.xaml",
               "DocumentMoniker": "C:\\Users\\Adria\\source\\repos\\GraceBerrill\\LogiSyn\\LogiSyn\\Views\\LoginWindow.xaml",
               "RelativeDocumentMoniker": "LogiSyn\\Views\\LoginWindow.xaml",
               "ToolTip": "C:\\Users\\Adria\\source\\repos\\GraceBerrill\\LogiSyn\\LogiSyn\\Views\\LoginWindow.xaml",
               "RelativeToolTip": "LogiSyn\\Views\\LoginWindow.xaml",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-<<<<<<< HEAD
               "WhenOpened": "2026-10-01T16:25:38.281Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
-=======
-              "WhenOpened": "2026-10-01T09:12:46.012Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
->>>>>>> main
               "Title": "LoginWindow.xaml",
               "DocumentMoniker": "C:\\Users\\Adria\\source\\repos\\GraceBerrill\\LogiSyn\\LogiSyn\\LoginWindow.xaml",
               "RelativeDocumentMoniker": "LogiSyn\\LoginWindow.xaml",
               "ToolTip": "C:\\Users\\Adria\\source\\repos\\GraceBerrill\\LogiSyn\\LogiSyn\\LoginWindow.xaml",
               "RelativeToolTip": "LogiSyn\\LoginWindow.xaml",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-<<<<<<< HEAD
               "WhenOpened": "2026-10-01T16:25:38.297Z"
-=======
-              "WhenOpened": "2026-10-01T09:12:41.365Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:128:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
->>>>>>> main
             }
           ]
         }
