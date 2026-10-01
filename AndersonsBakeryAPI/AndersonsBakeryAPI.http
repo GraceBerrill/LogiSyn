@@ -1,0 +1,6 @@
+@AndersonsBakeryAPI_HostAddress = http://localhost:5109
+
+GET {{AndersonsBakeryAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
