@@ -12,9 +12,9 @@ TRACE;DEBUG;NET;NET10_0;NETCOREAPP;WINDOWS;WINDOWS7_0;NET5_0_OR_GREATER;NET6_0_O
 C:\Users\Adria\source\repos\LogiSyn\LogiSyn\App.xaml
 7735986307
 
-13-1335560475
+12553979382
 365461700990
 LoginWindow.xaml;MainWindow.xaml;Views\CreateOrderPage.xaml;Views\LoginWindow.xaml;Views\MainWindow.xaml;Views\OrderReviewPage.xaml;Views\OrdersPage.xaml;
 
-False
+True
 
