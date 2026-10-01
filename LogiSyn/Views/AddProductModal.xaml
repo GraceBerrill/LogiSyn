@@ -13,6 +13,29 @@
                     <TextBox x:Name="ProductBox" Width="500" Height="36" />
                 </StackPanel>
 
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,12" HorizontalAlignment="Left">
+                    <StackPanel Orientation="Vertical" Margin="0,0,12,0">
+                        <TextBlock Text="Price"/>
+                        <TextBox x:Name="ProductPriceBox" Width="160" Height="36" />
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical" Margin="0,0,12,0">
+                        <TextBlock Text="Sell By"/>
+                        <TextBox x:Name="SellByBox" Width="120" Height="36" />
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical" Margin="0,0,12,0">
+                        <TextBlock Text="Best Before"/>
+                        <TextBox x:Name="BestBeforeBox" Width="120" Height="36" />
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Text="Storage"/>
+                        <ComboBox x:Name="StorageBox" Width="140" Height="36">
+                            <ComboBoxItem Content="Freezer"/>
+                            <ComboBoxItem Content="Fridge"/>
+                            <ComboBoxItem Content="Dry Store"/>
+                        </ComboBox>
+                    </StackPanel>
+                </StackPanel>
+
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,18,0,0">
                     <Button Content="Add" Width="160" Height="46" Click="AddButton_Click" Style="{StaticResource NavyButton}"/>
                 </StackPanel>

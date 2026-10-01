@@ -11,6 +11,7 @@ namespace LogiSyn.Views
     public partial class ManageProductsView : UserControl
     {
         private readonly List<ProductRow> _all;
+        private readonly LogiSyn.Services.ProductService _service = new LogiSyn.Services.ProductService();
         private bool _ready;
 
         public ManageProductsView()
@@ -18,15 +19,15 @@ namespace LogiSyn.Views
             InitializeComponent();
 
             DateText.Text = SampleData.Today();
-
-            // TODO (backend): load the real products here
-            _all = SampleData.Products();
+            _all = _service.GetAll();
 
             StorageFilter.SelectedIndex = 0;
             _ready = true;
             Refresh();
         }
 
+        /********************************************************************************************/
+        //refreshes the product list based on search or filters
         private void Refresh()
         {
             if (!_ready) return;
@@ -37,7 +38,7 @@ namespace LogiSyn.Views
 
             ProductList.ItemsSource = _all.Where(p =>
                 (q.Length == 0 || p.Name.IndexOf(q, StringComparison.OrdinalIgnoreCase) >= 0)
-                && (storage == "Storage" || p.Storage == storage)).ToList();
+                && (storage == "Storage" || p.Storage.Equals(storage, StringComparison.OrdinalIgnoreCase))).ToList();
         }
 
         private void SearchBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -50,30 +51,30 @@ namespace LogiSyn.Views
             Refresh();
         }
 
-        private void BtnAddProduct_Click(object sender, RoutedEventArgs e)
-        {
-            // Show the Add Product modal
-            try
-            {
-                ShellWindow.Current?.ShowModal(new AddProductModal(), (Brush)FindResource("ScrimDetail"));
-            }
-            catch
-            {
-                MessageBox.Show("Unable to open Add Product dialog.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
-
         private static ProductRow RowOf(object sender)
         {
             return ((FrameworkElement)sender).DataContext as ProductRow;
         }
 
+        /********************************************************************************************/
+        //shows the product detail
         private void ShowDetail(ProductRow row, bool editable)
         {
             if (row == null) return;
-            ShellWindow.Current.ShowModal(
+
+            Brush overlayScrim = null;
+            try
+            {
+                overlayScrim = FindResource("ScrimDetail") as Brush;
+            }
+            catch
+            {
+                overlayScrim = new SolidColorBrush(Color.FromArgb(120, 0, 0, 0));
+            }
+
+            ShellWindow.Current?.ShowModal(
                 new ProductDetailModal(SampleData.DetailFor(row), editable),
-                (Brush)FindResource("ScrimDetail"));
+                overlayScrim);
         }
 
         private void ViewButton_Click(object sender, RoutedEventArgs e)
@@ -86,6 +87,8 @@ namespace LogiSyn.Views
             ShowDetail(RowOf(sender), true);
         }
 
+        /********************************************************************************************/
+        //deletes a product from the list after confirmation
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
             var row = RowOf(sender);
@@ -95,9 +98,38 @@ namespace LogiSyn.Views
                                          MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (answer != MessageBoxResult.Yes) return;
 
-            // TODO (backend): delete the product in the database
+            // delete via service then refresh
+            try { _service.DeleteByName(row.Name); }
+            catch { }
             _all.Remove(row);
             Refresh();
         }
+
+        /********************************************************************************************/
+        //adds a new product to the list
+        private void BtnAddProduct_Click(object sender, RoutedEventArgs e)
+        {
+            Brush overlayScrim = null;
+            try
+            {
+                overlayScrim = FindResource("ScrimDetail") as Brush;
+            }
+            catch
+            {
+                overlayScrim = new SolidColorBrush(Color.FromArgb(120, 0, 0, 0));
+            }
+
+            ShellWindow.Current?.ShowModal(new AddProductModal(), overlayScrim);
+
+            try
+            {
+                var updated = _service.GetAll();
+                _all.Clear();
+                _all.AddRange(updated);
+                Refresh();
+            }
+            catch { }
+        }
     }
 }
+/*********************************************MAR26EOF*******************************************/
