@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using LogiSyn.Views;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -19,6 +20,13 @@ namespace LogiSyn
         public MainWindow()
         {
             InitializeComponent();
+
+            MainFrame.Navigate(new OrdersPage());
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(new OrdersPage());
         }
     }
 }

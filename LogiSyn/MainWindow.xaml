@@ -80,7 +80,7 @@
                             Foreground="#1B2136"/>
                     <Button Content="Orders" 
                             Tag="&#xE8A1;" 
-                            Style="{StaticResource MenuButtonStyle}"/>
+                            Style="{StaticResource MenuButtonStyle}" Click="Button_Click_1"/>
                     <Button Content="History" 
                             Tag="&#xE81C;" 
                             Style="{StaticResource MenuButtonStyle}"/>
@@ -103,6 +103,6 @@
 
             </Grid>
         </Border>
-        <ContentControl x:Name="MainContent" Grid.Column="1"/>
+        <Frame x:Name="MainFrame" Grid.Column="1" NavigationUIVisibility="Hidden"/>
     </Grid>
 </Window>
