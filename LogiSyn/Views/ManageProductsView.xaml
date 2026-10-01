@@ -17,26 +17,37 @@
         <TextBlock x:Name="DateText" Grid.Row="0" Style="{StaticResource PageDate}"
                    VerticalAlignment="Top" Margin="4,64.7,0,0"/>
 
+        <!-- Top Control Bar: Search + Storage Filter + Add Product -->
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="583.3"/>
+                <ColumnDefinition Width="450"/>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="268.7"/>
+                <ColumnDefinition Width="220"/>
+                <ColumnDefinition Width="15"/>
+                <ColumnDefinition Width="180"/>
             </Grid.ColumnDefinitions>
+
             <TextBox x:Name="SearchBox" Grid.Column="0" Style="{StaticResource SearchBox}"
                      Tag="Search Products" TextChanged="SearchBox_TextChanged"/>
+
             <ComboBox x:Name="StorageFilter" Grid.Column="2" Style="{StaticResource FilterCombo}"
-                      Margin="0,0,9,0" SelectionChanged="StorageFilter_SelectionChanged">
+                      SelectionChanged="StorageFilter_SelectionChanged">
                 <ComboBoxItem Content="Storage"/>
                 <ComboBoxItem Content="Freezer"/>
                 <ComboBoxItem Content="Fridge"/>
                 <ComboBoxItem Content="Dry Store"/>
             </ComboBox>
+
+            <!-- Added Add Product Button for Admin Role -->
+            <Button x:Name="BtnAddProduct" Grid.Column="3" Style="{StaticResource PrimaryButton}"
+                    Content="+ Add Product" Click="BtnAddProduct_Click" Grid.ColumnSpan="2" Margin="15,0,0,0"
+                    Height="72" VerticalAlignment="Center" FontSize="21.3"/>
         </Grid>
 
+        <!-- Product Table Container -->
         <ContentControl Grid.Row="3" Style="{StaticResource Card28}">
             <Grid>
-                <!-- headings -->
+                <!-- Headings -->
                 <Border Style="{StaticResource RowLine}" Height="57.7" VerticalAlignment="Top"
                         Margin="22,0,22,0">
                     <Grid Margin="5.3,23.3,0,0" VerticalAlignment="Top">
@@ -58,7 +69,7 @@
                     </Grid>
                 </Border>
 
-                <!-- rows -->
+                <!-- Rows -->
                 <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="22,57.7,22,20" Focusable="False">
                     <ItemsControl x:Name="ProductList" Focusable="False">
                         <ItemsControl.ItemTemplate>

@@ -50,6 +50,19 @@ namespace LogiSyn.Views
             Refresh();
         }
 
+        private void BtnAddProduct_Click(object sender, RoutedEventArgs e)
+        {
+            // Show the Add Product modal
+            try
+            {
+                ShellWindow.Current?.ShowModal(new AddProductModal(), (Brush)FindResource("ScrimDetail"));
+            }
+            catch
+            {
+                MessageBox.Show("Unable to open Add Product dialog.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
         private static ProductRow RowOf(object sender)
         {
             return ((FrameworkElement)sender).DataContext as ProductRow;
