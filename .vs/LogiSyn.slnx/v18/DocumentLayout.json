@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "C:\\Users\\Adria\\source\\repos\\LogiSyn\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{BEFAEA94-05CE-4044-A137-3515287FDD22}|AndersonsBakeryAPI\\AndersonsBakeryAPI.csproj|c:\\users\\adria\\source\\repos\\logisyn\\andersonsbakeryapi\\services\\orderservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BEFAEA94-05CE-4044-A137-3515287FDD22}|AndersonsBakeryAPI\\AndersonsBakeryAPI.csproj|solutionrelative:andersonsbakeryapi\\services\\orderservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{FD01C211-13C6-B1A9-E190-BB5532D75860}|LogiSyn\\LogiSyn.csproj|c:\\users\\adria\\source\\repos\\logisyn\\logisyn\\views\\orderspage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{FD01C211-13C6-B1A9-E190-BB5532D75860}|LogiSyn\\LogiSyn.csproj|solutionrelative:logisyn\\views\\orderspage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -37,10 +41,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{FD01C211-13C6-B1A9-E190-BB5532D75860}|LogiSyn\\LogiSyn.csproj|c:\\users\\adria\\source\\repos\\logisyn\\logisyn\\views\\orderreviewpage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
       "RelativeMoniker": "D:0:0:{FD01C211-13C6-B1A9-E190-BB5532D75860}|LogiSyn\\LogiSyn.csproj|solutionrelative:logisyn\\views\\orderreviewpage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{BEFAEA94-05CE-4044-A137-3515287FDD22}|AndersonsBakeryAPI\\AndersonsBakeryAPI.csproj|c:\\users\\adria\\source\\repos\\logisyn\\andersonsbakeryapi\\services\\orderservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BEFAEA94-05CE-4044-A137-3515287FDD22}|AndersonsBakeryAPI\\AndersonsBakeryAPI.csproj|solutionrelative:andersonsbakeryapi\\services\\orderservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{77608DA4-8432-4890-947A-B236E2147999}|SharedLibrary\\SharedLibrary.csproj|c:\\users\\adria\\source\\repos\\logisyn\\sharedlibrary\\model\\ordermodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -78,11 +78,11 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 11,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 9,
               "Title": "OrderReviewPage.xaml",
               "DocumentMoniker": "C:\\Users\\Adria\\source\\repos\\LogiSyn\\LogiSyn\\Views\\OrderReviewPage.xaml",
               "RelativeDocumentMoniker": "LogiSyn\\Views\\OrderReviewPage.xaml",
@@ -95,7 +95,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "AndersonsBakeryAPI.http",
               "DocumentMoniker": "C:\\Users\\Adria\\source\\repos\\LogiSyn\\AndersonsBakeryAPI\\AndersonsBakeryAPI.http",
               "RelativeDocumentMoniker": "AndersonsBakeryAPI\\AndersonsBakeryAPI.http",
@@ -108,7 +108,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 7,
               "Title": "MainWindow.xaml.cs",
               "DocumentMoniker": "C:\\Users\\Adria\\source\\repos\\LogiSyn\\LogiSyn\\Views\\MainWindow.xaml.cs",
               "RelativeDocumentMoniker": "LogiSyn\\Views\\MainWindow.xaml.cs",
@@ -121,7 +121,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 6,
               "Title": "MainWindow.xaml",
               "DocumentMoniker": "C:\\Users\\Adria\\source\\repos\\LogiSyn\\LogiSyn\\Views\\MainWindow.xaml",
               "RelativeDocumentMoniker": "LogiSyn\\Views\\MainWindow.xaml",
@@ -133,7 +133,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "OrdersPage.xaml.cs",
               "DocumentMoniker": "C:\\Users\\Adria\\source\\repos\\LogiSyn\\LogiSyn\\Views\\OrdersPage.xaml.cs",
               "RelativeDocumentMoniker": "LogiSyn\\Views\\OrdersPage.xaml.cs",
@@ -146,7 +146,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "OrdersPage.xaml",
               "DocumentMoniker": "C:\\Users\\Adria\\source\\repos\\LogiSyn\\LogiSyn\\Views\\OrdersPage.xaml",
               "RelativeDocumentMoniker": "LogiSyn\\Views\\OrdersPage.xaml",
@@ -158,7 +158,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "OrderController.cs",
               "DocumentMoniker": "C:\\Users\\Adria\\source\\repos\\LogiSyn\\AndersonsBakeryAPI\\Controllers\\OrderController.cs",
               "RelativeDocumentMoniker": "AndersonsBakeryAPI\\Controllers\\OrderController.cs",
@@ -183,7 +183,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "IOrderService.cs",
               "DocumentMoniker": "C:\\Users\\Adria\\source\\repos\\LogiSyn\\SharedLibrary\\Interface\\IOrderService.cs",
               "RelativeDocumentMoniker": "SharedLibrary\\Interface\\IOrderService.cs",
@@ -196,13 +196,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 0,
               "Title": "OrderService.cs",
               "DocumentMoniker": "C:\\Users\\Adria\\source\\repos\\LogiSyn\\AndersonsBakeryAPI\\Services\\OrderService.cs",
               "RelativeDocumentMoniker": "AndersonsBakeryAPI\\Services\\OrderService.cs",
               "ToolTip": "C:\\Users\\Adria\\source\\repos\\LogiSyn\\AndersonsBakeryAPI\\Services\\OrderService.cs",
               "RelativeToolTip": "AndersonsBakeryAPI\\Services\\OrderService.cs",
-              "ViewState": "AgIAAEYAAAAAAAAAAAAzwF4AAAAoAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAGMAAAAWAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-10-01T18:50:50.04Z",
               "EditorCaption": ""
@@ -221,7 +221,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 8,
               "Title": "OrderReviewPage.xaml.cs",
               "DocumentMoniker": "C:\\Users\\Adria\\source\\repos\\LogiSyn\\LogiSyn\\Views\\OrderReviewPage.xaml.cs",
               "RelativeDocumentMoniker": "LogiSyn\\Views\\OrderReviewPage.xaml.cs",
