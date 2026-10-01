@@ -18,9 +18,6 @@ namespace LogiSyn.Views
     /// </summary>
     public partial class OrdersPage : Page
     {
-        public OrdersPage()
-        {
-            InitializeComponent();
-        }
+        // Constructor removed to avoid duplicate definition (InitializeComponent is in generated partial class).
     }
 }

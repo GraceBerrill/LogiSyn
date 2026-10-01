@@ -52,8 +52,8 @@ namespace LogiSyn.Views
                 ProductName = item.ProductName,
                 ProductionLine = item.ProductionLine,
                 Pans = item.packaging.Pans,
-                // Safely reads Trollies from your Packaging model
-                Trollies = item.packaging.Trollies,
+                // Safely reads Trolleys from your Packaging model
+                Trolleys = item.packaging.Trolleys,
                 IngredientsSummary = string.Join(",  ", item.ReqIngredients.Select(i =>
                     $"{i.IngredientName}: {i.IngredientAmount + i.AdditionsAmount} {i.MeasuredIngredient}"))
             }).ToList();
@@ -104,7 +104,7 @@ namespace LogiSyn.Views
         public string ProductName { get; set; } = string.Empty;
         public string ProductionLine { get; set; } = string.Empty;
         public int Pans { get; set; }
-        public int Trollies { get; set; }
+        public int Trolleys { get; set; }
         public string IngredientsSummary { get; set; } = string.Empty;
     }
 

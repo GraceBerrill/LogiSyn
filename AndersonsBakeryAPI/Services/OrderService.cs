@@ -88,11 +88,11 @@ namespace LogiSyn.Services
                             Pans = recipe.UnitsPerPan > 0
                                 ? (int)Math.Ceiling((double)quantity / recipe.UnitsPerPan)
                                 : 2,
-                            Trollies = recipe.PansPerTrolley > 0
+                            Trolleys = recipe.PansPerTrolley > 0
                                 ? (int)Math.Ceiling((double)quantity / (recipe.UnitsPerPan * recipe.PansPerTrolley))
                                 : 1,
                             PansUsed = 0,
-                            TrolliesUsed = 0
+                            TrolleysUsed = 0
                         }
                     };
 

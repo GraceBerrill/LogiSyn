@@ -2,7 +2,7 @@ using System.Windows.Controls;
 
 namespace LogiSyn.Views
 {
-    public class OrdersPage : Page
+    public partial class OrdersPage : Page
     {
         public OrdersPage()
         {
@@ -10,3 +10,4 @@ namespace LogiSyn.Views
         }
     }
 }
+
