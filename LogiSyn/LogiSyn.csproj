@@ -9,6 +9,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Views\AdminViews\**" />
+    <EmbeddedResource Remove="Views\AdminViews\**" />
+    <None Remove="Views\AdminViews\**" />
+    <Page Remove="Views\AdminViews\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.Data.SqlClient" Version="7.1.0" />
   </ItemGroup>
 
