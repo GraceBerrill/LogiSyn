@@ -68,34 +68,38 @@
                         <TextBlock Text="&#xE77B;" FontFamily="Segoe MDL2 Assets" Foreground="#B0B0B0" 
                                    VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="16"/>
                     </Border>
-                    <TextBlock Text="Admin" Foreground="#E0E0E0" VerticalAlignment="Center" FontSize="14"/>
+                    <TextBlock x:Name="ProfileNameText" Text="Admin" Foreground="#E0E0E0" VerticalAlignment="Center" FontSize="14"/>
                 </StackPanel>
                 
                 <StackPanel Grid.Row="1" Margin="20,0,20,0">
 
-                    <Button Content="Dashboard" 
+                    <Button x:Name="BtnDashboard" Content="Dashboard" 
                             Tag="&#xE80F;" 
                             Style="{StaticResource MenuButtonStyle}"
                             Background="White" 
-                            Foreground="#1B2136"/>
-                    <Button Content="Orders" 
+                            Foreground="#1B2136" Click="BtnDashboard_Click"/>
+                    <Button x:Name="BtnOrders" Content="Orders" 
                             Tag="&#xE8A1;" 
-                            Style="{StaticResource MenuButtonStyle}"/>
-                    <Button Content="History" 
+                            Style="{StaticResource MenuButtonStyle}" Click="BtnOrders_Click"/>
+                    <Button x:Name="BtnHistory" Content="History" 
                             Tag="&#xE81C;" 
-                            Style="{StaticResource MenuButtonStyle}"/>
+                            Style="{StaticResource MenuButtonStyle}" Click="BtnHistory_Click"/>
 
-                    <Button Content="Manage Products" 
+                    <Button x:Name="BtnManageProducts" Content="Manage Products" 
                             Tag="&#xE7B8;" 
-                            Style="{StaticResource MenuButtonStyle}"/>
+                            Style="{StaticResource MenuButtonStyle}" Click="BtnManageProducts_Click"/>
+
+                    <Button x:Name="BtnManageUsers" Content="Manage Users" 
+                            Tag="&#xE77B;" 
+                            Style="{StaticResource MenuButtonStyle}" Click="BtnManageUsers_Click"/>
 
                 </StackPanel>
-                <Button Grid.Row="2" 
+                <Button x:Name="BtnLogout" Grid.Row="2" 
                         Margin="20,0,20,30" 
                         Background="Transparent" 
                         BorderThickness="0" 
                         HorizontalContentAlignment="Left"
-                        Cursor="Hand">
+                        Cursor="Hand" Click="BtnLogout_Click">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="Log Out" Foreground="#E0E0E0" FontSize="14" Margin="0,0,5,0"/>
                     </StackPanel>
