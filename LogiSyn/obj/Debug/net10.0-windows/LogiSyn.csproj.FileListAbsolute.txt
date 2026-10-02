@@ -141,12 +141,13 @@ C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\obj\Debug\net10.0-windo
 C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn.genruntimeconfig.cache
 C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\ref\LogiSyn.dll
 C:\Users\Adria\source\repos\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn.csproj.AssemblyReference.cache
+C:\Users\Adria\source\repos\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\AddMoreProducts.baml
 C:\Users\Adria\source\repos\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\CreateOrderPage.baml
 C:\Users\Adria\source\repos\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\LoginWindow.baml
 C:\Users\Adria\source\repos\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\OrderReviewPage.baml
 C:\Users\Adria\source\repos\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\OrdersPage.baml
 C:\Users\Adria\source\repos\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LoginWindow.g.cs
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\MainWindow.g.cs
+C:\Users\Adria\source\repos\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\AddMoreProducts.g.cs
 C:\Users\Adria\source\repos\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\CreateOrderPage.g.cs
 C:\Users\Adria\source\repos\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\LoginWindow.g.cs
 C:\Users\Adria\source\repos\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\MainWindow.g.cs
@@ -177,6 +178,7 @@ C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.
 C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.IdentityModel.Protocols.dll
 C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
 C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.IdentityModel.Tokens.dll
+C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.Office.Interop.Outlook.dll
 C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.OpenApi.dll
 C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.SqlServer.Server.dll
 C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\System.IdentityModel.Tokens.Jwt.dll
@@ -208,7 +210,6 @@ C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\SharedLibr
 C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\SharedLibrary.pdb
 C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\AndersonsBakeryAPI.pdb
 C:\Users\Adria\source\repos\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LoginWindow.baml
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\MainWindow.baml
 C:\Users\Adria\source\repos\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\MainWindow.baml
 C:\Users\Adria\source\repos\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn.g.resources
 C:\Users\Adria\source\repos\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn.GeneratedMSBuildEditorConfig.editorconfig

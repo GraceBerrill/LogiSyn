@@ -10,6 +10,7 @@
         "dependencies": {
           "AndersonsBakeryAPI": "1.0.0",
           "Microsoft.Data.SqlClient": "7.1.0",
+          "Microsoft.Office.Interop.Outlook": "15.0.4797.1004",
           "SharedLibrary": "1.0.0"
         },
         "runtime": {
@@ -209,6 +210,14 @@
           }
         }
       },
+      "Microsoft.Office.Interop.Outlook/15.0.4797.1004": {
+        "runtime": {
+          "lib/netstandard2.0/Microsoft.Office.Interop.Outlook.dll": {
+            "assemblyVersion": "15.0.0.0",
+            "fileVersion": "15.0.4797.1003"
+          }
+        }
+      },
       "Microsoft.OpenApi/2.12.0": {
         "runtime": {
           "lib/net8.0/Microsoft.OpenApi.dll": {
@@ -237,7 +246,7 @@
           }
         }
       },
-      "UglyToad.PdfPig/0.1.9-alpha001-patch1": {
+      "UglyToad.PdfPig/1.7.0-custom-5": {
         "dependencies": {
           "UglyToad.PdfPig.Core": "1.7.0-custom-5",
           "UglyToad.PdfPig.Fonts": "1.7.0-custom-5",
@@ -246,8 +255,8 @@
         },
         "runtime": {
           "lib/net6.0/UglyToad.PdfPig.dll": {
-            "assemblyVersion": "0.1.9.0",
-            "fileVersion": "0.1.9.0"
+            "assemblyVersion": "0.1.8.0",
+            "fileVersion": "0.1.8.0"
           }
         }
       },
@@ -300,7 +309,7 @@
           "Microsoft.AspNetCore.OpenApi": "10.0.12",
           "Microsoft.Data.SqlClient": "7.1.0",
           "SharedLibrary": "1.0.0",
-          "UglyToad.PdfPig": "0.1.9-alpha001-patch1"
+          "UglyToad.PdfPig": "1.7.0-custom-5"
         },
         "runtime": {
           "AndersonsBakeryAPI.dll": {
@@ -310,6 +319,9 @@
         }
       },
       "SharedLibrary/1.0.0": {
+        "dependencies": {
+          "Microsoft.Office.Interop.Outlook": "15.0.4797.1004"
+        },
         "runtime": {
           "SharedLibrary.dll": {
             "assemblyVersion": "1.0.0.0",
@@ -409,6 +421,13 @@
       "path": "microsoft.identitymodel.tokens/8.16.0",
       "hashPath": "microsoft.identitymodel.tokens.8.16.0.nupkg.sha512"
     },
+    "Microsoft.Office.Interop.Outlook/15.0.4797.1004": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-17tdFXg/TGnbmSC9YNkIrB6P3vTSemOMI/TaUaZWQmRE1dMjHIVmBPffQhXasH/te4weHiFk8EEXUCi/NsGbuA==",
+      "path": "microsoft.office.interop.outlook/15.0.4797.1004",
+      "hashPath": "microsoft.office.interop.outlook.15.0.4797.1004.nupkg.sha512"
+    },
     "Microsoft.OpenApi/2.12.0": {
       "type": "package",
       "serviceable": true,
@@ -430,12 +449,12 @@
       "path": "system.identitymodel.tokens.jwt/8.16.0",
       "hashPath": "system.identitymodel.tokens.jwt.8.16.0.nupkg.sha512"
     },
-    "UglyToad.PdfPig/0.1.9-alpha001-patch1": {
+    "UglyToad.PdfPig/1.7.0-custom-5": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-dayc8urhJp129XPTzYQr00wQmbmOxcIVZRqh/lL1Z12qrwN9zRmNFQR92WOQy0y6eSEokfuN0tdOJw1+eQwTaA==",
-      "path": "uglytoad.pdfpig/0.1.9-alpha001-patch1",
-      "hashPath": "uglytoad.pdfpig.0.1.9-alpha001-patch1.nupkg.sha512"
+      "sha512": "sha512-mddnoBg+XV5YZJg+lp/LlXQ9NY9/oV/MoNjLbbLHw0uTymfyuinVePQB4ff/ELRv3s6n0G7h8q3Ycb3KYg+hgQ==",
+      "path": "uglytoad.pdfpig/1.7.0-custom-5",
+      "hashPath": "uglytoad.pdfpig.1.7.0-custom-5.nupkg.sha512"
     },
     "UglyToad.PdfPig.Core/1.7.0-custom-5": {
       "type": "package",

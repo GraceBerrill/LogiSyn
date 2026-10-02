@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "XZM3mXJzvjM=",
+  "dgSpecHash": "GnbxyAJu/0Y=",
   "success": true,
   "projectFilePath": "C:\\Users\\Adria\\source\\repos\\LogiSyn\\LogiSyn\\LogiSyn.csproj",
   "expectedPackageFiles": [
@@ -22,64 +22,16 @@
     "C:\\Users\\Adria\\.nuget\\packages\\microsoft.identitymodel.protocols\\8.16.0\\microsoft.identitymodel.protocols.8.16.0.nupkg.sha512",
     "C:\\Users\\Adria\\.nuget\\packages\\microsoft.identitymodel.protocols.openidconnect\\8.16.0\\microsoft.identitymodel.protocols.openidconnect.8.16.0.nupkg.sha512",
     "C:\\Users\\Adria\\.nuget\\packages\\microsoft.identitymodel.tokens\\8.16.0\\microsoft.identitymodel.tokens.8.16.0.nupkg.sha512",
+    "C:\\Users\\Adria\\.nuget\\packages\\microsoft.office.interop.outlook\\15.0.4797.1004\\microsoft.office.interop.outlook.15.0.4797.1004.nupkg.sha512",
     "C:\\Users\\Adria\\.nuget\\packages\\microsoft.openapi\\2.12.0\\microsoft.openapi.2.12.0.nupkg.sha512",
     "C:\\Users\\Adria\\.nuget\\packages\\microsoft.sqlserver.server\\1.0.0\\microsoft.sqlserver.server.1.0.0.nupkg.sha512",
     "C:\\Users\\Adria\\.nuget\\packages\\system.identitymodel.tokens.jwt\\8.16.0\\system.identitymodel.tokens.jwt.8.16.0.nupkg.sha512",
     "C:\\Users\\Adria\\.nuget\\packages\\system.threading.ratelimiting\\9.0.18\\system.threading.ratelimiting.9.0.18.nupkg.sha512",
-    "C:\\Users\\Adria\\.nuget\\packages\\uglytoad.pdfpig\\0.1.9-alpha001-patch1\\uglytoad.pdfpig.0.1.9-alpha001-patch1.nupkg.sha512",
+    "C:\\Users\\Adria\\.nuget\\packages\\uglytoad.pdfpig\\1.7.0-custom-5\\uglytoad.pdfpig.1.7.0-custom-5.nupkg.sha512",
     "C:\\Users\\Adria\\.nuget\\packages\\uglytoad.pdfpig.core\\1.7.0-custom-5\\uglytoad.pdfpig.core.1.7.0-custom-5.nupkg.sha512",
     "C:\\Users\\Adria\\.nuget\\packages\\uglytoad.pdfpig.fonts\\1.7.0-custom-5\\uglytoad.pdfpig.fonts.1.7.0-custom-5.nupkg.sha512",
     "C:\\Users\\Adria\\.nuget\\packages\\uglytoad.pdfpig.tokenization\\1.7.0-custom-5\\uglytoad.pdfpig.tokenization.1.7.0-custom-5.nupkg.sha512",
     "C:\\Users\\Adria\\.nuget\\packages\\uglytoad.pdfpig.tokens\\1.7.0-custom-5\\uglytoad.pdfpig.tokens.1.7.0-custom-5.nupkg.sha512"
   ],
-  "logs": [
-    {
-      "code": "NU1603",
-      "level": "Warning",
-      "message": "UglyToad.PdfPig 0.1.9-alpha001-patch1 depends on UglyToad.PdfPig.Core (>= 0.1.9-alpha001-patch1) but UglyToad.PdfPig.Core 0.1.9-alpha001-patch1 was not found. UglyToad.PdfPig.Core 1.7.0-custom-5 was resolved instead.",
-      "projectPath": "C:\\Users\\Adria\\source\\repos\\LogiSyn\\LogiSyn\\LogiSyn.csproj",
-      "warningLevel": 1,
-      "filePath": "C:\\Users\\Adria\\source\\repos\\LogiSyn\\LogiSyn\\LogiSyn.csproj",
-      "libraryId": "UglyToad.PdfPig.Core",
-      "targetGraphs": [
-        "net10.0-windows"
-      ]
-    },
-    {
-      "code": "NU1603",
-      "level": "Warning",
-      "message": "UglyToad.PdfPig 0.1.9-alpha001-patch1 depends on UglyToad.PdfPig.Fonts (>= 0.1.9-alpha001-patch1) but UglyToad.PdfPig.Fonts 0.1.9-alpha001-patch1 was not found. UglyToad.PdfPig.Fonts 1.7.0-custom-5 was resolved instead.",
-      "projectPath": "C:\\Users\\Adria\\source\\repos\\LogiSyn\\LogiSyn\\LogiSyn.csproj",
-      "warningLevel": 1,
-      "filePath": "C:\\Users\\Adria\\source\\repos\\LogiSyn\\LogiSyn\\LogiSyn.csproj",
-      "libraryId": "UglyToad.PdfPig.Fonts",
-      "targetGraphs": [
-        "net10.0-windows"
-      ]
-    },
-    {
-      "code": "NU1603",
-      "level": "Warning",
-      "message": "UglyToad.PdfPig 0.1.9-alpha001-patch1 depends on UglyToad.PdfPig.Tokenization (>= 0.1.9-alpha001-patch1) but UglyToad.PdfPig.Tokenization 0.1.9-alpha001-patch1 was not found. UglyToad.PdfPig.Tokenization 1.7.0-custom-5 was resolved instead.",
-      "projectPath": "C:\\Users\\Adria\\source\\repos\\LogiSyn\\LogiSyn\\LogiSyn.csproj",
-      "warningLevel": 1,
-      "filePath": "C:\\Users\\Adria\\source\\repos\\LogiSyn\\LogiSyn\\LogiSyn.csproj",
-      "libraryId": "UglyToad.PdfPig.Tokenization",
-      "targetGraphs": [
-        "net10.0-windows"
-      ]
-    },
-    {
-      "code": "NU1603",
-      "level": "Warning",
-      "message": "UglyToad.PdfPig 0.1.9-alpha001-patch1 depends on UglyToad.PdfPig.Tokens (>= 0.1.9-alpha001-patch1) but UglyToad.PdfPig.Tokens 0.1.9-alpha001-patch1 was not found. UglyToad.PdfPig.Tokens 1.7.0-custom-5 was resolved instead.",
-      "projectPath": "C:\\Users\\Adria\\source\\repos\\LogiSyn\\LogiSyn\\LogiSyn.csproj",
-      "warningLevel": 1,
-      "filePath": "C:\\Users\\Adria\\source\\repos\\LogiSyn\\LogiSyn\\LogiSyn.csproj",
-      "libraryId": "UglyToad.PdfPig.Tokens",
-      "targetGraphs": [
-        "net10.0-windows"
-      ]
-    }
-  ]
+  "logs": []
 }

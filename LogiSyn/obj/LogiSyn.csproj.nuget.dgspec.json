@@ -67,7 +67,7 @@
             },
             "UglyToad.PdfPig": {
               "target": "Package",
-              "version": "[0.1.9-alpha001-patch1, )"
+              "version": "[1.7.0-custom-5, )"
             }
           },
           "imports": [
@@ -566,6 +566,10 @@
             "Microsoft.Data.SqlClient": {
               "target": "Package",
               "version": "[7.1.0, )"
+            },
+            "Microsoft.Office.Interop.Outlook": {
+              "target": "Package",
+              "version": "[15.0.4797.1004, )"
             }
           },
           "imports": [
@@ -929,6 +933,12 @@
         "net10.0": {
           "framework": "net10.0",
           "targetAlias": "net10.0",
+          "dependencies": {
+            "Microsoft.Office.Interop.Outlook": {
+              "target": "Package",
+              "version": "[15.0.4797.1004, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",

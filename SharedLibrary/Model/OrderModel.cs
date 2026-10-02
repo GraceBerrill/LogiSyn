@@ -52,6 +52,16 @@ namespace LogiSyn.Model
         public Dictionary<string, (double Amount, string Unit)> RawMaterials { get; set; } = new();
     }
 
+    //------------------------------------------------------------------------------------------------//
+
+    // Email model
+
+    public class EmailMessageModel
+    {
+        public string Subject { get; set; } = string.Empty;
+        public string Body { get; set; } = string.Empty;
+    }
+
 }
 
 //--------------------------------------End of File----------------------------------------------------------//
