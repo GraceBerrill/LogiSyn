@@ -1,6 +1,7 @@
 ﻿<Application x:Class="LogiSyn.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+<<<<<<< HEAD
              xmlns:local="clr-namespace:LogiSyn">
     <Application.Resources>
 <<<<<<< HEAD
@@ -13,5 +14,11 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
 >>>>>>> origin/Feature/desktop-admin-manage-products
+=======
+             xmlns:local="clr-namespace:LogiSyn"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+
+>>>>>>> origin/Feature/desktop-admin-create-order
     </Application.Resources>
 </Application>
