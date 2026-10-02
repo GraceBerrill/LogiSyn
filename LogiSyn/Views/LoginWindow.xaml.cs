@@ -1,4 +1,9 @@
+<<<<<<< HEAD
 ﻿using System;
+=======
+using LogiSyn.Model;
+using LogiSyn.Services;
+>>>>>>> origin/Feature/desktop-manager-manage-users
 using System.Windows;
 using System.Windows.Controls;
 <<<<<<< HEAD
@@ -18,6 +23,7 @@ namespace LogiSyn.Views
 
         private bool _passwordRevealed;
         private bool _syncing;
+        private readonly LoginService _loginService = new LoginService();
 
         public User? LoggedInUser { get; private set; }
 
@@ -97,6 +103,7 @@ namespace LogiSyn.Views
             }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
             try
             {
                 User? loggedInUser = _loginService.Authenticate(username, password);
@@ -154,6 +161,37 @@ namespace LogiSyn.Views
             main.Show();
             Close();
 >>>>>>> origin/Feature/desktop-admin-manage-products
+=======
+            UserRow? user;
+            try
+            {
+                user = _loginService.Authenticate(username, password);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Could not reach the database:\n" + ex.Message,
+                                "Login error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            if (user == null)
+            {
+                MessageBox.Show("Invalid username or password.",
+                                "Login", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            // Map the DB string role to the AppRole enum the shell expects.
+            if (!Enum.TryParse<AppRole>(user.Role, out var role))
+            {
+                MessageBox.Show($"Unknown role '{user.Role}' for this account.",
+                                "Login", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            new ShellWindow(role).Show();
+            Close();
+>>>>>>> origin/Feature/desktop-manager-manage-users
         }
     }
 }

@@ -61,6 +61,57 @@ C:\Users\grace\OneDrive\Documents\GitHub\LogiSyn\LogiSyn\obj\Debug\net10.0-windo
 C:\Users\grace\OneDrive\Documents\GitHub\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn.genruntimeconfig.cache
 C:\Users\grace\OneDrive\Documents\GitHub\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\ref\LogiSyn.dll
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn.csproj.AssemblyReference.cache
+C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Styles\Icons.baml
+C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Styles\Theme.baml
+C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\AdminOrdersView.baml
+C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\CreateOrderView.baml
+C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\DashBoardView.baml
+C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\HistoryView.baml
+C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\LoginWindow.baml
+C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\ManageProductsView.baml
+C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\ManageUsersView.baml
+C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\OrderBreakdownView.baml
+C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\OrderCompleteModal.baml
+C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\PrintEmailModal.baml
+C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\RawMaterialPaper.baml
+C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\ShellWindow.baml
+C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\SummaryPaper.baml
+C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\UserOrderView.baml
+C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\App.baml
+C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LoginWindow.g.cs
+C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\MainWindow.g.cs
+C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\AdminOrdersView.g.cs
+C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\CreateOrderView.g.cs
+C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\DashBoardView.g.cs
+C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\HistoryView.g.cs
+C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\LoginWindow.g.cs
+C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\MainWindow.g.cs
+C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\ManageProductsView.g.cs
+C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\ManageUsersView.g.cs
+C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\OrderBreakdownView.g.cs
+C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\OrderCompleteModal.g.cs
+C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\OrderSheetsView.g.cs
+C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\PrintEmailModal.g.cs
+C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\ProductDetailModal.g.cs
+C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\RawMaterialPaper.g.cs
+C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\SheetPaper.g.cs
+C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\ShellWindow.g.cs
+C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\SummaryPaper.g.cs
+C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\UserOrderSheet.g.cs
+C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\UserOrderView.g.cs
+C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\App.g.cs
+C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\GeneratedInternalTypeHelper.g.cs
+C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn_MarkupCompile.cache
+C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn_MarkupCompile.lref
+C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn.dll
+C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\refint\LogiSyn.dll
+C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn.pdb
+C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\AddProductModal.baml
+C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\AddProductModal.g.cs
+>>>>>>> origin/Feature/desktop-manager-manage-users
 C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\LogiSyn.exe
 C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\LogiSyn.deps.json
 C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\LogiSyn.runtimeconfig.json
@@ -103,6 +154,7 @@ C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\ru
 C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\runtimes\win-arm64\native\Microsoft.Data.SqlClient.SNI.dll
 C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\runtimes\win-x64\native\Microsoft.Data.SqlClient.SNI.dll
 C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\runtimes\win-x86\native\Microsoft.Data.SqlClient.SNI.dll
+<<<<<<< HEAD
 C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn.csproj.AssemblyReference.cache
 C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Styles\Icons.baml
 C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Styles\Theme.baml
@@ -113,6 +165,15 @@ C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Ap
 C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn_MarkupCompile.cache
 C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn_MarkupCompile.lref
 C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\MainWindow.baml
+=======
+C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LoginWindow.baml
+C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\MainWindow.baml
+C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\MainWindow.baml
+C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\OrderSheetsView.baml
+C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\ProductDetailModal.baml
+C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\SheetPaper.baml
+C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\UserOrderSheet.baml
+>>>>>>> origin/Feature/desktop-manager-manage-users
 C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn.g.resources
 C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn.AssemblyInfoInputs.cache
@@ -120,6 +181,7 @@ C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Lo
 C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn.csproj.CoreCompileInputs.cache
 C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn.sourcelink.json
 C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn.csproj.Up2Date
+<<<<<<< HEAD
 C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn.dll
 C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\refint\LogiSyn.dll
 C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn.pdb
@@ -298,3 +360,11 @@ C:\Users\Adria\source\repos\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\Conf
 C:\Users\Adria\source\repos\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\UserOrderPageReview.g.cs
 C:\Users\Adria\source\repos\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\UsersOrderPage.g.cs
 >>>>>>> origin/Feature/desktop-admin-create-order
+=======
+C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn.genruntimeconfig.cache
+C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\ref\LogiSyn.dll
+C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\AddUserModal.baml
+C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\AddUserModal.g.cs
+C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\EditUserModal.g.cs
+C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\EditUserModal.baml
+>>>>>>> origin/Feature/desktop-manager-manage-users

@@ -82,10 +82,11 @@ namespace LogiSyn.Model
 
 	public class UserRow
 	{
-		public string Id { get; set; }
-		public string Name { get; set; }
-		public string Access { get; set; }
-		public string DateAdded { get; set; }
+		public string Id { get; set; } = string.Empty;
+		public string Name { get; set; } = string.Empty;
+		public string Password { get; set; } = string.Empty;
+		public string Role { get; set; } = string.Empty;
+		public string DateAdded { get; set; } = string.Empty;
 	}
 
 	// ----- summary paper (Order Sheets / Order Breakdown) -----
@@ -215,9 +216,9 @@ namespace LogiSyn.Model
 		{
 			return new List<UserRow>
 			{
-				new UserRow { Id = "01", Name = "Blessings",        Access = "Admin",   DateAdded = "12/08/2026" },
-				new UserRow { Id = "02", Name = "Paul",             Access = "Manager", DateAdded = "12/08/2026" },
-				new UserRow { Id = "03", Name = "Bread Station #1", Access = "User",    DateAdded = "12/08/2026" }
+				new UserRow { Id = "01", Name = "Blessings",        Role = "Admin",   DateAdded = "12/08/2026" },
+				new UserRow { Id = "02", Name = "Paul",             Role = "Manager", DateAdded = "12/08/2026" },
+				new UserRow { Id = "03", Name = "Bread Station #1", Role = "User",    DateAdded = "12/08/2026" }
 			};
 		}
 
