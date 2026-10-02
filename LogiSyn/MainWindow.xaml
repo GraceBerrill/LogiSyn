@@ -193,5 +193,6 @@
         <Frame x:Name="MainFrame" 
                Grid.Column="1" 
                NavigationUIVisibility="Hidden"/>
+        <Button x:Name="UserOrderTemp" Grid.Column="1" Content="Users Orders" HorizontalAlignment="Left" Margin="152,241,0,0" VerticalAlignment="Top" Click="UserOrderTemp_Click"/>
     </Grid>
 </Window>

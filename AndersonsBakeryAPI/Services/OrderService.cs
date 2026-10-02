@@ -193,7 +193,7 @@ namespace LogiSyn.Services
                 }
             }
 
-            order.RawMaterials = aggregates;
+            order.RawMaterials = aggregates.ToDictionary(kvp => kvp.Key, kvp => new RawMaterialValue(kvp.Value.Amount, kvp.Value.Unit));
         }
 
         //------------------------------------------------------------------------------------------------//

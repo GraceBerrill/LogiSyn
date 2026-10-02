@@ -1,0 +1,254 @@
+﻿<Page x:Class="LogiSyn.Views.AdminOrderBreakdown"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Title="Order Breakdown"
+      d:DesignHeight="850" d:DesignWidth="1200"
+      Background="#F5F6FA"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      mc:Ignorable="d">
+
+    <Page.Resources>
+        <Style x:Key="NavyActionButtonStyle" TargetType="Button">
+            <Setter Property="Height" Value="52"/>
+            <Setter Property="Background" Value="#152238"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="10"
+                                Padding="35,0">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Page.Resources>
+
+    <Grid Margin="45,30,45,30">
+        <Grid.RowDefinitions>
+            <!-- Page Title -->
+            <RowDefinition Height="Auto"/>
+            <!-- Main Content Area -->
+            <RowDefinition Height="*"/>
+            <!-- Bottom Action Row -->
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- 1. Header -->
+        <TextBlock Grid.Row="0" 
+                   Text="Order Breakdown" 
+                   FontSize="34" 
+                   FontWeight="Bold" 
+                   Foreground="#1B2136" 
+                   Margin="0,0,0,20"/>
+
+        <!-- 2. Main Order Card Area (Expanded to 860px to host full tables) -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="860"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="0" 
+                    Background="White" 
+                    CornerRadius="10" 
+                    BorderBrush="#152238" 
+                    BorderThickness="10" 
+                    Padding="26,20">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <!-- Order Status + Date/Customer Header -->
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="1"/>
+                        <!-- Scrollable Product Sheets -->
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Top Card Header -->
+                    <StackPanel Grid.Row="0" Margin="0,0,0,12">
+                        <TextBlock x:Name="TxtStatus"
+                                   Text="COMPLETED" 
+                                   Foreground="#2ECC71" 
+                                   FontSize="15" 
+                                   FontWeight="Bold" 
+                                   Margin="0,0,0,4"/>
+
+                        <TextBlock x:Name="TxtOrderDate" 
+                                   Text="5 August 2026" 
+                                   FontSize="15" 
+                                   Foreground="#718096"
+                                   Margin="0,0,0,4"/>
+
+                        <TextBlock x:Name="TxtOrderTitle" 
+                                   Text="Spar Order #002" 
+                                   FontSize="22" 
+                                   FontWeight="SemiBold" 
+                                   Foreground="#1B2136"/>
+                    </StackPanel>
+
+                    <Separator Grid.Row="1" Background="#1B2136" Margin="0,0,0,16"/>
+
+                    <!-- Scrollable Product Sheets -->
+                    <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
+                        <ItemsControl x:Name="ItemsBreakdownList">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <!-- Outer Product Sheet Box matching design sheet -->
+                                    <Border BorderBrush="#555555" BorderThickness="1" Margin="0,0,0,24" Padding="14">
+                                        <StackPanel>
+                                            <!-- ================= PRODUCT HEADER ================= -->
+                                            <Grid Margin="0,0,0,4">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="2.5*"/>
+                                                    <ColumnDefinition Width="1.2*"/>
+                                                    <ColumnDefinition Width="3*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Grid.Column="0" Text="Product" FontSize="14" Foreground="#6B7280" Margin="4,0,0,0"/>
+                                                <TextBlock Grid.Column="1" Text="Amount" FontSize="14" Foreground="#6B7280" Margin="6,0,0,0"/>
+                                                <TextBlock Grid.Column="2" Text="Production" FontSize="14" Foreground="#6B7280" Margin="6,0,0,0"/>
+                                            </Grid>
+
+                                            <Border BorderBrush="#555555" BorderThickness="1" Height="36" Margin="0,0,0,14">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="2.5*"/>
+                                                        <ColumnDefinition Width="1.2*"/>
+                                                        <ColumnDefinition Width="3*"/>
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <TextBlock Grid.Column="0" Text="{Binding DisplayProductName}" FontSize="15" FontWeight="SemiBold" Foreground="#152238" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                                                    <Border Grid.Column="0" BorderBrush="#555555" BorderThickness="0,0,1,0"/>
+
+                                                    <TextBlock Grid.Column="1" Text="{Binding DisplayAmount}" FontSize="15" FontWeight="SemiBold" Foreground="#152238" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                                                    <Border Grid.Column="1" BorderBrush="#555555" BorderThickness="0,0,1,0"/>
+
+                                                    <TextBlock Grid.Column="2" Text="{Binding ProductionLine}" FontSize="15" FontWeight="SemiBold" Foreground="#152238" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                                                </Grid>
+                                            </Border>
+
+                                            <!-- ================= INGREDIENTS TABLE ================= -->
+                                            <Grid Margin="0,0,0,4">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="2.5*"/>
+                                                    <ColumnDefinition Width="1.5*"/>
+                                                    <ColumnDefinition Width="1.5*"/>
+                                                    <ColumnDefinition Width="1.5*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Grid.Column="0" Text="Ingredients" FontSize="14" Foreground="#6B7280" Margin="4,0,0,0"/>
+                                                <TextBlock Grid.Column="1" Text="Amount" FontSize="14" Foreground="#6B7280" Margin="6,0,0,0"/>
+                                                <TextBlock Grid.Column="2" Text="Additional" FontSize="14" Foreground="#6B7280" Margin="6,0,0,0"/>
+                                                <TextBlock Grid.Column="3" Text="Used" FontSize="14" Foreground="#6B7280" Margin="6,0,0,0"/>
+                                            </Grid>
+
+                                            <Border BorderBrush="#555555" BorderThickness="1" Margin="0,0,0,14">
+                                                <ItemsControl ItemsSource="{Binding Ingredients}">
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <Grid Height="34">
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="2.5*"/>
+                                                                    <ColumnDefinition Width="1.5*"/>
+                                                                    <ColumnDefinition Width="1.5*"/>
+                                                                    <ColumnDefinition Width="1.5*"/>
+                                                                </Grid.ColumnDefinitions>
+
+                                                                <TextBlock Grid.Column="0" Text="{Binding IngredientName}" FontSize="14" Foreground="#152238" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                                                                <Border Grid.Column="0" BorderBrush="#555555" BorderThickness="0,0,1,1"/>
+
+                                                                <TextBlock Grid.Column="1" Text="{Binding Amount}" FontSize="14" Foreground="#152238" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                                                                <Border Grid.Column="1" BorderBrush="#555555" BorderThickness="0,0,1,1"/>
+
+                                                                <TextBlock Grid.Column="2" Text="{Binding Additional}" FontSize="14" Foreground="#152238" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                                                                <Border Grid.Column="2" BorderBrush="#555555" BorderThickness="0,0,1,1"/>
+
+                                                                <TextBlock Grid.Column="3" Text="{Binding Used}" FontSize="14" FontWeight="SemiBold" Foreground="#152238" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                                                                <Border Grid.Column="3" BorderBrush="#555555" BorderThickness="0,0,0,1"/>
+                                                            </Grid>
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
+                                            </Border>
+
+                                            <!-- ================= PACKAGING TABLE ================= -->
+                                            <Grid Margin="0,0,0,4">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="2.5*"/>
+                                                    <ColumnDefinition Width="1.5*"/>
+                                                    <ColumnDefinition Width="3.0*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Grid.Column="0" Text="Packaging" FontSize="14" Foreground="#6B7280" Margin="4,0,0,0"/>
+                                                <TextBlock Grid.Column="1" Text="Amount" FontSize="14" Foreground="#6B7280" Margin="6,0,0,0"/>
+                                                <TextBlock Grid.Column="2" Text="Used" FontSize="14" Foreground="#6B7280" Margin="6,0,0,0"/>
+                                            </Grid>
+
+                                            <Border BorderBrush="#555555" BorderThickness="1" Margin="0,0,0,14">
+                                                <StackPanel>
+                                                    <!-- Pans -->
+                                                    <Grid Height="34">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="2.5*"/>
+                                                            <ColumnDefinition Width="1.5*"/>
+                                                            <ColumnDefinition Width="3.0*"/>
+                                                        </Grid.ColumnDefinitions>
+                                                        <TextBlock Grid.Column="0" Text="Pans" FontSize="14" Foreground="#152238" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                                                        <Border Grid.Column="0" BorderBrush="#555555" BorderThickness="0,0,1,1"/>
+
+                                                        <TextBlock Grid.Column="1" Text="{Binding PansAmount}" FontSize="14" Foreground="#152238" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                                                        <Border Grid.Column="1" BorderBrush="#555555" BorderThickness="0,0,1,1"/>
+
+                                                        <TextBlock Grid.Column="2" Text="{Binding PansUsed}" FontSize="14" FontWeight="SemiBold" Foreground="#152238" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                                                        <Border Grid.Column="2" BorderBrush="#555555" BorderThickness="0,0,0,1"/>
+                                                    </Grid>
+
+                                                    <!-- Trolleys -->
+                                                    <Grid Height="34">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="2.5*"/>
+                                                            <ColumnDefinition Width="1.5*"/>
+                                                            <ColumnDefinition Width="3.0*"/>
+                                                        </Grid.ColumnDefinitions>
+                                                        <TextBlock Grid.Column="0" Text="Trolleys" FontSize="14" Foreground="#152238" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                                                        <Border Grid.Column="0" BorderBrush="#555555" BorderThickness="0,0,1,0"/>
+
+                                                        <TextBlock Grid.Column="1" Text="{Binding TrolleysAmount}" FontSize="14" Foreground="#152238" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                                                        <Border Grid.Column="1" BorderBrush="#555555" BorderThickness="0,0,1,0"/>
+
+                                                        <TextBlock Grid.Column="2" Text="{Binding TrolleysUsed}" FontSize="14" FontWeight="SemiBold" Foreground="#152238" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                                                    </Grid>
+                                                </StackPanel>
+                                            </Border>
+
+                                            <!-- ================= NOTES SECTION ================= -->
+                                            <TextBlock Text="Notes" FontSize="14" Foreground="#6B7280" Margin="4,0,0,4"/>
+                                            <Border BorderBrush="#555555" BorderThickness="1" MinHeight="60">
+                                                <TextBlock Text="{Binding Notes}" 
+                                                           FontSize="14" 
+                                                           Foreground="#152238" 
+                                                           TextWrapping="Wrap" 
+                                                           Padding="8,6"/>
+                                            </Border>
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <!-- 3. Bottom Action: DONE Button (Pinned bottom-right) -->
+        <Button Grid.Row="2" 
+                Content="DONE" 
+                Width="180"
+                HorizontalAlignment="Right"
+                Style="{StaticResource NavyActionButtonStyle}"
+                Click="BtnDone_Click"/>
+    </Grid>
+</Page>

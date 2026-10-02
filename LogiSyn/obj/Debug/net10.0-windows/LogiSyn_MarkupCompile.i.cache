@@ -10,11 +10,11 @@ none
 false
 TRACE;DEBUG;NET;NET10_0;NETCOREAPP;WINDOWS;WINDOWS7_0;NET5_0_OR_GREATER;NET6_0_OR_GREATER;NET7_0_OR_GREATER;NET8_0_OR_GREATER;NET9_0_OR_GREATER;NET10_0_OR_GREATER;NETCOREAPP1_0_OR_GREATER;NETCOREAPP1_1_OR_GREATER;NETCOREAPP2_0_OR_GREATER;NETCOREAPP2_1_OR_GREATER;NETCOREAPP2_2_OR_GREATER;NETCOREAPP3_0_OR_GREATER;NETCOREAPP3_1_OR_GREATER;WINDOWS7_0_OR_GREATER
 C:\Users\Adria\source\repos\LogiSyn\LogiSyn\App.xaml
-61926453838
+11897867342
 
-11584440215
+16-95650306
 366-1831224355
-Views\AddMoreProducts.xaml;Views\CreateOrderPage.xaml;Views\LoginWindow.xaml;Views\MainWindow.xaml;Views\OrderReviewPage.xaml;Views\OrdersPage.xaml;
+MainWindow.xaml;Views\AddMoreProducts.xaml;Views\AdminOrderBreakdown.xaml;Views\AdminOrderHistory.xaml;Views\ConfirmationPopUp.xaml;Views\CreateOrderPage.xaml;Views\LoginWindow.xaml;Views\OrderReviewPage.xaml;Views\OrdersPage.xaml;Views\UserOrderPageReview.xaml;Views\UsersOrderPage.xaml;
 
 False
 

@@ -20,8 +20,6 @@ namespace LogiSyn
         public MainWindow()
         {
             InitializeComponent();
-
-            MainFrame.Navigate(new OrdersPage());
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
@@ -31,13 +29,12 @@ namespace LogiSyn
 
         private void NavDashboard_Click(object sender, RoutedEventArgs e)
         {
-            // If you have a Dashboard page created:
-            //MainFrame.Navigate(new DashboardPage());
+            MainFrame.Navigate(new MainWindow());
         }
 
         private void NavHistory_Click(object sender, RoutedEventArgs e)
         {
-            // MainFrame.Navigate(new HistoryPage());
+             MainFrame.Navigate(new AdminOrderHistory());
         }
 
         private void NavProducts_Click(object sender, RoutedEventArgs e)
@@ -50,6 +47,11 @@ namespace LogiSyn
             var loginWindow = new LoginWindow();
             loginWindow.Show();
             this.Close();
+        }
+
+        private void UserOrderTemp_Click(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(new UsersOrderPage());
         }
     }
 }
