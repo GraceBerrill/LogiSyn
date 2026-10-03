@@ -14,6 +14,12 @@ namespace LogiSyn.Views
             InitializeComponent();
         }
 
+        public DashboardView(LogiSyn.Model.AppRole role)
+        {
+            InitializeComponent();
+            ConfigureRole(role.ToString());
+        }
+
         /********************************************************************************************/
         // this makes it so that the dashboard can be configured based on the role of the user
         public void ConfigureRole(string role)

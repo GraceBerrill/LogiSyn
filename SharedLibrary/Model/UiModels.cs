@@ -2,7 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
+#if WINDOWS
 using System.Windows.Media;
+#else
+using ImageSource = System.Object;
+using Brush = System.Object;
+#endif
 
 namespace LogiSyn.Model
 {
@@ -37,23 +42,37 @@ namespace LogiSyn.Model
 		public event PropertyChangedEventHandler PropertyChanged;
 	}
 
-	public static class Palette
-	{
-		public static Brush From(string hex)
+	#if WINDOWS
+		public static class Palette
 		{
-			var brush = (SolidColorBrush)new BrushConverter().ConvertFromString(hex);
-			brush.Freeze();
-			return brush;
-		}
+			public static Brush From(string hex)
+			{
+				var brush = (SolidColorBrush)new BrushConverter().ConvertFromString(hex);
+				brush.Freeze();
+				return brush;
+			}
 
-		public static readonly Brush ListPending = From("#BDD38478");
-		public static readonly Brush ListComplete = From("#BD398158");
-		public static readonly Brush DashPending = From("#C6AEA5");
-		public static readonly Brush DashComplete = From("#A5C6AC");
-		public static readonly Brush UserPending = From("#B22727");
-		public static readonly Brush UserComplete = From("#135826");
-		public static readonly Brush Black = From("#000000");
-	}
+			public static readonly Brush ListPending = From("#BDD38478");
+			public static readonly Brush ListComplete = From("#BD398158");
+			public static readonly Brush DashPending = From("#C6AEA5");
+			public static readonly Brush DashComplete = From("#A5C6AC");
+			public static readonly Brush UserPending = From("#B22727");
+			public static readonly Brush UserComplete = From("#135826");
+			public static readonly Brush Black = From("#000000");
+		}
+	#else
+		public static class Palette
+		{
+			public static Brush From(string hex) => null!;
+			public static readonly Brush ListPending = null!;
+			public static readonly Brush ListComplete = null!;
+			public static readonly Brush DashPending = null!;
+			public static readonly Brush DashComplete = null!;
+			public static readonly Brush UserPending = null!;
+			public static readonly Brush UserComplete = null!;
+			public static readonly Brush Black = null!;
+		}
+	#endif
 
 	public class OrderRow
 	{

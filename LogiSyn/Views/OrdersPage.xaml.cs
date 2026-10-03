@@ -129,7 +129,7 @@ namespace LogiSyn.Views
         // Event handler for the Click event of the "Create Order" button
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService?.Navigate(new CreateOrderPage());
+            NavigationService?.Navigate(new CreateOrderView());
         }
     }
 }

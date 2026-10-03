@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Threading;
+using LogiSyn.Model;
 using LogiSyn.Views;
 
 namespace LogiSyn
@@ -13,7 +14,7 @@ namespace LogiSyn
 
             this.ShutdownMode = ShutdownMode.OnExplicitShutdown;
 
-            var login = new LoginWindow();
+            var login = new LogiSyn.Views.LoginWindow();
             bool? result = login.ShowDialog();
 
             if (result == true && login.LoggedInUser != null)
@@ -22,15 +23,16 @@ namespace LogiSyn
 
                 Dispatcher.BeginInvoke(new Action(() =>
                 {
-                    Window dashboard = user.Role?.ToLowerInvariant() switch
+                    // Map the user role string to the AppRole enum (Admin, Manager, User)
+                    if (!Enum.TryParse(user.Role, true, out AppRole role))
                     {
-                        "admin" => new AdminWindow(user),
-                        "manager" => new ManagerWindow(user),
-                        _ => new UserWindow(user),
-                    };
+                        role = AppRole.User;
+                    }
 
-                    Application.Current.MainWindow = dashboard;
-                    dashboard.Show();
+                    var shell = new ShellWindow(role);
+                    Application.Current.MainWindow = shell;
+                    shell.Show();
+
                 }), DispatcherPriority.ApplicationIdle);
             }
             else

@@ -3,11 +3,15 @@ using System.Windows;
 using System.Windows.Controls;
 using LogiSyn.Model;
 using Microsoft.Win32;
+using LogiSyn.Services;
+using System.Diagnostics;
 
 namespace LogiSyn.Views
 {
     public partial class CreateOrderView : UserControl
     {
+        private readonly OrderService _orderService = new OrderService();
+
         private string _file;
 
         public CreateOrderView()
@@ -44,15 +48,24 @@ namespace LogiSyn.Views
 
         private void GoButton_Click(object sender, RoutedEventArgs e)
         {
-            if (_file == null)
+            try
             {
-                MessageBox.Show("Please choose an order file first.", "Create New Order",
-                                MessageBoxButton.OK, MessageBoxImage.Information);
-                return;
-            }
+                if (_file == null)
+                {
+                    MessageBox.Show("Please choose an order file first.", "Create New Order",
+                                    MessageBoxButton.OK, MessageBoxImage.Information);
+                    return;
+                }
 
-            // TODO (backend): read the file, create the order, then show the breakdown
-            ShellWindow.Current.Navigate("ordersheets");
+                var order = _orderService.ReadAndScaleOrder(_file);
+
+                ShellWindow.Current.Navigate("ordersheets", order);
+            }
+            catch (System.Exception ex)
+            {
+                MessageBox.Show($"An error occurred while creating the order: {ex.Message}", "Error",
+                                MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
     }
 }

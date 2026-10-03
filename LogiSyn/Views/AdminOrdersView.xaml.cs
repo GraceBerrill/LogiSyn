@@ -58,7 +58,20 @@ namespace LogiSyn.Views
 
         private void CreateOrderButton_Click(object sender, RoutedEventArgs e)
         {
-            ShellWindow.Current.Navigate("createorder");
+            if (ShellWindow.Current != null)
+            {
+                ShellWindow.Current.Navigate("createorder");
+                return;
+            }
+
+            var parentWindow = Window.GetWindow(this);
+            if (parentWindow?.FindName("MainContent") is ContentControl mainContent)
+            {
+                mainContent.Content = new CreateOrderView();
+                return;
+            }
+
+            MessageBox.Show($"Could not find navigation container. Active window is: {parentWindow?.GetType().Name}");
         }
     }
 }

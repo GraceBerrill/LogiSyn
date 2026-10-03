@@ -17,9 +17,15 @@ namespace LogiSyn.Views
     /// </summary>
     public partial class ManagerWindow : Window
     {
-        public ManagerWindow()
+        public ManagerWindow(LogiSyn.Model.UserRow user)
         {
             InitializeComponent();
+
+            // navigate to dashboard by default
+            if (!System.Enum.TryParse<LogiSyn.Model.AppRole>(user.Role, true, out var role))
+                role = LogiSyn.Model.AppRole.User;
+
+            MainFrame.Navigate(new DashboardView(role));
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
@@ -29,7 +35,7 @@ namespace LogiSyn.Views
 
         private void NavDashboard_Click(object sender, RoutedEventArgs e)
         {
-            MainFrame.Navigate(new MainWindow());
+            MainFrame.Navigate(new DashboardView(LogiSyn.Model.AppRole.Manager));
         }
 
         private void NavHistory_Click(object sender, RoutedEventArgs e)

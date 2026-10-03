@@ -11,21 +11,25 @@ using System.Windows.Shapes;
 
 namespace LogiSyn.Views
 {
-<<<<<<< HEAD:LogiSyn/Views/UserWindow.xaml.cs
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class UserWindow : Window
-=======
-    public partial class MainWindow : Window
->>>>>>> origin/Feature/desktop-admin-manage-products:LogiSyn/MainWindow.xaml.cs
+
     {
-        public UserWindow()
+        public UserWindow(LogiSyn.Model.UserRow user)
         {
             InitializeComponent();
 
             //navigate shell window to dashboard by default
-            LogiSyn.Views.ShellWindow.Current = new LogiSyn.Views.ShellWindow(this);
+            if (!System.Enum.TryParse<LogiSyn.Model.AppRole>(user.Role, true, out var role))
+                role = LogiSyn.Model.AppRole.User;
+
+            LogiSyn.Views.ShellWindow.Current = new LogiSyn.Views.ShellWindow(role);
+
+            // initialize sidebar/profile
+            SetupSidebarNavigation(user.Role);
+            SetProfileName(user.Name);
         }
 
         public void SetupSidebarNavigation(string role)
@@ -81,7 +85,7 @@ namespace LogiSyn.Views
         {
             try
             {
-                LogiSyn.Views.ShellWindow.Current?.CloseAllModals();
+                LogiSyn.Views.ShellWindow.Current?.CloseModal();
             }
             catch { }
 

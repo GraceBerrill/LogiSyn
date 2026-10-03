@@ -1,9 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
+    <!-- Multi-target so non-WPF projects can consume the library while WPF apps get the Windows build -->
+    <TargetFrameworks>net10.0;net10.0-windows</TargetFrameworks>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <!-- Enable WPF only when building the windows TFM -->
+  <PropertyGroup Condition="'$(TargetFramework)'=='net10.0-windows'">
+    <UseWPF>true</UseWPF>
+    <DefineConstants>WINDOWS;$(DefineConstants)</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>

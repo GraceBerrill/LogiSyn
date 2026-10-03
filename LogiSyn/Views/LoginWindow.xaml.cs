@@ -1,19 +1,9 @@
-<<<<<<< HEAD
-﻿using System;
-=======
+using System;
 using LogiSyn.Model;
 using LogiSyn.Services;
->>>>>>> origin/Feature/desktop-manager-manage-users
 using System.Windows;
 using System.Windows.Controls;
-<<<<<<< HEAD
-using LogiSyn.Model;
-using LogiSyn.Services;
-=======
-using LogiSyn.Services;
-using LogiSyn.Model;
 using LogiSyn.Views;
->>>>>>> origin/Feature/desktop-admin-manage-products
 
 namespace LogiSyn.Views
 {
@@ -23,9 +13,8 @@ namespace LogiSyn.Views
 
         private bool _passwordRevealed;
         private bool _syncing;
-        private readonly LoginService _loginService = new LoginService();
 
-        public User? LoggedInUser { get; private set; }
+        public UserRow? LoggedInUser { get; private set; }
 
         public LoginWindow()
         {
@@ -101,12 +90,9 @@ namespace LogiSyn.Views
                                 "Login", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
-
-<<<<<<< HEAD
-<<<<<<< HEAD
             try
             {
-                User? loggedInUser = _loginService.Authenticate(username, password);
+                UserRow? loggedInUser = _loginService.Authenticate(username, password);
 
                 if (loggedInUser != null)
                 {
@@ -126,72 +112,6 @@ namespace LogiSyn.Views
                 MessageBox.Show(ex.Message, "Database Error",
                                 MessageBoxButton.OK, MessageBoxImage.Error);
             }
-=======
-            // Authenticate against the backend (SQL first, then local JSON fallback)
-            var svc = new LoginService();
-            var user = svc.Authenticate(username, password);
-
-            if (user == null)
-            {
-                MessageBox.Show("Invalid username or password.", "Login", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
-
-            // Open main window and configure navigation/role
-            var main = new global::LogiSyn.MainWindow();
-
-            // Ensure ShellWindow controller exists (MainWindow ctor registers it)
-            if (ShellWindow.Current != null)
-            {
-                // Map returned user role string to AppRole enum (case-insensitive)
-                if (!Enum.TryParse<AppRole>(user.Role, true, out var roleEnum))
-                    roleEnum = AppRole.User;
-
-                ShellWindow.Current.Role = roleEnum;
-
-                // Setup sidebar visibility and other role-based UI
-                main.SetupSidebarNavigation(user.Role);
-                // Display the logged-in username in the sidebar/profile
-                main.SetProfileName(user.Username);
-
-                // Load the dashboard configured for this role (User -> production staff)
-                ShellWindow.Current.Navigate("dashboard");
-            }
-
-            main.Show();
-            Close();
->>>>>>> origin/Feature/desktop-admin-manage-products
-=======
-            UserRow? user;
-            try
-            {
-                user = _loginService.Authenticate(username, password);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Could not reach the database:\n" + ex.Message,
-                                "Login error", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
-
-            if (user == null)
-            {
-                MessageBox.Show("Invalid username or password.",
-                                "Login", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-
-            // Map the DB string role to the AppRole enum the shell expects.
-            if (!Enum.TryParse<AppRole>(user.Role, out var role))
-            {
-                MessageBox.Show($"Unknown role '{user.Role}' for this account.",
-                                "Login", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-
-            new ShellWindow(role).Show();
-            Close();
->>>>>>> origin/Feature/desktop-manager-manage-users
         }
     }
 }

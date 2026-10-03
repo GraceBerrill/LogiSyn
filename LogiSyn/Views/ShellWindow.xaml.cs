@@ -8,13 +8,26 @@ namespace LogiSyn.Views
 {
     public partial class ShellWindow : Window
     {
-        public static ShellWindow? Current { get; private set; }
+        public static ShellWindow? Current { get; set; }
 
-        private readonly AppRole _role;
+        private AppRole _role;
+
+        public AppRole Role
+        {
+            get => _role;
+            set
+            {
+                _role = value;
+                if (RoleText != null) RoleText.Text = value.ToString();
+                ConfigureNavigation();
+                Navigate("dashboard");
+            }
+        }
 
         public ShellWindow(AppRole role)
         {
             InitializeComponent();
+            _role = role;
 
             Current = this;
             _role = role;
@@ -72,17 +85,19 @@ namespace LogiSyn.Views
                     break;
 
                 case "ordersheets":
-                    view = new OrderSheetsView();
+                    view = parameter is OrderScaled scaledOrder
+                        ? new OrderSheetsView(scaledOrder)
+                        : new OrderSheetsView();
                     break;
 
                 case "breakdown":
-                    if (parameter is not OrderRow order)
+                    if (parameter is not OrderRow orderRow)
                     {
                         Navigate("orders");
                         return;
                     }
 
-                    view = new OrderBreakdownView(_role, order);
+                    view = new OrderBreakdownView(_role, orderRow);
                     break;
 
                 case "usersheet":

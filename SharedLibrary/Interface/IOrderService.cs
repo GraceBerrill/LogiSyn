@@ -15,5 +15,6 @@ namespace LogiSyn.Interface
         OrderScaled? GetOrderById(string orderId);
         void SaveOrder(OrderScaled order);
         void CompleteOrder(string orderId, Action<OrderScaled> recordOrderData);
+        EmailMessageModel BuildScalingSheetEmail(OrderScaled order);
     }
 }
