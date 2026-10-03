@@ -64,6 +64,10 @@
               "target": "Package",
               "version": "[7.1.0, )"
             },
+            "MongoDB.Driver": {
+              "target": "Package",
+              "version": "[3.12.0, )"
+            },
             "UglyToad.PdfPig": {
               "target": "Package",
               "version": "[1.7.0-custom-5, )"
@@ -934,6 +938,10 @@
             "Microsoft.Office.Interop.Outlook": {
               "target": "Package",
               "version": "[15.0.4797.1004, )"
+            },
+            "MongoDB.Bson": {
+              "target": "Package",
+              "version": "[3.12.0, )"
             }
           },
           "imports": [

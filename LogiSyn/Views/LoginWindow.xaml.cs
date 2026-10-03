@@ -1,120 +1,119 @@
+using AndersonsBakeryAPI.Services;
+using SharedLibrary.Model;
+using System;
 using System.Windows;
 using System.Windows.Controls;
-using LogiSyn.Services;
-using SharedLibrary.Model;
 
 namespace LogiSyn.Views
 {
-	public partial class LoginWindow : Window
-	{
-		private readonly LoginService _loginService = new LoginService();
+    public partial class LoginWindow : Window
+    {
+        private readonly LoginServiceRouter _loginService = new LoginServiceRouter();
 
-		private bool _passwordRevealed;
-		private bool _syncing;
+        private bool _passwordRevealed;
+        private bool _syncing;
 
-		public LoginWindow()
-		{
-			InitializeComponent();
+        public LoginWindow()
+        {
+            InitializeComponent();
+            BrandLetters.ItemsSource = "ANDERSON'S BAKERY";
+            UsernameBox.Focus();
+        }
 
-			BrandLetters.ItemsSource = "ANDERSON'S BAKERY";
+        // ---------- placeholders ----------
 
-			UsernameBox.Focus();
-		}
+        private void UsernameBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            UsernamePlaceholder.Visibility =
+                string.IsNullOrEmpty(UsernameBox.Text) ? Visibility.Visible : Visibility.Collapsed;
+        }
 
-		// ---------- placeholders ----------
+        private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+            if (_syncing) return;
+            _syncing = true;
+            PasswordRevealBox.Text = PasswordBox.Password;
+            _syncing = false;
+            UpdatePasswordPlaceholder();
+        }
 
-		private void UsernameBox_TextChanged(object sender, TextChangedEventArgs e)
-		{
-			UsernamePlaceholder.Visibility =
-				string.IsNullOrEmpty(UsernameBox.Text) ? Visibility.Visible : Visibility.Collapsed;
-		}
+        private void PasswordRevealBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (_syncing) return;
+            _syncing = true;
+            PasswordBox.Password = PasswordRevealBox.Text;
+            _syncing = false;
+            UpdatePasswordPlaceholder();
+        }
 
-		private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
-		{
-			if (_syncing) return;
-			_syncing = true;
-			PasswordRevealBox.Text = PasswordBox.Password;
-			_syncing = false;
-			UpdatePasswordPlaceholder();
-		}
+        private void UpdatePasswordPlaceholder()
+        {
+            PasswordPlaceholder.Visibility =
+                string.IsNullOrEmpty(PasswordBox.Password) ? Visibility.Visible : Visibility.Collapsed;
+        }
 
-		private void PasswordRevealBox_TextChanged(object sender, TextChangedEventArgs e)
-		{
-			if (_syncing) return;
-			_syncing = true;
-			PasswordBox.Password = PasswordRevealBox.Text;
-			_syncing = false;
-			UpdatePasswordPlaceholder();
-		}
+        // ---------- show / hide password ----------
 
-		private void UpdatePasswordPlaceholder()
-		{
-			PasswordPlaceholder.Visibility =
-				string.IsNullOrEmpty(PasswordBox.Password) ? Visibility.Visible : Visibility.Collapsed;
-		}
+        private void ToggleReveal_Click(object sender, RoutedEventArgs e)
+        {
+            _passwordRevealed = !_passwordRevealed;
 
-		// ---------- show / hide password ----------
+            PasswordBox.Visibility = _passwordRevealed ? Visibility.Collapsed : Visibility.Visible;
+            PasswordRevealBox.Visibility = _passwordRevealed ? Visibility.Visible : Visibility.Collapsed;
 
-		private void ToggleReveal_Click(object sender, RoutedEventArgs e)
-		{
-			_passwordRevealed = !_passwordRevealed;
+            if (_passwordRevealed)
+            {
+                PasswordRevealBox.Focus();
+                PasswordRevealBox.CaretIndex = PasswordRevealBox.Text.Length;
+            }
+            else
+            {
+                PasswordBox.Focus();
+            }
+        }
 
-			PasswordBox.Visibility = _passwordRevealed ? Visibility.Collapsed : Visibility.Visible;
-			PasswordRevealBox.Visibility = _passwordRevealed ? Visibility.Visible : Visibility.Collapsed;
+        // ---------- log in ----------
 
-			if (_passwordRevealed)
-			{
-				PasswordRevealBox.Focus();
-				PasswordRevealBox.CaretIndex = PasswordRevealBox.Text.Length;
-			}
-			else
-			{
-				PasswordBox.Focus();
-			}
-		}
+        private void LoginButton_Click(object sender, RoutedEventArgs e)
+        {
+            string username = UsernameBox.Text.Trim();
+            string password = _passwordRevealed ? PasswordRevealBox.Text : PasswordBox.Password;
 
-		// ---------- log in ----------
+            if (username.Length == 0 || password.Length == 0)
+            {
+                MessageBox.Show("Please enter your username and password.",
+                                "Login", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
 
-		private void LoginButton_Click(object sender, RoutedEventArgs e)
-		{
-			string username = UsernameBox.Text.Trim();
-			string password = _passwordRevealed ? PasswordRevealBox.Text : PasswordBox.Password;
+            UserRow? user;
+            try
+            {
+                user = _loginService.Authenticate(username, password);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Could not reach the database:\n" + ex.Message,
+                                "Login error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
 
-			if (username.Length == 0 || password.Length == 0)
-			{
-				MessageBox.Show("Please enter your username and password.",
-								"Login", MessageBoxButton.OK, MessageBoxImage.Warning);
-				return;
-			}
+            if (user == null)
+            {
+                MessageBox.Show("Invalid username or password.",
+                                "Login", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
 
-			UserRow? user;
-			try
-			{
-				user = _loginService.Authenticate(username, password);
-			}
-			catch (Exception ex)
-			{
-				MessageBox.Show("Could not reach the database:\n" + ex.Message,
-								"Login error", MessageBoxButton.OK, MessageBoxImage.Error);
-				return;
-			}
+            if (!Enum.TryParse<AppRole>(user.Role, out var role))
+            {
+                MessageBox.Show($"Unknown role '{user.Role}' for this account.",
+                                "Login", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
 
-			if (user == null)
-			{
-				MessageBox.Show("Invalid username or password.",
-								"Login", MessageBoxButton.OK, MessageBoxImage.Warning);
-				return;
-			}
-
-			if (!Enum.TryParse<AppRole>(user.Role, out var role))
-			{
-				MessageBox.Show($"Unknown role '{user.Role}' for this account.",
-								"Login", MessageBoxButton.OK, MessageBoxImage.Warning);
-				return;
-			}
-
-			new ShellWindow(role).Show();
-			Close();
-		}
-	}
+            new ShellWindow(role).Show();
+            Close();
+        }
+    }
 }

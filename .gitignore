@@ -383,3 +383,5 @@ obj/
 
 *.dbmdl
 *.jfm
+
+**/MongoConfig.cs

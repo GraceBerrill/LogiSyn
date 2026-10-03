@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Microsoft.Data.SqlClient;
 using SharedLibrary.Model;
 
-namespace LogiSyn.Services
+namespace AndersonsBakeryAPI.Services
 {
     public class UserService
     {
@@ -41,7 +41,7 @@ namespace LogiSyn.Services
             return users;
         }
 
-        public bool UsernameExists(string username, int? excludedId = null)
+        public bool UsernameExists(string username, string? excludedId = null)
         {
             const string query =
                 "SELECT COUNT(1) FROM [User] " +
@@ -52,10 +52,11 @@ namespace LogiSyn.Services
             using var cmd = new SqlCommand(query, conn);
 
             cmd.Parameters.AddWithValue("@Username", username);
+
             var excludedIdParameter = cmd.Parameters.Add("@ExcludedId", System.Data.SqlDbType.Int);
-            excludedIdParameter.Value = excludedId.HasValue
-                ? excludedId.Value
-                : DBNull.Value;
+            excludedIdParameter.Value = string.IsNullOrEmpty(excludedId)
+                ? DBNull.Value
+                : int.Parse(excludedId);
 
             conn.Open();
 
@@ -79,7 +80,7 @@ namespace LogiSyn.Services
             cmd.ExecuteNonQuery();
         }
 
-        public void UpdateUser(int id, string username, string role, string? newPassword = null)
+        public void UpdateUser(string id, string username, string role, string? newPassword = null)
         {
             const string queryWithPassword =
                 "UPDATE [User] " +
@@ -98,7 +99,7 @@ namespace LogiSyn.Services
                     : queryWithPassword,
                 conn);
 
-            cmd.Parameters.AddWithValue("@Id", id);
+            cmd.Parameters.AddWithValue("@Id", int.Parse(id));
             cmd.Parameters.AddWithValue("@Username", username);
             cmd.Parameters.AddWithValue("@Role", role);
 
@@ -109,14 +110,14 @@ namespace LogiSyn.Services
             cmd.ExecuteNonQuery();
         }
 
-        public void DeleteUser(int id)
+        public void DeleteUser(string id)
         {
             const string query = "DELETE FROM [User] WHERE Id = @Id";
 
             using var conn = new SqlConnection(_connectionString);
             using var cmd = new SqlCommand(query, conn);
 
-            cmd.Parameters.AddWithValue("@Id", id);
+            cmd.Parameters.AddWithValue("@Id", int.Parse(id));
 
             conn.Open();
             cmd.ExecuteNonQuery();

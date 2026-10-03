@@ -1,7 +1,7 @@
 using System;
 using System.Security.Cryptography;
 
-namespace LogiSyn.Services
+namespace AndersonsBakeryAPI.Services
 {
     public static class PasswordHasher
     {

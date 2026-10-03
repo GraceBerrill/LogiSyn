@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.Windows.Media;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace SharedLibrary.Model
 {
@@ -80,17 +82,28 @@ namespace SharedLibrary.Model
 		public string Storage { get; set; }
 	}
 
-	public class UserRow
-	{
-		public string Id { get; set; } = string.Empty;
-		public string Name { get; set; } = string.Empty;
-		public string Password { get; set; } = string.Empty;
-		public string Role { get; set; } = string.Empty;
-		public string DateAdded { get; set; } = string.Empty;
-	}
+    public class UserRow
+    {
+        [BsonId]
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string Id { get; set; } = string.Empty;
 
-	// ----- summary paper (Order Sheets / Order Breakdown) -----
-	public class SummaryLine
+        [BsonElement("Username")]
+        public string Name { get; set; } = string.Empty;
+
+        [BsonElement("Password")]
+        public string Password { get; set; } = string.Empty;
+
+        [BsonElement("Role")]
+        public string Role { get; set; } = string.Empty;
+
+        [BsonElement("DateAdded")]
+        public string DateAdded { get; set; } = string.Empty;
+    }
+
+
+    // ----- summary paper (Order Sheets / Order Breakdown) -----
+    public class SummaryLine
 	{
 		public string Product { get; set; }
 		public string Production { get; set; }

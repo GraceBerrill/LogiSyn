@@ -1,14 +1,14 @@
-﻿using System;
+﻿using AndersonsBakeryAPI.Services;
+using SharedLibrary.Model;
+using System;
 using System.Windows;
 using System.Windows.Controls;
-using SharedLibrary.Model;
-using LogiSyn.Services;
 
 namespace LogiSyn.Views
 {
     public partial class AddUserModal : UserControl
     {
-        private readonly UserService _userService = new UserService();
+        private readonly UserServiceRouter _userService = new UserServiceRouter();
 
         public event Action? Saved;
         public event Action? Cancelled;
@@ -16,11 +16,8 @@ namespace LogiSyn.Views
         public AddUserModal()
         {
             InitializeComponent();
-
             AccessBox.ItemsSource = Enum.GetValues(typeof(AppRole));
-
             AccessBox.SelectedItem = AppRole.User;
-
             Loaded += (s, e) => UsernameBox.Focus();
         }
 
@@ -35,7 +32,6 @@ namespace LogiSyn.Views
 
             string username = UsernameBox.Text.Trim();
             string password = PasswordBox.Password;
-
             string access = AccessBox.SelectedItem?.ToString() ?? nameof(AppRole.User);
 
             if (string.IsNullOrWhiteSpace(username)) { ShowError("Username is required."); return; }
