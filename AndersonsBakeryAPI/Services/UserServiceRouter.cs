@@ -12,33 +12,78 @@ namespace AndersonsBakeryAPI.Services
         public List<UserRow> GetAllUsers()
         {
             try { return _mongo.GetAllUsers(); }
-            catch (Exception ex) when (IsNetworkError(ex)) { return _sql.GetAllUsers(); }
+            catch { return _sql.GetAllUsers(); }
         }
 
-        public bool UsernameExists(string username, string? excludedId = null)
+        public bool UsernameExists(string username, string? excludedMongoId = null)
         {
-            try { return _mongo.UsernameExists(username, excludedId); }
-            catch (Exception ex) when (IsNetworkError(ex)) { return _sql.UsernameExists(username, int.TryParse(excludedId, out var id) ? id : null); }
+            try { return _mongo.UsernameExists(username, excludedMongoId); }
+            catch { return _sql.UsernameExists(username, excludedMongoId); }
         }
 
-        public void AddUser(string username, string password, string role)
+        public void AddUser(string username, string plainPassword, string role)
         {
-            try { _mongo.AddUser(username, password, role); }
-            catch (Exception ex) when (IsNetworkError(ex)) { _sql.AddUser(username, password, role); }
+            string hash = PasswordHasher.HashPassword(plainPassword);
+            string mongoId = string.Empty;
+            bool mongoOk = false;
+            bool sqlOk = false;
+
+            try
+            {
+                mongoId = _mongo.AddUserWithHash(username, hash, role);
+                mongoOk = true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Mongo write failed: " + ex.Message);
+            }
+
+            try
+            {
+                _sql.AddUser(username, hash, role, mongoId);
+                sqlOk = true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("SQL write failed: " + ex.Message);
+            }
+
+            if (!mongoOk && !sqlOk)
+                throw new Exception("Both databases failed for AddUser.");
         }
 
-        public void UpdateUser(string id, string username, string role, string? newPassword = null)
+        public void UpdateUser(string mongoId, string username, string role, string? newPlainPassword = null)
         {
-            try { _mongo.UpdateUser(id, username, role, newPassword); }
-            catch (Exception ex) when (IsNetworkError(ex)) { _sql.UpdateUser(int.Parse(id), username, role, newPassword); }
+            try
+            {
+                _mongo.UpdateUser(mongoId, username, role, newPlainPassword);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Mongo update failed: " + ex.Message);
+            }
+
+            string? hash = string.IsNullOrWhiteSpace(newPlainPassword)
+                ? null
+                : PasswordHasher.HashPassword(newPlainPassword);
+
+            try
+            {
+                _sql.UpdateUser(mongoId, username, role, hash);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("SQL update failed: " + ex.Message);
+            }
         }
 
-        public void DeleteUser(string id)
+        public void DeleteUser(string mongoId)
         {
-            try { _mongo.DeleteUser(id); }
-            catch (Exception ex) when (IsNetworkError(ex)) { _sql.DeleteUser(int.Parse(id)); }
-        }
+            try { _mongo.DeleteUser(mongoId); }
+            catch (Exception ex) { Console.WriteLine("Mongo delete failed: " + ex.Message); }
 
-        private static bool IsNetworkError(Exception ex) { /* same as above */ }
+            try { _sql.DeleteUser(mongoId); }
+            catch (Exception ex) { Console.WriteLine("SQL delete failed: " + ex.Message); }
+        }
     }
 }

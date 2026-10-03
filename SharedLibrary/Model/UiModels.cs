@@ -80,13 +80,16 @@ namespace SharedLibrary.Model
 		public string SellBy { get; set; }
 		public string BestBefore { get; set; }
 		public string Storage { get; set; }
-	}
+    }
 
-    public class UserRow
+public class UserRow
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; } = string.Empty;
+
+        [BsonIgnore]
+        public string SqlId { get; set; } = string.Empty; 
 
         [BsonElement("Username")]
         public string Name { get; set; } = string.Empty;

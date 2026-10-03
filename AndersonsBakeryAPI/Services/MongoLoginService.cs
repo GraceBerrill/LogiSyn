@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Linq;     
+using System.Linq;
 using MongoDB.Driver;
 using SharedLibrary.Model;
 
@@ -10,7 +10,7 @@ namespace AndersonsBakeryAPI.Services
         private readonly IMongoCollection<UserRow> _usersCollection;
 
         public MongoLoginService()
-    : this(MongoConfig.ConnectionString, MongoConfig.DatabaseName)
+            : this(MongoConfig.ConnectionString, MongoConfig.DatabaseName)
         {
         }
 

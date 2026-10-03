@@ -11,7 +11,7 @@ namespace AndersonsBakeryAPI.Services
         private readonly IMongoCollection<UserRow> _usersCollection;
 
         public MongoUserService()
-    : this(MongoConfig.ConnectionString, MongoConfig.DatabaseName)
+            : this(MongoConfig.ConnectionString, MongoConfig.DatabaseName)
         {
         }
 
@@ -29,6 +29,16 @@ namespace AndersonsBakeryAPI.Services
             return users;
         }
 
+        public List<UserRow> GetAllUsersRaw()
+        {
+            return _usersCollection.Find(_ => true).ToList();
+        }
+
+        public UserRow? GetById(string id)
+        {
+            return _usersCollection.Find(u => u.Id == id).FirstOrDefault();
+        }
+
         public bool UsernameExists(string username, string? excludedId = null)
         {
             var filter = Builders<UserRow>.Filter.Eq(u => u.Name, username);
@@ -37,19 +47,26 @@ namespace AndersonsBakeryAPI.Services
             return _usersCollection.Find(filter).Any();
         }
 
-        public void AddUser(string username, string password, string role)
+        public string AddUserWithHash(string username, string passwordHash, string role,
+                                       string? dateAdded = null)
         {
             var newUser = new UserRow
             {
                 Name = username,
-                Password = PasswordHasher.HashPassword(password),
+                Password = passwordHash,
                 Role = role,
-                DateAdded = DateTime.Now.ToString("yyyy-MM-dd")
+                DateAdded = dateAdded ?? DateTime.Now.ToString("yyyy-MM-dd")
             };
             _usersCollection.InsertOne(newUser);
+            return newUser.Id;
         }
 
-        public void UpdateUser(string id, string username, string role, string? newPassword = null)
+        public string AddUser(string username, string plainPassword, string role)
+        {
+            return AddUserWithHash(username, PasswordHasher.HashPassword(plainPassword), role);
+        }
+
+        public void UpdateUser(string id, string username, string role, string? newPlainPassword = null)
         {
             var filter = Builders<UserRow>.Filter.Eq(u => u.Id, id);
             var updates = new List<UpdateDefinition<UserRow>>
@@ -57,8 +74,10 @@ namespace AndersonsBakeryAPI.Services
                 Builders<UserRow>.Update.Set(u => u.Name, username),
                 Builders<UserRow>.Update.Set(u => u.Role, role)
             };
-            if (!string.IsNullOrWhiteSpace(newPassword))
-                updates.Add(Builders<UserRow>.Update.Set(u => u.Password, PasswordHasher.HashPassword(newPassword)));
+
+            if (!string.IsNullOrWhiteSpace(newPlainPassword))
+                updates.Add(Builders<UserRow>.Update.Set(u => u.Password,
+                    PasswordHasher.HashPassword(newPlainPassword)));
 
             _usersCollection.UpdateOne(filter, Builders<UserRow>.Update.Combine(updates));
         }

@@ -57,7 +57,6 @@ namespace LogiSyn.Views
         private void ToggleReveal_Click(object sender, RoutedEventArgs e)
         {
             _passwordRevealed = !_passwordRevealed;
-
             PasswordBox.Visibility = _passwordRevealed ? Visibility.Collapsed : Visibility.Visible;
             PasswordRevealBox.Visibility = _passwordRevealed ? Visibility.Visible : Visibility.Collapsed;
 

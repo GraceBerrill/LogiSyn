@@ -1,8 +1,6 @@
 ﻿using System;
-using SharedLibrary.Model;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Data.SqlClient;
-using AndersonsBakeryAPI.Services;
+using SharedLibrary.Model;
 
 namespace AndersonsBakeryAPI.Services
 {
@@ -14,7 +12,7 @@ namespace AndersonsBakeryAPI.Services
         public UserRow? Authenticate(string name, string password)
         {
             const string query =
-                "SELECT Id, Username, Password, Role, DateAdded " +
+                "SELECT Id, MongoId, Username, Password, Role, DateAdded " +
                 "FROM [User] " +
                 "WHERE Username = @Username";
 
@@ -25,16 +23,13 @@ namespace AndersonsBakeryAPI.Services
             try
             {
                 conn.Open();
-
                 using var reader = cmd.ExecuteReader();
 
                 if (!reader.Read())
                     return null;
 
                 string storedPassword = reader["Password"] as string ?? string.Empty;
-
                 bool isHashed = PasswordHasher.IsHash(storedPassword);
-
                 bool valid = isHashed
                     ? PasswordHasher.VerifyPassword(password, storedPassword)
                     : string.Equals(password, storedPassword, StringComparison.Ordinal);
@@ -44,7 +39,8 @@ namespace AndersonsBakeryAPI.Services
 
                 var user = new UserRow
                 {
-                    Id = ((int)reader["Id"]).ToString("D2"),
+                    SqlId = ((int)reader["Id"]).ToString(),
+                    Id = reader["MongoId"] as string ?? string.Empty,
                     Name = reader["Username"] as string ?? string.Empty,
                     Password = storedPassword,
                     Role = reader["Role"] as string ?? string.Empty,
@@ -64,7 +60,7 @@ namespace AndersonsBakeryAPI.Services
                         conn);
 
                     updateCmd.Parameters.AddWithValue("@Password", upgradedHash);
-                    updateCmd.Parameters.AddWithValue("@Id", int.Parse(user.Id));
+                    updateCmd.Parameters.AddWithValue("@Id", int.Parse(user.SqlId));
                     updateCmd.ExecuteNonQuery();
 
                     user.Password = upgradedHash;

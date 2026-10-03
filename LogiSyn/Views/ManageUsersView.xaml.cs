@@ -3,6 +3,7 @@ using AndersonsBakeryAPI.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -10,14 +11,19 @@ namespace LogiSyn.Views
 {
     public partial class ManageUsersView : UserControl
     {
-        private readonly UserService _userService = new UserService();
+        private readonly UserServiceRouter _userService = new UserServiceRouter();
+        private readonly SyncService _syncService = new SyncService();
         private List<UserRow> _all = new();
         private bool _ready;
+        private bool _syncing;
 
         public ManageUsersView()
         {
             InitializeComponent();
             _ready = true;
+
+            Loaded += async (s, e) => await RunSyncAsync(silentWhenNothingToDo: true);
+
             LoadUsers();
         }
 
@@ -52,6 +58,64 @@ namespace LogiSyn.Views
 
         private void SearchBox_TextChanged(object sender, TextChangedEventArgs e) => Refresh();
 
+
+        private async void SyncButton_Click(object sender, RoutedEventArgs e)
+        {
+            await RunSyncAsync(silentWhenNothingToDo: false);
+        }
+
+        private async Task RunSyncAsync(bool silentWhenNothingToDo)
+        {
+            if (_syncing) return;
+            _syncing = true;
+
+            SetSyncUiBusy(true);
+
+            try
+            {
+                var result = await Task.Run(() => _syncService.SyncUsers());
+
+                if (result.SqlToMongo == 0 && result.Skipped == 0 && result.Failed == 0)
+                {
+                    if (!silentWhenNothingToDo)
+                    {
+                        MessageBox.Show("Everything is already in sync.",
+                                        "Sync", MessageBoxButton.OK,
+                                        MessageBoxImage.Information);
+                    }
+                    return;
+                }
+
+                var icon = result.Failed > 0 ? MessageBoxImage.Warning
+                         : MessageBoxImage.Information;
+
+                MessageBox.Show(result.ToString(),
+                                result.Failed > 0 ? "Sync completed with errors" : "Sync complete",
+                                MessageBoxButton.OK, icon);
+
+                if (result.SqlToMongo > 0)
+                    LoadUsers();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Sync failed:\n" + ex.Message,
+                                "Sync error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                SetSyncUiBusy(false);
+                _syncing = false;
+            }
+        }
+
+        private void SetSyncUiBusy(bool busy)
+        {
+            SyncButton.IsEnabled = !busy;
+            AddUserButton.IsEnabled = !busy;
+            SyncButtonText.Text = busy ? "Syncing…" : "Sync";
+        }
+
+
         private void AddUserButton_Click(object sender, RoutedEventArgs e)
         {
             var modal = new AddUserModal();
@@ -79,15 +143,16 @@ namespace LogiSyn.Views
             var row = ((FrameworkElement)sender).DataContext as UserRow;
             if (row == null) return;
 
-            int id;
-            if (!int.TryParse(row.Id, out id))
+            if (string.IsNullOrEmpty(row.Id))
             {
-                MessageBox.Show("Could not determine user id.", "Error",
-                                MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(
+                    "This user was created offline and hasn't been synced yet.\n" +
+                    "Please run Sync before editing.",
+                    "Not synced", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
-            var modal = new EditUserModal(id, row.Name, row.Role);
+            var modal = new EditUserModal(row.Id, row.Name, row.Role);
 
             var host = new Window
             {
@@ -112,21 +177,22 @@ namespace LogiSyn.Views
             var row = ((FrameworkElement)sender).DataContext as UserRow;
             if (row == null) return;
 
+            if (string.IsNullOrEmpty(row.Id))
+            {
+                MessageBox.Show(
+                    "This user was created offline and hasn't been synced yet.\n" +
+                    "Please run Sync before deleting.",
+                    "Not synced", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
             var answer = MessageBox.Show("Delete " + row.Name + "?", "Delete user",
                                          MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (answer != MessageBoxResult.Yes) return;
 
-            int id;
-            if (!int.TryParse(row.Id, out id))
-            {
-                MessageBox.Show("Could not determine user id.", "Error",
-                                MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
-
             try
             {
-                _userService.DeleteUser(id);
+                _userService.DeleteUser(row.Id);
                 _all.Remove(row);
                 Refresh();
             }

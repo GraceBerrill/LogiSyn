@@ -2,23 +2,23 @@
 using System.Windows;
 using System.Windows.Controls;
 using SharedLibrary.Model;
-using LogiSyn.Services;
+using AndersonsBakeryAPI.Services;
 
 namespace LogiSyn.Views
 {
     public partial class EditUserModal : UserControl
     {
-        private readonly UserService _userService = new UserService();
-        private readonly int _userId;
+        private readonly UserServiceRouter _userService = new UserServiceRouter();
+        private readonly string _mongoId;
 
         public event Action? Saved;
         public event Action? Cancelled;
 
-        public EditUserModal(int userId, string username, string role)
+        public EditUserModal(string mongoId, string username, string role)
         {
             InitializeComponent();
 
-            _userId = userId;
+            _mongoId = mongoId;
 
             AccessBox.ItemsSource = Enum.GetValues(typeof(AppRole));
 
@@ -58,13 +58,19 @@ namespace LogiSyn.Views
 
             try
             {
-                if (_userService.UsernameExists(username, _userId))
+                // Exclude the current user from the "already taken" check by MongoId
+                if (_userService.UsernameExists(username, _mongoId))
                 {
                     ShowError("That username is already taken.");
                     return;
                 }
 
-                _userService.UpdateUser(_userId, username, access, string.IsNullOrWhiteSpace(password) ? null : password);
+                _userService.UpdateUser(
+                    _mongoId,
+                    username,
+                    access,
+                    string.IsNullOrWhiteSpace(password) ? null : password);
+
                 Saved?.Invoke();
             }
             catch (Exception ex)

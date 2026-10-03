@@ -3,6 +3,9 @@ using SharedLibrary.Model;
 
 namespace AndersonsBakeryAPI.Services
 {
+    /// <summary>
+    /// Tries Mongo first. If the network is down, falls back to SQL.
+    /// </summary>
     public class LoginServiceRouter
     {
         private readonly MongoLoginService _mongo = new MongoLoginService();
@@ -12,27 +15,13 @@ namespace AndersonsBakeryAPI.Services
         {
             try
             {
-                var user = _mongo.Authenticate(name, password);
-                if (user != null)
-                    return user;   // found online → done
+                return _mongo.Authenticate(name, password);
             }
-            catch (Exception ex) when (IsNetworkError(ex))
+            catch (Exception ex)
             {
-                Console.WriteLine("Mongo unreachable: " + ex.Message);
+                Console.WriteLine("Mongo auth failed, falling back to SQL: " + ex.Message);
+                return _sql.Authenticate(name, password);
             }
-
-            return _sql.Authenticate(name, password);
-        }
-
-        private static bool IsNetworkError(Exception ex)
-        {
-            var name = ex.GetType().Name;
-            if (name.Contains("MongoConnection") ||
-                name.Contains("Timeout") ||
-                name.Contains("Socket"))
-                return true;
-
-            return ex.InnerException != null && IsNetworkError(ex.InnerException);
         }
     }
 }
