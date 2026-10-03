@@ -6,7 +6,7 @@ using System.Text.Json;
 using Microsoft.Data.SqlClient;
 using LogiSyn.Model;
 
-namespace LogiSyn.Services
+namespace AndersonsBakeryAPI.Services
 {
     public class LoginService
     {

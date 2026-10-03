@@ -189,8 +189,8 @@ namespace LogiSyn.Model
 		{
 			return new List<OrderRow>
 			{
-				new OrderRow { Number = "#001", Customer = "Checkers", Date = new DateTime(2026, 5, 9), Status = "Pending" },
-				new OrderRow { Number = "#002", Customer = "Spar",     Date = new DateTime(2026, 5, 9), Status = "Complete" }
+				new OrderRow { Number = "#001", Customer = "Checkers", Date = DateTime.Now, Status = "Pending" },
+				new OrderRow { Number = "#002", Customer = "Spar", Date = DateTime.Now, Status = "Complete" }
 			};
 		}
 
@@ -199,8 +199,8 @@ namespace LogiSyn.Model
 		{
 			return new List<OrderRow>
 			{
-				new OrderRow { Number = "#001", Customer = "Checkers", Date = new DateTime(2026, 5, 9), Status = "Complete" },
-				new OrderRow { Number = "#002", Customer = "Spar",     Date = new DateTime(2026, 5, 9), Status = "Complete" }
+				new OrderRow { Number = "#001", Customer = "Checkers", Date = DateTime.Now, Status = "Complete" },
+				new OrderRow { Number = "#002", Customer = "Spar", Date = DateTime.Now, Status = "Complete" }
 			};
 		}
 
@@ -209,8 +209,8 @@ namespace LogiSyn.Model
 		{
 			return new List<OrderRow>
 			{
-				new OrderRow { Number = "#001", Customer = "Checkers", Date = new DateTime(2026, 5, 9), Status = "Complete" },
-				new OrderRow { Number = "#002", Customer = "Spar",     Date = new DateTime(2026, 5, 9), Status = "Pending" }
+				new OrderRow { Number = "#001", Customer = "Checkers", Date = DateTime.Now, Status = "Complete" },
+				new OrderRow { Number = "#002", Customer = "Spar", Date = DateTime.Now, Status = "Pending" }
 			};
 		}
 
@@ -218,8 +218,8 @@ namespace LogiSyn.Model
 		{
 			return new List<ProductRow>
 			{
-				new ProductRow { Name = "Hamburger Rolls", Price = "R24.99", SellBy = "5", BestBefore = "5", Storage = "Freezer" },
-				new ProductRow { Name = "Hotdog Rolls",    Price = "R24.99", SellBy = "6", BestBefore = "6", Storage = "Freezer" }
+				new ProductRow { Name = "Product A", Price = "24.99", SellBy = "5", BestBefore = "5", Storage = "Cool" },
+				new ProductRow { Name = "Product B", Price = "19.99", SellBy = "6", BestBefore = "6", Storage = "Cool" }
 			};
 		}
 
@@ -227,9 +227,9 @@ namespace LogiSyn.Model
 		{
 			return new List<UserRow>
 			{
-				new UserRow { Id = "01", Name = "Blessings",        Role = "Admin",   DateAdded = "12/08/2026" },
-				new UserRow { Id = "02", Name = "Paul",             Role = "Manager", DateAdded = "12/08/2026" },
-				new UserRow { Id = "03", Name = "Bread Station #1", Role = "User",    DateAdded = "12/08/2026" }
+				new UserRow { Id = "01", Name = "Admin User",        Role = "Admin",   DateAdded = DateTime.Now.ToString("dd/MM/yyyy") },
+				new UserRow { Id = "02", Name = "Manager User",      Role = "Manager", DateAdded = DateTime.Now.ToString("dd/MM/yyyy") },
+				new UserRow { Id = "03", Name = "Standard User",     Role = "User",    DateAdded = DateTime.Now.ToString("dd/MM/yyyy") }
 			};
 		}
 
@@ -237,8 +237,8 @@ namespace LogiSyn.Model
 		{
 			return new SummaryData
 			{
-				Title = "Spar Order #002",
-				DateText = "5 August 2026",
+			Title = "Spar Order #002",
+			DateText = Today(),
 				IsCompleted = completed,
 				Lines = new List<SummaryLine>
 				{
@@ -262,8 +262,8 @@ namespace LogiSyn.Model
 		{
 			return new RawMaterialData
 			{
-				Title = "Spar Order #002",
-				DateText = "5 August 2026",
+			Title = "Spar Order #002",
+			DateText = Today(),
 				Totals = new List<string> { "Eggs: 50 dozen", "Flour: 100 bags", "Salt: 50 bags" }
 			};
 		}
@@ -279,14 +279,14 @@ namespace LogiSyn.Model
 
 			return new SheetData
 			{
-				Title = "Spar Order #002",
-				DateText = "5 August 2026",
+			Title = "Spar Order #002",
+			DateText = Today(),
 				IsCompleted = filled,
 				Products = new List<SheetProduct>
 				{
 					new SheetProduct
 					{
-						Name = "Hamburger Rolls", Amount = "250", Production = "Production 1",
+					Name = "Product A", Amount = "250", Production = "Production 1",
 						Ingredients = new List<SheetIngredient>
 						{
 							new SheetIngredient { Name = "Flour",  Amount = "5 bags",   Additional = "6 bags",   Used = filled ? "6 bags"   : "", UsedBrush = good },
@@ -303,7 +303,7 @@ namespace LogiSyn.Model
 					},
 					new SheetProduct
 					{
-						Name = "Croissants", Amount = "110", Production = "Croissant Room",
+					Name = "Product B", Amount = "110", Production = "Production 2",
 						Ingredients = new List<SheetIngredient>
 						{
 							new SheetIngredient { Name = "Flour", Amount = "5 bags",   Additional = "6 bags",   Used = filled ? "6 bags"   : "", UsedBrush = good },

@@ -1,6 +1,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using LogiSyn.Model;
+using AndersonsBakeryAPI.Services;
 
 namespace LogiSyn.Views
 {
@@ -40,7 +41,7 @@ namespace LogiSyn.Views
             var detail = DataContext as ProductDetail;
             if (detail == null) { ShellWindow.Current.CloseModal(); return; }
 
-            var svc = new LogiSyn.Services.ProductService();
+            var svc = new ProductService();
             var existing = svc.GetProductByName(detail.Name) ?? new Product();
             var prod = new Product
             {

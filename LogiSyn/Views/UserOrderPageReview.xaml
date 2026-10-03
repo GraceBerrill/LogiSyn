@@ -65,8 +65,8 @@
 
                     <!-- Order Header -->
                     <StackPanel Grid.Row="0" Margin="0,0,0,12">
-                        <TextBlock x:Name="TxtOrderDate" Text="5 August 2026" FontSize="15" Foreground="#718096" Margin="0,0,0,4"/>
-                        <TextBlock x:Name="TxtOrderTitle" Text="Spar Order #002" FontSize="22" FontWeight="SemiBold" Foreground="#152238"/>
+                        <TextBlock x:Name="TxtOrderDate" Text="" FontSize="15" Foreground="#718096" Margin="0,0,0,4"/>
+                        <TextBlock x:Name="TxtOrderTitle" Text="" FontSize="22" FontWeight="SemiBold" Foreground="#152238"/>
                     </StackPanel>
 
                     <Separator Grid.Row="1" Background="#152238" Margin="0,0,0,16"/>

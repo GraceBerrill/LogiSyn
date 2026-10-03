@@ -1,5 +1,6 @@
 ﻿using LogiSyn.Interface;
 using LogiSyn.Model;
+using AndersonsBakeryAPI.Services;
 using LogiSyn.Services;
 using System;
 using System.Collections.Generic;
@@ -50,14 +51,14 @@ namespace LogiSyn.Views
                     {
                         OrderId = "#001",
                         Customer = "Checkers",
-                        OrderDate = new DateTime(2026, 8, 5),
+                        OrderDate = DateTime.Now,
                         Status = "Completed"
                     },
                     new OrderScaled
                     {
                         OrderId = "#002",
                         Customer = "Spar",
-                        OrderDate = new DateTime(2026, 8, 5),
+                        OrderDate = DateTime.Now,
                         Status = "Pending"
                     }
                 };

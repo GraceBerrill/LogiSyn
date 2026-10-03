@@ -12,6 +12,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using LogiSyn.Model;
 using LogiSyn.Interface;
+using AndersonsBakeryAPI.Services;
 using LogiSyn.Services;
 
 namespace LogiSyn.Views

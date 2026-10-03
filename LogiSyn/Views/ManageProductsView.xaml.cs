@@ -5,13 +5,14 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using LogiSyn.Model;
+using AndersonsBakeryAPI.Services;
 
 namespace LogiSyn.Views
 {
     public partial class ManageProductsView : UserControl
     {
         private readonly List<ProductRow> _all;
-        private readonly LogiSyn.Services.ProductService _service = new LogiSyn.Services.ProductService();
+        private readonly ProductService _service = new ProductService();
         private bool _ready;
 
         public ManageProductsView()
