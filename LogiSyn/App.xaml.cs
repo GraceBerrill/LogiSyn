@@ -22,15 +22,15 @@ namespace LogiSyn
 
                 Dispatcher.BeginInvoke(new Action(() =>
                 {
-                    Window dashboard = user.Role?.ToLowerInvariant() switch
+                    LogiSyn.Model.AppRole parsedRole = LogiSyn.Model.AppRole.User;
+                    if (!string.IsNullOrEmpty(user.Role))
                     {
-                        "admin" => new AdminWindow(),
-                        "manager" => new ManagerWindow(),
-                        _ => new UserWindow(),
-                    };
+                        Enum.TryParse<LogiSyn.Model.AppRole>(user.Role, true, out parsedRole);
+                    }
 
-                    Application.Current.MainWindow = dashboard;
-                    dashboard.Show();
+                    var shell = new Views.ShellWindow(parsedRole);
+                    Application.Current.MainWindow = shell;
+                    shell.Show();
                 }), DispatcherPriority.ApplicationIdle);
             }
             else
