@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Windows.Media;
 
-namespace LogiSyn.Model
+namespace SharedLibrary.Model
 {
 	// =====================================================================
 	//  Front-end models + sample data.

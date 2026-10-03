@@ -1,6 +1,7 @@
 using System;
+using SharedLibrary.Model;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Data.SqlClient;
-using LogiSyn.Model;
 
 namespace LogiSyn.Services
 {

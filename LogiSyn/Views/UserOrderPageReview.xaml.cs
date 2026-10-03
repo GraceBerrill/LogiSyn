@@ -1,5 +1,5 @@
 ﻿using LogiSyn.Interface;
-using LogiSyn.Model;
+using SharedLibrary.Model;
 using LogiSyn.Services;
 using System;
 using System.Collections.Generic;

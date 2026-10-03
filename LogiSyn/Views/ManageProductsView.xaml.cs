@@ -4,7 +4,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using LogiSyn.Model;
+using SharedLibrary.Model;
 
 namespace LogiSyn.Views
 {

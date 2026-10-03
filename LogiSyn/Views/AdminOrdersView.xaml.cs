@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using LogiSyn.Model;
+using SharedLibrary.Model;
 
 namespace LogiSyn.Views
 {

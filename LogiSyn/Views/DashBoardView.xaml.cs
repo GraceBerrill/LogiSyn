@@ -9,7 +9,7 @@ namespace LogiSyn.Views
 {
     public partial class DashboardView : UserControl
     {
-        public DashboardView()
+        public DashboardView(SharedLibrary.Model.AppRole role)
         {
             InitializeComponent();
         }

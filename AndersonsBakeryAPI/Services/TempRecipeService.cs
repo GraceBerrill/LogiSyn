@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using LogiSyn.Interface;
-using LogiSyn.Model;
+using SharedLibrary.Model;
 
 namespace LogiSyn.Services
 {

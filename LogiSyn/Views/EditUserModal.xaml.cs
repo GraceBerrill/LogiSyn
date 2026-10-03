@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
-using LogiSyn.Model;
+using SharedLibrary.Model;
 using LogiSyn.Services;
 
 namespace LogiSyn.Views

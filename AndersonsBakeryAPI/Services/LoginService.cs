@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using Microsoft.Data.SqlClient;
-using LogiSyn.Model;
+using SharedLibrary.Model;
 
 namespace LogiSyn.Services
 {

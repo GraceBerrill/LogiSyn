@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Data.SqlClient;
-using LogiSyn.Model;
+using SharedLibrary.Model;
 
 namespace LogiSyn.Services
 {
