@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -94,16 +94,15 @@ namespace LogiSyn.Model
 
         public Dictionary<string, RawMaterialValue> RawMaterials { get; set; } = new();
     }
-}
 
     //------------------------------------------------------------------------------------------------//
 
     // Email model
-
     public class EmailMessageModel
     {
         public string Subject { get; set; } = string.Empty;
         public string Body { get; set; } = string.Empty;
     }
+}
 
 //--------------------------------------End of File----------------------------------------------------------//

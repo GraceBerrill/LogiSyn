@@ -30,7 +30,7 @@ namespace LogiSyn.Views
 
         private void DoneButton_Click(object sender, RoutedEventArgs e)
         {
-            ShellWindow.Current.Navigate("history");
+            ShellWindow.Current?.Navigate("history");
         }
     }
 }

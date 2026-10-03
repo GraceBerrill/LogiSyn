@@ -13,14 +13,14 @@ namespace LogiSyn.Views
         private void PrintButton_Click(object sender, RoutedEventArgs e)
         {
             // TODO (backend): print the order sheets
-            ShellWindow.Current.CloseModal();
+            ShellWindow.Current?.CloseModal();
             MessageBox.Show("Printing will be connected later.", "Print");
         }
 
         private void EmailButton_Click(object sender, RoutedEventArgs e)
         {
             // TODO (backend): email the order sheets
-            ShellWindow.Current.CloseModal();
+            ShellWindow.Current?.CloseModal();
             MessageBox.Show("Email will be connected later.", "Email");
         }
     }

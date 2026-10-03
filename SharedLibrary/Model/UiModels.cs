@@ -81,13 +81,27 @@ namespace LogiSyn.Model
 		public DateTime Date { get; set; }
 		public string Status { get; set; }              // "Pending" or "Complete"
 
-		public bool IsComplete { get { return Status == "Complete"; } }
+		public bool IsComplete { get { return Status == "Complete" || Status == "Completed"; } }
 		public string DateText { get { return Date.ToString("dd/MM/yy", CultureInfo.InvariantCulture); } }
 
 		public Brush ListStatusBrush { get { return IsComplete ? Palette.ListComplete : Palette.ListPending; } }
 		public Brush DashStatusBrush { get { return IsComplete ? Palette.DashComplete : Palette.DashPending; } }
 		public string UserStatusText { get { return IsComplete ? "Completed" : "Pending"; } }
 		public Brush UserStatusBrush { get { return IsComplete ? Palette.UserComplete : Palette.UserPending; } }
+
+		/// <summary>
+		/// Factory method to create an OrderRow from an OrderScaled (API response)
+		/// </summary>
+		public static OrderRow FromOrderScaled(OrderScaled order)
+		{
+			return new OrderRow
+			{
+				Number = order.OrderId,
+				Customer = order.Customer,
+				Date = order.OrderDate,
+				Status = order.Status == "Completed" ? "Complete" : order.Status
+			};
+		}
 	}
 
 	public class ProductRow

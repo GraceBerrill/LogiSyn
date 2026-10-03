@@ -24,6 +24,7 @@ namespace LogiSyn.Views
     {
         private readonly OrderScaled _currentOrder;
         private readonly IOrderService _orderService;
+        private readonly ApiClient _apiClient = new ApiClient();
 
         //------------------------------------------------------------------------------------------------//
 
@@ -42,6 +43,12 @@ namespace LogiSyn.Views
             _orderService = new OrderService();
 
             PopulateUI();
+
+            // Persist order if it has an OrderId
+            if (!string.IsNullOrWhiteSpace(_currentOrder.OrderId))
+            {
+                _ = SaveOrderAsync();
+            }
         }
 
         //------------------------------------------------------------------------------------------------//
@@ -85,15 +92,37 @@ namespace LogiSyn.Views
 
         //------------------------------------------------------------------------------------------------//
 
-        private void BtnBack_Click(object sender, RoutedEventArgs e)
+        // Helper method to persist order locally and via API
+        private async Task SaveOrderAsync()
         {
+            try
+            {
+                _orderService.SaveOrder(_currentOrder);
+                try
+                {
+                    await _apiClient.SaveOrderAsync(_currentOrder);
+                }
+                catch (Exception apiEx)
+                {
+                    Console.WriteLine($"API save skipped/failed: {apiEx.Message}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error saving order: {ex.Message}");
+            }
+        }
+
+        private async void BtnBack_Click(object sender, RoutedEventArgs e)
+        {
+            await SaveOrderAsync();
             NavigateToOrders();
         }
 
         //------------------------------------------------------------------------------------------------//
 
         // Event handler for the "Add Product" button click event
-        private void BtnAddProduct_Click(object sender, RoutedEventArgs e)
+        private async void BtnAddProduct_Click(object sender, RoutedEventArgs e)
         {
             var dialog = new AddMoreProducts()
             {
@@ -106,13 +135,17 @@ namespace LogiSyn.Views
                 _currentOrder.productionItems.Add(dialog.CreatedItem);
                 _orderService.RecalRawMaterials(_currentOrder);
                 PopulateUI();
+                await SaveOrderAsync();
             }
         }
 
         //------------------------------------------------------------------------------------------------//
 
-        private void BtnDone_Click(object sender, RoutedEventArgs e)
+        private async void BtnDone_Click(object sender, RoutedEventArgs e)
         {
+            // Ensure order is persisted when clicking Done
+            await SaveOrderAsync();
+
             // Show the submit modal overlay when the "Done" button is clicked
             SubmitModalOverlay.Visibility = Visibility.Visible;
         }
@@ -120,12 +153,12 @@ namespace LogiSyn.Views
         //------------------------------------------------------------------------------------------------//
 
         // Event handler for the "Print" button click event
-        private void BtnPrint_Click(object sender, RoutedEventArgs e)
+        private async void BtnPrint_Click(object sender, RoutedEventArgs e)
         {
             // Save the current order and attempt to print it
             try
             {
-                _orderService.SaveOrder(_currentOrder);
+                await SaveOrderAsync();
 
                 // Show the print dialog and check if the user confirmed printing
                 var printDlg = new PrintDialog();
@@ -146,12 +179,12 @@ namespace LogiSyn.Views
         //------------------------------------------------------------------------------------------------//
 
         // Event handler for the "Email" button click event
-        private void BtnEmail_Click(object sender, RoutedEventArgs e)
+        private async void BtnEmail_Click(object sender, RoutedEventArgs e)
         {
             // Save the current order and attempt to email it
             try
             {
-                _orderService.SaveOrder(_currentOrder);
+                await SaveOrderAsync();
 
                 var emailModel = _orderService.BuildScalingSheetEmail(_currentOrder);
 

@@ -1,4 +1,4 @@
-﻿using LogiSyn.Model;
+using LogiSyn.Model;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -42,7 +42,7 @@ namespace LogiSyn.Views
             TxtStatus.Text = string.IsNullOrWhiteSpace(_order.Status) ? "COMPLETED" : _order.Status.ToUpper();
 
             // Prepare the list of items for display in the breakdown
-            var itemsList = (_order.productionItems ?? _order.productionItems ?? new List<ProductionItem>())
+            var itemsList = (_order.productionItems ?? new List<ProductionItem>())
                 .Select(item =>
                 {
                     // Extract the product name and amount from the ProductName property
@@ -61,7 +61,7 @@ namespace LogiSyn.Views
                         amount = "100";
                     }
 
-                    var pkg = item.packaging ?? item.packaging ?? new Packaging();
+                    var pkg = item.packaging ?? new Packaging();
 
                     // Create a new BreakdownProductItemViewModel for each production item
                     return new BreakdownProductItemViewModel

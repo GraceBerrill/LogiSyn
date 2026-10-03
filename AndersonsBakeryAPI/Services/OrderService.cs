@@ -1,29 +1,152 @@
-﻿using LogiSyn.Interface;
+using LogiSyn.Interface;
 using LogiSyn.Model;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using UglyToad.PdfPig;
 using UglyToad.PdfPig.Content;
+using AndersonsBakeryAPI.Repositories;
+using AndersonsBakeryAPI.Data;
+using Microsoft.EntityFrameworkCore;
+using MongoDB.Driver;
 
 namespace LogiSyn.Services
 {
     public class OrderService : IOrderService
     {
         // Initialise lists and repositories for order processing
-        private readonly ITempRecipeService _recipeRepo;
+        private readonly ProductService _productService;
+        private readonly MongoOrderRepository? _mongoRepository;
+        private readonly SqlOrderRepository? _sqlRepository;
 
         private static readonly List<OrderScaled> _orders = new();
+        private static bool _localLoaded = false;
 
-        public OrderService() : this(new TempRecipeService()) { }
-
-        // TODO: Refactor when merged with the main project to use actual recipe repository instead of the temporary one
-        public OrderService(ITempRecipeService recipeRepo)
+        private static string OrdersFilePath()
         {
-            _recipeRepo = recipeRepo ?? throw new ArgumentNullException(nameof(recipeRepo));
+            string dataFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data");
+            if (!Directory.Exists(dataFolder)) Directory.CreateDirectory(dataFolder);
+            return Path.Combine(dataFolder, "orders.json");
+        }
+
+        private static void LoadLocalOrders()
+        {
+            try
+            {
+                string path = OrdersFilePath();
+                if (File.Exists(path))
+                {
+                    string json = File.ReadAllText(path);
+                    var items = JsonSerializer.Deserialize<List<OrderScaled>>(json, new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    });
+                    if (items != null)
+                    {
+                        lock (_orders)
+                        {
+                            foreach (var item in items)
+                            {
+                                if (!_orders.Any(o => o.OrderId.Equals(item.OrderId, StringComparison.OrdinalIgnoreCase)))
+                                {
+                                    _orders.Add(item);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[LOCAL] Error loading local orders.json: {ex.Message}");
+            }
+        }
+
+        private static void SaveLocalOrders()
+        {
+            try
+            {
+                string path = OrdersFilePath();
+                string json;
+                lock (_orders)
+                {
+                    json = JsonSerializer.Serialize(_orders, new JsonSerializerOptions
+                    {
+                        WriteIndented = true
+                    });
+                }
+                File.WriteAllText(path, json);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[LOCAL] Error saving local orders.json: {ex.Message}");
+            }
+        }
+
+        private static SqlOrderRepository? CreateDefaultSqlRepository()
+        {
+            try
+            {
+                var optionsBuilder = new DbContextOptionsBuilder<LogiSynDbContext>();
+                optionsBuilder.UseSqlServer(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=LogiSynDb;Integrated Security=True;TrustServerCertificate=True;");
+                var context = new LogiSynDbContext(optionsBuilder.Options);
+                context.Database.EnsureCreated();
+                return new SqlOrderRepository(context);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[SQL] Could not initialize SQL repository: {ex.Message}");
+                return null;
+            }
+        }
+
+        private static MongoOrderRepository? CreateDefaultMongoRepository()
+        {
+            try
+            {
+                string conn = "mongodb+srv://reannaude1_db_user:MPaJYcEqumlJbf0j@cluster0.twltvce.mongodb.net/?appName=Cluster0";
+                var settings = MongoClientSettings.FromConnectionString(conn);
+                settings.ServerSelectionTimeout = TimeSpan.FromSeconds(2);
+                settings.ConnectTimeout = TimeSpan.FromSeconds(2);
+                var client = new MongoClient(settings);
+                var db = client.GetDatabase("LogiSynDb");
+                return new MongoOrderRepository(db);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[MONGODB] Could not initialize MongoDB repository: {ex.Message}");
+                return null;
+            }
+        }
+
+        static OrderService()
+        {
+            LoadLocalOrders();
+        }
+
+        public OrderService() : this(new ProductService(), CreateDefaultMongoRepository(), CreateDefaultSqlRepository()) { }
+
+        public OrderService(ProductService productService) : this(productService, CreateDefaultMongoRepository(), CreateDefaultSqlRepository()) { }
+
+        public OrderService(MongoOrderRepository? mongoRepository, SqlOrderRepository? sqlRepository)
+            : this(new ProductService(), mongoRepository, sqlRepository) { }
+
+        public OrderService(ProductService productService, MongoOrderRepository? mongoRepository, SqlOrderRepository? sqlRepository)
+        {
+            _productService = productService ?? new ProductService();
+            _mongoRepository = mongoRepository;
+            _sqlRepository = sqlRepository;
+
+            if (!_localLoaded)
+            {
+                LoadLocalOrders();
+                _localLoaded = true;
+            }
         }
 
         //------------------------------------------------------------------------------------------------//
@@ -58,17 +181,20 @@ namespace LogiSyn.Services
                 productionItems = new List<ProductionItem>()
             };
 
-            // Loop through lines to match products from recipes
+            // Loop through lines to match products from ProductService
+            var availableProducts = _productService.GetAllProducts();
+
             for (int i = 0; i < extractedLines.Count; i++)
             {
                 string line = extractedLines[i];
 
                 if (IsDividerLine(line)) continue;
 
-                var recipe = _recipeRepo.GetAllRecipes()
-                    .FirstOrDefault(r => line.IndexOf(r.MatchPattern, StringComparison.OrdinalIgnoreCase) >= 0);
+                var product = availableProducts
+                    .FirstOrDefault(p => !string.IsNullOrWhiteSpace(p.ProductName) &&
+                                         line.IndexOf(p.ProductName, StringComparison.OrdinalIgnoreCase) >= 0);
 
-                if (recipe != null)
+                if (product != null)
                 {
                     // Extract quantity from the current line and the next two lines for context
                     string context = line;
@@ -82,34 +208,53 @@ namespace LogiSyn.Services
 
                     int quantity = ExtractQuantity(context);
 
-                    // Create a production item based on the recipe and calculated quantity
+                    // Create a production item based on the product and calculated quantity
                     var item = new ProductionItem
                     {
-                        ProductName = $"{quantity} {recipe.DisplayName}",
-                        ProductionLine = recipe.ProductionArea,
+                        ProductName = $"{quantity} {product.ProductName}",
+                        ProductionLine = !string.IsNullOrWhiteSpace(product.StorageLocation) ? product.StorageLocation : "Production 1",
                         packaging = new Packaging
                         {
-                            Pans = recipe.UnitsPerPan > 0
-                                ? (int)Math.Ceiling((double)quantity / recipe.UnitsPerPan)
-                                : 2,
-                            Trolleys = recipe.PansPerTrolley > 0
-                                ? (int)Math.Ceiling((double)quantity / (recipe.UnitsPerPan * recipe.PansPerTrolley))
-                                : 1,
+                            Pans = (int)Math.Ceiling((double)quantity / 50),
+                            Trolleys = (int)Math.Ceiling((double)quantity / 100),
                             PansUsed = 0,
                             TrolleysUsed = 0
                         }
                     };
 
                     // Scale and add the required ingredients for this production item
-                    foreach (var ing in recipe.Ingredients)
+                    if (product.Ingredients != null && product.Ingredients.Count > 0)
+                    {
+                        foreach (var ing in product.Ingredients)
+                        {
+                            double baseQty = (double)ing.Quantity;
+                            item.ReqIngredients.Add(new Ingredients
+                            {
+                                IngredientName = ing.IngredientName,
+                                IngredientAmount = Math.Round(baseQty * quantity, 1),
+                                AdditionsAmount = Math.Round(baseQty * 0.1 * quantity, 1),
+                                MeasuredIngredient = ing.Unit ?? "kg",
+                                AmountUsed = Math.Round(baseQty * quantity, 1)
+                            });
+                        }
+                    }
+                    else
                     {
                         item.ReqIngredients.Add(new Ingredients
                         {
-                            IngredientName = ing.Name,
-                            IngredientAmount = Math.Round(ing.AmountPerUnit * quantity, 1),
-                            AdditionsAmount = Math.Round(ing.AdditionalRatio * quantity, 1),
-                            MeasuredIngredient = ing.Unit,
-                            AmountUsed = Math.Round(ing.DefaultUsedRatio * quantity, 1)
+                            IngredientName = "Flour",
+                            IngredientAmount = Math.Round(0.04 * quantity, 1),
+                            AdditionsAmount = Math.Round(0.005 * quantity, 1),
+                            MeasuredIngredient = "kg",
+                            AmountUsed = Math.Round(0.04 * quantity, 1)
+                        });
+                        item.ReqIngredients.Add(new Ingredients
+                        {
+                            IngredientName = "Yeast",
+                            IngredientAmount = Math.Round(0.01 * quantity, 1),
+                            AdditionsAmount = Math.Round(0.001 * quantity, 1),
+                            MeasuredIngredient = "kg",
+                            AmountUsed = Math.Round(0.01 * quantity, 1)
                         });
                     }
 
@@ -133,6 +278,7 @@ namespace LogiSyn.Services
                 baseOrderId = "#001";
 
             string candidateId = baseOrderId;
+            var existingOrderIds = new HashSet<string>(GetOrders().Select(o => o.OrderId), StringComparer.OrdinalIgnoreCase);
 
             // Check if the order ID is purely numeric (with optional '#' prefix)
             var numMatch = Regex.Match(baseOrderId, @"^(#?)(\d+)$");
@@ -144,7 +290,7 @@ namespace LogiSyn.Services
                 int padLength = digits.Length;
 
                 // Increment the numeric part until a unique order ID is found
-                while (_orders.Any(o => o.OrderId.Equals(candidateId, StringComparison.OrdinalIgnoreCase)))
+                while (existingOrderIds.Contains(candidateId))
                 {
                     num++;
                     candidateId = $"{prefix}{num.ToString().PadLeft(padLength, '0')}";
@@ -155,7 +301,7 @@ namespace LogiSyn.Services
 
             // If the order ID is not purely numeric, Add a suffix to ensure a unique order ID
             int suffix = 1;
-            while (_orders.Any(o => o.OrderId.Equals(candidateId, StringComparison.OrdinalIgnoreCase)))
+            while (existingOrderIds.Contains(candidateId))
             {
                 candidateId = $"{baseOrderId}-{suffix}";
                 suffix++;
@@ -198,40 +344,162 @@ namespace LogiSyn.Services
 
         //------------------------------------------------------------------------------------------------//
 
-        // Methods to manage orders in memory, including retrieval, saving, and completion
-        public IEnumerable<OrderScaled> GetOrders() => _orders.ToList();
+        // Methods to manage orders, fetching from MongoDB, SQL, local file, or memory
+        public IEnumerable<OrderScaled> GetOrders()
+        {
+            // 1. If in-memory already has orders, return a copy immediately (fast UI response)
+            lock (_orders)
+            {
+                if (_orders.Count > 0)
+                {
+                    return _orders.ToList();
+                }
+            }
 
-        // Retrieves only completed orders for history purposes, To be used in the history page as well
-        public IEnumerable<OrderScaled> GetHistory() =>
-            _orders.Where(o => o.Status.Equals("Completed", StringComparison.OrdinalIgnoreCase)).ToList();
+            // 2. Fetch from MongoDB if repository is available (with a short timeout to prevent UI freezes)
+            if (_mongoRepository != null)
+            {
+                try
+                {
+                    var task = _mongoRepository.GetAllOrdersAsync();
+                    if (task.Wait(TimeSpan.FromSeconds(2)))
+                    {
+                        var mongoOrders = task.Result.ToList();
+                        if (mongoOrders.Count > 0)
+                        {
+                            lock (_orders)
+                            {
+                                foreach (var mo in mongoOrders)
+                                {
+                                    if (!_orders.Any(o => o.OrderId.Equals(mo.OrderId, StringComparison.OrdinalIgnoreCase)))
+                                        _orders.Add(mo);
+                                }
+                            }
+                            SaveLocalOrders();
+                            return mongoOrders;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error fetching orders from MongoDB: {ex.Message}");
+                }
+            }
 
-        // Retrieves a specific order by its ID, ignoring case sensitivity
-        public OrderScaled? GetOrderById(string orderId) =>
-            _orders.FirstOrDefault(o => o.OrderId.Equals(orderId, StringComparison.OrdinalIgnoreCase));
+            // 3. Fetch from SQL Server repository if available
+            if (_sqlRepository != null)
+            {
+                try
+                {
+                    var task = _sqlRepository.GetAllOrdersAsync();
+                    if (task.Wait(TimeSpan.FromSeconds(2)))
+                    {
+                        var sqlOrders = task.Result.ToList();
+                        if (sqlOrders.Count > 0)
+                        {
+                            lock (_orders)
+                            {
+                                foreach (var so in sqlOrders)
+                                {
+                                    if (!_orders.Any(o => o.OrderId.Equals(so.OrderId, StringComparison.OrdinalIgnoreCase)))
+                                        _orders.Add(so);
+                                }
+                            }
+                            SaveLocalOrders();
+                            return sqlOrders;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error fetching orders from SQL: {ex.Message}");
+                }
+            }
 
-        // Saves or updates an order in the in-memory list, replacing any existing order with the same ID
+            // 4. Return in-memory list (which includes orders loaded from Data/orders.json)
+            lock (_orders)
+            {
+                return _orders.ToList();
+            }
+        }
+
+        // Retrieves only completed orders for history purposes
+        public IEnumerable<OrderScaled> GetHistory()
+        {
+            return GetOrders().Where(o =>
+                string.Equals(o.Status, "Completed", StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(o.Status, "Complete", StringComparison.OrdinalIgnoreCase)).ToList();
+        }
+
+        // Retrieves a specific order by its ID
+        public OrderScaled? GetOrderById(string orderId)
+        {
+            if (string.IsNullOrWhiteSpace(orderId)) return null;
+            return GetOrders().FirstOrDefault(o => o.OrderId.Equals(orderId, StringComparison.OrdinalIgnoreCase));
+        }
+
+        // Saves or updates an order locally, and syncs to MongoDB and SQL Server in background
         public void SaveOrder(OrderScaled order)
         {
             if (order == null) return;
 
-            var existing = GetOrderById(order.OrderId);
-            if (existing != null)
+            lock (_orders)
             {
-                _orders.Remove(existing);
+                _orders.RemoveAll(o => o.OrderId.Equals(order.OrderId, StringComparison.OrdinalIgnoreCase));
+                _orders.Add(order);
             }
-            _orders.Add(order);
+
+            // Always persist locally to disk (Data/orders.json) immediately
+            SaveLocalOrders();
+
+            // Persist to MongoDB in background if repository is available
+            if (_mongoRepository != null)
+            {
+                Task.Run(async () =>
+                {
+                    try
+                    {
+                        Console.WriteLine($"[MONGODB] Saving order {order.OrderId} to MongoDB...");
+                        await _mongoRepository.SaveOrderAsync(order);
+                        Console.WriteLine($"[MONGODB] ✓ Successfully saved order {order.OrderId} to MongoDB");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"[MONGODB] ✗ ERROR saving order to MongoDB: {ex.Message}");
+                    }
+                });
+            }
+
+            // Persist to SQL Server in background if repository is available
+            if (_sqlRepository != null)
+            {
+                Task.Run(async () =>
+                {
+                    try
+                    {
+                        Console.WriteLine($"[SQL] Saving order {order.OrderId} to SQL Server...");
+                        await _sqlRepository.SaveOrderAsync(order);
+                        Console.WriteLine($"[SQL] ✓ Successfully saved order {order.OrderId} to SQL Server");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"[SQL] ✗ ERROR saving order to SQL Server: {ex.Message}");
+                    }
+                });
+            }
         }
 
         // ------------------------------------------------------------------------------------------------//
 
-        // Marks an order as completed and allows for additional processing via a callback action
-        public void CompleteOrder(string orderId, Action<OrderScaled> recordOrderData)
+        // Marks an order as completed and allows for additional processing via an optional callback action
+        public void CompleteOrder(string orderId, Action<OrderScaled>? recordOrderData = null)
         {
             var order = GetOrderById(orderId);
             if (order == null) return;
 
             recordOrderData?.Invoke(order);
             order.Status = "Completed";
+            SaveOrder(order);
         }
 
         //------------------------------------------------------------------------------------------------//
