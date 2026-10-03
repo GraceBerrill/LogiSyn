@@ -1,0 +1,31 @@
+<UserControl x:Class="LogiSyn.Views.RawMaterialPaper"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             FontFamily="{StaticResource FontVarela}" Foreground="Black" Background="White">
+
+    <!-- "Raw Material Scaling" page. DataContext = RawMaterialData -->
+    <StackPanel Margin="18,5,17,20">
+
+        <TextBlock Text="{Binding Title}" FontSize="21.3"/>
+
+        <Grid Margin="0,8,0,0">
+            <TextBlock Text="Raw Material Scaling" FontSize="21.3"/>
+            <TextBlock Text="{Binding DateText}" FontSize="16" HorizontalAlignment="Right"
+                       VerticalAlignment="Bottom" Margin="0,0,0,3"
+                       Foreground="{StaticResource PaperMuted}"/>
+        </Grid>
+
+        <Border Height="1" Background="#CC000000" Margin="0,10,0,0"/>
+
+        <TextBlock Text="Total Amounts:" FontSize="21.3" Margin="0,16,0,0"/>
+        <Border Height="1" Background="{StaticResource PaperRule}" Margin="0,4,0,8"/>
+
+        <ItemsControl ItemsSource="{Binding Totals}" Focusable="False">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding}" FontSize="16" Margin="0,3,0,3"/>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </StackPanel>
+</UserControl>

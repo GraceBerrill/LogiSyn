@@ -2,6 +2,7 @@
   "version": 4,
   "targets": {
     "net10.0-windows": {
+<<<<<<< HEAD
       "Microsoft.AspNetCore.OpenApi/10.0.12": {
         "type": "package",
         "dependencies": {
@@ -24,6 +25,8 @@
           "build/_._": {}
         }
       },
+=======
+>>>>>>> origin/Feature/desktop-manager-manage-users
       "Microsoft.Bcl.Cryptography/9.0.18": {
         "type": "package",
         "compile": {
@@ -369,6 +372,16 @@
           }
         }
       },
+<<<<<<< HEAD
+      "Microsoft.Office.Interop.Outlook/15.0.4797.1004": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/Microsoft.Office.Interop.Outlook.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/Microsoft.Office.Interop.Outlook.dll": {}
+        }
+      },
       "Microsoft.OpenApi/2.12.0": {
         "type": "package",
         "compile": {
@@ -382,6 +395,8 @@
           }
         }
       },
+=======
+>>>>>>> origin/Feature/desktop-manager-manage-users
       "Microsoft.SqlServer.Server/1.0.0": {
         "type": "package",
         "compile": {
@@ -427,14 +442,15 @@
         "build": {
           "buildTransitive/net8.0/_._": {}
         }
+<<<<<<< HEAD
       },
-      "UglyToad.PdfPig/0.1.9-alpha001-patch1": {
+      "UglyToad.PdfPig/1.7.0-custom-5": {
         "type": "package",
         "dependencies": {
-          "UglyToad.PdfPig.Core": "0.1.9-alpha001-patch1",
-          "UglyToad.PdfPig.Fonts": "0.1.9-alpha001-patch1",
-          "UglyToad.PdfPig.Tokenization": "0.1.9-alpha001-patch1",
-          "UglyToad.PdfPig.Tokens": "0.1.9-alpha001-patch1"
+          "UglyToad.PdfPig.Core": "1.7.0-custom-5",
+          "UglyToad.PdfPig.Fonts": "1.7.0-custom-5",
+          "UglyToad.PdfPig.Tokenization": "1.7.0-custom-5",
+          "UglyToad.PdfPig.Tokens": "1.7.0-custom-5"
         },
         "compile": {
           "lib/net6.0/UglyToad.PdfPig.dll": {
@@ -525,7 +541,7 @@
           "Microsoft.AspNetCore.OpenApi": "10.0.12",
           "Microsoft.Data.SqlClient": "7.1.0",
           "SharedLibrary": "1.0.0",
-          "UglyToad.PdfPig": "0.1.9-alpha001-patch1"
+          "UglyToad.PdfPig": "1.7.0-custom-5"
         },
         "compile": {
           "bin/placeholder/AndersonsBakeryAPI.dll": {}
@@ -540,16 +556,22 @@
       "SharedLibrary/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v10.0",
+        "dependencies": {
+          "Microsoft.Office.Interop.Outlook": "15.0.4797.1004"
+        },
         "compile": {
           "bin/placeholder/SharedLibrary.dll": {}
         },
         "runtime": {
           "bin/placeholder/SharedLibrary.dll": {}
         }
+=======
+>>>>>>> origin/Feature/desktop-manager-manage-users
       }
     }
   },
   "libraries": {
+<<<<<<< HEAD
     "Microsoft.AspNetCore.OpenApi/10.0.12": {
       "sha512": "7RnQ/UKn+kK3JDLmTpW+vVqNErWthGPAVAy1aIiBzv4ucQ6g9NFvOJUuT0PHcpvcJxGVxctMxj6t+NESWMrgHQ==",
       "type": "package",
@@ -568,6 +590,8 @@
         "microsoft.aspnetcore.openapi.nuspec"
       ]
     },
+=======
+>>>>>>> origin/Feature/desktop-manager-manage-users
     "Microsoft.Bcl.Cryptography/9.0.18": {
       "sha512": "42XcqOGj0jTNW6FphUEuhNLCdVQsYbYCf2pPlkWdz1uDyxxirpcxyjg7pWIBgPCjzk6rv/irgLya/2tDJKIpYg==",
       "type": "package",
@@ -1103,6 +1127,20 @@
         "microsoft.identitymodel.tokens.nuspec"
       ]
     },
+<<<<<<< HEAD
+    "Microsoft.Office.Interop.Outlook/15.0.4797.1004": {
+      "sha512": "17tdFXg/TGnbmSC9YNkIrB6P3vTSemOMI/TaUaZWQmRE1dMjHIVmBPffQhXasH/te4weHiFk8EEXUCi/NsGbuA==",
+      "type": "package",
+      "path": "microsoft.office.interop.outlook/15.0.4797.1004",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net20/Microsoft.Office.Interop.Outlook.dll",
+        "lib/netstandard2.0/Microsoft.Office.Interop.Outlook.dll",
+        "microsoft.office.interop.outlook.15.0.4797.1004.nupkg.sha512",
+        "microsoft.office.interop.outlook.nuspec"
+      ]
+    },
     "Microsoft.OpenApi/2.12.0": {
       "sha512": "0xB/be+f6qYOhvQPUrVsLrau+fkowYv6gt9RIkajMhwT7sZnqtcA797yW3bS5kgSje+AQW4xZgyLnW641YFioQ==",
       "type": "package",
@@ -1121,6 +1159,8 @@
         "microsoft.openapi.nuspec"
       ]
     },
+=======
+>>>>>>> origin/Feature/desktop-manager-manage-users
     "Microsoft.SqlServer.Server/1.0.0": {
       "sha512": "N4KeF3cpcm1PUHym1RmakkzfkEv3GRMyofVv40uXsQhCQeglr2OHNcUk2WOG51AKpGO8ynGpo9M/kFXSzghwug==",
       "type": "package",
@@ -1192,11 +1232,12 @@
         "system.threading.ratelimiting.nuspec",
         "useSharedDesignerContext.txt"
       ]
+<<<<<<< HEAD
     },
-    "UglyToad.PdfPig/0.1.9-alpha001-patch1": {
-      "sha512": "dayc8urhJp129XPTzYQr00wQmbmOxcIVZRqh/lL1Z12qrwN9zRmNFQR92WOQy0y6eSEokfuN0tdOJw1+eQwTaA==",
+    "UglyToad.PdfPig/1.7.0-custom-5": {
+      "sha512": "mddnoBg+XV5YZJg+lp/LlXQ9NY9/oV/MoNjLbbLHw0uTymfyuinVePQB4ff/ELRv3s6n0G7h8q3Ycb3KYg+hgQ==",
       "type": "package",
-      "path": "uglytoad.pdfpig/0.1.9-alpha001-patch1",
+      "path": "uglytoad.pdfpig/1.7.0-custom-5",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -1216,7 +1257,7 @@
         "lib/net6.0/UglyToad.PdfPig.xml",
         "lib/netstandard2.0/UglyToad.PdfPig.dll",
         "lib/netstandard2.0/UglyToad.PdfPig.xml",
-        "uglytoad.pdfpig.0.1.9-alpha001-patch1.nupkg.sha512",
+        "uglytoad.pdfpig.1.7.0-custom-5.nupkg.sha512",
         "uglytoad.pdfpig.nuspec"
       ]
     },
@@ -1346,33 +1387,56 @@
       "type": "project",
       "path": "../SharedLibrary/SharedLibrary.csproj",
       "msbuildProject": "../SharedLibrary/SharedLibrary.csproj"
+=======
+>>>>>>> origin/Feature/desktop-manager-manage-users
     }
   },
   "projectFileDependencyGroups": {
     "net10.0-windows": [
+<<<<<<< HEAD
       "AndersonsBakeryAPI >= 1.0.0",
       "Microsoft.Data.SqlClient >= 7.1.0",
+      "Microsoft.Office.Interop.Outlook >= 15.0.4797.1004",
       "SharedLibrary >= 1.0.0"
     ]
   },
   "packageFolders": {
     "C:\\Users\\Adria\\.nuget\\packages\\": {},
+=======
+      "Microsoft.Data.SqlClient >= 7.1.0"
+    ]
+  },
+  "packageFolders": {
+    "C:\\Users\\Luc Naude\\.nuget\\packages\\": {},
+>>>>>>> origin/Feature/desktop-manager-manage-users
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Adria\\source\\repos\\GraceBerrill\\LogiSyn\\LogiSyn\\LogiSyn.csproj",
+<<<<<<< HEAD
+      "projectUniqueName": "C:\\Users\\Adria\\source\\repos\\LogiSyn\\LogiSyn\\LogiSyn.csproj",
       "projectName": "LogiSyn",
-      "projectPath": "C:\\Users\\Adria\\source\\repos\\GraceBerrill\\LogiSyn\\LogiSyn\\LogiSyn.csproj",
+      "projectPath": "C:\\Users\\Adria\\source\\repos\\LogiSyn\\LogiSyn\\LogiSyn.csproj",
       "packagesPath": "C:\\Users\\Adria\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Adria\\source\\repos\\GraceBerrill\\LogiSyn\\LogiSyn\\obj\\",
+      "outputPath": "C:\\Users\\Adria\\source\\repos\\LogiSyn\\LogiSyn\\obj\\",
+=======
+      "projectUniqueName": "C:\\Users\\Luc Naude\\Desktop\\INSY7315\\LogiSyn\\LogiSyn\\LogiSyn.csproj",
+      "projectName": "LogiSyn",
+      "projectPath": "C:\\Users\\Luc Naude\\Desktop\\INSY7315\\LogiSyn\\LogiSyn\\LogiSyn.csproj",
+      "packagesPath": "C:\\Users\\Luc Naude\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Luc Naude\\Desktop\\INSY7315\\LogiSyn\\LogiSyn\\obj\\",
+>>>>>>> origin/Feature/desktop-manager-manage-users
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
+<<<<<<< HEAD
         "C:\\Users\\Adria\\AppData\\Roaming\\NuGet\\NuGet.Config",
+=======
+        "C:\\Users\\Luc Naude\\AppData\\Roaming\\NuGet\\NuGet.Config",
+>>>>>>> origin/Feature/desktop-manager-manage-users
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -1389,11 +1453,11 @@
           "framework": "net10.0-windows7.0",
           "targetAlias": "net10.0-windows",
           "projectReferences": {
-            "C:\\Users\\Adria\\source\\repos\\GraceBerrill\\LogiSyn\\AndersonsBakeryAPI\\AndersonsBakeryAPI.csproj": {
-              "projectPath": "C:\\Users\\Adria\\source\\repos\\GraceBerrill\\LogiSyn\\AndersonsBakeryAPI\\AndersonsBakeryAPI.csproj"
+            "C:\\Users\\Adria\\source\\repos\\LogiSyn\\AndersonsBakeryAPI\\AndersonsBakeryAPI.csproj": {
+              "projectPath": "C:\\Users\\Adria\\source\\repos\\LogiSyn\\AndersonsBakeryAPI\\AndersonsBakeryAPI.csproj"
             },
-            "C:\\Users\\Adria\\source\\repos\\GraceBerrill\\LogiSyn\\SharedLibrary\\SharedLibrary.csproj": {
-              "projectPath": "C:\\Users\\Adria\\source\\repos\\GraceBerrill\\LogiSyn\\SharedLibrary\\SharedLibrary.csproj"
+            "C:\\Users\\Adria\\source\\repos\\LogiSyn\\SharedLibrary\\SharedLibrary.csproj": {
+              "projectPath": "C:\\Users\\Adria\\source\\repos\\LogiSyn\\SharedLibrary\\SharedLibrary.csproj"
             }
           }
         }
@@ -1418,6 +1482,13 @@
           "Microsoft.Data.SqlClient": {
             "target": "Package",
             "version": "[7.1.0, )"
+<<<<<<< HEAD
+          },
+          "Microsoft.Office.Interop.Outlook": {
+            "target": "Package",
+            "version": "[15.0.4797.1004, )"
+=======
+>>>>>>> origin/Feature/desktop-manager-manage-users
           }
         },
         "imports": [
@@ -1735,44 +1806,10 @@
   },
   "logs": [
     {
-      "code": "NU1603",
+      "code": "Undefined",
       "level": "Warning",
       "warningLevel": 1,
-      "message": "UglyToad.PdfPig 0.1.9-alpha001-patch1 depends on UglyToad.PdfPig.Core (>= 0.1.9-alpha001-patch1) but UglyToad.PdfPig.Core 0.1.9-alpha001-patch1 was not found. UglyToad.PdfPig.Core 1.7.0-custom-5 was resolved instead.",
-      "libraryId": "UglyToad.PdfPig.Core",
-      "targetGraphs": [
-        "net10.0-windows"
-      ]
-    },
-    {
-      "code": "NU1603",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "UglyToad.PdfPig 0.1.9-alpha001-patch1 depends on UglyToad.PdfPig.Fonts (>= 0.1.9-alpha001-patch1) but UglyToad.PdfPig.Fonts 0.1.9-alpha001-patch1 was not found. UglyToad.PdfPig.Fonts 1.7.0-custom-5 was resolved instead.",
-      "libraryId": "UglyToad.PdfPig.Fonts",
-      "targetGraphs": [
-        "net10.0-windows"
-      ]
-    },
-    {
-      "code": "NU1603",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "UglyToad.PdfPig 0.1.9-alpha001-patch1 depends on UglyToad.PdfPig.Tokenization (>= 0.1.9-alpha001-patch1) but UglyToad.PdfPig.Tokenization 0.1.9-alpha001-patch1 was not found. UglyToad.PdfPig.Tokenization 1.7.0-custom-5 was resolved instead.",
-      "libraryId": "UglyToad.PdfPig.Tokenization",
-      "targetGraphs": [
-        "net10.0-windows"
-      ]
-    },
-    {
-      "code": "NU1603",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "UglyToad.PdfPig 0.1.9-alpha001-patch1 depends on UglyToad.PdfPig.Tokens (>= 0.1.9-alpha001-patch1) but UglyToad.PdfPig.Tokens 0.1.9-alpha001-patch1 was not found. UglyToad.PdfPig.Tokens 1.7.0-custom-5 was resolved instead.",
-      "libraryId": "UglyToad.PdfPig.Tokens",
-      "targetGraphs": [
-        "net10.0-windows"
-      ]
+      "message": "Problem reading the cache file C:\\Users\\Adria\\source\\repos\\LogiSyn\\LogiSyn\\obj\\project.nuget.cache : '<' is an invalid start of a property name. Expected a '\"'. Path: $ | LineNumber: 2 | BytePositionInLine: 0."
     }
   ]
 }

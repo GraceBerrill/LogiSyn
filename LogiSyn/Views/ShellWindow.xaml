@@ -1,0 +1,158 @@
+<Window x:Class="LogiSyn.Views.ShellWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="LogiSyn"
+        Width="1440"
+        Height="900"
+        MinWidth="1100"
+        MinHeight="700"
+        WindowStartupLocation="CenterScreen"
+        Background="#F5F6FA">
+
+    <Window.Resources>
+        <Style x:Key="MenuButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#E0E0E0"/>
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Height" Value="50"/>
+            <Setter Property="Margin" Value="0,0,0,15"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Bg"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="8"
+                                Padding="15,0">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0"
+                                           Text="{TemplateBinding Tag}"
+                                           FontFamily="Segoe MDL2 Assets"
+                                           FontSize="18"
+                                           Margin="0,0,10,0"
+                                           VerticalAlignment="Center"
+                                           Foreground="{TemplateBinding Foreground}"/>
+                                <ContentPresenter Grid.Column="1"
+                                                  VerticalAlignment="Center"
+                                                  HorizontalAlignment="Left"/>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bg" Property="Background" Value="#2A3350"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                            <Trigger Property="Tag" Value="ACTIVE">
+                                <Setter TargetName="Bg" Property="Background" Value="White"/>
+                                <Setter Property="Foreground" Value="#1B2136"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="260"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Border Grid.Column="0" Background="#1B2136">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="20,30,20,40">
+                    <Border Width="35" Height="35" CornerRadius="17.5"
+                            Background="#3E4A61" Margin="0,0,10,0">
+                        <TextBlock Text="&#xE77B;"
+                                   FontFamily="Segoe MDL2 Assets"
+                                   Foreground="#B0B0B0"
+                                   VerticalAlignment="Center"
+                                   HorizontalAlignment="Center"
+                                   FontSize="16"/>
+                    </Border>
+                    <TextBlock x:Name="RoleText"
+                               Text="Admin"
+                               Foreground="#E0E0E0"
+                               VerticalAlignment="Center"
+                               FontSize="14"/>
+                </StackPanel>
+
+                <StackPanel Grid.Row="1" Margin="20,0,20,0">
+                    <Button x:Name="DashboardButton"
+                            Content="Dashboard"
+                            Tag="&#xE80F;"
+                            Style="{StaticResource MenuButtonStyle}"
+                            Click="DashboardButton_Click"/>
+                    <Button x:Name="OrdersButton"
+                            Content="Orders"
+                            Tag="&#xE8A1;"
+                            Style="{StaticResource MenuButtonStyle}"
+                            Click="OrdersButton_Click"/>
+                    <Button x:Name="HistoryButton"
+                            Content="History"
+                            Tag="&#xE81C;"
+                            Style="{StaticResource MenuButtonStyle}"
+                            Click="HistoryButton_Click"/>
+                    <Button x:Name="ProductsButton"
+                            Content="Manage Products"
+                            Tag="&#xE7B8;"
+                            Style="{StaticResource MenuButtonStyle}"
+                            Click="ProductsButton_Click"/>
+                    <Button x:Name="UsersButton"
+                            Content="Manage Users"
+                            Tag="&#xE716;"
+                            Style="{StaticResource MenuButtonStyle}"
+                            Click="UsersButton_Click"
+                            Visibility="Collapsed"/>
+                </StackPanel>
+
+                <Button Grid.Row="2"
+                        Margin="20,0,20,30"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        HorizontalContentAlignment="Left"
+                        Cursor="Hand"
+                        Click="LogoutButton_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="&#xE7E8;"
+                                   FontFamily="Segoe MDL2 Assets"
+                                   Foreground="#E0E0E0"
+                                   FontSize="14"
+                                   Margin="0,0,8,0"
+                                   VerticalAlignment="Center"/>
+                        <TextBlock Text="Log Out"
+                                   Foreground="#E0E0E0"
+                                   FontSize="14"
+                                   VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+            </Grid>
+        </Border>
+
+        <Grid Grid.Column="1">
+            <ContentControl x:Name="MainContent"/>
+
+            <Grid x:Name="ModalLayer" Visibility="Collapsed">
+                <Border x:Name="ModalScrim"
+                        Background="{StaticResource ScrimDetail}"/>
+                <ContentControl x:Name="ModalContent"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"/>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>

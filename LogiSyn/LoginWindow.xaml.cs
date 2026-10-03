@@ -1,4 +1,4 @@
-﻿using System.Windows;
+using System.Windows;
 using LogiSyn.Services;
 using LogiSyn.Model;
 
@@ -26,7 +26,7 @@ namespace LogiSyn
 
             try
             {
-                User? loggedInUser = _loginService.Authenticate(name, password);
+                UserRow? loggedInUser = _loginService.Authenticate(name, password);
 
                 if (loggedInUser != null)
                 {
