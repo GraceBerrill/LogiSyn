@@ -20,8 +20,8 @@ namespace LogiSyn.Views
         {
             InitializeComponent();
 
-            //navigate shell window to dashboard by default
-            LogiSyn.Views.ShellWindow.Current = new LogiSyn.Views.ShellWindow(this);
+            // navigate shell window to dashboard by default for a regular user
+            _ = new LogiSyn.Views.ShellWindow(LogiSyn.Model.AppRole.User);
         }
 
         public void SetupSidebarNavigation(string role)

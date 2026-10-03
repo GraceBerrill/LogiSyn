@@ -46,7 +46,9 @@ namespace LogiSyn.Views
             switch (page.ToLowerInvariant())
             {
                 case "dashboard":
-                    view = new DashboardView(_role);
+                    var dv = new DashboardView();
+                    dv.ConfigureRole(_role.ToString());
+                    view = dv;
                     break;
 
                 case "orders":
@@ -96,7 +98,9 @@ namespace LogiSyn.Views
                     break;
 
                 default:
-                    view = new DashboardView(_role);
+                    var dv2 = new DashboardView();
+                    dv2.ConfigureRole(_role.ToString());
+                    view = dv2;
                     page = "dashboard";
                     break;
             }
@@ -117,6 +121,12 @@ namespace LogiSyn.Views
         {
             ModalContent.Content = null;
             ModalLayer.Visibility = Visibility.Collapsed;
+        }
+
+        // Backwards-compatibility: close all modal content layers
+        public void CloseAllModals()
+        {
+            CloseModal();
         }
 
         private void UpdateActiveButton(string page)

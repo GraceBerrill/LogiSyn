@@ -2,7 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
+// Provide UI type aliases so the library can be multi-targeted.
+#if WINDOWS
+using UiBrush = System.Windows.Media.Brush;
+using UiImageSource = System.Windows.Media.ImageSource;
 using System.Windows.Media;
+#else
+using UiBrush = System.Object;
+using UiImageSource = System.Object;
+#endif
 
 namespace LogiSyn.Model
 {
@@ -19,9 +27,9 @@ namespace LogiSyn.Model
 	{
 		private bool _isActive;
 
-		public string Key { get; set; }
-		public string Label { get; set; }
-		public ImageSource Icon { get; set; }
+		public string? Key { get; set; }
+		public string? Label { get; set; }
+		public UiImageSource? Icon { get; set; }
 
 		public bool IsActive
 		{
@@ -29,55 +37,58 @@ namespace LogiSyn.Model
 			set
 			{
 				_isActive = value;
-				if (PropertyChanged != null)
-					PropertyChanged(this, new PropertyChangedEventArgs("IsActive"));
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("IsActive"));
 			}
 		}
 
-		public event PropertyChangedEventHandler PropertyChanged;
+	public event PropertyChangedEventHandler? PropertyChanged;
 	}
 
 	public static class Palette
 	{
-		public static Brush From(string hex)
+		public static UiBrush From(string hex)
 		{
+#if WINDOWS
 			var brush = (SolidColorBrush)new BrushConverter().ConvertFromString(hex);
 			brush.Freeze();
 			return brush;
+#else
+			return null!;
+#endif
 		}
 
-		public static readonly Brush ListPending = From("#BDD38478");
-		public static readonly Brush ListComplete = From("#BD398158");
-		public static readonly Brush DashPending = From("#C6AEA5");
-		public static readonly Brush DashComplete = From("#A5C6AC");
-		public static readonly Brush UserPending = From("#B22727");
-		public static readonly Brush UserComplete = From("#135826");
-		public static readonly Brush Black = From("#000000");
+		public static readonly UiBrush ListPending = From("#BDD38478");
+		public static readonly UiBrush ListComplete = From("#BD398158");
+		public static readonly UiBrush DashPending = From("#C6AEA5");
+		public static readonly UiBrush DashComplete = From("#A5C6AC");
+		public static readonly UiBrush UserPending = From("#B22727");
+		public static readonly UiBrush UserComplete = From("#135826");
+		public static readonly UiBrush Black = From("#000000");
 	}
 
 	public class OrderRow
 	{
-		public string Number { get; set; }
-		public string Customer { get; set; }
+		public string? Number { get; set; }
+		public string? Customer { get; set; }
 		public DateTime Date { get; set; }
-		public string Status { get; set; }              // "Pending" or "Complete"
+		public string? Status { get; set; }              // "Pending" or "Complete"
 
 		public bool IsComplete { get { return Status == "Complete"; } }
 		public string DateText { get { return Date.ToString("dd/MM/yy", CultureInfo.InvariantCulture); } }
 
-		public Brush ListStatusBrush { get { return IsComplete ? Palette.ListComplete : Palette.ListPending; } }
-		public Brush DashStatusBrush { get { return IsComplete ? Palette.DashComplete : Palette.DashPending; } }
+		public UiBrush ListStatusBrush { get { return IsComplete ? Palette.ListComplete : Palette.ListPending; } }
+		public UiBrush DashStatusBrush { get { return IsComplete ? Palette.DashComplete : Palette.DashPending; } }
 		public string UserStatusText { get { return IsComplete ? "Completed" : "Pending"; } }
-		public Brush UserStatusBrush { get { return IsComplete ? Palette.UserComplete : Palette.UserPending; } }
+		public UiBrush UserStatusBrush { get { return IsComplete ? Palette.UserComplete : Palette.UserPending; } }
 	}
 
 	public class ProductRow
 	{
-		public string Name { get; set; }
-		public string Price { get; set; }
-		public string SellBy { get; set; }
-		public string BestBefore { get; set; }
-		public string Storage { get; set; }
+		public string? Name { get; set; }
+		public string? Price { get; set; }
+		public string? SellBy { get; set; }
+		public string? BestBefore { get; set; }
+		public string? Storage { get; set; }
 	}
 
 	public class UserRow
@@ -92,77 +103,77 @@ namespace LogiSyn.Model
 	// ----- summary paper (Order Sheets / Order Breakdown) -----
 	public class SummaryLine
 	{
-		public string Product { get; set; }
-		public string Production { get; set; }
-		public string Ingredients { get; set; }
-		public string Packaging { get; set; }
+		public string? Product { get; set; }
+		public string? Production { get; set; }
+		public string? Ingredients { get; set; }
+		public string? Packaging { get; set; }
 	}
 
 	public class SummaryData
 	{
-		public string Title { get; set; }
-		public string DateText { get; set; }
+		public string? Title { get; set; }
+		public string? DateText { get; set; }
 		public bool IsCompleted { get; set; }
-		public List<SummaryLine> Lines { get; set; }
+		public List<SummaryLine> Lines { get; set; } = new List<SummaryLine>();
 	}
 
 	public class RawMaterialData
 	{
-		public string Title { get; set; }
-		public string DateText { get; set; }
-		public List<string> Totals { get; set; }
+		public string? Title { get; set; }
+		public string? DateText { get; set; }
+		public List<string> Totals { get; set; } = new List<string>();
 	}
 
 	// ----- production sheet paper -----
 	public class SheetIngredient
 	{
-		public string Name { get; set; }
-		public string Amount { get; set; }
-		public string Additional { get; set; }
-		public string Used { get; set; }
-		public Brush UsedBrush { get; set; }
+		public string? Name { get; set; }
+		public string? Amount { get; set; }
+		public string? Additional { get; set; }
+		public string? Used { get; set; }
+		public UiBrush? UsedBrush { get; set; }
 	}
 
 	public class SheetPackaging
 	{
-		public string Name { get; set; }
-		public string Amount { get; set; }
-		public string Used { get; set; }
-		public Brush UsedBrush { get; set; }
+		public string? Name { get; set; }
+		public string? Amount { get; set; }
+		public string? Used { get; set; }
+		public UiBrush? UsedBrush { get; set; }
 	}
 
 	public class SheetProduct
 	{
-		public string Name { get; set; }
-		public string Amount { get; set; }
-		public string Production { get; set; }
-		public List<SheetIngredient> Ingredients { get; set; }
-		public List<SheetPackaging> Packaging { get; set; }
-		public string Notes { get; set; }
+		public string? Name { get; set; }
+		public string? Amount { get; set; }
+		public string? Production { get; set; }
+		public List<SheetIngredient> Ingredients { get; set; } = new List<SheetIngredient>();
+		public List<SheetPackaging> Packaging { get; set; } = new List<SheetPackaging>();
+		public string? Notes { get; set; }
 	}
 
 	public class SheetData
 	{
-		public string Title { get; set; }
-		public string DateText { get; set; }
+		public string? Title { get; set; }
+		public string? DateText { get; set; }
 		public bool IsCompleted { get; set; }
-		public List<SheetProduct> Products { get; set; }
+		public List<SheetProduct> Products { get; set; } = new List<SheetProduct>();
 	}
 
 	// ----- product pop-up -----
 	public class IngredientLine
 	{
-		public string Name { get; set; }
-		public string Quantity { get; set; }
+		public string? Name { get; set; }
+		public string? Quantity { get; set; }
 	}
 
 	public class ProductDetail
 	{
-		public string Name { get; set; }
-		public string DateAdded { get; set; }
-		public List<IngredientLine> Ingredients { get; set; }
-		public string Method { get; set; }
-		public string Storage { get; set; }
+		public string? Name { get; set; }
+		public string? DateAdded { get; set; }
+		public List<IngredientLine> Ingredients { get; set; } = new List<IngredientLine>();
+		public string? Method { get; set; }
+		public string? Storage { get; set; }
 	}
 
 	// =====================================================================
@@ -263,8 +274,8 @@ namespace LogiSyn.Model
 		/// </summary>
 		public static SheetData Sheet(bool filled)
 		{
-			Brush good = filled ? Palette.UserComplete : Palette.Black;
-			Brush bad = filled ? Palette.UserPending : Palette.Black;
+			UiBrush good = filled ? Palette.UserComplete : Palette.Black;
+			UiBrush bad = filled ? Palette.UserPending : Palette.Black;
 
 			return new SheetData
 			{

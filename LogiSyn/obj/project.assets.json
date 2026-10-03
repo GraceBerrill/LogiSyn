@@ -549,9 +549,6 @@
       "SharedLibrary/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v10.0",
-        "dependencies": {
-          "Microsoft.Office.Interop.Outlook": "15.0.4797.1004"
-        },
         "compile": {
           "bin/placeholder/SharedLibrary.dll": {}
         },

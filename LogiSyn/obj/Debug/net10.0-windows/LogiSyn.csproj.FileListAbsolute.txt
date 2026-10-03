@@ -1,354 +1,61 @@
-C:\Users\grace\OneDrive\Documents\GitHub\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\LogiSyn.exe
-C:\Users\grace\OneDrive\Documents\GitHub\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\LogiSyn.deps.json
-C:\Users\grace\OneDrive\Documents\GitHub\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\LogiSyn.runtimeconfig.json
-C:\Users\grace\OneDrive\Documents\GitHub\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\LogiSyn.dll
-C:\Users\grace\OneDrive\Documents\GitHub\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\LogiSyn.pdb
-C:\Users\grace\OneDrive\Documents\GitHub\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.Bcl.Cryptography.dll
-C:\Users\grace\OneDrive\Documents\GitHub\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.Data.SqlClient.dll
-C:\Users\grace\OneDrive\Documents\GitHub\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.Data.SqlClient.Extensions.Abstractions.dll
-C:\Users\grace\OneDrive\Documents\GitHub\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.Data.SqlClient.Internal.Logging.dll
-C:\Users\grace\OneDrive\Documents\GitHub\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.Extensions.Caching.Abstractions.dll
-C:\Users\grace\OneDrive\Documents\GitHub\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.Extensions.Caching.Memory.dll
-C:\Users\grace\OneDrive\Documents\GitHub\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.Extensions.DependencyInjection.Abstractions.dll
-C:\Users\grace\OneDrive\Documents\GitHub\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.Extensions.Logging.Abstractions.dll
-C:\Users\grace\OneDrive\Documents\GitHub\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.Extensions.Options.dll
-C:\Users\grace\OneDrive\Documents\GitHub\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.Extensions.Primitives.dll
-C:\Users\grace\OneDrive\Documents\GitHub\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.IdentityModel.Abstractions.dll
-C:\Users\grace\OneDrive\Documents\GitHub\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.IdentityModel.JsonWebTokens.dll
-C:\Users\grace\OneDrive\Documents\GitHub\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.IdentityModel.Logging.dll
-C:\Users\grace\OneDrive\Documents\GitHub\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.IdentityModel.Protocols.dll
-C:\Users\grace\OneDrive\Documents\GitHub\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
-C:\Users\grace\OneDrive\Documents\GitHub\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.IdentityModel.Tokens.dll
-C:\Users\grace\OneDrive\Documents\GitHub\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.SqlServer.Server.dll
-C:\Users\grace\OneDrive\Documents\GitHub\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\System.IdentityModel.Tokens.Jwt.dll
-C:\Users\grace\OneDrive\Documents\GitHub\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\System.Threading.RateLimiting.dll
-C:\Users\grace\OneDrive\Documents\GitHub\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\cs\Microsoft.Data.SqlClient.resources.dll
-C:\Users\grace\OneDrive\Documents\GitHub\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\de\Microsoft.Data.SqlClient.resources.dll
-C:\Users\grace\OneDrive\Documents\GitHub\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\es\Microsoft.Data.SqlClient.resources.dll
-C:\Users\grace\OneDrive\Documents\GitHub\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\fr\Microsoft.Data.SqlClient.resources.dll
-C:\Users\grace\OneDrive\Documents\GitHub\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\it\Microsoft.Data.SqlClient.resources.dll
-C:\Users\grace\OneDrive\Documents\GitHub\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\ja\Microsoft.Data.SqlClient.resources.dll
-C:\Users\grace\OneDrive\Documents\GitHub\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\ko\Microsoft.Data.SqlClient.resources.dll
-C:\Users\grace\OneDrive\Documents\GitHub\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\pl\Microsoft.Data.SqlClient.resources.dll
-C:\Users\grace\OneDrive\Documents\GitHub\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\pt-BR\Microsoft.Data.SqlClient.resources.dll
-C:\Users\grace\OneDrive\Documents\GitHub\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\ru\Microsoft.Data.SqlClient.resources.dll
-C:\Users\grace\OneDrive\Documents\GitHub\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\tr\Microsoft.Data.SqlClient.resources.dll
-C:\Users\grace\OneDrive\Documents\GitHub\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\zh-Hans\Microsoft.Data.SqlClient.resources.dll
-C:\Users\grace\OneDrive\Documents\GitHub\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\zh-Hant\Microsoft.Data.SqlClient.resources.dll
-C:\Users\grace\OneDrive\Documents\GitHub\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\runtimes\unix\lib\net9.0\Microsoft.Data.SqlClient.dll
-C:\Users\grace\OneDrive\Documents\GitHub\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\runtimes\win\lib\net9.0\Microsoft.Data.SqlClient.dll
-C:\Users\grace\OneDrive\Documents\GitHub\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\runtimes\win-arm64\native\Microsoft.Data.SqlClient.SNI.dll
-C:\Users\grace\OneDrive\Documents\GitHub\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\runtimes\win-x64\native\Microsoft.Data.SqlClient.SNI.dll
-C:\Users\grace\OneDrive\Documents\GitHub\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\runtimes\win-x86\native\Microsoft.Data.SqlClient.SNI.dll
-C:\Users\grace\OneDrive\Documents\GitHub\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn.csproj.AssemblyReference.cache
-C:\Users\grace\OneDrive\Documents\GitHub\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\LoginWindow.baml
-C:\Users\grace\OneDrive\Documents\GitHub\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\LoginWindow.g.cs
-C:\Users\grace\OneDrive\Documents\GitHub\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\MainWindow.g.cs
-C:\Users\grace\OneDrive\Documents\GitHub\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\App.g.cs
-C:\Users\grace\OneDrive\Documents\GitHub\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn_MarkupCompile.cache
-C:\Users\grace\OneDrive\Documents\GitHub\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn_MarkupCompile.lref
-C:\Users\grace\OneDrive\Documents\GitHub\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\MainWindow.baml
-C:\Users\grace\OneDrive\Documents\GitHub\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn.g.resources
-C:\Users\grace\OneDrive\Documents\GitHub\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\grace\OneDrive\Documents\GitHub\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn.AssemblyInfoInputs.cache
-C:\Users\grace\OneDrive\Documents\GitHub\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn.AssemblyInfo.cs
-C:\Users\grace\OneDrive\Documents\GitHub\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn.csproj.CoreCompileInputs.cache
-C:\Users\grace\OneDrive\Documents\GitHub\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn.sourcelink.json
-C:\Users\grace\OneDrive\Documents\GitHub\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn.csproj.Up2Date
-C:\Users\grace\OneDrive\Documents\GitHub\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn.dll
-C:\Users\grace\OneDrive\Documents\GitHub\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\refint\LogiSyn.dll
-C:\Users\grace\OneDrive\Documents\GitHub\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn.pdb
-C:\Users\grace\OneDrive\Documents\GitHub\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn.genruntimeconfig.cache
-C:\Users\grace\OneDrive\Documents\GitHub\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\ref\LogiSyn.dll
-<<<<<<< HEAD
-=======
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn.csproj.AssemblyReference.cache
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Styles\Icons.baml
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Styles\Theme.baml
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\AdminOrdersView.baml
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\CreateOrderView.baml
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\DashBoardView.baml
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\HistoryView.baml
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\LoginWindow.baml
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\ManageProductsView.baml
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\ManageUsersView.baml
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\OrderBreakdownView.baml
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\OrderCompleteModal.baml
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\PrintEmailModal.baml
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\RawMaterialPaper.baml
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\ShellWindow.baml
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\SummaryPaper.baml
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\UserOrderView.baml
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\App.baml
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LoginWindow.g.cs
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\MainWindow.g.cs
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\AdminOrdersView.g.cs
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\CreateOrderView.g.cs
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\DashBoardView.g.cs
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\HistoryView.g.cs
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\LoginWindow.g.cs
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\MainWindow.g.cs
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\ManageProductsView.g.cs
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\ManageUsersView.g.cs
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\OrderBreakdownView.g.cs
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\OrderCompleteModal.g.cs
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\OrderSheetsView.g.cs
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\PrintEmailModal.g.cs
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\ProductDetailModal.g.cs
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\RawMaterialPaper.g.cs
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\SheetPaper.g.cs
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\ShellWindow.g.cs
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\SummaryPaper.g.cs
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\UserOrderSheet.g.cs
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\UserOrderView.g.cs
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\App.g.cs
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\GeneratedInternalTypeHelper.g.cs
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn_MarkupCompile.cache
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn_MarkupCompile.lref
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn.dll
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\refint\LogiSyn.dll
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn.pdb
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\AddProductModal.baml
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\AddProductModal.g.cs
->>>>>>> origin/Feature/desktop-manager-manage-users
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\LogiSyn.exe
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\LogiSyn.deps.json
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\LogiSyn.runtimeconfig.json
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\LogiSyn.dll
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\LogiSyn.pdb
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.Bcl.Cryptography.dll
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.Data.SqlClient.dll
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.Data.SqlClient.Extensions.Abstractions.dll
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.Data.SqlClient.Internal.Logging.dll
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.Extensions.Caching.Abstractions.dll
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.Extensions.Caching.Memory.dll
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.Extensions.DependencyInjection.Abstractions.dll
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.Extensions.Logging.Abstractions.dll
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.Extensions.Options.dll
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.Extensions.Primitives.dll
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.IdentityModel.Abstractions.dll
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.IdentityModel.JsonWebTokens.dll
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.IdentityModel.Logging.dll
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.IdentityModel.Protocols.dll
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.IdentityModel.Tokens.dll
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.SqlServer.Server.dll
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\System.IdentityModel.Tokens.Jwt.dll
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\System.Threading.RateLimiting.dll
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\cs\Microsoft.Data.SqlClient.resources.dll
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\de\Microsoft.Data.SqlClient.resources.dll
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\es\Microsoft.Data.SqlClient.resources.dll
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\fr\Microsoft.Data.SqlClient.resources.dll
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\it\Microsoft.Data.SqlClient.resources.dll
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\ja\Microsoft.Data.SqlClient.resources.dll
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\ko\Microsoft.Data.SqlClient.resources.dll
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\pl\Microsoft.Data.SqlClient.resources.dll
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\pt-BR\Microsoft.Data.SqlClient.resources.dll
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\ru\Microsoft.Data.SqlClient.resources.dll
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\tr\Microsoft.Data.SqlClient.resources.dll
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\zh-Hans\Microsoft.Data.SqlClient.resources.dll
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\zh-Hant\Microsoft.Data.SqlClient.resources.dll
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\runtimes\unix\lib\net9.0\Microsoft.Data.SqlClient.dll
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\runtimes\win\lib\net9.0\Microsoft.Data.SqlClient.dll
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\runtimes\win-arm64\native\Microsoft.Data.SqlClient.SNI.dll
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\runtimes\win-x64\native\Microsoft.Data.SqlClient.SNI.dll
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\runtimes\win-x86\native\Microsoft.Data.SqlClient.SNI.dll
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\MainWindow.baml
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LoginWindow.baml
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\MainWindow.baml
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\OrderSheetsView.baml
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\ProductDetailModal.baml
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\SheetPaper.baml
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\UserOrderSheet.baml
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn.g.resources
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn.AssemblyInfoInputs.cache
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn.AssemblyInfo.cs
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn.csproj.CoreCompileInputs.cache
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn.sourcelink.json
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn.csproj.Up2Date
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn.genruntimeconfig.cache
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\ref\LogiSyn.dll
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn.csproj.AssemblyReference.cache
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\CreateOrderPage.baml
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\LoginWindow.baml
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\OrderReviewPage.baml
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LoginWindow.g.cs
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\MainWindow.g.cs
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\CreateOrderPage.g.cs
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\LoginWindow.g.cs
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\MainWindow.g.cs
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\OrderReviewPage.g.cs
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\App.g.cs
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn_MarkupCompile.cache
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn_MarkupCompile.lref
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn.dll
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\refint\LogiSyn.dll
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn.pdb
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\AndersonsBakeryAPI.deps.json
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\AndersonsBakeryAPI.runtimeconfig.json
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\appsettings.Development.json
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\appsettings.json
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\AndersonsBakeryAPI.staticwebassets.endpoints.json
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\AndersonsBakeryAPI.exe
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\LogiSyn.exe
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\LogiSyn.deps.json
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\LogiSyn.runtimeconfig.json
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\LogiSyn.dll
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\LogiSyn.pdb
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.AspNetCore.OpenApi.dll
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.Bcl.Cryptography.dll
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.Data.SqlClient.dll
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.Data.SqlClient.Extensions.Abstractions.dll
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.Data.SqlClient.Internal.Logging.dll
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.IdentityModel.Abstractions.dll
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.IdentityModel.JsonWebTokens.dll
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.IdentityModel.Logging.dll
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.IdentityModel.Protocols.dll
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.IdentityModel.Tokens.dll
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.OpenApi.dll
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.SqlServer.Server.dll
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\System.IdentityModel.Tokens.Jwt.dll
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\UglyToad.PdfPig.dll
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\UglyToad.PdfPig.Core.dll
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\UglyToad.PdfPig.Fonts.dll
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\UglyToad.PdfPig.Tokenization.dll
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\UglyToad.PdfPig.Tokens.dll
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\cs\Microsoft.Data.SqlClient.resources.dll
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\de\Microsoft.Data.SqlClient.resources.dll
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\es\Microsoft.Data.SqlClient.resources.dll
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\fr\Microsoft.Data.SqlClient.resources.dll
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\it\Microsoft.Data.SqlClient.resources.dll
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\ja\Microsoft.Data.SqlClient.resources.dll
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\ko\Microsoft.Data.SqlClient.resources.dll
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\pl\Microsoft.Data.SqlClient.resources.dll
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\pt-BR\Microsoft.Data.SqlClient.resources.dll
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\ru\Microsoft.Data.SqlClient.resources.dll
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\tr\Microsoft.Data.SqlClient.resources.dll
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\zh-Hans\Microsoft.Data.SqlClient.resources.dll
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\zh-Hant\Microsoft.Data.SqlClient.resources.dll
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\runtimes\unix\lib\net9.0\Microsoft.Data.SqlClient.dll
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\runtimes\win\lib\net9.0\Microsoft.Data.SqlClient.dll
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\runtimes\win-arm64\native\Microsoft.Data.SqlClient.SNI.dll
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\runtimes\win-x64\native\Microsoft.Data.SqlClient.SNI.dll
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\runtimes\win-x86\native\Microsoft.Data.SqlClient.SNI.dll
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\AndersonsBakeryAPI.dll
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\SharedLibrary.dll
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\SharedLibrary.pdb
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\AndersonsBakeryAPI.pdb
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LoginWindow.baml
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\MainWindow.baml
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\MainWindow.baml
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn.g.resources
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn.AssemblyInfoInputs.cache
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn.AssemblyInfo.cs
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn.csproj.CoreCompileInputs.cache
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn.sourcelink.json
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn.csproj.Up2Date
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn.genruntimeconfig.cache
-C:\Users\Adria\source\repos\GraceBerrill\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\ref\LogiSyn.dll
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\AndersonsBakeryAPI.deps.json
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\AndersonsBakeryAPI.runtimeconfig.json
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\appsettings.Development.json
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\appsettings.json
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\AndersonsBakeryAPI.staticwebassets.endpoints.json
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\AndersonsBakeryAPI.exe
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\LogiSyn.exe
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\LogiSyn.deps.json
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\LogiSyn.runtimeconfig.json
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\LogiSyn.dll
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\LogiSyn.pdb
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.AspNetCore.OpenApi.dll
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.Bcl.Cryptography.dll
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.Data.SqlClient.dll
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.Data.SqlClient.Extensions.Abstractions.dll
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.Data.SqlClient.Internal.Logging.dll
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.IdentityModel.Abstractions.dll
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.IdentityModel.JsonWebTokens.dll
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.IdentityModel.Logging.dll
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.IdentityModel.Protocols.dll
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.IdentityModel.Tokens.dll
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.Office.Interop.Outlook.dll
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.OpenApi.dll
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.SqlServer.Server.dll
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\System.IdentityModel.Tokens.Jwt.dll
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\UglyToad.PdfPig.dll
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\UglyToad.PdfPig.Core.dll
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\UglyToad.PdfPig.Fonts.dll
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\UglyToad.PdfPig.Tokenization.dll
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\UglyToad.PdfPig.Tokens.dll
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\cs\Microsoft.Data.SqlClient.resources.dll
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\de\Microsoft.Data.SqlClient.resources.dll
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\es\Microsoft.Data.SqlClient.resources.dll
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\fr\Microsoft.Data.SqlClient.resources.dll
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\it\Microsoft.Data.SqlClient.resources.dll
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\ja\Microsoft.Data.SqlClient.resources.dll
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\ko\Microsoft.Data.SqlClient.resources.dll
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\pl\Microsoft.Data.SqlClient.resources.dll
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\pt-BR\Microsoft.Data.SqlClient.resources.dll
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\ru\Microsoft.Data.SqlClient.resources.dll
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\tr\Microsoft.Data.SqlClient.resources.dll
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\zh-Hans\Microsoft.Data.SqlClient.resources.dll
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\zh-Hant\Microsoft.Data.SqlClient.resources.dll
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\runtimes\unix\lib\net9.0\Microsoft.Data.SqlClient.dll
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\runtimes\win\lib\net9.0\Microsoft.Data.SqlClient.dll
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\runtimes\win-arm64\native\Microsoft.Data.SqlClient.SNI.dll
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\runtimes\win-x64\native\Microsoft.Data.SqlClient.SNI.dll
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\runtimes\win-x86\native\Microsoft.Data.SqlClient.SNI.dll
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\AndersonsBakeryAPI.dll
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\SharedLibrary.dll
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\SharedLibrary.pdb
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\AndersonsBakeryAPI.pdb
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn.csproj.AssemblyReference.cache
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\AddMoreProducts.baml
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\AdminOrderBreakdown.baml
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\AdminOrderHistory.baml
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\CreateOrderPage.baml
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\LoginWindow.baml
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\OrderReviewPage.baml
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\OrdersPage.baml
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\AddMoreProducts.g.cs
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\AdminOrderBreakdown.g.cs
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\AdminOrderHistory.g.cs
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\CreateOrderPage.g.cs
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\LoginWindow.g.cs
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\OrderReviewPage.g.cs
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\OrdersPage.g.cs
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\App.g.cs
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn_MarkupCompile.cache
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn_MarkupCompile.lref
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn.g.resources
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn.AssemblyInfoInputs.cache
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn.AssemblyInfo.cs
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn.csproj.CoreCompileInputs.cache
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn.sourcelink.json
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn.csproj.Up2Date
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn.dll
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\refint\LogiSyn.dll
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn.pdb
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn.genruntimeconfig.cache
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\ref\LogiSyn.dll
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\MainWindow.g.cs
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\MainWindow.baml
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\ConfirmationPopUp.baml
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\UserOrderPageReview.baml
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\UsersOrderPage.baml
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\ConfirmationPopUp.g.cs
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\UserOrderPageReview.g.cs
-C:\Users\Adria\source\repos\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\UsersOrderPage.g.cs
->>>>>>> origin/Feature/desktop-admin-create-order
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\AddUserModal.baml
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\AddUserModal.g.cs
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\EditUserModal.g.cs
-C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\EditUserModal.baml
+D:\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\appsettings.Development.json
+D:\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\appsettings.json
+D:\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\AndersonsBakeryAPI.deps.json
+D:\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\AndersonsBakeryAPI.runtimeconfig.json
+D:\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\AndersonsBakeryAPI.staticwebassets.endpoints.json
+D:\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\AndersonsBakeryAPI.exe
+D:\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\LogiSyn.exe
+D:\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\LogiSyn.deps.json
+D:\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\LogiSyn.runtimeconfig.json
+D:\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\LogiSyn.dll
+D:\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\LogiSyn.pdb
+D:\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.AspNetCore.OpenApi.dll
+D:\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.Bcl.Cryptography.dll
+D:\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.Data.SqlClient.dll
+D:\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.Data.SqlClient.Extensions.Abstractions.dll
+D:\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.Data.SqlClient.Internal.Logging.dll
+D:\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.IdentityModel.Abstractions.dll
+D:\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.IdentityModel.JsonWebTokens.dll
+D:\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.IdentityModel.Logging.dll
+D:\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.IdentityModel.Protocols.dll
+D:\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+D:\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.IdentityModel.Tokens.dll
+D:\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.Office.Interop.Outlook.dll
+D:\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.OpenApi.dll
+D:\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\Microsoft.SqlServer.Server.dll
+D:\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\System.IdentityModel.Tokens.Jwt.dll
+D:\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\UglyToad.PdfPig.dll
+D:\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\UglyToad.PdfPig.Core.dll
+D:\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\UglyToad.PdfPig.Fonts.dll
+D:\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\UglyToad.PdfPig.Tokenization.dll
+D:\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\UglyToad.PdfPig.Tokens.dll
+D:\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\cs\Microsoft.Data.SqlClient.resources.dll
+D:\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\de\Microsoft.Data.SqlClient.resources.dll
+D:\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\es\Microsoft.Data.SqlClient.resources.dll
+D:\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\fr\Microsoft.Data.SqlClient.resources.dll
+D:\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\it\Microsoft.Data.SqlClient.resources.dll
+D:\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\ja\Microsoft.Data.SqlClient.resources.dll
+D:\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\ko\Microsoft.Data.SqlClient.resources.dll
+D:\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\pl\Microsoft.Data.SqlClient.resources.dll
+D:\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\pt-BR\Microsoft.Data.SqlClient.resources.dll
+D:\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\ru\Microsoft.Data.SqlClient.resources.dll
+D:\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\tr\Microsoft.Data.SqlClient.resources.dll
+D:\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\zh-Hans\Microsoft.Data.SqlClient.resources.dll
+D:\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\zh-Hant\Microsoft.Data.SqlClient.resources.dll
+D:\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\runtimes\unix\lib\net9.0\Microsoft.Data.SqlClient.dll
+D:\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\runtimes\win\lib\net9.0\Microsoft.Data.SqlClient.dll
+D:\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\runtimes\win-arm64\native\Microsoft.Data.SqlClient.SNI.dll
+D:\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\runtimes\win-x64\native\Microsoft.Data.SqlClient.SNI.dll
+D:\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\runtimes\win-x86\native\Microsoft.Data.SqlClient.SNI.dll
+D:\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\AndersonsBakeryAPI.dll
+D:\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\SharedLibrary.dll
+D:\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\SharedLibrary.pdb
+D:\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\AndersonsBakeryAPI.pdb
 D:\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn.csproj.AssemblyReference.cache
 D:\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Styles\Icons.baml
 D:\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Styles\Theme.baml
 D:\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\AddMoreProducts.baml
+D:\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\AddProductModal.baml
 D:\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\AddUserModal.baml
 D:\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\AdminOrderBreakdown.baml
 D:\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\AdminOrderHistory.baml
@@ -373,6 +80,7 @@ D:\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\UserOrderPageReview.baml
 D:\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\UserOrderView.baml
 D:\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\UsersOrderPage.baml
 D:\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\AddMoreProducts.g.cs
+D:\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\AddProductModal.g.cs
 D:\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\AddUserModal.g.cs
 D:\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\AdminOrderBreakdown.g.cs
 D:\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\AdminOrderHistory.g.cs
@@ -404,10 +112,28 @@ D:\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\UserOrderSheet.g.cs
 D:\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\UserOrderView.g.cs
 D:\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\UsersOrderPage.g.cs
 D:\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\UserWindow.g.cs
+D:\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\App.g.cs
 D:\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\GeneratedInternalTypeHelper.g.cs
 D:\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn_MarkupCompile.cache
 D:\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn_MarkupCompile.lref
+D:\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\App.baml
+D:\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\AdminWindow.baml
+D:\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\EditUserModal.baml
+D:\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\ManagerWindow.baml
+D:\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\OrderSheetsView.baml
+D:\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\ProductDetailModal.baml
+D:\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\SheetPaper.baml
+D:\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\UserOrderSheet.baml
+D:\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\Views\UserWindow.baml
+D:\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn.g.resources
+D:\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn.GeneratedMSBuildEditorConfig.editorconfig
+D:\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn.AssemblyInfoInputs.cache
+D:\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn.AssemblyInfo.cs
+D:\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn.csproj.CoreCompileInputs.cache
+D:\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn.sourcelink.json
+D:\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn.csproj.Up2Date
 D:\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn.dll
 D:\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\refint\LogiSyn.dll
 D:\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn.pdb
-D:\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\App.g.cs
+D:\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\LogiSyn.genruntimeconfig.cache
+D:\LogiSyn\LogiSyn\obj\Debug\net10.0-windows\ref\LogiSyn.dll
