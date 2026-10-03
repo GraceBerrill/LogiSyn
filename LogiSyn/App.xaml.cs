@@ -24,9 +24,9 @@ namespace LogiSyn
                 {
                     Window dashboard = user.Role?.ToLowerInvariant() switch
                     {
-                        "admin" => new AdminWindow(user),
-                        "manager" => new ManagerWindow(user),
-                        _ => new UserWindow(user),
+                        "admin" => new AdminWindow(),
+                        "manager" => new ManagerWindow(),
+                        _ => new UserWindow(),
                     };
 
                     Application.Current.MainWindow = dashboard;

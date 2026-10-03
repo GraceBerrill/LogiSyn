@@ -11,14 +11,10 @@ using System.Windows.Shapes;
 
 namespace LogiSyn.Views
 {
-<<<<<<< HEAD:LogiSyn/Views/UserWindow.xaml.cs
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for UserWindow.xaml
     /// </summary>
     public partial class UserWindow : Window
-=======
-    public partial class MainWindow : Window
->>>>>>> origin/Feature/desktop-admin-manage-products:LogiSyn/MainWindow.xaml.cs
     {
         public UserWindow()
         {

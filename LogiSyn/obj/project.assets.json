@@ -2,7 +2,6 @@
   "version": 4,
   "targets": {
     "net10.0-windows": {
-<<<<<<< HEAD
       "Microsoft.AspNetCore.OpenApi/10.0.12": {
         "type": "package",
         "dependencies": {
@@ -25,8 +24,6 @@
           "build/_._": {}
         }
       },
-=======
->>>>>>> origin/Feature/desktop-manager-manage-users
       "Microsoft.Bcl.Cryptography/9.0.18": {
         "type": "package",
         "compile": {
@@ -372,7 +369,6 @@
           }
         }
       },
-<<<<<<< HEAD
       "Microsoft.Office.Interop.Outlook/15.0.4797.1004": {
         "type": "package",
         "compile": {
@@ -395,8 +391,6 @@
           }
         }
       },
-=======
->>>>>>> origin/Feature/desktop-manager-manage-users
       "Microsoft.SqlServer.Server/1.0.0": {
         "type": "package",
         "compile": {
@@ -442,7 +436,6 @@
         "build": {
           "buildTransitive/net8.0/_._": {}
         }
-<<<<<<< HEAD
       },
       "UglyToad.PdfPig/1.7.0-custom-5": {
         "type": "package",
@@ -565,13 +558,10 @@
         "runtime": {
           "bin/placeholder/SharedLibrary.dll": {}
         }
-=======
->>>>>>> origin/Feature/desktop-manager-manage-users
       }
     }
   },
   "libraries": {
-<<<<<<< HEAD
     "Microsoft.AspNetCore.OpenApi/10.0.12": {
       "sha512": "7RnQ/UKn+kK3JDLmTpW+vVqNErWthGPAVAy1aIiBzv4ucQ6g9NFvOJUuT0PHcpvcJxGVxctMxj6t+NESWMrgHQ==",
       "type": "package",
@@ -590,8 +580,6 @@
         "microsoft.aspnetcore.openapi.nuspec"
       ]
     },
-=======
->>>>>>> origin/Feature/desktop-manager-manage-users
     "Microsoft.Bcl.Cryptography/9.0.18": {
       "sha512": "42XcqOGj0jTNW6FphUEuhNLCdVQsYbYCf2pPlkWdz1uDyxxirpcxyjg7pWIBgPCjzk6rv/irgLya/2tDJKIpYg==",
       "type": "package",
@@ -1127,7 +1115,6 @@
         "microsoft.identitymodel.tokens.nuspec"
       ]
     },
-<<<<<<< HEAD
     "Microsoft.Office.Interop.Outlook/15.0.4797.1004": {
       "sha512": "17tdFXg/TGnbmSC9YNkIrB6P3vTSemOMI/TaUaZWQmRE1dMjHIVmBPffQhXasH/te4weHiFk8EEXUCi/NsGbuA==",
       "type": "package",
@@ -1159,8 +1146,6 @@
         "microsoft.openapi.nuspec"
       ]
     },
-=======
->>>>>>> origin/Feature/desktop-manager-manage-users
     "Microsoft.SqlServer.Server/1.0.0": {
       "sha512": "N4KeF3cpcm1PUHym1RmakkzfkEv3GRMyofVv40uXsQhCQeglr2OHNcUk2WOG51AKpGO8ynGpo9M/kFXSzghwug==",
       "type": "package",
@@ -1232,7 +1217,6 @@
         "system.threading.ratelimiting.nuspec",
         "useSharedDesignerContext.txt"
       ]
-<<<<<<< HEAD
     },
     "UglyToad.PdfPig/1.7.0-custom-5": {
       "sha512": "mddnoBg+XV5YZJg+lp/LlXQ9NY9/oV/MoNjLbbLHw0uTymfyuinVePQB4ff/ELRv3s6n0G7h8q3Ycb3KYg+hgQ==",
@@ -1387,13 +1371,10 @@
       "type": "project",
       "path": "../SharedLibrary/SharedLibrary.csproj",
       "msbuildProject": "../SharedLibrary/SharedLibrary.csproj"
-=======
->>>>>>> origin/Feature/desktop-manager-manage-users
     }
   },
   "projectFileDependencyGroups": {
     "net10.0-windows": [
-<<<<<<< HEAD
       "AndersonsBakeryAPI >= 1.0.0",
       "Microsoft.Data.SqlClient >= 7.1.0",
       "Microsoft.Office.Interop.Outlook >= 15.0.4797.1004",
@@ -1401,42 +1382,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Adria\\.nuget\\packages\\": {},
-=======
-      "Microsoft.Data.SqlClient >= 7.1.0"
-    ]
-  },
-  "packageFolders": {
-    "C:\\Users\\Luc Naude\\.nuget\\packages\\": {},
->>>>>>> origin/Feature/desktop-manager-manage-users
+    "C:\\Users\\matth\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-<<<<<<< HEAD
-      "projectUniqueName": "C:\\Users\\Adria\\source\\repos\\LogiSyn\\LogiSyn\\LogiSyn.csproj",
+      "projectUniqueName": "D:\\LogiSyn\\LogiSyn\\LogiSyn.csproj",
       "projectName": "LogiSyn",
-      "projectPath": "C:\\Users\\Adria\\source\\repos\\LogiSyn\\LogiSyn\\LogiSyn.csproj",
-      "packagesPath": "C:\\Users\\Adria\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Adria\\source\\repos\\LogiSyn\\LogiSyn\\obj\\",
-=======
-      "projectUniqueName": "C:\\Users\\Luc Naude\\Desktop\\INSY7315\\LogiSyn\\LogiSyn\\LogiSyn.csproj",
-      "projectName": "LogiSyn",
-      "projectPath": "C:\\Users\\Luc Naude\\Desktop\\INSY7315\\LogiSyn\\LogiSyn\\LogiSyn.csproj",
-      "packagesPath": "C:\\Users\\Luc Naude\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Luc Naude\\Desktop\\INSY7315\\LogiSyn\\LogiSyn\\obj\\",
->>>>>>> origin/Feature/desktop-manager-manage-users
+      "projectPath": "D:\\LogiSyn\\LogiSyn\\LogiSyn.csproj",
+      "packagesPath": "C:\\Users\\matth\\.nuget\\packages\\",
+      "outputPath": "D:\\LogiSyn\\LogiSyn\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-<<<<<<< HEAD
-        "C:\\Users\\Adria\\AppData\\Roaming\\NuGet\\NuGet.Config",
-=======
-        "C:\\Users\\Luc Naude\\AppData\\Roaming\\NuGet\\NuGet.Config",
->>>>>>> origin/Feature/desktop-manager-manage-users
+        "C:\\Users\\matth\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -1445,7 +1407,6 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -1453,11 +1414,11 @@
           "framework": "net10.0-windows7.0",
           "targetAlias": "net10.0-windows",
           "projectReferences": {
-            "C:\\Users\\Adria\\source\\repos\\LogiSyn\\AndersonsBakeryAPI\\AndersonsBakeryAPI.csproj": {
-              "projectPath": "C:\\Users\\Adria\\source\\repos\\LogiSyn\\AndersonsBakeryAPI\\AndersonsBakeryAPI.csproj"
+            "D:\\LogiSyn\\AndersonsBakeryAPI\\AndersonsBakeryAPI.csproj": {
+              "projectPath": "D:\\LogiSyn\\AndersonsBakeryAPI\\AndersonsBakeryAPI.csproj"
             },
-            "C:\\Users\\Adria\\source\\repos\\LogiSyn\\SharedLibrary\\SharedLibrary.csproj": {
-              "projectPath": "C:\\Users\\Adria\\source\\repos\\LogiSyn\\SharedLibrary\\SharedLibrary.csproj"
+            "D:\\LogiSyn\\SharedLibrary\\SharedLibrary.csproj": {
+              "projectPath": "D:\\LogiSyn\\SharedLibrary\\SharedLibrary.csproj"
             }
           }
         }
@@ -1482,13 +1443,10 @@
           "Microsoft.Data.SqlClient": {
             "target": "Package",
             "version": "[7.1.0, )"
-<<<<<<< HEAD
           },
           "Microsoft.Office.Interop.Outlook": {
             "target": "Package",
             "version": "[15.0.4797.1004, )"
-=======
->>>>>>> origin/Feature/desktop-manager-manage-users
           }
         },
         "imports": [
@@ -1803,13 +1761,5 @@
         }
       }
     }
-  },
-  "logs": [
-    {
-      "code": "Undefined",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Problem reading the cache file C:\\Users\\Adria\\source\\repos\\LogiSyn\\LogiSyn\\obj\\project.nuget.cache : '<' is an invalid start of a property name. Expected a '\"'. Path: $ | LineNumber: 2 | BytePositionInLine: 0."
-    }
-  ]
+  }
 }
