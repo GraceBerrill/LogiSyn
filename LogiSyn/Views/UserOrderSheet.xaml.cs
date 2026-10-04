@@ -7,7 +7,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using SharedLibrary.Model;
-using SharedLibrary.Model;
 using AndersonsBakeryAPI.Services;
 
 namespace LogiSyn.Views

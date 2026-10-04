@@ -67,7 +67,9 @@ namespace LogiSyn.Views
             // Format production items for the left list
             var displayItems = _currentOrder.productionItems.Select(item => new ProductionItemDisplayModel
             {
-                ProductName = item.ProductName,
+                ProductName = item.Amount > 0 && !(item.ProductName ?? string.Empty).StartsWith($"{item.Amount} ")
+                    ? $"{item.Amount} {item.ProductName}"
+                    : (item.ProductName ?? string.Empty),
                 ProductionLine = item.ProductionLine,
                 Pans = item.packaging.Pans,
                 Trolleys = item.packaging.Trolleys,

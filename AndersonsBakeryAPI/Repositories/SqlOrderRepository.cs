@@ -98,6 +98,9 @@ namespace AndersonsBakeryAPI.Repositories
                     existingOrder.Status = order.Status;
                     existingOrder.ProductionItems = order.ProductionItems;
                     existingOrder.RawMaterials = order.RawMaterials;
+
+                    context.Entry(existingOrder).Property(o => o.ProductionItems).IsModified = true;
+                    context.Entry(existingOrder).Property(o => o.RawMaterials).IsModified = true;
                 }
                 else
                 {

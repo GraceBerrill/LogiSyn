@@ -1,4 +1,4 @@
-﻿using SharedLibrary.Interface;
+using SharedLibrary.Interface;
 using SharedLibrary.Model;
 using System;
 using System.Collections.Generic;
@@ -23,7 +23,6 @@ namespace AndersonsBakeryAPI.Services
         private readonly ProductService _productService;
         private readonly MongoOrderRepository? _mongoRepository;
         private readonly SqlOrderRepository? _sqlRepository;
-
         private static readonly List<OrderScaled> _orders = new();
         private static bool _localLoaded = false;
 
@@ -129,13 +128,13 @@ namespace AndersonsBakeryAPI.Services
         {
             try
             {
-                // Configure the MongoDB client settings with a connection string and timeouts
-                string conn = "mongodb+srv://reannaude1_db_user:MPaJYcEqumlJbf0j@cluster0.twltvce.mongodb.net/?appName=Cluster0";
+                string conn = MongoConfiguration.GetConnectionString();
+                string dbName = MongoConfiguration.GetDatabaseName();
                 var settings = MongoClientSettings.FromConnectionString(conn);
                 settings.ServerSelectionTimeout = TimeSpan.FromSeconds(2);
                 settings.ConnectTimeout = TimeSpan.FromSeconds(2);
                 var client = new MongoClient(settings);
-                var db = client.GetDatabase("LogiSynDb");
+                var db = client.GetDatabase(dbName);
                 return new MongoOrderRepository(db);
             }
             catch (Exception ex)
@@ -144,7 +143,6 @@ namespace AndersonsBakeryAPI.Services
                 return null;
             }
         }
-
         //------------------------------------------------------------------------------------------------//
 
         // Static constructor to load local orders when the class is first accessed
@@ -242,7 +240,7 @@ namespace AndersonsBakeryAPI.Services
                     // Create a production item based on the product and calculated quantity
                     var item = new ProductionItem
                     {
-                        ProductName = $"{quantity} {product.ProductName}",
+                        ProductName = product.ProductName,
                         Amount = quantity,
                         ProductionLine = !string.IsNullOrWhiteSpace(product.StorageLocation) ? product.StorageLocation : "Production 1",
                         packaging = new Packaging
@@ -266,7 +264,7 @@ namespace AndersonsBakeryAPI.Services
                                 IngredientAmount = Math.Round(baseQty * quantity, 1),
                                 AdditionsAmount = Math.Round(baseQty * 0.1 * quantity, 1),
                                 MeasuredIngredient = ing.Unit ?? "kg",
-                                AmountUsed = Math.Round(baseQty * quantity, 1)
+                                AmountUsed = 0
                             });
                         }
                     }
@@ -278,7 +276,7 @@ namespace AndersonsBakeryAPI.Services
                             IngredientAmount = Math.Round(0.04 * quantity, 1),
                             AdditionsAmount = Math.Round(0.005 * quantity, 1),
                             MeasuredIngredient = "kg",
-                            AmountUsed = Math.Round(0.04 * quantity, 1)
+                            AmountUsed = 0
                         });
                         item.ReqIngredients.Add(new Ingredients
                         {
@@ -286,7 +284,7 @@ namespace AndersonsBakeryAPI.Services
                             IngredientAmount = Math.Round(0.01 * quantity, 1),
                             AdditionsAmount = Math.Round(0.001 * quantity, 1),
                             MeasuredIngredient = "kg",
-                            AmountUsed = Math.Round(0.01 * quantity, 1)
+                            AmountUsed = 0
                         });
                     }
 
@@ -376,82 +374,100 @@ namespace AndersonsBakeryAPI.Services
 
         //------------------------------------------------------------------------------------------------//
 
-        // Methods to manage orders, fetching from MongoDB, SQL, local file, or memory
-        public IEnumerable<OrderScaled> GetOrders()
+        // Helper to merge fetched orders into the in-memory cache without duplicates
+        private static void MergeOrders(IEnumerable<OrderScaled> incomingOrders)
         {
-            // 1. If in-memory already has orders, return a copy immediately (fast UI response)
             lock (_orders)
             {
-                if (_orders.Count > 0)
+                foreach (var incoming in incomingOrders)
                 {
-                    return _orders.ToList();
+                    int index = _orders.FindIndex(o => o.OrderId.Equals(incoming.OrderId, StringComparison.OrdinalIgnoreCase));
+                    if (index >= 0)
+                    {
+                        _orders[index] = incoming;
+                    }
+                    else
+                    {
+                        _orders.Add(incoming);
+                    }
+                }
+            }
+        }
+
+        // Asynchronously fetches orders from MongoDB, falling back to SQL Server, then local memory
+        public async Task<IEnumerable<OrderScaled>> GetOrdersAsync(bool forceRefresh = false)
+        {
+            // If cache is populated and fresh fetch is not forced, return immediate in-memory copy
+            if (!forceRefresh)
+            {
+                lock (_orders)
+                {
+                    if (_orders.Count > 0)
+                        return _orders.ToList();
                 }
             }
 
-            // 2. Fetch from MongoDB if repository is available (with a short timeout to prevent UI freezes)
+            // 1. Attempt fetch from MongoDB
             if (_mongoRepository != null)
             {
                 try
                 {
-                    var task = _mongoRepository.GetAllOrdersAsync();
-                    if (task.Wait(TimeSpan.FromSeconds(2)))
+                    var mongoOrders = (await _mongoRepository.GetAllOrdersAsync()).ToList();
+                    if (mongoOrders.Count > 0)
                     {
-                        var mongoOrders = task.Result.ToList();
-                        if (mongoOrders.Count > 0)
-                        {
-                            lock (_orders)
-                            {
-                                foreach (var mo in mongoOrders)
-                                {
-                                    if (!_orders.Any(o => o.OrderId.Equals(mo.OrderId, StringComparison.OrdinalIgnoreCase)))
-                                        _orders.Add(mo);
-                                }
-                            }
-                            SaveLocalOrders();
-                            return mongoOrders;
-                        }
+                        MergeOrders(mongoOrders);
+                        SaveLocalOrders();
+                        return mongoOrders;
                     }
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error fetching orders from MongoDB: {ex.Message}");
+                    Console.WriteLine($"[OrderService] Error fetching orders from MongoDB: {ex.Message}");
                 }
             }
 
-            // 3. Fetch from SQL Server repository if available
+            // 2. Fallback: Attempt fetch from SQL Server
             if (_sqlRepository != null)
             {
                 try
                 {
-                    var task = _sqlRepository.GetAllOrdersAsync();
-                    if (task.Wait(TimeSpan.FromSeconds(2)))
+                    var sqlOrders = (await _sqlRepository.GetAllOrdersAsync()).ToList();
+                    if (sqlOrders.Count > 0)
                     {
-                        var sqlOrders = task.Result.ToList();
-                        if (sqlOrders.Count > 0)
-                        {
-                            lock (_orders)
-                            {
-                                foreach (var so in sqlOrders)
-                                {
-                                    if (!_orders.Any(o => o.OrderId.Equals(so.OrderId, StringComparison.OrdinalIgnoreCase)))
-                                        _orders.Add(so);
-                                }
-                            }
-                            SaveLocalOrders();
-                            return sqlOrders;
-                        }
+                        MergeOrders(sqlOrders);
+                        SaveLocalOrders();
+                        return sqlOrders;
                     }
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error fetching orders from SQL: {ex.Message}");
+                    Console.WriteLine($"[OrderService] Error fetching orders from SQL: {ex.Message}");
                 }
             }
 
-            // 4. Return in-memory list (which includes orders loaded from Data/orders.json)
+            // 3. Fallback: Return in-memory list (includes orders from Data/orders.json)
             lock (_orders)
             {
                 return _orders.ToList();
+            }
+        }
+
+        // Synchronous wrapper
+        public IEnumerable<OrderScaled> GetOrders()
+        {
+            lock (_orders)
+            {
+                if (_orders.Count > 0)
+                    return _orders.ToList();
+            }
+
+            try
+            {
+                return Task.Run(async () => await GetOrdersAsync(forceRefresh: false)).GetAwaiter().GetResult();
+            }
+            catch
+            {
+                lock (_orders) { return _orders.ToList(); }
             }
         }
 
@@ -463,17 +479,26 @@ namespace AndersonsBakeryAPI.Services
                 string.Equals(o.Status, "Complete", StringComparison.OrdinalIgnoreCase)).ToList();
         }
 
-        // Retrieves a specific order by its ID
+        // Asynchronously retrieves an order by ID
+        public async Task<OrderScaled?> GetOrderByIdAsync(string orderId)
+        {
+            if (string.IsNullOrWhiteSpace(orderId)) return null;
+
+            var all = await GetOrdersAsync(forceRefresh: false);
+            return all.FirstOrDefault(o => o.OrderId.Equals(orderId, StringComparison.OrdinalIgnoreCase));
+        }
+
+        // Synchronous retrieval by ID
         public OrderScaled? GetOrderById(string orderId)
         {
             if (string.IsNullOrWhiteSpace(orderId)) return null;
             return GetOrders().FirstOrDefault(o => o.OrderId.Equals(orderId, StringComparison.OrdinalIgnoreCase));
         }
 
-        // Saves or updates an order locally, and syncs to MongoDB and SQL Server in background
-        public void SaveOrder(OrderScaled order)
+        // Asynchronously saves or updates an order locally and persists across MongoDB and SQL Server
+        public async Task<OrderScaled> SaveOrderAsync(OrderScaled order)
         {
-            if (order == null) return;
+            if (order == null) throw new ArgumentNullException(nameof(order));
 
             lock (_orders)
             {
@@ -481,49 +506,66 @@ namespace AndersonsBakeryAPI.Services
                 _orders.Add(order);
             }
 
-            // Always persist locally to disk (Data/orders.json) immediately
+            // Persist locally to Data/orders.json
             SaveLocalOrders();
 
-            // Persist to MongoDB in background if repository is available
+            // Persist to MongoDB
             if (_mongoRepository != null)
             {
-                Task.Run(async () =>
+                try
                 {
-                    try
-                    {
-                        Console.WriteLine($"[MONGODB] Saving order {order.OrderId} to MongoDB...");
-                        await _mongoRepository.SaveOrderAsync(order);
-                        Console.WriteLine($"[MONGODB] ✓ Successfully saved order {order.OrderId} to MongoDB");
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"[MONGODB] ✗ ERROR saving order to MongoDB: {ex.Message}");
-                    }
-                });
+                    await _mongoRepository.SaveOrderAsync(order);
+                    Console.WriteLine($"[MONGODB] Successfully saved order {order.OrderId}");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"[MONGODB] Error saving order to MongoDB: {ex.Message}");
+                }
             }
 
-            // Persist to SQL Server in background if repository is available
+            // Persist to SQL Server
             if (_sqlRepository != null)
             {
-                Task.Run(async () =>
+                try
                 {
-                    try
-                    {
-                        Console.WriteLine($"[SQL] Saving order {order.OrderId} to SQL Server...");
-                        await _sqlRepository.SaveOrderAsync(order);
-                        Console.WriteLine($"[SQL] ✓ Successfully saved order {order.OrderId} to SQL Server");
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"[SQL] ✗ ERROR saving order to SQL Server: {ex.Message}");
-                    }
-                });
+                    await _sqlRepository.SaveOrderAsync(order);
+                    Console.WriteLine($"[SQL] Successfully saved order {order.OrderId}");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"[SQL] Error saving order to SQL: {ex.Message}");
+                }
+            }
+
+            return order;
+        }
+
+        // Synchronous save wrapper
+        public void SaveOrder(OrderScaled order)
+        {
+            if (order == null) return;
+            try
+            {
+                Task.Run(async () => await SaveOrderAsync(order)).GetAwaiter().GetResult();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[OrderService] Error in sync SaveOrder: {ex.Message}");
             }
         }
 
-        // ------------------------------------------------------------------------------------------------//
+        // Completes an order asynchronously
+        public async Task CompleteOrderAsync(string orderId, Action<OrderScaled>? recordOrderData = null)
+        {
+            var order = await GetOrderByIdAsync(orderId);
+            if (order == null) return;
 
-        // Marks an order as completed and allows for additional processing via an optional callback action
+            recordOrderData?.Invoke(order);
+            order.Status = "Completed";
+            await SaveOrderAsync(order);
+        }
+
+        // Synchronous complete wrapper
         public void CompleteOrder(string orderId, Action<OrderScaled>? recordOrderData = null)
         {
             var order = GetOrderById(orderId);
@@ -533,6 +575,7 @@ namespace AndersonsBakeryAPI.Services
             order.Status = "Completed";
             SaveOrder(order);
         }
+
 
         //------------------------------------------------------------------------------------------------//
 

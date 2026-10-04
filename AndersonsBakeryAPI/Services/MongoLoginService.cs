@@ -10,6 +10,8 @@ namespace AndersonsBakeryAPI.Services
     {
         private readonly IMongoCollection<UserRow> _usersCollection;
 
+        //------------------------------------------------------------------------------------------------//
+
         public MongoLoginService(IMongoClient client, IConfiguration configuration)
         {
             var databaseName = configuration["MongoDatabase"]
@@ -19,17 +21,22 @@ namespace AndersonsBakeryAPI.Services
             _usersCollection = database.GetCollection<UserRow>("Users");
         }
 
+        //------------------------------------------------------------------------------------------------//
+
         public MongoLoginService(string connectionString, string databaseName)
         {
             if (string.IsNullOrWhiteSpace(connectionString))
                 throw new ArgumentException("MongoDB connection string is required.", nameof(connectionString));
-
             if (string.IsNullOrWhiteSpace(databaseName))
                 throw new ArgumentException("MongoDB database name is required.", nameof(databaseName));
-
-            var client = new MongoClient(connectionString);
+            var settings = MongoClientSettings.FromConnectionString(connectionString);
+            settings.ServerSelectionTimeout = TimeSpan.FromSeconds(3);
+            settings.ConnectTimeout = TimeSpan.FromSeconds(3);
+            var client = new MongoClient(settings);
             _usersCollection = client.GetDatabase(databaseName).GetCollection<UserRow>("Users");
         }
+
+        //------------------------------------------------------------------------------------------------//
 
         public UserRow? Authenticate(string name, string password)
         {
@@ -56,3 +63,5 @@ namespace AndersonsBakeryAPI.Services
         }
     }
 }
+
+//--------------------------------------End of File----------------------------------------------------------//

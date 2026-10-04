@@ -861,8 +861,7 @@
           "bin/placeholder/AndersonsBakeryAPI.dll": {}
         },
         "frameworkReferences": [
-          "Microsoft.AspNetCore.App",
-          "Microsoft.WindowsDesktop.App.WPF"
+          "Microsoft.AspNetCore.App"
         ]
       },
       "SharedLibrary/1.0.0": {

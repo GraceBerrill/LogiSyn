@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using SharedLibrary.Model;
-using SharedLibrary.Model;
 using AndersonsBakeryAPI.Services;
 
 namespace LogiSyn.Views
@@ -112,16 +111,15 @@ namespace LogiSyn.Views
                 var scaledOrder = _orderService.GetOrderById(orderId);
                 if (scaledOrder != null)
                 {
+                    // Save to API first then if it fails it falls back to local save
                     scaledOrder.Status = "Completed";
-                    _orderService.SaveOrder(scaledOrder);
                     try
                     {
                         await _apiClient.SaveOrderAsync(scaledOrder);
-                        await _apiClient.UpdateOrderStatusAsync(orderId, "Completed");
                     }
-                    catch (Exception ex)
+                    catch
                     {
-                        Console.WriteLine($"[OrderBreakdownView] Sync error: {ex.Message}");
+                        _orderService.SaveOrder(scaledOrder);
                     }
                 }
                 else if (_order != null)

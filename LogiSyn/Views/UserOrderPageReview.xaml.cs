@@ -1,4 +1,4 @@
-﻿using SharedLibrary.Interface;
+using SharedLibrary.Interface;
 using SharedLibrary.Model;
 using AndersonsBakeryAPI.Services;
 using System;
@@ -48,20 +48,32 @@ namespace LogiSyn.Views
             TxtOrderDate.Text = _order.OrderDate.ToString("d MMMM yyyy");
 
             // Wrap items with editable presentation bindings
-            _presentationItems = _order.productionItems.Select(item => new UserProductionItemViewModel
+            _presentationItems = _order.productionItems.Select(item =>
             {
-                ProductName = item.ProductName,
-                Amount = item.Amount > 0 ? item.Amount.ToString() : "100",
-                ProductionLine = item.ProductionLine,
-                Packaging = item.packaging,
-                Notes = item.Notes ?? string.Empty,
-                Ingredients = item.ReqIngredients.Select(ing => new UserIngredientViewModel
+                string cleanName = item.ProductName ?? string.Empty;
+                string amountStr = item.Amount > 0 ? item.Amount.ToString() : "100";
+                var match = System.Text.RegularExpressions.Regex.Match(cleanName, @"^(\d+)\s+(.+)$");
+                if (match.Success)
                 {
-                    IngredientName = ing.IngredientName,
-                    DisplayAmount = $"{ing.IngredientAmount} {ing.MeasuredIngredient}".Trim(),
-                    DisplayAdditional = $"{ing.AdditionsAmount} {ing.MeasuredIngredient}".Trim(),
-                    DisplayUsed = ing.AmountUsed > 0 ? ing.AmountUsed.ToString(System.Globalization.CultureInfo.InvariantCulture) : string.Empty
-                }).ToList()
+                    amountStr = match.Groups[1].Value;
+                    cleanName = match.Groups[2].Value;
+                }
+
+                return new UserProductionItemViewModel
+                {
+                    ProductName = cleanName,
+                    Amount = amountStr,
+                    ProductionLine = item.ProductionLine,
+                    Packaging = item.packaging,
+                    Notes = item.Notes ?? string.Empty,
+                    Ingredients = item.ReqIngredients.Select(ing => new UserIngredientViewModel
+                    {
+                        IngredientName = ing.IngredientName,
+                        DisplayAmount = $"{ing.IngredientAmount} {ing.MeasuredIngredient}".Trim(),
+                        DisplayAdditional = $"{ing.AdditionsAmount} {ing.MeasuredIngredient}".Trim(),
+                        DisplayUsed = ing.AmountUsed > 0 ? ing.AmountUsed.ToString(System.Globalization.CultureInfo.InvariantCulture) : string.Empty
+                    }).ToList()
+                };
             }).ToList();
 
             ItemsProductionList.ItemsSource = _presentationItems;

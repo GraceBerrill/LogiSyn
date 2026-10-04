@@ -293,6 +293,17 @@ namespace AndersonsBakeryAPI.Services
                             {
                                 pItem.Notes = notes;
                             }
+                        } else
+                        {
+                            if (pItem == null) {
+                                pItem = new ProductionItem
+                                {
+                                    ProductName = prodName,
+                                    ProductionLine = "Production line 1",
+                                    packaging = new Packaging()
+                                };
+                                targetOrder.ProductionItems.Add(pItem);
+                            }
                         }
                     }
                     else if (currentSection == 2)

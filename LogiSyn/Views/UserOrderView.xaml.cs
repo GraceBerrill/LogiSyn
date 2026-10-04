@@ -5,7 +5,6 @@ using System.Windows;
 using System.Windows.Controls;
 using SharedLibrary.Model;
 using AndersonsBakeryAPI.Services;
-using AndersonsBakeryAPI.Services;
 
 namespace LogiSyn.Views
 {
@@ -96,20 +95,31 @@ namespace LogiSyn.Views
                     if (res == MessageBoxResult.Yes)
                     {
                         orderToUse.Status = "Completed";
-                        _orderService.SaveOrder(orderToUse);
+
+                        // Save to API first if it cant it falls back to Local save
                         try
                         {
                             await _apiClient.SaveOrderAsync(orderToUse);
-                            await _apiClient.UpdateOrderStatusAsync(orderToUse.OrderId, "Completed");
                         }
-                        catch { }
+                        catch 
+                        {
+                            _orderService.SaveOrder(orderToUse);
+                        }
 
                         LoadOrdersAsync();
                         MessageBox.Show($"Order {orderToUse.OrderId} marked as Completed!", "Completed", MessageBoxButton.OK, MessageBoxImage.Information);
                     }
                     else if (res == MessageBoxResult.No)
                     {
-                        _orderService.SaveOrder(orderToUse);
+                       try
+                        {
+                            await _apiClient.SaveOrderAsync(orderToUse);
+                        }
+                        catch
+                        {
+                            _orderService.SaveOrder(orderToUse);
+                        }
+
                         LoadOrdersAsync();
                         ShellWindow.Current?.Navigate("usersheet", OrderRow.FromOrderScaled(orderToUse));
                     }

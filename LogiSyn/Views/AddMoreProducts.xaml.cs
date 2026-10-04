@@ -1,4 +1,4 @@
-﻿using SharedLibrary.Model;
+using SharedLibrary.Model;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -71,8 +71,8 @@ namespace LogiSyn.Views
             // Construct new production line item
             CreatedItem = new ProductionItem
             {
-                // Set the product name with quantity
-                ProductName = $"{qty} {productTitle}",
+                ProductName = productTitle,
+                Amount = qty,
                 ProductionLine = productionLine,
                 packaging = new Packaging
                 {

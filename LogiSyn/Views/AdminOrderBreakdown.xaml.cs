@@ -1,4 +1,4 @@
-﻿using SharedLibrary.Model;
+using SharedLibrary.Model;
 using SharedLibrary.Interface;
 using AndersonsBakeryAPI.Services;
 using System;
@@ -72,7 +72,7 @@ namespace LogiSyn.Views
                     }
                     else
                     {
-                        amount = "100";
+                        amount = item.Amount > 0 ? item.Amount.ToString() : "100";
                     }
 
                     var pkg = item.packaging ?? new Packaging();

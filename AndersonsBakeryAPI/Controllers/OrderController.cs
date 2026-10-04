@@ -28,12 +28,12 @@ namespace AndersonsBakeryAPI.Controllers
 
         //------------------------------------------------------------------------------------------------//
 
-        // GET endpoint to retrieve all orders
+        // GET endpoint to retrieve all orders (supports ?refresh=true)
         [HttpGet]
-        public ActionResult<IEnumerable<OrderScaled>> GetOrders()
+        public async Task<ActionResult<IEnumerable<OrderScaled>>> GetOrders([FromQuery] bool refresh = false)
         {
-            Console.WriteLine("[API] GET /api/orders called");
-            var orders = _orderService.GetOrders();
+            Console.WriteLine($"[API] GET /api/orders called (refresh={refresh})");
+            var orders = await _orderService.GetOrdersAsync(refresh);
             Console.WriteLine($"[API] Returning {orders.Count()} orders");
             return Ok(orders);
         }
@@ -42,10 +42,10 @@ namespace AndersonsBakeryAPI.Controllers
 
         // GET endpoint to retrieve a specific order by its ID
         [HttpGet("{id}")]
-        public ActionResult<OrderScaled> GetOrderById(string id)
+        public async Task<ActionResult<OrderScaled>> GetOrderById(string id)
         {
             Console.WriteLine($"[API] GET /api/orders/{id} called");
-            var order = _orderService.GetOrderById(id);
+            var order = await _orderService.GetOrderByIdAsync(id);
             if (order == null) return NotFound();
             return Ok(order);
         }
@@ -94,7 +94,7 @@ namespace AndersonsBakeryAPI.Controllers
 
         // POST endpoint to save a scaled order to the database
         [HttpPost]
-        public ActionResult<OrderScaled> SaveOrder([FromBody] OrderScaled order)
+        public async Task<ActionResult<OrderScaled>> SaveOrder([FromBody] OrderScaled order)
         {
             // Log the request and validate the order payload
             Console.WriteLine("[API] POST /api/orders called with SaveOrder");
@@ -102,23 +102,23 @@ namespace AndersonsBakeryAPI.Controllers
 
             // Log the order details and call the order service to save the order
             Console.WriteLine($"[API] Saving order: ID={order.OrderId}, Customer={order.Customer}, Status={order.Status}");
-            _orderService.SaveOrder(order);
-            Console.WriteLine($"[API] Order {order.OrderId} saved successfully");
-            return CreatedAtAction(nameof(GetOrderById), new { id = order.OrderId }, order);
+            var saved = await _orderService.SaveOrderAsync(order);
+            Console.WriteLine($"[API] Order {saved.OrderId} saved successfully");
+            return CreatedAtAction(nameof(GetOrderById), new { id = saved.OrderId }, saved);
         }
 
         //------------------------------------------------------------------------------------------------//
 
         // PUT endpoint to update the status of an existing order
         [HttpPut("{id}/status")]
-        public ActionResult UpdateOrderStatus(string id, [FromBody] string status)
+        public async Task<ActionResult> UpdateOrderStatus(string id, [FromBody] string status)
         {
             Console.WriteLine($"[API] PUT /api/orders/{id}/status called with {status}");
-            var order = _orderService.GetOrderById(id);
+            var order = await _orderService.GetOrderByIdAsync(id);
             if (order == null) return NotFound();
 
             order.Status = status;
-            _orderService.SaveOrder(order);
+            await _orderService.SaveOrderAsync(order);
             return NoContent();
         }
 

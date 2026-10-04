@@ -24,14 +24,14 @@ namespace AndersonsBakeryAPI.Services
         {
             if (string.IsNullOrWhiteSpace(connectionString))
                 throw new ArgumentException("MongoDB connection string is required.", nameof(connectionString));
-
             if (string.IsNullOrWhiteSpace(databaseName))
                 throw new ArgumentException("MongoDB database name is required.", nameof(databaseName));
-
-            var client = new MongoClient(connectionString);
+            var settings = MongoClientSettings.FromConnectionString(connectionString);
+            settings.ServerSelectionTimeout = TimeSpan.FromSeconds(3);
+            settings.ConnectTimeout = TimeSpan.FromSeconds(3);
+            var client = new MongoClient(settings);
             _usersCollection = client.GetDatabase(databaseName).GetCollection<UserRow>("Users");
         }
-
         public List<UserRow> GetAllUsers()
         {
             var users = _usersCollection.Find(_ => true).ToList();

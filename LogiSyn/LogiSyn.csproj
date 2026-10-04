@@ -28,4 +28,10 @@
     <ProjectReference Include="..\AndersonsBakeryAPI\AndersonsBakeryAPI.csproj" />
   </ItemGroup>
 
+	<ItemGroup>
+		<None Include="..\AndersonsBakeryAPI\appsettings.json" Link="appsettings.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+
 </Project>
