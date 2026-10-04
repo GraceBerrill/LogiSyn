@@ -7,8 +7,13 @@ namespace AndersonsBakeryAPI.Services
 {
     public class UserService
     {
-        private readonly string _connectionString =
-            @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=LogiSynDb;Integrated Security=True;";
+        private string GetConnectionString()
+        {
+            var env = Environment.GetEnvironmentVariable("LOGISYN_CONNECTION");
+            return string.IsNullOrWhiteSpace(env)
+                ? @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=LogiSynDb;Integrated Security=True;"
+                : env;
+        }
 
         public List<UserRow> GetAllUsers()
         {
@@ -18,7 +23,7 @@ namespace AndersonsBakeryAPI.Services
                 "SELECT Id, MongoId, Username, Password, Role, DateAdded " +
                 "FROM [User] ORDER BY Id";
 
-            using var conn = new SqlConnection(_connectionString);
+            using var conn = new SqlConnection(GetConnectionString());
             using var cmd = new SqlCommand(query, conn);
             conn.Open();
 
@@ -47,7 +52,7 @@ namespace AndersonsBakeryAPI.Services
                 "WHERE Username = @Username " +
                 "AND (@ExcludedMongoId IS NULL OR MongoId <> @ExcludedMongoId)";
 
-            using var conn = new SqlConnection(_connectionString);
+            using var conn = new SqlConnection(GetConnectionString());
             using var cmd = new SqlCommand(query, conn);
 
             cmd.Parameters.AddWithValue("@Username", username);
@@ -65,7 +70,7 @@ namespace AndersonsBakeryAPI.Services
                 "OUTPUT INSERTED.Id " +
                 "VALUES (@Username, @Password, @Role, @MongoId)";
 
-            using var conn = new SqlConnection(_connectionString);
+            using var conn = new SqlConnection(GetConnectionString());
             using var cmd = new SqlCommand(query, conn);
 
             cmd.Parameters.AddWithValue("@Username", username);
@@ -88,7 +93,7 @@ namespace AndersonsBakeryAPI.Services
                 "UPDATE [User] SET Username = @Username, Role = @Role " +
                 "WHERE MongoId = @MongoId";
 
-            using var conn = new SqlConnection(_connectionString);
+            using var conn = new SqlConnection(GetConnectionString());
             using var cmd = new SqlCommand(
                 string.IsNullOrWhiteSpace(newPasswordHash) ? withoutPassword : withPassword,
                 conn);
@@ -107,7 +112,7 @@ namespace AndersonsBakeryAPI.Services
         {
             const string query = "DELETE FROM [User] WHERE MongoId = @MongoId";
 
-            using var conn = new SqlConnection(_connectionString);
+            using var conn = new SqlConnection(GetConnectionString());
             using var cmd = new SqlCommand(query, conn);
             cmd.Parameters.AddWithValue("@MongoId", mongoId);
 
@@ -118,7 +123,7 @@ namespace AndersonsBakeryAPI.Services
         public string? GetPasswordHashBySqlId(string sqlId)
         {
             const string query = "SELECT Password FROM [User] WHERE Id = @Id";
-            using var conn = new SqlConnection(_connectionString);
+            using var conn = new SqlConnection(GetConnectionString());
             using var cmd = new SqlCommand(query, conn);
             cmd.Parameters.AddWithValue("@Id", int.Parse(sqlId));
             conn.Open();
@@ -128,7 +133,7 @@ namespace AndersonsBakeryAPI.Services
         public void SetMongoIdForSqlRow(string sqlId, string mongoId)
         {
             const string query = "UPDATE [User] SET MongoId = @MongoId WHERE Id = @Id";
-            using var conn = new SqlConnection(_connectionString);
+            using var conn = new SqlConnection(GetConnectionString());
             using var cmd = new SqlCommand(query, conn);
             cmd.Parameters.AddWithValue("@MongoId", mongoId);
             cmd.Parameters.AddWithValue("@Id", int.Parse(sqlId));

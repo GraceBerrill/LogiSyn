@@ -8,9 +8,9 @@
     -->
 
     <!-- ===== Fonts (files live in LogiSyn/Fonts, Build Action = Resource) ===== -->
-    <FontFamily x:Key="FontMS">/Fonts/#Merriweather Sans, Segoe UI</FontFamily>
-    <FontFamily x:Key="FontVarela">/Fonts/#Varela, Segoe UI</FontFamily>
-    <FontFamily x:Key="FontLexend">/Fonts/#Lexend Mega, Segoe UI</FontFamily>
+    <FontFamily x:Key="FontMS">Segoe UI</FontFamily>
+    <FontFamily x:Key="FontVarela">Segoe UI</FontFamily>
+    <FontFamily x:Key="FontLexend">Segoe UI</FontFamily>
 
     <!-- ===== Colours (from Figma) ===== -->
     <SolidColorBrush x:Key="Navy" Color="#122441"/>

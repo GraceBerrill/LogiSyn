@@ -1,4 +1,4 @@
-﻿<Window x:Class="LogiSyn.Views.LoginWindow"
+<Window x:Class="LogiSyn.Views.LoginWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Login - LogiSyn"
@@ -11,8 +11,8 @@
 
         <!-- Fonts (put the .ttf files in a Fonts folder, Build Action = Resource).
              Falls back to Segoe UI if they are missing. -->
-        <FontFamily x:Key="LexendMega">/Fonts/#Lexend Mega, Segoe UI</FontFamily>
-        <FontFamily x:Key="MerriweatherSans">/Fonts/#Merriweather Sans, Segoe UI</FontFamily>
+        <FontFamily x:Key="LexendMega">Segoe UI</FontFamily>
+        <FontFamily x:Key="MerriweatherSans">Segoe UI</FontFamily>
 
         <!-- Colours from the Figma file -->
         <SolidColorBrush x:Key="Navy" Color="#122441"/>

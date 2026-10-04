@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using Microsoft.Extensions.Configuration;
 using MongoDB.Driver;
@@ -17,6 +17,18 @@ namespace AndersonsBakeryAPI.Services
 
             var database = client.GetDatabase(databaseName);
             _usersCollection = database.GetCollection<UserRow>("Users");
+        }
+
+        public MongoLoginService(string connectionString, string databaseName)
+        {
+            if (string.IsNullOrWhiteSpace(connectionString))
+                throw new ArgumentException("MongoDB connection string is required.", nameof(connectionString));
+
+            if (string.IsNullOrWhiteSpace(databaseName))
+                throw new ArgumentException("MongoDB database name is required.", nameof(databaseName));
+
+            var client = new MongoClient(connectionString);
+            _usersCollection = client.GetDatabase(databaseName).GetCollection<UserRow>("Users");
         }
 
         public UserRow? Authenticate(string name, string password)

@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("LogiSyn")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3b6e2d27f375a3f39c01c7e2f86b600d1ebca092")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+bdcc4c52c0e9739ac97f0006f0c375fffaee5fbc")]
 [assembly: System.Reflection.AssemblyProductAttribute("LogiSyn")]
 [assembly: System.Reflection.AssemblyTitleAttribute("LogiSyn")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

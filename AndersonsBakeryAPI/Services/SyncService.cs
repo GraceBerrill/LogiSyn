@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using SharedLibrary.Model;
@@ -22,18 +22,35 @@ namespace AndersonsBakeryAPI.Services
 
     public class SyncService
     {
-        private readonly MongoUserService _mongo;
+        private readonly MongoUserService? _mongo;
         private readonly UserService _sql;
+
+        public SyncService()
+        {
+            _sql = new UserService();
+            _mongo = new MongoUserService(
+                MongoConfiguration.GetConnectionString(),
+                MongoConfiguration.GetDatabaseName());
+        }
+
+        public bool IsMongoConfigured => _mongo != null;
 
         public SyncService(MongoUserService mongo, UserService sql)
         {
-            _mongo = mongo;
-            _sql = sql;
+            _mongo = mongo ?? throw new ArgumentNullException(nameof(mongo));
+            _sql = sql ?? throw new ArgumentNullException(nameof(sql));
         }
 
         public SyncResult SyncUsers()
         {
             var result = new SyncResult();
+
+            if (_mongo == null)
+            {
+                result.Failed = 1;
+                result.Messages.Add("MongoDB sync is not configured. SQL users are available locally.");
+                return result;
+            }
 
             List<UserRow> sqlUsers;
             try

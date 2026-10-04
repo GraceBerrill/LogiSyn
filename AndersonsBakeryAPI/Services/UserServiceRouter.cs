@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using SharedLibrary.Model;
 
@@ -6,23 +6,37 @@ namespace AndersonsBakeryAPI.Services
 {
     public class UserServiceRouter
     {
-        private readonly MongoUserService _mongo;
+        private readonly MongoUserService? _mongo;
         private readonly UserService _sql;
+
+        public UserServiceRouter()
+        {
+            _mongo = new MongoUserService(
+                MongoConfiguration.GetConnectionString(),
+                MongoConfiguration.GetDatabaseName());
+            _sql = new UserService();
+        }
 
         public UserServiceRouter(MongoUserService mongo, UserService sql)
         {
-            _mongo = mongo;
-            _sql = sql;
+            _mongo = mongo ?? throw new ArgumentNullException(nameof(mongo));
+            _sql = sql ?? throw new ArgumentNullException(nameof(sql));
         }
 
         public List<UserRow> GetAllUsers()
         {
+            if (_mongo == null)
+                return _sql.GetAllUsers();
+
             try { return _mongo.GetAllUsers(); }
             catch { return _sql.GetAllUsers(); }
         }
 
         public bool UsernameExists(string username, string? excludedMongoId = null)
         {
+            if (_mongo == null)
+                return _sql.UsernameExists(username, excludedMongoId);
+
             try { return _mongo.UsernameExists(username, excludedMongoId); }
             catch { return _sql.UsernameExists(username, excludedMongoId); }
         }
@@ -30,6 +44,13 @@ namespace AndersonsBakeryAPI.Services
         public void AddUser(string username, string plainPassword, string role)
         {
             string hash = PasswordHasher.HashPassword(plainPassword);
+
+            if (_mongo == null)
+            {
+                _sql.AddUser(username, hash, role, string.Empty);
+                return;
+            }
+
             string mongoId = string.Empty;
             bool mongoOk = false;
             bool sqlOk = false;
@@ -60,6 +81,15 @@ namespace AndersonsBakeryAPI.Services
 
         public void UpdateUser(string mongoId, string username, string role, string? newPlainPassword = null)
         {
+            if (_mongo == null)
+            {
+                _sql.UpdateUser(mongoId, username, role,
+                    string.IsNullOrWhiteSpace(newPlainPassword)
+                        ? null
+                        : PasswordHasher.HashPassword(newPlainPassword));
+                return;
+            }
+
             try
             {
                 _mongo.UpdateUser(mongoId, username, role, newPlainPassword);
@@ -85,6 +115,12 @@ namespace AndersonsBakeryAPI.Services
 
         public void DeleteUser(string mongoId)
         {
+            if (_mongo == null)
+            {
+                _sql.DeleteUser(mongoId);
+                return;
+            }
+
             try { _mongo.DeleteUser(mongoId); }
             catch (Exception ex) { Console.WriteLine("Mongo delete failed: " + ex.Message); }
 

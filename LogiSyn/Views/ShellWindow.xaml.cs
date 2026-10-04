@@ -11,6 +11,7 @@ namespace LogiSyn.Views
         public static ShellWindow? Current { get; private set; }
 
         private readonly AppRole _role;
+        private bool _allowCloseWithoutShutdown;
 
         public ShellWindow(AppRole role)
         {
@@ -46,7 +47,7 @@ namespace LogiSyn.Views
             switch (page.ToLowerInvariant())
             {
                 case "dashboard":
-                    var dv = new DashboardView();
+                    var dv = new DashboardView(_role);
                     dv.ConfigureRole(_role.ToString());
                     view = dv;
                     break;
@@ -98,7 +99,7 @@ namespace LogiSyn.Views
                     break;
 
                 default:
-                    var dv2 = new DashboardView();
+                    var dv2 = new DashboardView(_role);
                     dv2.ConfigureRole(_role.ToString());
                     view = dv2;
                     page = "dashboard";
@@ -174,9 +175,21 @@ namespace LogiSyn.Views
         {
             var app = Application.Current as App;
 
+            _allowCloseWithoutShutdown = true;
             Close();
 
             app?.SignOut();
+        }
+
+        protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
+        {
+            if (!_allowCloseWithoutShutdown)
+            {
+                _allowCloseWithoutShutdown = true;
+                Application.Current.Shutdown();
+            }
+
+            base.OnClosing(e);
         }
 
         protected override void OnClosed(EventArgs e)

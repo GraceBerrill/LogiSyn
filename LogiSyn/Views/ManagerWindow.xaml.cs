@@ -1,4 +1,4 @@
-﻿using LogiSyn.Views;
+using LogiSyn.Views;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -29,7 +29,7 @@ namespace LogiSyn.Views
 
         private void NavDashboard_Click(object sender, RoutedEventArgs e)
         {
-            MainFrame.Navigate(new DashboardView());
+            MainFrame.Navigate(new DashboardView(SharedLibrary.Model.AppRole.Manager));
         }
 
         private void NavHistory_Click(object sender, RoutedEventArgs e)

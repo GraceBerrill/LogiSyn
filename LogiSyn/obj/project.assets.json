@@ -53,12 +53,12 @@
           "buildTransitive/net8.0/_._": {}
         }
       },
-      "Microsoft.Data.SqlClient/7.1.0": {
+      "Microsoft.Data.SqlClient/7.1.1": {
         "type": "package",
         "dependencies": {
           "Microsoft.Bcl.Cryptography": "9.0.18",
-          "Microsoft.Data.SqlClient.Extensions.Abstractions": "[7.1.0, 8.0.0)",
-          "Microsoft.Data.SqlClient.Internal.Logging": "[7.1.0, 8.0.0)",
+          "Microsoft.Data.SqlClient.Extensions.Abstractions": "[7.1.1, 8.0.0)",
+          "Microsoft.Data.SqlClient.Internal.Logging": "[7.1.1, 8.0.0)",
           "Microsoft.Data.SqlClient.SNI.runtime": "[7.1.0, 8.0.0)",
           "Microsoft.Extensions.Caching.Memory": "9.0.18",
           "Microsoft.IdentityModel.JsonWebTokens": "8.16.0",
@@ -128,10 +128,10 @@
           }
         }
       },
-      "Microsoft.Data.SqlClient.Extensions.Abstractions/7.1.0": {
+      "Microsoft.Data.SqlClient.Extensions.Abstractions/7.1.1": {
         "type": "package",
         "dependencies": {
-          "Microsoft.Data.SqlClient.Internal.Logging": "[7.1.0, 8.0.0)"
+          "Microsoft.Data.SqlClient.Internal.Logging": "[7.1.1, 8.0.0)"
         },
         "compile": {
           "lib/netstandard2.0/Microsoft.Data.SqlClient.Extensions.Abstractions.dll": {
@@ -144,7 +144,7 @@
           }
         }
       },
-      "Microsoft.Data.SqlClient.Internal.Logging/7.1.0": {
+      "Microsoft.Data.SqlClient.Internal.Logging/7.1.1": {
         "type": "package",
         "compile": {
           "lib/netstandard2.0/Microsoft.Data.SqlClient.Internal.Logging.dll": {
@@ -610,7 +610,7 @@
         "framework": ".NETCoreApp,Version=v10.0",
         "dependencies": {
           "Microsoft.AspNetCore.OpenApi": "10.0.12",
-          "Microsoft.Data.SqlClient": "7.1.0",
+          "Microsoft.Data.SqlClient": "7.1.1",
           "MongoDB.Driver": "3.12.0",
           "SharedLibrary": "1.0.0",
           "UglyToad.PdfPig": "1.7.0-custom-5"
@@ -716,10 +716,10 @@
         "useSharedDesignerContext.txt"
       ]
     },
-    "Microsoft.Data.SqlClient/7.1.0": {
-      "sha512": "yKPkjufNvrX5VDv49XHaGbUNPL4kDx9ALCrqDhYu+ThFQxjM8zGMzYxPv9iiwRU0ZL3vhgq0F2KEeoV3PT2utQ==",
+    "Microsoft.Data.SqlClient/7.1.1": {
+      "sha512": "Moz4+bba/OdEM9I4jXWggduJ4sqoNcgVAQyXG/dNnGGvnS/YDr2fTjP83fg5YX3drgRki6fRAhR94P8dAZgZtQ==",
       "type": "package",
-      "path": "microsoft.data.sqlclient/7.1.0",
+      "path": "microsoft.data.sqlclient/7.1.1",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -772,7 +772,7 @@
         "lib/net9.0/zh-Hant/Microsoft.Data.SqlClient.resources.dll",
         "lib/netstandard2.0/Microsoft.Data.SqlClient.dll",
         "lib/netstandard2.0/Microsoft.Data.SqlClient.xml",
-        "microsoft.data.sqlclient.7.1.0.nupkg.sha512",
+        "microsoft.data.sqlclient.7.1.1.nupkg.sha512",
         "microsoft.data.sqlclient.nuspec",
         "ref/net462/Microsoft.Data.SqlClient.dll",
         "ref/net462/Microsoft.Data.SqlClient.xml",
@@ -789,10 +789,10 @@
         "runtimes/win/lib/net9.0/Microsoft.Data.SqlClient.dll"
       ]
     },
-    "Microsoft.Data.SqlClient.Extensions.Abstractions/7.1.0": {
-      "sha512": "8xqe8rxLEJealAw21Rh/w+Kis4TtgAZQ+e7HrTkG/gOeiy3CbCtcMXJr3P5H9txhUQNNxkoR9qy1FIk5T85FSg==",
+    "Microsoft.Data.SqlClient.Extensions.Abstractions/7.1.1": {
+      "sha512": "qP/zUOCJwfKqWNC9o+TWqltfNbLnZi1APNpJZgj0yeEJhoI+h+eoQLX+331yZHNOlDxdafZLP5arW/yrS1jAAw==",
       "type": "package",
-      "path": "microsoft.data.sqlclient.extensions.abstractions/7.1.0",
+      "path": "microsoft.data.sqlclient.extensions.abstractions/7.1.1",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -800,14 +800,14 @@
         "dotnet.png",
         "lib/netstandard2.0/Microsoft.Data.SqlClient.Extensions.Abstractions.dll",
         "lib/netstandard2.0/Microsoft.Data.SqlClient.Extensions.Abstractions.xml",
-        "microsoft.data.sqlclient.extensions.abstractions.7.1.0.nupkg.sha512",
+        "microsoft.data.sqlclient.extensions.abstractions.7.1.1.nupkg.sha512",
         "microsoft.data.sqlclient.extensions.abstractions.nuspec"
       ]
     },
-    "Microsoft.Data.SqlClient.Internal.Logging/7.1.0": {
-      "sha512": "z+uzJ+/xqZlYSlv0slMhiHd3TRZr20ijZmjUG2qOaNjKzMMO5cx8itHQ0s/YguqMq/8BMlXZe5n6XSgswe+73g==",
+    "Microsoft.Data.SqlClient.Internal.Logging/7.1.1": {
+      "sha512": "bVqbATLnHQngue7U9K7GRnzvfdDa7IyiBU2vijfU2vBMBSZrAnQp/wXqNSfaVonckSaMXUk07wfujTqy9IVMdw==",
       "type": "package",
-      "path": "microsoft.data.sqlclient.internal.logging/7.1.0",
+      "path": "microsoft.data.sqlclient.internal.logging/7.1.1",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -815,7 +815,7 @@
         "dotnet.png",
         "lib/netstandard2.0/Microsoft.Data.SqlClient.Internal.Logging.dll",
         "lib/netstandard2.0/Microsoft.Data.SqlClient.Internal.Logging.xml",
-        "microsoft.data.sqlclient.internal.logging.7.1.0.nupkg.sha512",
+        "microsoft.data.sqlclient.internal.logging.7.1.1.nupkg.sha512",
         "microsoft.data.sqlclient.internal.logging.nuspec"
       ]
     },
@@ -1580,7 +1580,7 @@
   "projectFileDependencyGroups": {
     "net10.0-windows": [
       "AndersonsBakeryAPI >= 1.0.0",
-      "Microsoft.Data.SqlClient >= 7.1.0",
+      "Microsoft.Data.SqlClient >= 7.1.1",
       "Microsoft.Office.Interop.Outlook >= 15.0.4797.1004",
       "SharedLibrary >= 1.0.0"
     ]
@@ -1646,7 +1646,7 @@
         "dependencies": {
           "Microsoft.Data.SqlClient": {
             "target": "Package",
-            "version": "[7.1.0, )"
+            "version": "[7.1.1, )"
           },
           "Microsoft.Office.Interop.Outlook": {
             "target": "Package",

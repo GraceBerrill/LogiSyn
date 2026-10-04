@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.Data.SqlClient;
 using SharedLibrary.Model;
 
@@ -6,8 +6,13 @@ namespace AndersonsBakeryAPI.Services
 {
     public class LoginService
     {
-        private readonly string _connectionString =
-            @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=LogiSynDb;Integrated Security=True;";
+        private string GetConnectionString()
+        {
+            var env = Environment.GetEnvironmentVariable("LOGISYN_CONNECTION");
+            return string.IsNullOrWhiteSpace(env)
+                ? @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=LogiSynDb;Integrated Security=True;"
+                : env;
+        }
 
         public UserRow? Authenticate(string name, string password)
         {
@@ -16,7 +21,7 @@ namespace AndersonsBakeryAPI.Services
                 "FROM [User] " +
                 "WHERE Username = @Username";
 
-            using var conn = new SqlConnection(_connectionString);
+            using var conn = new SqlConnection(GetConnectionString());
             using var cmd = new SqlCommand(query, conn);
             cmd.Parameters.AddWithValue("@Username", name);
 

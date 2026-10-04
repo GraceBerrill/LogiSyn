@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Configuration;
@@ -18,6 +18,18 @@ namespace AndersonsBakeryAPI.Services
 
             var database = client.GetDatabase(databaseName);
             _usersCollection = database.GetCollection<UserRow>("Users");
+        }
+
+        public MongoUserService(string connectionString, string databaseName)
+        {
+            if (string.IsNullOrWhiteSpace(connectionString))
+                throw new ArgumentException("MongoDB connection string is required.", nameof(connectionString));
+
+            if (string.IsNullOrWhiteSpace(databaseName))
+                throw new ArgumentException("MongoDB database name is required.", nameof(databaseName));
+
+            var client = new MongoClient(connectionString);
+            _usersCollection = client.GetDatabase(databaseName).GetCollection<UserRow>("Users");
         }
 
         public List<UserRow> GetAllUsers()

@@ -1,20 +1,27 @@
-﻿/*
-Post-Deployment Script Template							
---------------------------------------------------------------------------------------
- This file contains SQL statements that will be appended to the build script.		
- Use SQLCMD syntax to include a file in the post-deployment script.			
- Example:      :r .\myfile.sql								
- Use SQLCMD syntax to reference a variable in the post-deployment script.		
- Example:      :setvar TableName MyTable							
-               SELECT * FROM [$(TableName)]					
---------------------------------------------------------------------------------------
-*/
-IF NOT EXISTS (
+IF COL_LENGTH('dbo.[User]', 'MongoId') IS NULL
+BEGIN
+    ALTER TABLE [dbo].[User]
+    ADD [MongoId] NVARCHAR(24) NULL;
+END;
+GO
+
+DECLARE @AdminPassword NVARCHAR(100) =
+    'PBKDF2-SHA256$600000$PX/eF/pqtB/py1Ge9f969A==$JCjN8neakDQb67c+x298kIPh97IN+QYn994VVpiUo9I=';
+
+IF EXISTS (
     SELECT 1
     FROM [dbo].[User]
     WHERE [Username] = 'admin'
 )
 BEGIN
-    INSERT INTO [dbo].[User] ([Username], [Password], [Role])
-    VALUES ('admin', '1234', 'Admin');
+    UPDATE [dbo].[User]
+    SET [Password] = @AdminPassword,
+        [Role] = 'Admin'
+    WHERE [Username] = 'admin';
 END
+ELSE
+BEGIN
+    INSERT INTO [dbo].[User] ([Username], [Password], [Role])
+    VALUES ('admin', @AdminPassword, 'Admin');
+END;
+GO

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Windows;
 using SharedLibrary.Model;
 using LogiSyn.Views;
@@ -42,7 +42,6 @@ namespace LogiSyn
 		public void SignOut()
 		{
 			MainWindow = null;
-
 			ShowLogin();
 		}
 	}
