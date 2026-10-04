@@ -578,10 +578,6 @@
             "Microsoft.Data.SqlClient": {
               "target": "Package",
               "version": "[7.1.0, )"
-            },
-            "Microsoft.Office.Interop.Outlook": {
-              "target": "Package",
-              "version": "[15.0.4797.1004, )"
             }
           },
           "imports": [
@@ -953,6 +949,10 @@
           "framework": "net10.0",
           "targetAlias": "net10.0",
           "dependencies": {
+            "ClosedXML": {
+              "target": "Package",
+              "version": "[0.105.1, )"
+            },
             "Microsoft.Office.Interop.Outlook": {
               "target": "Package",
               "version": "[15.0.4797.1004, )"
@@ -1254,6 +1254,10 @@
           "framework": "net10.0-windows7.0",
           "targetAlias": "net10.0-windows",
           "dependencies": {
+            "ClosedXML": {
+              "target": "Package",
+              "version": "[0.105.1, )"
+            },
             "Microsoft.Office.Interop.Outlook": {
               "target": "Package",
               "version": "[15.0.4797.1004, )"

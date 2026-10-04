@@ -1,5 +1,6 @@
 // Adriaan
 using System;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using LogiSyn.Model;
@@ -10,6 +11,7 @@ namespace LogiSyn.Views
     public partial class OrderBreakdownView : UserControl
     {
         private readonly OrderService _orderService = new OrderService();
+        private readonly ExcelOrderService _excelService = new ExcelOrderService();
         private readonly ApiClient _apiClient = new ApiClient();
         private readonly AppRole _role;
         private readonly OrderRow? _order;
@@ -92,14 +94,100 @@ namespace LogiSyn.Views
                 var data = SummaryData.FromOrderScaled(order);
                 PaperHost.Content = new SummaryPaper { DataContext = data };
             }
+
+            bool isCompleted = string.Equals(order.Status, "Completed", StringComparison.OrdinalIgnoreCase) ||
+                               string.Equals(order.Status, "Complete", StringComparison.OrdinalIgnoreCase);
+
+            DoneButton.Content = isCompleted ? "DONE" : "ADD TO HISTORY";
         }
 
         //------------------------------------------------------------------------------------------------//
 
-        // Event handler for the Done button click event
-        private void DoneButton_Click(object sender, RoutedEventArgs e)
+        // Event handler for the Done button click event - finalizes phase and adds order to history
+        private async void DoneButton_Click(object sender, RoutedEventArgs e)
         {
+            string orderId = _order?.Number ?? "";
+            if (!string.IsNullOrWhiteSpace(orderId))
+            {
+                var scaledOrder = _orderService.GetOrderById(orderId);
+                if (scaledOrder != null)
+                {
+                    scaledOrder.Status = "Completed";
+                    _orderService.SaveOrder(scaledOrder);
+                    try
+                    {
+                        await _apiClient.SaveOrderAsync(scaledOrder);
+                        await _apiClient.UpdateOrderStatusAsync(orderId, "Completed");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"[OrderBreakdownView] Sync error: {ex.Message}");
+                    }
+                }
+                else if (_order != null)
+                {
+                    _order.Status = "Complete";
+                }
+            }
+
             ShellWindow.Current?.Navigate("history");
+        }
+
+        //------------------------------------------------------------------------------------------------//
+
+        // Adriaan - Event handler to email order Excel back to admin
+        private void EmailButton_Click(object sender, RoutedEventArgs e)
+        {
+            string orderId = _order?.Number ?? "";
+            var scaledOrder = _orderService.GetOrderById(orderId);
+            if (scaledOrder == null)
+            {
+                MessageBox.Show("No active order data available to email.", "Email Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            try
+            {
+                string filePath = _excelService.ExportOrderToExcel(scaledOrder);
+
+                bool emailSent = false;
+                try
+                {
+                    Type? outlookType = Type.GetTypeFromProgID("Outlook.Application");
+                    if (outlookType != null)
+                    {
+                        dynamic outlookApp = Activator.CreateInstance(outlookType)!;
+                        dynamic mailItem = outlookApp.CreateItem(0); // 0 = olMailItem
+                        mailItem.Subject = $"Completed Production Order {scaledOrder.OrderId} - {scaledOrder.Customer}";
+                        mailItem.Body = $"Hi Admin,\n\nPlease find attached the production order Excel sheet for {scaledOrder.Customer} (Order {scaledOrder.OrderId}) with actual quantities used and baker notes.\n\nKind regards,\nBakery Team";
+                        mailItem.Attachments.Add(filePath);
+                        mailItem.Display(false);
+                        emailSent = true;
+                    }
+                }
+                catch (Exception comEx)
+                {
+                    Console.WriteLine($"[Outlook COM] Direct Outlook launch unavailable: {comEx.Message}");
+                }
+
+                if (!emailSent)
+                {
+                    string subject = Uri.EscapeDataString($"Completed Production Order {scaledOrder.OrderId} - {scaledOrder.Customer}");
+                    string body = Uri.EscapeDataString($"Hi Admin,\n\nProduction order Excel file saved at:\n{filePath}\n\nActual quantities used and notes have been recorded.");
+                    try
+                    {
+                        Process.Start(new ProcessStartInfo { FileName = $"mailto:?subject={subject}&body={body}", UseShellExecute = true });
+                    }
+                    catch { }
+
+                    Process.Start(new ProcessStartInfo { FileName = "explorer.exe", Arguments = $"/select,\"{filePath}\"", UseShellExecute = true });
+                    MessageBox.Show($"Updated order exported to Excel:\n{filePath}\n\nPlease attach this file to email back to the admin.", "Email Excel", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Email failed: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
     }
 }

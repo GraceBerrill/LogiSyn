@@ -218,3 +218,17 @@ C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\TestBuild\AndersonsBakeryAPI.dll
 C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\TestBuild\SharedLibrary.dll
 C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\TestBuild\SharedLibrary.pdb
 C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\TestBuild\AndersonsBakeryAPI.pdb
+C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\TestBuild\ClosedXML.dll
+C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\TestBuild\ClosedXML.Parser.dll
+C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\TestBuild\DocumentFormat.OpenXml.dll
+C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\TestBuild\DocumentFormat.OpenXml.Framework.dll
+C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\TestBuild\ExcelNumberFormat.dll
+C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\TestBuild\RBush.dll
+C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\TestBuild\SixLabors.Fonts.dll
+C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\ClosedXML.dll
+C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\ClosedXML.Parser.dll
+C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\DocumentFormat.OpenXml.dll
+C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\DocumentFormat.OpenXml.Framework.dll
+C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\ExcelNumberFormat.dll
+C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\RBush.dll
+C:\Users\Adria\source\repos\LogiSyn\LogiSyn\bin\Debug\net10.0-windows\SixLabors.Fonts.dll

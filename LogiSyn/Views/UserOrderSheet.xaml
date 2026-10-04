@@ -15,10 +15,16 @@
         </ScrollViewer>
 
         <StackPanel HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="685.7,0,0,35">
+            <!-- Adriaan - Upload Excel Sheet with used quantities and notes -->
+            <Button x:Name="UploadExcelButton" Content="Upload Excel" Style="{StaticResource NavyButton}"
+                    Width="251.7" Height="54" Margin="0,0,0,18" Click="UploadExcelButton_Click"/>
+            <!-- Adriaan - Email updated Excel back to admin -->
+            <Button x:Name="EmailButton" Content="EMAIL" Style="{StaticResource NavyButton}"
+                    Width="251.7" Height="54" Margin="0,0,0,18" Click="EmailButton_Click"/>
             <Button x:Name="PrintButton" Content="PRINT" Style="{StaticResource NavyButton}"
-                    Width="251.7" Height="61.3" Click="PrintButton_Click"/>
+                    Width="251.7" Height="54" Click="PrintButton_Click"/>
             <Button x:Name="CompleteButton" Content="Mark As Completed" Style="{StaticResource GreenButton}"
-                    Width="251.7" Height="61.3" Margin="0,24.7,0,0" Click="CompleteButton_Click"/>
+                    Width="251.7" Height="54" Margin="0,18,0,0" Click="CompleteButton_Click"/>
         </StackPanel>
     </Grid>
 </UserControl>

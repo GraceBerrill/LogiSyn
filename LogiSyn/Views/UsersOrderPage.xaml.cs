@@ -4,6 +4,7 @@ using LogiSyn.Model;
 using LogiSyn.Services;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -23,6 +24,8 @@ namespace LogiSyn.Views
     public partial class UsersOrderPage : Page
     {
         private readonly IOrderService _orderService;
+        private readonly ExcelOrderService _excelService = new ExcelOrderService();
+        private readonly ApiClient _apiClient = new ApiClient();
 
         //------------------------------------------------------------------------------------------------//
 
@@ -42,29 +45,86 @@ namespace LogiSyn.Views
         {
             var orders = _orderService.GetOrders().ToList();
 
-            // Mock fallback if service currently has no orders
+            // Error message for when no orders are found
             if (!orders.Any())
             {
-                orders = new()
-                {
-                    new OrderScaled
-                    {
-                        OrderId = "#001",
-                        Customer = "Checkers",
-                        OrderDate = new DateTime(2026, 8, 5),
-                        Status = "Completed"
-                    },
-                    new OrderScaled
-                    {
-                        OrderId = "#002",
-                        Customer = "Spar",
-                        OrderDate = new DateTime(2026, 8, 5),
-                        Status = "Pending"
-                    }
-                };
+                MessageBox.Show("No orders found please add or create order");
             }
 
             OrdersItemsControl.ItemsSource = orders;
+        }
+
+        //------------------------------------------------------------------------------------------------//
+
+        // Upload baker Excel spreadsheet with notes and used quantities
+        private async void BtnUploadExcel_Click(object sender, RoutedEventArgs e)
+        {
+            // Triggers the upload file feature filtering by extensions
+            var dialog = new Microsoft.Win32.OpenFileDialog
+            {
+                Title = "Upload Production Excel Sheet",
+                Filter = "Excel Files (*.xlsx;*.xls)|*.xlsx;*.xls|All files (*.*)|*.*"
+            };
+
+            if (dialog.ShowDialog() == true)
+            {
+                try
+                {
+                    // Parses the excel data 
+                    var parsed = _excelService.ReadOrderFromExcel(dialog.FileName);
+                    if (parsed == null)
+                    {
+                        MessageBox.Show("Could not read valid production order data from the selected Excel file.", "Import Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        return;
+                    }
+
+                    // Orders by Id
+                    var existing = _orderService.GetOrderById(parsed.OrderId);
+                    OrderScaled orderToUse;
+                    if (existing != null)
+                    {
+                        _excelService.ImportOrderFromExcel(dialog.FileName, existing);
+                        orderToUse = existing;
+                    }
+                    else
+                    {
+                        orderToUse = parsed;
+                    }
+
+                    // Successful import
+                    var res = MessageBox.Show(
+                        $"Excel sheet for Order {orderToUse.OrderId} imported successfully!\nUsed quantities and notes have been populated.\n\nDo you want to mark this order as Completed now?",
+                        "Excel Imported",
+                        MessageBoxButton.YesNoCancel,
+                        MessageBoxImage.Question);
+
+                    if (res == MessageBoxResult.Yes)
+                    {
+                        orderToUse.Status = "Completed";
+                        _orderService.SaveOrder(orderToUse);
+                        try
+                        {
+                            await _apiClient.SaveOrderAsync(orderToUse);
+                            await _apiClient.UpdateOrderStatusAsync(orderToUse.OrderId, "Completed");
+                        }
+                        catch { }
+
+                        LoadOrders();
+                        MessageBox.Show($"Order {orderToUse.OrderId} marked as Completed!", "Completed", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+                    else if (res == MessageBoxResult.No)
+                    {
+                        _orderService.SaveOrder(orderToUse);
+                        LoadOrders();
+                        // Navigate to review so user can view/adjust before completing
+                        NavigationService?.Navigate(new UserOrderPageReview(orderToUse));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Failed to import Excel: {ex.Message}", "Import Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
         }
 
         //------------------------------------------------------------------------------------------------//

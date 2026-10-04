@@ -50,23 +50,9 @@ namespace LogiSyn.Views
         // Method to load orders from the order service
         private void LoadOrders()
         {
-            //TODO: Remove this block when the database is populated with real orders
             if (!_orderService.GetOrders().Any())
             {
-                _orderService.SaveOrder(new OrderScaled
-                {
-                    OrderId = "#001",
-                    Customer = "Checkers",
-                    OrderDate = DateTime.Now,
-                    Status = "Pending"
-                });
-                _orderService.SaveOrder(new OrderScaled
-                {
-                    OrderId = "#002",
-                    Customer = "Spar",
-                    OrderDate = DateTime.Now,
-                    Status = "Complete"
-                });
+                MessageBox.Show("No orders are available please add or create and order");
             }
 
             _allOrders = _orderService.GetOrders().ToList();
@@ -131,6 +117,17 @@ namespace LogiSyn.Views
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             NavigationService?.Navigate(new CreateOrderView());
+        }
+
+        //------------------------------------------------------------------------------------------------//
+
+        // View order breakdown
+        private void BtnViewOrder_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button btn && btn.DataContext is OrderScaled selectedOrder)
+            {
+                NavigationService?.Navigate(new AdminOrderBreakdown(selectedOrder));
+            }
         }
     }
 }

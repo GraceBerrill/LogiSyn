@@ -244,6 +244,39 @@
 
             <!-- 3. Right Action Buttons -->
             <StackPanel Grid.Column="2" VerticalAlignment="Bottom">
+                <Button Content="UPLOAD EXCEL" 
+                        Height="56"
+                        Background="#152238" 
+                        Foreground="White" 
+                        FontSize="17" 
+                        FontWeight="Bold"
+                        Cursor="Hand"
+                        Margin="0,0,0,16"
+                        Click="BtnUploadExcel_Click">
+                    <Button.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="10"/>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+
+                <!-- Adriaan - Email updated Excel back to admin -->
+                <Button Content="EMAIL" 
+                        Height="56"
+                        Background="#152238" 
+                        Foreground="White" 
+                        FontSize="18" 
+                        FontWeight="Bold"
+                        Cursor="Hand"
+                        Margin="0,0,0,16"
+                        Click="BtnEmail_Click">
+                    <Button.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="10"/>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+
                 <Button Content="PRINT" 
                         Height="56"
                         Background="#152238" 

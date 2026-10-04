@@ -202,6 +202,29 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
+
+                    <!-- Adriaan - Action Column -->
+                    <DataGridTemplateColumn Header="Action" Width="1.2*">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="VIEW" 
+                                        Background="#152238" 
+                                        Foreground="White" 
+                                        FontWeight="SemiBold"
+                                        FontSize="13"
+                                        Height="32"
+                                        Padding="14,0"
+                                        Cursor="Hand"
+                                        Click="BtnViewOrder_Click">
+                                    <Button.Resources>
+                                        <Style TargetType="Border">
+                                            <Setter Property="CornerRadius" Value="6"/>
+                                        </Style>
+                                    </Button.Resources>
+                                </Button>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
                 </DataGrid.Columns>
             </DataGrid>
         </Border>

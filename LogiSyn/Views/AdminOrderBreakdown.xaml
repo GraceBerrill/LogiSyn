@@ -244,12 +244,22 @@
             </Border>
         </Grid>
 
-        <!-- 3. Bottom Action: DONE Button (Pinned bottom-right) -->
-        <Button Grid.Row="2" 
-                Content="DONE" 
-                Width="180"
-                HorizontalAlignment="Right"
-                Style="{StaticResource NavyActionButtonStyle}"
-                Click="BtnDone_Click"/>
+        <!-- 3. Bottom Action: Email + Done Buttons (Pinned bottom-right) -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
+            <!-- Adriaan - Email updated Excel -->
+            <Button x:Name="BtnEmail"
+                    Content="EMAIL EXCEL" 
+                    MinWidth="180"
+                    Padding="25,0"
+                    Margin="0,0,16,0"
+                    Style="{StaticResource NavyActionButtonStyle}"
+                    Click="BtnEmail_Click"/>
+            <Button x:Name="BtnDone"
+                    Content="DONE" 
+                    MinWidth="180"
+                    Padding="25,0"
+                    Style="{StaticResource NavyActionButtonStyle}"
+                    Click="BtnDone_Click"/>
+        </StackPanel>
     </Grid>
 </Page>

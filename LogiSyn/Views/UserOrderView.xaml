@@ -16,6 +16,16 @@
         <TextBlock x:Name="DateText" Grid.Row="0" Style="{StaticResource PageDate}"
                    VerticalAlignment="Top" Margin="2,73,0,0"/>
 
+        <!-- Adriaan - Upload Excel Sheet Button -->
+        <Button x:Name="BtnUploadExcel" Grid.Row="0"
+                Content="Upload Excel Sheet"
+                Style="{StaticResource NavyButton}"
+                Width="200" Height="42"
+                HorizontalAlignment="Right" VerticalAlignment="Center"
+                Margin="0,0,10,0"
+                Cursor="Hand"
+                Click="BtnUploadExcel_Click"/>
+
         <ContentControl Grid.Row="1" Style="{StaticResource Card28}">
             <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="18,34.7,18,20" Focusable="False">
                 <ItemsControl x:Name="OrderList" Focusable="False">

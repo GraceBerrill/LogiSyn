@@ -20,8 +20,12 @@
         <ScrollViewer x:Name="PaperHost" Grid.Row="1" Style="{StaticResource PaperPanel}"
                       Width="655.7" HorizontalAlignment="Left"/>
 
-        <Button x:Name="DoneButton" Grid.Row="1" Content="DONE" Style="{StaticResource NavyButton}"
-                Width="322.7" HorizontalAlignment="Right" VerticalAlignment="Bottom"
-                Click="DoneButton_Click"/>
+        <StackPanel Grid.Row="1" Width="322.7" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+            <!-- Adriaan - Email updated Excel back to admin -->
+            <Button x:Name="EmailButton" Content="EMAIL EXCEL" Style="{StaticResource NavyButton}"
+                    Height="52" Margin="0,0,0,16" Click="EmailButton_Click"/>
+            <Button x:Name="DoneButton" Content="DONE" Style="{StaticResource NavyButton}"
+                    Height="52" Click="DoneButton_Click"/>
+        </StackPanel>
     </Grid>
 </UserControl>

@@ -125,6 +125,28 @@ namespace LogiSyn.Views
 
         //------------------------------------------------------------------------------------------------//
 
+        // Adriaan - View order breakdown when clicking VIEW button
+        private void BtnViewOrder_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is FrameworkElement elem && elem.DataContext is OrderRow order)
+            {
+                ShellWindow.Current?.Navigate("breakdown", order);
+            }
+        }
+
+        //------------------------------------------------------------------------------------------------//
+
+        // Adriaan - View order breakdown when clicking on the row
+        private void OrderRow_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (sender is FrameworkElement elem && elem.DataContext is OrderRow order)
+            {
+                ShellWindow.Current?.Navigate("breakdown", order);
+            }
+        }
+
+        //------------------------------------------------------------------------------------------------//
+
         private void CreateOrderButton_Click(object sender, RoutedEventArgs e)
         {
             if (ShellWindow.Current != null)

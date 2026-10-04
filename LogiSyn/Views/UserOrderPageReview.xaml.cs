@@ -4,6 +4,7 @@ using LogiSyn.Model;
 using LogiSyn.Services;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -24,6 +25,7 @@ namespace LogiSyn.Views
     {
         private readonly OrderScaled _order;
         private readonly IOrderService _orderService;
+        private readonly ExcelOrderService _excelService = new ExcelOrderService();
 
         //------------------------------------------------------------------------------------------------//
 
@@ -68,27 +70,37 @@ namespace LogiSyn.Views
 
         //------------------------------------------------------------------------------------------------//
 
+        /// <summary>
+        /// Synchronizes user input from UI presentation view models back into the underlying order model.
+        /// </summary>
         private void SyncPresentationItemsToOrder()
         {
+            // Ensure both presentation items and order production items collections exist
             if (_presentationItems == null || _order.productionItems == null) return;
 
+            // Iterate through each presentation item and update the corresponding order item
             for (int i = 0; i < _presentationItems.Count && i < _order.productionItems.Count; i++)
             {
                 var pvm = _presentationItems[i];
                 var pItem = _order.productionItems[i];
 
+                // Sync baker/operator notes
                 pItem.Notes = pvm.Notes ?? string.Empty;
 
+                // Sync ingredient amounts used if collections are present
                 if (pvm.Ingredients != null && pItem.ReqIngredients != null)
                 {
                     for (int j = 0; j < pvm.Ingredients.Count && j < pItem.ReqIngredients.Count; j++)
                     {
                         var ivm = pvm.Ingredients[j];
                         var ing = pItem.ReqIngredients[j];
+
+                        // Parse the user-entered amount using invariant culture format
                         if (double.TryParse(ivm.DisplayUsed, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out double parsedUsed))
                         {
                             ing.AmountUsed = parsedUsed;
                         }
+                        // Reset to 0 if the field was left blank or whitespace
                         else if (string.IsNullOrWhiteSpace(ivm.DisplayUsed))
                         {
                             ing.AmountUsed = 0;
@@ -120,6 +132,117 @@ namespace LogiSyn.Views
             if (printDlg.ShowDialog() == true)
             {
                 MessageBox.Show($"Order sheet for {_order.OrderId} sent to printer.", "Print", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+        }
+
+        //------------------------------------------------------------------------------------------------//
+
+        // Event handler to upload an Excel file with notes and used quantities
+        private void BtnUploadExcel_Click(object sender, RoutedEventArgs e)
+        {
+            var dialog = new Microsoft.Win32.OpenFileDialog
+            {
+                Title = "Upload Production Excel Sheet",
+                Filter = "Excel Files (*.xlsx;*.xls)|*.xlsx;*.xls|All files (*.*)|*.*"
+            };
+
+            if (dialog.ShowDialog() == true)
+            {
+                try
+                {
+                    bool imported = _excelService.ImportOrderFromExcel(dialog.FileName, _order);
+                    if (imported)
+                    {
+                        // Refresh presentation items and UI bindings
+                        PopulateUI();
+
+                        var res = MessageBox.Show(
+                            "Production Excel sheet uploaded successfully!\nUsed quantities and notes have been populated.\n\nDo you want to mark this order as Completed now?",
+                            "Excel Imported",
+                            MessageBoxButton.YesNo,
+                            MessageBoxImage.Question);
+
+                        if (res == MessageBoxResult.Yes)
+                        {
+                            BtnModalDone_Click(sender, e);
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("Could not read valid production data from the selected Excel file.", "Import Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Failed to import Excel: {ex.Message}", "Import Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
+
+        //------------------------------------------------------------------------------------------------//
+
+        // Adriaan - Event handler to email updated order Excel back to admin
+        /// <summary>
+        /// Synchronizes UI changes, persists the order, exports it to an Excel workbook,
+        /// and drafts an email back to the admin via Microsoft Outlook (or fallback default mail client).
+        /// </summary>
+        private void BtnEmail_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                // Synchronize latest user input from presentation models back to order model
+                SyncPresentationItemsToOrder();
+
+                // Persist updated order to database/storage
+                _orderService.SaveOrder(_order);
+
+                // Export updated order data (actuals and notes) to Excel spreadsheet
+                string filePath = _excelService.ExportOrderToExcel(_order);
+
+                bool emailSent = false;
+                try
+                {
+                    // Attempt direct email draft creation via Microsoft Outlook COM automation
+                    Type? outlookType = Type.GetTypeFromProgID("Outlook.Application");
+                    if (outlookType != null)
+                    {
+                        dynamic outlookApp = Activator.CreateInstance(outlookType)!;
+                        dynamic mailItem = outlookApp.CreateItem(0); // 0 = olMailItem
+                        mailItem.Subject = $"Completed Production Order {_order.OrderId} - {_order.Customer}";
+                        mailItem.Body = $"Hi Admin,\n\nPlease find attached the updated production order Excel sheet for {_order.Customer} (Order {_order.OrderId}) with actual quantities used and baker notes.\n\nKind regards,\nBakery Team";
+                        mailItem.Attachments.Add(filePath);
+                        mailItem.Display(false); // Display Outlook mail window without modal blocking
+                        emailSent = true;
+                    }
+                }
+                catch (Exception comEx)
+                {
+                    // Log COM interop failure (e.g. if Outlook is not installed or lacks COM permissions)
+                    Console.WriteLine($"[Outlook COM] Direct Outlook launch unavailable: {comEx.Message}");
+                }
+
+                // Fallback: If Outlook COM automation is unavailable, launch default mail client and file explorer
+                if (!emailSent)
+                {
+                    string subject = Uri.EscapeDataString($"Completed Production Order {_order.OrderId} - {_order.Customer}");
+                    string body = Uri.EscapeDataString($"Hi Admin,\n\nProduction order Excel file saved at:\n{filePath}\n\nActual quantities used and notes have been recorded.");
+                    
+                    try
+                    {
+                        // Open default system mail client with pre-filled subject and body
+                        Process.Start(new ProcessStartInfo { FileName = $"mailto:?subject={subject}&body={body}", UseShellExecute = true });
+                    }
+                    catch { }
+
+                    // Open Windows Explorer with the exported Excel file highlighted for easy attachment
+                    Process.Start(new ProcessStartInfo { FileName = "explorer.exe", Arguments = $"/select,\"{filePath}\"", UseShellExecute = true });
+                    MessageBox.Show($"Updated order exported to Excel:\n{filePath}\n\nPlease attach this file to email back to the admin.", "Email Excel", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                // Display error prompt if export, save, or general email dispatch encounters a failure
+                MessageBox.Show($"Email failed: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 

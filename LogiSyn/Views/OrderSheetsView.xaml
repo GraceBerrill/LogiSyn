@@ -219,6 +219,11 @@
                         Margin="0,0,18,0"
                         Click="BtnAddProduct_Click"/>
 
+                <Button Content="Save as Excel" 
+                        Style="{StaticResource NavyActionButtonStyle}" 
+                        Margin="0,0,18,0"
+                        Click="BtnSaveExcel_Click"/>
+
                 <Button Content="DONE" 
                         Style="{StaticResource NavyActionButtonStyle}" 
                         Width="160"
@@ -226,13 +231,13 @@
             </StackPanel>
         </Grid>
 
-        <!-- SUBMIT MODAL OVERLAY (DIMMED BACKGROUND + PRINT/EMAIL DIALOG) -->
+        <!-- SUBMIT MODAL OVERLAY (DIMMED BACKGROUND + PRINT/EMAIL/SAVE EXCEL DIALOG) -->
         <Grid x:Name="SubmitModalOverlay" 
               Visibility="Collapsed" 
               Background="#66000000"
               MouseDown="SubmitModalOverlay_MouseDown">
 
-            <Border Width="560" Height="220"
+            <Border Width="680" Height="220"
                     Background="White"
                     CornerRadius="24"
                     BorderBrush="#1B2136"
@@ -244,14 +249,30 @@
                             HorizontalAlignment="Center" 
                             VerticalAlignment="Center">
 
-                    <Button Content="PRINT" 
+                    <Button Content="SAVE EXCEL" 
                             Width="190" Height="62"
                             Background="#152238" 
                             Foreground="White" 
-                            FontSize="22" 
+                            FontSize="18" 
                             FontWeight="Bold"
                             Cursor="Hand"
-                            Margin="0,0,30,0"
+                            Margin="0,0,18,0"
+                            Click="BtnSaveExcel_Click">
+                        <Button.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="12"/>
+                            </Style>
+                        </Button.Resources>
+                    </Button>
+
+                    <Button Content="PRINT (EXCEL)" 
+                            Width="190" Height="62"
+                            Background="#152238" 
+                            Foreground="White" 
+                            FontSize="18" 
+                            FontWeight="Bold"
+                            Cursor="Hand"
+                            Margin="0,0,18,0"
                             Click="BtnPrint_Click">
                         <Button.Resources>
                             <Style TargetType="Border">
@@ -260,11 +281,11 @@
                         </Button.Resources>
                     </Button>
 
-                    <Button Content="EMAIL" 
+                    <Button Content="EMAIL (EXCEL)" 
                             Width="190" Height="62"
                             Background="#152238" 
                             Foreground="White" 
-                            FontSize="22" 
+                            FontSize="18" 
                             FontWeight="Bold"
                             Cursor="Hand"
                             Click="BtnEmail_Click">

@@ -1,20 +1,14 @@
-// Adriaan
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using LogiSyn.Model;
 using LogiSyn.Interface;
 using LogiSyn.Services;
 using System.Diagnostics;
+using Microsoft.Win32;
 
 namespace LogiSyn.Views
 {
@@ -26,6 +20,7 @@ namespace LogiSyn.Views
         private readonly OrderScaled _currentOrder;
         private readonly IOrderService _orderService;
         private readonly ApiClient _apiClient = new ApiClient();
+        private readonly ExcelOrderService _excelService = new ExcelOrderService();
 
         //------------------------------------------------------------------------------------------------//
 
@@ -153,22 +148,57 @@ namespace LogiSyn.Views
 
         //------------------------------------------------------------------------------------------------//
 
-        // Event handler for the "Print" button click event
+        // Event handler to export and save the order as an Excel file
+        private async void BtnSaveExcel_Click(object sender, RoutedEventArgs e)
+        {
+            await SaveOrderAsync();
+
+            var dialog = new SaveFileDialog
+            {
+                Title = "Save Order Production Sheet as Excel",
+                Filter = "Excel Workbook (*.xlsx)|*.xlsx",
+                FileName = $"Order_{_currentOrder.OrderId}_{DateTime.Now:yyyyMMdd}.xlsx"
+            };
+
+            if (dialog.ShowDialog() == true)
+            {
+                try
+                {
+                    // Export the order to an Excel file and get the path
+                    string path = _excelService.ExportOrderToExcel(_currentOrder, dialog.FileName);
+                    MessageBox.Show($"Order successfully saved as Excel file:\n{path}", "Excel Exported", MessageBoxButton.OK, MessageBoxImage.Information);
+                    NavigateToOrders();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Failed to export Excel file: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
+
+        //------------------------------------------------------------------------------------------------//
+
+        // Event handler for the "Print" button click event - exports order as Excel and launches for printing
         private async void BtnPrint_Click(object sender, RoutedEventArgs e)
         {
-            // Save the current order and attempt to print it
             try
             {
                 await SaveOrderAsync();
 
-                // Show the print dialog and check if the user confirmed printing
-                var printDlg = new PrintDialog();
-                if (printDlg.ShowDialog() == true)
-                {
-                    MessageBox.Show($"Order {_currentOrder.OrderId} sent to printer.", "Printing", MessageBoxButton.OK, MessageBoxImage.Information);
-                }
+                // Export to Excel file
+                string filePath = _excelService.ExportOrderToExcel(_currentOrder);
 
-                // Navigate back to the OrdersPage after printing
+                // Open Excel file with default system handler so user can print directly from Excel
+                var psi = new ProcessStartInfo
+                {
+                    FileName = filePath,
+                    UseShellExecute = true
+                };
+                Process.Start(psi);
+
+                MessageBox.Show($"Order {_currentOrder.OrderId} exported as Excel and opened for printing:\n{filePath}", 
+                                "Print Excel", MessageBoxButton.OK, MessageBoxImage.Information);
+
                 NavigateToOrders();
             }
             catch (Exception ex)
@@ -179,28 +209,55 @@ namespace LogiSyn.Views
 
         //------------------------------------------------------------------------------------------------//
 
-        // Event handler for the "Email" button click event
+        // Event handler for the "Email" button click event - exports order as Excel and attaches to email
         private async void BtnEmail_Click(object sender, RoutedEventArgs e)
         {
-            // Save the current order and attempt to email it
             try
             {
                 await SaveOrderAsync();
 
-                var emailModel = _orderService.BuildScalingSheetEmail(_currentOrder);
+                // Export to Excel file
+                string filePath = _excelService.ExportOrderToExcel(_currentOrder);
 
-                string recipient = "";
-                string subject = Uri.EscapeDataString(emailModel.Subject);
-                string body = Uri.EscapeDataString(emailModel.Body);
-                string mailtoUri = $"mailto:{recipient}?subject={subject}&body={body}";
-
-                var psi = new ProcessStartInfo
+                bool emailSent = false;
+                try
                 {
-                    FileName = mailtoUri,
-                    UseShellExecute = true
-                };
+                    // Attempt to create and display an Outlook email via late-bound COM
+                    Type? outlookType = Type.GetTypeFromProgID("Outlook.Application");
+                    if (outlookType != null)
+                    {
+                        dynamic outlookApp = Activator.CreateInstance(outlookType)!;
+                        dynamic mailItem = outlookApp.CreateItem(0);
+                        mailItem.Subject = $"Production Order {_currentOrder.OrderId} - {_currentOrder.Customer}";
+                        mailItem.Body = $"Please find attached the production order Excel sheet for {_currentOrder.Customer} (Order {_currentOrder.OrderId}).\n\nPlease enter used quantities and notes in the highlighted columns and upload when complete.";
+                        mailItem.Attachments.Add(filePath);
+                        mailItem.Display(false);
+                        emailSent = true;
+                    }
+                }
+                catch (Exception comEx)
+                {
+                    Console.WriteLine($"[Outlook COM] Direct Outlook launch unavailable: {comEx.Message}");
+                }
 
-                Process.Start(psi);
+                if (!emailSent)
+                {
+                    // Fallback to default system email client and open folder highlighting the file
+                    string subject = Uri.EscapeDataString($"Production Order {_currentOrder.OrderId} - {_currentOrder.Customer}");
+                    string body = Uri.EscapeDataString($"Production order Excel file saved at:\n{filePath}\n\nPlease enter used quantities and notes in the highlighted columns.");
+                    string mailtoUri = $"mailto:?subject={subject}&body={body}";
+
+                    try
+                    {
+                        Process.Start(new ProcessStartInfo { FileName = mailtoUri, UseShellExecute = true });
+                    }
+                    catch { }
+
+                    // Highlight the generated Excel file in Windows Explorer for easy dragging/attaching
+                    Process.Start(new ProcessStartInfo { FileName = "explorer.exe", Arguments = $"/select,\"{filePath}\"", UseShellExecute = true });
+                    MessageBox.Show($"Order exported to Excel:\n{filePath}\n\nPlease attach this file to your email draft.", "Email Excel", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+
                 NavigateToOrders();
             }
             catch (Exception ex)
