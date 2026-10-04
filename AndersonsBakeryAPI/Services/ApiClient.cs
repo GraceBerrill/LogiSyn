@@ -21,15 +21,19 @@ namespace AndersonsBakeryAPI.Services
         //------------------------------------------------------------------------------------------------//
 
         // Constructor for the ApiClient class
-        public ApiClient(string baseUrl = "https://localhost:7274")
+        public ApiClient(string baseUrl = "https://andersons-bakery-api.onrender.com")
         {
-            // Determine the primary base URL and add a fallback URL based on the port number
-            // TODO: replace connection string with render.com string after deployment
-            var primary = baseUrl.TrimEnd('/');
-            _baseUrls = primary.Contains("7274")
-                ? new[] { primary, "http://localhost:5109" }
-                : new[] { primary, "https://localhost:7274" };
 
+            var primary = baseUrl.TrimEnd('/');
+
+            // Prioritize the live Render cloud API, with local ports as offline fallbacks
+            _baseUrls = new[]
+            {
+                primary,                   
+                "https://localhost:7274",  
+                "http://localhost:5109"    
+            };            
+            
             // Configure HttpClient to ignore SSL certificate validation for development purposes
             var handler = new HttpClientHandler
             {
@@ -37,7 +41,7 @@ namespace AndersonsBakeryAPI.Services
             };
             _httpClient = new HttpClient(handler)
             {
-                Timeout = TimeSpan.FromSeconds(2)
+                Timeout = TimeSpan.FromSeconds(20)
             };
         }
 
