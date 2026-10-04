@@ -29,7 +29,7 @@ namespace LogiSyn.Views
 
         private void NavDashboard_Click(object sender, RoutedEventArgs e)
         {
-            MainFrame.Navigate(new MainWindow());
+            MainFrame.Navigate(new DashboardView());
         }
 
         private void NavHistory_Click(object sender, RoutedEventArgs e)

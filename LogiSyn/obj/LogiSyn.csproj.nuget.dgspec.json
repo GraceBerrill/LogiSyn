@@ -1,23 +1,13 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Luc Naude\\Desktop\\INSY7315\\LogiSyn\\LogiSyn\\LogiSyn.csproj": {}
-  },
-  "projects": {
-    "C:\\Users\\Luc Naude\\Desktop\\INSY7315\\LogiSyn\\AndersonsBakeryAPI\\AndersonsBakeryAPI.csproj": {
-      "version": "1.0.0",
-      "restore": {
-        "projectUniqueName": "C:\\Users\\Luc Naude\\Desktop\\INSY7315\\LogiSyn\\AndersonsBakeryAPI\\AndersonsBakeryAPI.csproj",
-        "projectName": "AndersonsBakeryAPI",
-        "projectPath": "C:\\Users\\Luc Naude\\Desktop\\INSY7315\\LogiSyn\\AndersonsBakeryAPI\\AndersonsBakeryAPI.csproj",
-        "packagesPath": "C:\\Users\\Luc Naude\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Luc Naude\\Desktop\\INSY7315\\LogiSyn\\AndersonsBakeryAPI\\obj\\",
+    "C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\LogiSyn.csproj": {}
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Luc Naude\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\Users\Luc Naude\AppData\Roaming\NuGet\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -33,8 +23,8 @@
             "framework": "net10.0",
             "targetAlias": "net10.0",
             "projectReferences": {
-              "C:\\Users\\Luc Naude\\Desktop\\INSY7315\\LogiSyn\\SharedLibrary\\SharedLibrary.csproj": {
-                "projectPath": "C:\\Users\\Luc Naude\\Desktop\\INSY7315\\LogiSyn\\SharedLibrary\\SharedLibrary.csproj"
+              "C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\SharedLibrary\SharedLibrary.csproj": {
+                "projectPath": "C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\SharedLibrary\SharedLibrary.csproj"
               }
             }
           }
@@ -510,20 +500,20 @@
         }
       }
     },
-    "C:\\Users\\Luc Naude\\Desktop\\INSY7315\\LogiSyn\\LogiSyn\\LogiSyn.csproj": {
+    "C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\LogiSyn.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Luc Naude\\Desktop\\INSY7315\\LogiSyn\\LogiSyn\\LogiSyn.csproj",
+        "projectUniqueName": "C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\LogiSyn.csproj",
         "projectName": "LogiSyn",
-        "projectPath": "C:\\Users\\Luc Naude\\Desktop\\INSY7315\\LogiSyn\\LogiSyn\\LogiSyn.csproj",
-        "packagesPath": "C:\\Users\\Luc Naude\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Luc Naude\\Desktop\\INSY7315\\LogiSyn\\LogiSyn\\obj\\",
+        "projectPath": "C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\LogiSyn.csproj",
+        "packagesPath": "C:\Users\Luc Naude\.nuget\packages\",
+        "outputPath": "C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Luc Naude\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\Users\Luc Naude\AppData\Roaming\NuGet\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -539,11 +529,11 @@
             "framework": "net10.0-windows7.0",
             "targetAlias": "net10.0-windows",
             "projectReferences": {
-              "C:\\Users\\Luc Naude\\Desktop\\INSY7315\\LogiSyn\\AndersonsBakeryAPI\\AndersonsBakeryAPI.csproj": {
-                "projectPath": "C:\\Users\\Luc Naude\\Desktop\\INSY7315\\LogiSyn\\AndersonsBakeryAPI\\AndersonsBakeryAPI.csproj"
+              "C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\AndersonsBakeryAPI\AndersonsBakeryAPI.csproj": {
+                "projectPath": "C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\AndersonsBakeryAPI\AndersonsBakeryAPI.csproj"
               },
-              "C:\\Users\\Luc Naude\\Desktop\\INSY7315\\LogiSyn\\SharedLibrary\\SharedLibrary.csproj": {
-                "projectPath": "C:\\Users\\Luc Naude\\Desktop\\INSY7315\\LogiSyn\\SharedLibrary\\SharedLibrary.csproj"
+              "C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\SharedLibrary\SharedLibrary.csproj": {
+                "projectPath": "C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\SharedLibrary\SharedLibrary.csproj"
               }
             }
           }
@@ -887,20 +877,20 @@
         }
       }
     },
-    "C:\\Users\\Luc Naude\\Desktop\\INSY7315\\LogiSyn\\SharedLibrary\\SharedLibrary.csproj": {
+    "C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\SharedLibrary\SharedLibrary.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Luc Naude\\Desktop\\INSY7315\\LogiSyn\\SharedLibrary\\SharedLibrary.csproj",
+        "projectUniqueName": "C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\SharedLibrary\SharedLibrary.csproj",
         "projectName": "SharedLibrary",
-        "projectPath": "C:\\Users\\Luc Naude\\Desktop\\INSY7315\\LogiSyn\\SharedLibrary\\SharedLibrary.csproj",
-        "packagesPath": "C:\\Users\\Luc Naude\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Luc Naude\\Desktop\\INSY7315\\LogiSyn\\SharedLibrary\\obj\\",
+        "projectPath": "C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\SharedLibrary\SharedLibrary.csproj",
+        "packagesPath": "C:\Users\Luc Naude\.nuget\packages\",
+        "outputPath": "C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\SharedLibrary\obj\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Luc Naude\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\Users\Luc Naude\AppData\Roaming\NuGet\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -958,9 +948,9 @@
           "frameworkReferences": {
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
-            },
             "Microsoft.WindowsDesktop.App.WPF": {
               "privateAssets": "none"
+            }
             }
           },
           "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.401/PortableRuntimeIdentifierGraph.json",

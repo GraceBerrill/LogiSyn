@@ -4,7 +4,7 @@ using System.Linq;
 using LogiSyn.Interface;
 using SharedLibrary.Model;
 
-namespace LogiSyn.Services
+namespace AndersonsBakeryAPI.Services
 {
     public class TempRecipeService : ITempRecipeService
     {

@@ -9,7 +9,7 @@ using System.Text.RegularExpressions;
 using UglyToad.PdfPig;
 using UglyToad.PdfPig.Content;
 
-namespace LogiSyn.Services
+namespace AndersonsBakeryAPI.Services
 {
     public class OrderService : IOrderService
     {

@@ -628,6 +628,9 @@
       "SharedLibrary/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v10.0",
+      "SharedLibrary/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v10.0",
         "dependencies": {
           "Microsoft.Office.Interop.Outlook": "15.0.4797.1004",
           "MongoDB.Bson": "3.12.0"
@@ -637,7 +640,6 @@
         },
         "runtime": {
           "bin/placeholder/SharedLibrary.dll": {}
-        },
         "frameworkReferences": [
           "Microsoft.WindowsDesktop.App.WPF"
         ]
@@ -1585,23 +1587,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Luc Naude\\.nuget\\packages\\": {},
+    "C:\Users\Luc Naude\.nuget\packages\": {}
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Luc Naude\\Desktop\\INSY7315\\LogiSyn\\LogiSyn\\LogiSyn.csproj",
+      "projectUniqueName": "C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\LogiSyn.csproj",
       "projectName": "LogiSyn",
-      "projectPath": "C:\\Users\\Luc Naude\\Desktop\\INSY7315\\LogiSyn\\LogiSyn\\LogiSyn.csproj",
-      "packagesPath": "C:\\Users\\Luc Naude\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Luc Naude\\Desktop\\INSY7315\\LogiSyn\\LogiSyn\\obj\\",
+      "projectPath": "C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\LogiSyn.csproj",
+      "packagesPath": "C:\Users\Luc Naude\.nuget\packages\",
+      "outputPath": "C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\LogiSyn\obj\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\Luc Naude\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\Users\Luc Naude\AppData\Roaming\NuGet\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -1617,11 +1619,11 @@
           "framework": "net10.0-windows7.0",
           "targetAlias": "net10.0-windows",
           "projectReferences": {
-            "C:\\Users\\Luc Naude\\Desktop\\INSY7315\\LogiSyn\\AndersonsBakeryAPI\\AndersonsBakeryAPI.csproj": {
-              "projectPath": "C:\\Users\\Luc Naude\\Desktop\\INSY7315\\LogiSyn\\AndersonsBakeryAPI\\AndersonsBakeryAPI.csproj"
+            "C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\AndersonsBakeryAPI\AndersonsBakeryAPI.csproj": {
+              "projectPath": "C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\AndersonsBakeryAPI\AndersonsBakeryAPI.csproj"
             },
-            "C:\\Users\\Luc Naude\\Desktop\\INSY7315\\LogiSyn\\SharedLibrary\\SharedLibrary.csproj": {
-              "projectPath": "C:\\Users\\Luc Naude\\Desktop\\INSY7315\\LogiSyn\\SharedLibrary\\SharedLibrary.csproj"
+            "C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\SharedLibrary\SharedLibrary.csproj": {
+              "projectPath": "C:\Users\Luc Naude\Desktop\INSY7315\LogiSyn\SharedLibrary\SharedLibrary.csproj"
             }
           }
         }

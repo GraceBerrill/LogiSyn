@@ -1,5 +1,6 @@
 ﻿using LogiSyn.Interface;
-using SharedLibrary.Model;
+using LogiSyn.Model;
+using AndersonsBakeryAPI.Services;
 using LogiSyn.Services;
 using System;
 using System.Collections.Generic;
@@ -73,13 +74,13 @@ namespace LogiSyn.Views
                 {
                     OrderId = "#002",
                     Customer = "Spar",
-                    OrderDate = new DateTime(2026, 5, 9),
+                    OrderDate = DateTime.Now,
                     Status = "Completed",
                     productionItems = new List<ProductionItem>
                     {
                         new ProductionItem
                         {
-                            ProductName = "250 Hamburger Rolls",
+                            ProductName = "Product A",
                             ProductionLine = "Production 1",
                             packaging = new Packaging { Pans = 2, Trolleys = 1 },
                             ReqIngredients = new List<Ingredients>
@@ -91,7 +92,7 @@ namespace LogiSyn.Views
                         },
                         new ProductionItem
                         {
-                            ProductName = "100 Rolls",
+                            ProductName = "Product B",
                             ProductionLine = "Production 1",
                             packaging = new Packaging { Pans = 2, Trolleys = 1 },
                             ReqIngredients = new List<Ingredients>

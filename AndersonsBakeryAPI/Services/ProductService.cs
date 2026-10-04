@@ -6,7 +6,7 @@ using System.Text.Json;
 using Microsoft.Data.SqlClient;
 using SharedLibrary.Model;
 
-namespace LogiSyn.Services
+namespace AndersonsBakeryAPI.Services
 {
     public class ProductService
     {
