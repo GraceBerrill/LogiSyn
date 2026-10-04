@@ -80,16 +80,22 @@ namespace AndersonsBakeryAPI.Data
 
             // Persist RawMaterials as serialized JSON in SQL Server
             modelBuilder.Entity<OrderScaled>()
-                .Property(o => o.RawMaterials)
-                .IsRequired(false)
-                .HasConversion(
-                    v => JsonSerializer.Serialize(v, (JsonSerializerOptions?)null),
-                    v => string.IsNullOrWhiteSpace(v)
-                        ? new Dictionary<string, RawMaterialValue>()
-                        : JsonSerializer.Deserialize<Dictionary<string, RawMaterialValue>>(v, (JsonSerializerOptions?)null) ?? new Dictionary<string, RawMaterialValue>()
-<<<<<<< HEAD
-                );
-
+                           .Property(o => o.RawMaterials)
+                           .IsRequired(false)
+                           .HasConversion(
+                               v => JsonSerializer.Serialize(v, (JsonSerializerOptions?)null),
+                               v => string.IsNullOrWhiteSpace(v)
+                                   ? new Dictionary<string, RawMaterialValue>()
+                                   : JsonSerializer.Deserialize<Dictionary<string, RawMaterialValue>>(v, (JsonSerializerOptions?)null) ?? new Dictionary<string, RawMaterialValue>()
+                           )
+                           .Metadata.SetValueComparer(new ValueComparer<Dictionary<string, RawMaterialValue>>(
+                               (d1, d2) => JsonSerializer.Serialize(d1, (JsonSerializerOptions?)null) ==
+                                           JsonSerializer.Serialize(d2, (JsonSerializerOptions?)null),
+                               d => d == null ? 0 : JsonSerializer.Serialize(d, (JsonSerializerOptions?)null).GetHashCode(),
+                               d => JsonSerializer.Deserialize<Dictionary<string, RawMaterialValue>>(
+                                       JsonSerializer.Serialize(d, (JsonSerializerOptions?)null),
+                                       (JsonSerializerOptions?)null) ?? new Dictionary<string, RawMaterialValue>()
+                           ));
             modelBuilder.Entity<Product>(entity =>
             {
                 entity.ToTable("Products");
@@ -108,7 +114,6 @@ namespace AndersonsBakeryAPI.Data
                             : JsonSerializer.Deserialize<List<IngredientRequirement>>(v, (JsonSerializerOptions?)null) ?? new List<IngredientRequirement>()
                     );
             });
-
             modelBuilder.Entity<UserRow>(entity =>
             {
                 entity.ToTable("Users");
@@ -120,19 +125,6 @@ namespace AndersonsBakeryAPI.Data
                 entity.Property(u => u.DateAdded).HasMaxLength(50);
                 entity.Ignore(u => u.SqlId);
             });
-=======
-                )
-                .Metadata.SetValueComparer(new ValueComparer<Dictionary<string, RawMaterialValue>>(
-                    (d1, d2) => JsonSerializer.Serialize(d1, (JsonSerializerOptions?)null) ==
-                                JsonSerializer.Serialize(d2, (JsonSerializerOptions?)null),
-                    d => d == null ? 0 : JsonSerializer.Serialize(d, (JsonSerializerOptions?)null).GetHashCode(),
-                    d => JsonSerializer.Deserialize<Dictionary<string, RawMaterialValue>>(
-                            JsonSerializer.Serialize(d, (JsonSerializerOptions?)null),
-                            (JsonSerializerOptions?)null) ?? new Dictionary<string, RawMaterialValue>()
-                ));
->>>>>>> fd4ae2d68a9cbfe221f1bb17051730eb0690d284
         }
     }
-}
-
-//--------------------------------------End of File----------------------------------------------------------//
+}//--------------------------------------End of File----------------------------------------------------------//
