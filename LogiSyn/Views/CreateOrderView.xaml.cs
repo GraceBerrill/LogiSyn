@@ -64,39 +64,62 @@ namespace LogiSyn.Views
         // Event handler for the Go button click event
         private async void GoButton_Click(object sender, RoutedEventArgs e)
         {
+            // Check if a file has been selected; if not, show a message box and return
+            if (string.IsNullOrWhiteSpace(_file))
+            {
+                MessageBox.Show("Please choose an order file first.", "Create New Order",
+                                MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            // Display loading spinner overlay and disable interaction while parsing
+            LoadingOverlay.Visibility = Visibility.Visible;
+            GoButton.IsEnabled = false;
+            BrowseButton.IsEnabled = false;
+            DropZone.AllowDrop = false;
+
             try
             {
-                // Check if a file has been selected; if not, show a message box and return
-                if (string.IsNullOrWhiteSpace(_file))
-                {
-                    MessageBox.Show("Please choose an order file first.", "Create New Order",
-                                    MessageBoxButton.OK, MessageBoxImage.Information);
-                    return;
-                }
-
-                // Attempt to parse the order using the API client; if it fails, fall back to local parsing
                 OrderScaled? order = null;
+
+                // Attempt to parse the order using the API client first
                 try
                 {
                     order = await _apiClient.ParsePdfOrderAsync(_file);
                 }
                 catch
                 {
-                    // TODO Add local parsing logic here
+                    // API parsing not available or failed; fallback to local parsing
                 }
 
-                // If the order is still null after attempting to parse, read and scale the order using the OrderService
+                // Fall back to local parsing on background thread so the UI spinner animates smoothly
                 if (order == null)
                 {
-                    order = _orderService.ReadAndScaleOrder(_file);
+                    order = await Task.Run(() => _orderService.ReadAndScaleOrder(_file));
                 }
 
-                ShellWindow.Current?.Navigate("ordersheets", order);
+                if (order != null)
+                {
+                    ShellWindow.Current?.Navigate("ordersheets", order);
+                }
+                else
+                {
+                    MessageBox.Show("Unable to parse the order file. Please verify that the selected file is a valid order PDF.",
+                                    "Parse Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
             }
             catch (System.Exception ex)
             {
                 MessageBox.Show($"An error occurred while creating the order: {ex.Message}", "Error",
                                 MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                // Reset loading overlay and controls
+                LoadingOverlay.Visibility = Visibility.Collapsed;
+                GoButton.IsEnabled = true;
+                BrowseButton.IsEnabled = true;
+                DropZone.AllowDrop = true;
             }
         }
     }
