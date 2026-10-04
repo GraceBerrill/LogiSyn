@@ -35,8 +35,9 @@
             <Button x:Name="AddUserButton" Grid.Column="3" Style="{StaticResource OutlineButton}"
             Height="72" FontSize="32" FontWeight="Regular" Click="AddUserButton_Click">
                 <Grid Width="277">
-                    <Image Source="{StaticResource IconAdd}" Width="42" Height="42"
-                   HorizontalAlignment="Left" Margin="20,0,0,0"/>
+                    <Path Data="{StaticResource IconAddGeometry}" Style="{StaticResource IconPath}"
+                          Stroke="{StaticResource Navy}" StrokeThickness="2.5" Width="26" Height="26"
+                          HorizontalAlignment="Left" Margin="24,0,0,0"/>
                     <TextBlock Text="Add Users" Margin="82,0,0,0" VerticalAlignment="Center"/>
                 </Grid>
             </Button>
@@ -88,11 +89,13 @@
                                                    VerticalAlignment="Bottom" Margin="0,0,0,1"/>
                                         <Button Grid.Column="4" Style="{StaticResource IconButton}" Width="40" Height="40"
                                                 HorizontalAlignment="Left" Click="EditButton_Click">
-                                            <Image Source="{StaticResource IconEdit}" Width="30" Height="30"/>
+                                            <Path Data="{StaticResource IconEditGeometry}" Style="{StaticResource IconPath}"
+                                                  Stroke="{StaticResource Navy}" Width="22" Height="22"/>
                                         </Button>
                                         <Button Grid.Column="5" Style="{StaticResource IconButton}" Width="40" Height="40"
                                                 HorizontalAlignment="Left" Click="DeleteButton_Click">
-                                            <Image Source="{StaticResource IconTrash}" Width="30" Height="30"/>
+                                            <Path Data="{StaticResource IconTrashGeometry}" Style="{StaticResource IconPath}"
+                                                  Stroke="#EF4444" Width="22" Height="22"/>
                                         </Button>
                                     </Grid>
                                 </Border>

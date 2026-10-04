@@ -63,6 +63,8 @@ namespace LogiSyn.Views
             _passwordRevealed = !_passwordRevealed;
             PasswordBox.Visibility = _passwordRevealed ? Visibility.Collapsed : Visibility.Visible;
             PasswordRevealBox.Visibility = _passwordRevealed ? Visibility.Visible : Visibility.Collapsed;
+            EyeIcon.Visibility = _passwordRevealed ? Visibility.Visible : Visibility.Collapsed;
+            EyeOffIcon.Visibility = _passwordRevealed ? Visibility.Collapsed : Visibility.Visible;
 
             if (_passwordRevealed)
             {

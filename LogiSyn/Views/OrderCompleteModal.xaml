@@ -11,8 +11,9 @@
 
         <Ellipse Width="246" Height="246" Fill="{StaticResource Navy}"
                  VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,94,0,0"/>
-        <Image Source="{StaticResource IconCheck}" Width="233" Height="233"
-               VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,101,0,0"/>
+        <Path Data="{StaticResource IconCheckGeometry}" Style="{StaticResource IconPath}"
+              Stroke="White" StrokeThickness="1.6" Width="110" Height="110"
+              VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,160,0,0"/>
 
         <Button x:Name="DoneButton" Content="DONE" Style="{StaticResource NavyButton}" Width="360"
                 Height="61.3" FontSize="32" VerticalAlignment="Bottom" HorizontalAlignment="Center"

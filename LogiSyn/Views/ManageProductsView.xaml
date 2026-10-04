@@ -95,11 +95,13 @@
                                                 Style="{StaticResource LinkButton}" Click="ViewButton_Click"/>
                                         <Button Grid.Column="6" Style="{StaticResource IconButton}" Width="34" Height="34"
                                                 HorizontalAlignment="Left" Click="EditButton_Click">
-                                            <Image Source="{StaticResource IconEdit}" Width="26" Height="26"/>
+                                            <Path Data="{StaticResource IconEditGeometry}" Style="{StaticResource IconPath}"
+                                                  Stroke="{StaticResource Navy}" Width="20" Height="20"/>
                                         </Button>
                                         <Button Grid.Column="7" Style="{StaticResource IconButton}" Width="34" Height="34"
                                                 HorizontalAlignment="Left" Click="DeleteButton_Click">
-                                            <Image Source="{StaticResource IconTrash}" Width="26" Height="26"/>
+                                            <Path Data="{StaticResource IconTrashGeometry}" Style="{StaticResource IconPath}"
+                                                  Stroke="#EF4444" Width="20" Height="20"/>
                                         </Button>
                                     </Grid>
                                 </Border>

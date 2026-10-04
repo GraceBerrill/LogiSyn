@@ -19,7 +19,7 @@ BEGIN
         [Role] = 'Admin'
     WHERE [Username] = 'admin';
 END
-ELSE
+ELSE(localdb)\MSSQLLocalDB
 BEGIN
     INSERT INTO [dbo].[User] ([Username], [Password], [Role])
     VALUES ('admin', @AdminPassword, 'Admin');
