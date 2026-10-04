@@ -2131,23 +2131,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Adria\\.nuget\\packages\\": {},
+    "C:\\Users\\Luc Naude\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Adria\\source\\repos\\LogiSyn\\LogiSyn\\LogiSyn.csproj",
+      "projectUniqueName": "C:\\Users\\Luc Naude\\Desktop\\INSY7315\\LogiSyn\\LogiSyn\\LogiSyn.csproj",
       "projectName": "LogiSyn",
-      "projectPath": "C:\\Users\\Adria\\source\\repos\\LogiSyn\\LogiSyn\\LogiSyn.csproj",
-      "packagesPath": "C:\\Users\\Adria\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Adria\\source\\repos\\LogiSyn\\LogiSyn\\obj\\",
+      "projectPath": "C:\\Users\\Luc Naude\\Desktop\\INSY7315\\LogiSyn\\LogiSyn\\LogiSyn.csproj",
+      "packagesPath": "C:\\Users\\Luc Naude\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Luc Naude\\Desktop\\INSY7315\\LogiSyn\\LogiSyn\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\Adria\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Luc Naude\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -2156,7 +2156,6 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -2164,11 +2163,11 @@
           "framework": "net10.0-windows7.0",
           "targetAlias": "net10.0-windows",
           "projectReferences": {
-            "C:\\Users\\Adria\\source\\repos\\LogiSyn\\AndersonsBakeryAPI\\AndersonsBakeryAPI.csproj": {
-              "projectPath": "C:\\Users\\Adria\\source\\repos\\LogiSyn\\AndersonsBakeryAPI\\AndersonsBakeryAPI.csproj"
+            "C:\\Users\\Luc Naude\\Desktop\\INSY7315\\LogiSyn\\AndersonsBakeryAPI\\AndersonsBakeryAPI.csproj": {
+              "projectPath": "C:\\Users\\Luc Naude\\Desktop\\INSY7315\\LogiSyn\\AndersonsBakeryAPI\\AndersonsBakeryAPI.csproj"
             },
-            "C:\\Users\\Adria\\source\\repos\\LogiSyn\\SharedLibrary\\SharedLibrary.csproj": {
-              "projectPath": "C:\\Users\\Adria\\source\\repos\\LogiSyn\\SharedLibrary\\SharedLibrary.csproj"
+            "C:\\Users\\Luc Naude\\Desktop\\INSY7315\\LogiSyn\\SharedLibrary\\SharedLibrary.csproj": {
+              "projectPath": "C:\\Users\\Luc Naude\\Desktop\\INSY7315\\LogiSyn\\SharedLibrary\\SharedLibrary.csproj"
             }
           }
         }
