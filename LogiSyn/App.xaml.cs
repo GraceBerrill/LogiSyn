@@ -13,30 +13,7 @@ namespace LogiSyn
 
             this.ShutdownMode = ShutdownMode.OnExplicitShutdown;
 
-            var login = new LoginWindow();
-            bool? result = login.ShowDialog();
-
-            if (result == true && login.LoggedInUser != null)
-            {
-                var user = login.LoggedInUser;
-
-                Dispatcher.BeginInvoke(new Action(() =>
-                {
-                    Window dashboard = user.Role?.ToLowerInvariant() switch
-                    {
-                        "admin" => new AdminWindow(user),
-                        "manager" => new ManagerWindow(user),
-                        _ => new UserWindow(user),
-                    };
-
-                    Application.Current.MainWindow = dashboard;
-                    dashboard.Show();
-                }), DispatcherPriority.ApplicationIdle);
-            }
-            else
-            {
-                Shutdown();
-            }
+            new LoginWindow().Show();
         }
     }
 }
