@@ -24,16 +24,18 @@
             <Button x:Name="ExcelButton" Style="{StaticResource OutlineButton}" Width="143.3"
                     Click="ExcelButton_Click">
                 <Grid Width="143">
-                    <Image Source="{StaticResource IconExcel}" Width="26" Height="26"
-                           HorizontalAlignment="Left" Margin="18,0,0,0"/>
+                    <Path Data="{StaticResource IconExcelGeometry}" Style="{StaticResource IconPath}"
+                          Stroke="{StaticResource Navy}" Width="20" Height="20"
+                          HorizontalAlignment="Left" Margin="18,0,0,0"/>
                     <TextBlock Text="Excel" Margin="62,0,0,0" VerticalAlignment="Center"/>
                 </Grid>
             </Button>
             <Button x:Name="EmailButton" Style="{StaticResource OutlineButton}" Width="143.3"
                     Margin="35,0,0,0" Click="EmailButton_Click">
                 <Grid Width="143">
-                    <Image Source="{StaticResource IconEmail}" Width="34" Height="34"
-                           HorizontalAlignment="Left" Margin="15,0,0,0"/>
+                    <Path Data="{StaticResource IconEmailGeometry}" Style="{StaticResource IconPath}"
+                          Stroke="{StaticResource Navy}" Width="24" Height="24"
+                          HorizontalAlignment="Left" Margin="15,0,0,0"/>
                     <TextBlock Text="Email" Margin="62,0,0,0" VerticalAlignment="Center"/>
                 </Grid>
             </Button>

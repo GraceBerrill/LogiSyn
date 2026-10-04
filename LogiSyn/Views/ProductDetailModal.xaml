@@ -61,7 +61,8 @@
         <Button x:Name="CloseButton" Style="{StaticResource IconButton}" Width="36" Height="36"
                 HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,5,22,0"
                 Click="CloseButton_Click">
-            <Image Source="{StaticResource IconClose}" Width="26" Height="26"/>
+            <Path Data="{StaticResource IconCloseGeometry}" Style="{StaticResource IconPath}"
+                  Stroke="{StaticResource Navy}" Width="20" Height="20"/>
         </Button>
 
         <!-- only shown when the pop-up is opened with the edit pencil -->

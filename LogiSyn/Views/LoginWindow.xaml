@@ -164,11 +164,12 @@
                         <TextBlock x:Name="UsernamePlaceholder"
                                    Text="Enter user name"
                                    Style="{StaticResource Placeholder}"/>
-                        <Image Source="/Assets/user.png"
-                               Width="36" Height="32"
-                               HorizontalAlignment="Right"
-                               Margin="0,0,20,0"
-                               IsHitTestVisible="False"/>
+                        <Path Data="{StaticResource IconUserGeometry}" Style="{StaticResource IconPath}"
+                              Stroke="{StaticResource Navy}"
+                              Width="22" Height="22"
+                              HorizontalAlignment="Right"
+                              Margin="0,0,22,0"
+                              IsHitTestVisible="False"/>
                     </Grid>
                 </Border>
 
@@ -195,8 +196,13 @@
                                 Width="60"
                                 HorizontalAlignment="Right"
                                 Click="ToggleReveal_Click">
-                            <Image Source="/Assets/eye-off.png"
-                                   Width="36" Height="32"/>
+                            <Grid Width="22" Height="22">
+                                <Path x:Name="EyeIcon" Data="{StaticResource IconEyeGeometry}"
+                                      Style="{StaticResource IconPath}" Stroke="{StaticResource Navy}"
+                                      Visibility="Collapsed"/>
+                                <Path x:Name="EyeOffIcon" Data="{StaticResource IconEyeOffGeometry}"
+                                      Style="{StaticResource IconPath}" Stroke="{StaticResource Navy}"/>
+                            </Grid>
                         </Button>
                     </Grid>
                 </Border>

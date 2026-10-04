@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Adria\\source\\repos\\LogiSyn\\LogiSyn\\LogiSyn.csproj": {}
+    "C:\\Users\\grace\\OneDrive\\Desktop\\LogiSyn\\LogiSyn\\LogiSyn.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Adria\\source\\repos\\LogiSyn\\AndersonsBakeryAPI\\AndersonsBakeryAPI.csproj": {
+    "C:\\Users\\grace\\OneDrive\\Desktop\\LogiSyn\\AndersonsBakeryAPI\\AndersonsBakeryAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Adria\\source\\repos\\LogiSyn\\AndersonsBakeryAPI\\AndersonsBakeryAPI.csproj",
+        "projectUniqueName": "C:\\Users\\grace\\OneDrive\\Desktop\\LogiSyn\\AndersonsBakeryAPI\\AndersonsBakeryAPI.csproj",
         "projectName": "AndersonsBakeryAPI",
-        "projectPath": "C:\\Users\\Adria\\source\\repos\\LogiSyn\\AndersonsBakeryAPI\\AndersonsBakeryAPI.csproj",
-        "packagesPath": "C:\\Users\\Adria\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Adria\\source\\repos\\LogiSyn\\AndersonsBakeryAPI\\obj\\",
+        "projectPath": "C:\\Users\\grace\\OneDrive\\Desktop\\LogiSyn\\AndersonsBakeryAPI\\AndersonsBakeryAPI.csproj",
+        "packagesPath": "C:\\Users\\grace\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\grace\\OneDrive\\Desktop\\LogiSyn\\AndersonsBakeryAPI\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Adria\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\grace\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -34,8 +34,8 @@
             "framework": "net10.0-windows7.0",
             "targetAlias": "net10.0-windows",
             "projectReferences": {
-              "C:\\Users\\Adria\\source\\repos\\LogiSyn\\SharedLibrary\\SharedLibrary.csproj": {
-                "projectPath": "C:\\Users\\Adria\\source\\repos\\LogiSyn\\SharedLibrary\\SharedLibrary.csproj"
+              "C:\\Users\\grace\\OneDrive\\Desktop\\LogiSyn\\SharedLibrary\\SharedLibrary.csproj": {
+                "projectPath": "C:\\Users\\grace\\OneDrive\\Desktop\\LogiSyn\\SharedLibrary\\SharedLibrary.csproj"
               }
             }
           }
@@ -544,20 +544,20 @@
         }
       }
     },
-    "C:\\Users\\Adria\\source\\repos\\LogiSyn\\LogiSyn\\LogiSyn.csproj": {
+    "C:\\Users\\grace\\OneDrive\\Desktop\\LogiSyn\\LogiSyn\\LogiSyn.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Adria\\source\\repos\\LogiSyn\\LogiSyn\\LogiSyn.csproj",
+        "projectUniqueName": "C:\\Users\\grace\\OneDrive\\Desktop\\LogiSyn\\LogiSyn\\LogiSyn.csproj",
         "projectName": "LogiSyn",
-        "projectPath": "C:\\Users\\Adria\\source\\repos\\LogiSyn\\LogiSyn\\LogiSyn.csproj",
-        "packagesPath": "C:\\Users\\Adria\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Adria\\source\\repos\\LogiSyn\\LogiSyn\\obj\\",
+        "projectPath": "C:\\Users\\grace\\OneDrive\\Desktop\\LogiSyn\\LogiSyn\\LogiSyn.csproj",
+        "packagesPath": "C:\\Users\\grace\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\grace\\OneDrive\\Desktop\\LogiSyn\\LogiSyn\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Adria\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\grace\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -574,11 +574,11 @@
             "framework": "net10.0-windows7.0",
             "targetAlias": "net10.0-windows",
             "projectReferences": {
-              "C:\\Users\\Adria\\source\\repos\\LogiSyn\\AndersonsBakeryAPI\\AndersonsBakeryAPI.csproj": {
-                "projectPath": "C:\\Users\\Adria\\source\\repos\\LogiSyn\\AndersonsBakeryAPI\\AndersonsBakeryAPI.csproj"
+              "C:\\Users\\grace\\OneDrive\\Desktop\\LogiSyn\\AndersonsBakeryAPI\\AndersonsBakeryAPI.csproj": {
+                "projectPath": "C:\\Users\\grace\\OneDrive\\Desktop\\LogiSyn\\AndersonsBakeryAPI\\AndersonsBakeryAPI.csproj"
               },
-              "C:\\Users\\Adria\\source\\repos\\LogiSyn\\SharedLibrary\\SharedLibrary.csproj": {
-                "projectPath": "C:\\Users\\Adria\\source\\repos\\LogiSyn\\SharedLibrary\\SharedLibrary.csproj"
+              "C:\\Users\\grace\\OneDrive\\Desktop\\LogiSyn\\SharedLibrary\\SharedLibrary.csproj": {
+                "projectPath": "C:\\Users\\grace\\OneDrive\\Desktop\\LogiSyn\\SharedLibrary\\SharedLibrary.csproj"
               }
             }
           }
@@ -918,21 +918,21 @@
         }
       }
     },
-    "C:\\Users\\Adria\\source\\repos\\LogiSyn\\SharedLibrary\\SharedLibrary.csproj": {
+    "C:\\Users\\grace\\OneDrive\\Desktop\\LogiSyn\\SharedLibrary\\SharedLibrary.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Adria\\source\\repos\\LogiSyn\\SharedLibrary\\SharedLibrary.csproj",
+        "projectUniqueName": "C:\\Users\\grace\\OneDrive\\Desktop\\LogiSyn\\SharedLibrary\\SharedLibrary.csproj",
         "projectName": "SharedLibrary",
-        "projectPath": "C:\\Users\\Adria\\source\\repos\\LogiSyn\\SharedLibrary\\SharedLibrary.csproj",
-        "packagesPath": "C:\\Users\\Adria\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Adria\\source\\repos\\LogiSyn\\SharedLibrary\\obj\\",
+        "projectPath": "C:\\Users\\grace\\OneDrive\\Desktop\\LogiSyn\\SharedLibrary\\SharedLibrary.csproj",
+        "packagesPath": "C:\\Users\\grace\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\grace\\OneDrive\\Desktop\\LogiSyn\\SharedLibrary\\obj\\",
         "projectStyle": "PackageReference",
         "crossTargeting": true,
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Adria\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\grace\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],

@@ -287,7 +287,8 @@
                 <ControlTemplate TargetType="Button">
                     <Grid x:Name="Root">
                         <Ellipse Fill="{StaticResource Navy}"/>
-                        <Image Source="{StaticResource IconBack}" Width="30" Height="30"/>
+                        <Path Data="{StaticResource IconBackGeometry}" Style="{StaticResource IconPath}"
+                              Stroke="White" Width="20" Height="20"/>
                     </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
@@ -366,8 +367,9 @@
                     <Grid>
                         <Border Background="{TemplateBinding Background}" BorderBrush="{StaticResource CardBorder}"
                                 BorderThickness="1" CornerRadius="15" Effect="{StaticResource CardShadow}"/>
-                        <Image Source="{StaticResource IconSearch}" Width="34" Height="34"
-                               HorizontalAlignment="Left" Margin="14,0,0,0" IsHitTestVisible="False"/>
+                        <Path Data="{StaticResource IconSearchGeometry}" Style="{StaticResource IconPath}"
+                              Stroke="{StaticResource Navy}" Width="22" Height="22"
+                              HorizontalAlignment="Left" Margin="16,0,0,0" IsHitTestVisible="False"/>
                         <ScrollViewer x:Name="PART_ContentHost" Margin="54,0,16,0" VerticalAlignment="Center"/>
                         <TextBlock x:Name="Hint" Text="{TemplateBinding Tag}" Margin="56,0,16,0"
                                    VerticalAlignment="Center" IsHitTestVisible="False"
@@ -433,8 +435,9 @@
                                           ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
                                           Margin="18,0,64,0" VerticalAlignment="Center"
                                           HorizontalAlignment="Left" IsHitTestVisible="False"/>
-                        <Image Source="{StaticResource IconArrowDown}" Width="32" Height="32"
-                               HorizontalAlignment="Right" Margin="0,0,18,0" IsHitTestVisible="False"/>
+                        <Path Data="{StaticResource IconArrowDownGeometry}" Style="{StaticResource IconPath}"
+                              Stroke="{StaticResource Navy}" StrokeThickness="2.5" Width="18" Height="18"
+                              HorizontalAlignment="Right" Margin="0,0,20,0" IsHitTestVisible="False"/>
                         <Popup x:Name="PART_Popup" IsOpen="{TemplateBinding IsDropDownOpen}" Placement="Bottom"
                                AllowsTransparency="True" Focusable="False" PopupAnimation="Fade">
                             <Border Width="{Binding ActualWidth, RelativeSource={RelativeSource TemplatedParent}}"
