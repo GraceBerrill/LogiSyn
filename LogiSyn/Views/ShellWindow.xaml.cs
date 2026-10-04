@@ -123,7 +123,6 @@ namespace LogiSyn.Views
             ModalLayer.Visibility = Visibility.Collapsed;
         }
 
-        // Backwards-compatibility: close all modal content layers
         public void CloseAllModals()
         {
             CloseModal();
@@ -133,12 +132,12 @@ namespace LogiSyn.Views
         {
             Button[] buttons =
             {
-        DashboardButton,
-        OrdersButton,
-        HistoryButton,
-        ProductsButton,
-        UsersButton
-    };
+                DashboardButton,
+                OrdersButton,
+                HistoryButton,
+                ProductsButton,
+                UsersButton
+            };
 
             var inactiveBg = Brushes.Transparent;
             var inactiveFg = new SolidColorBrush(Color.FromRgb(0xE0, 0xE0, 0xE0));
@@ -173,9 +172,11 @@ namespace LogiSyn.Views
 
         private void LogoutButton_Click(object sender, RoutedEventArgs e)
         {
-            Current = null;
-            new LoginWindow().Show();
+            var app = Application.Current as App;
+
             Close();
+
+            app?.SignOut();
         }
 
         protected override void OnClosed(EventArgs e)

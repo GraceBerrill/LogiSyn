@@ -1,44 +1,49 @@
 ﻿using System;
 using System.Windows;
-using System.Windows.Threading;
+using SharedLibrary.Model;
 using LogiSyn.Views;
 
 namespace LogiSyn
 {
-    public partial class App : Application
-    {
-        protected override void OnStartup(StartupEventArgs e)
-        {
-            base.OnStartup(e);
+	public partial class App : Application
+	{
+		protected override void OnStartup(StartupEventArgs e)
+		{
+			base.OnStartup(e);
+			ShutdownMode = ShutdownMode.OnExplicitShutdown;
 
-            this.ShutdownMode = ShutdownMode.OnExplicitShutdown;
+			ShowLogin();
+		}
 
-            this.ShutdownMode = ShutdownMode.OnExplicitShutdown;
+		private void ShowLogin()
+		{
+			var login = new LoginWindow();
+			bool? result = login.ShowDialog();
 
-            var login = new LoginWindow();
-            bool? result = login.ShowDialog();
+			if (result != true || login.LoggedInUser == null)
+			{
+				Shutdown();
+				return;
+			}
 
-            if (result == true && login.LoggedInUser != null)
-            {
-                var user = login.LoggedInUser;
+			var user = login.LoggedInUser;
 
-                Dispatcher.BeginInvoke(new Action(() =>
-                {
-                    LogiSyn.Model.AppRole parsedRole = LogiSyn.Model.AppRole.User;
-                    if (!string.IsNullOrEmpty(user.Role))
-                    {
-                        Enum.TryParse<LogiSyn.Model.AppRole>(user.Role, true, out parsedRole);
-                    }
+			AppRole parsedRole = AppRole.User;
+			if (!string.IsNullOrEmpty(user.Role))
+			{
+				Enum.TryParse(user.Role, true, out parsedRole);
+			}
 
-                    var shell = new Views.ShellWindow(parsedRole);
-                    Application.Current.MainWindow = shell;
-                    shell.Show();
-                }), DispatcherPriority.ApplicationIdle);
-            }
-            else
-            {
-                Shutdown();
-            }
-        }
-    }
+			var shell = new ShellWindow(parsedRole);
+			MainWindow = shell;
+			shell.Show();
+		}
+
+		public void SignOut()
+		{
+			MainWindow = null;
+
+			ShowLogin();
+		}
+	}
 }

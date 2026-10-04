@@ -4,7 +4,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using LogiSyn.Model;
+using SharedLibrary.Model;
 using AndersonsBakeryAPI.Services;
 
 namespace LogiSyn.Views
@@ -76,10 +76,10 @@ namespace LogiSyn.Views
             try
             {
                 var prod = _service.GetProductByName(row.Name);
-                LogiSyn.Model.ProductDetail detail;
+                SharedLibrary.Model.ProductDetail detail;
                 if (prod != null)
                 {
-                    var ingredients = new System.Collections.Generic.List<LogiSyn.Model.IngredientLine>();
+                    var ingredients = new System.Collections.Generic.List<SharedLibrary.Model.IngredientLine>();
                     if (prod.Ingredients != null)
                     {
                         foreach (var ing in prod.Ingredients)
@@ -95,11 +95,11 @@ namespace LogiSyn.Views
                                 qtyText = string.IsNullOrEmpty(qtyText) ? ing.Unit : qtyText + " " + ing.Unit;
                             }
 
-                            ingredients.Add(new LogiSyn.Model.IngredientLine { Name = ing.IngredientName, Quantity = qtyText });
+                            ingredients.Add(new SharedLibrary.Model.IngredientLine { Name = ing.IngredientName, Quantity = qtyText });
                         }
                     }
 
-                    detail = new LogiSyn.Model.ProductDetail
+                    detail = new SharedLibrary.Model.ProductDetail
                     {
                         Name = prod.ProductName,
                         DateAdded = "",

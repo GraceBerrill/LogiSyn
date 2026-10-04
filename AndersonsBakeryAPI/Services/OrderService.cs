@@ -1,4 +1,4 @@
-﻿using LogiSyn.Interface;
+﻿using SharedLibrary.Interface;
 using SharedLibrary.Model;
 using System;
 using System.Collections.Generic;

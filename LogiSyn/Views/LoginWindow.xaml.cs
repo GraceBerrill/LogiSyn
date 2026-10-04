@@ -13,6 +13,8 @@ namespace LogiSyn.Views
         private bool _passwordRevealed;
         private bool _syncing;
 
+        public UserRow? LoggedInUser { get; private set; }
+
         public LoginWindow()
         {
             InitializeComponent();
@@ -104,15 +106,15 @@ namespace LogiSyn.Views
                 return;
             }
 
-            if (!Enum.TryParse<AppRole>(user.Role, out var role))
+            if (!Enum.TryParse<AppRole>(user.Role, out _))
             {
                 MessageBox.Show($"Unknown role '{user.Role}' for this account.",
                                 "Login", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
-            new ShellWindow(role).Show();
-            Close();
+            LoggedInUser = user;
+            DialogResult = true;
         }
     }
 }

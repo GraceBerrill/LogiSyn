@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Extensions.Configuration;
 using MongoDB.Driver;
 using SharedLibrary.Model;
 
@@ -10,14 +11,11 @@ namespace AndersonsBakeryAPI.Services
     {
         private readonly IMongoCollection<UserRow> _usersCollection;
 
-        public MongoUserService()
-            : this(MongoConfig.ConnectionString, MongoConfig.DatabaseName)
+        public MongoUserService(IMongoClient client, IConfiguration configuration)
         {
-        }
+            var databaseName = configuration["MongoDatabase"]
+                ?? throw new InvalidOperationException("Missing 'MongoDatabase' value.");
 
-        public MongoUserService(string connectionString, string databaseName)
-        {
-            var client = new MongoClient(connectionString);
             var database = client.GetDatabase(databaseName);
             _usersCollection = database.GetCollection<UserRow>("Users");
         }

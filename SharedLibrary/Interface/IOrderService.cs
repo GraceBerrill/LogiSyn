@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace LogiSyn.Interface
+namespace SharedLibrary.Interface
 {
     public interface IOrderService
     {

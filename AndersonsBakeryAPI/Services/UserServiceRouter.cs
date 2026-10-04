@@ -6,8 +6,14 @@ namespace AndersonsBakeryAPI.Services
 {
     public class UserServiceRouter
     {
-        private readonly MongoUserService _mongo = new MongoUserService();
-        private readonly UserService _sql = new UserService();
+        private readonly MongoUserService _mongo;
+        private readonly UserService _sql;
+
+        public UserServiceRouter(MongoUserService mongo, UserService sql)
+        {
+            _mongo = mongo;
+            _sql = sql;
+        }
 
         public List<UserRow> GetAllUsers()
         {

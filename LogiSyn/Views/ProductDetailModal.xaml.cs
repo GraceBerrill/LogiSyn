@@ -1,6 +1,6 @@
 using System.Windows;
 using System.Windows.Controls;
-using LogiSyn.Model;
+using SharedLibrary.Model;
 using AndersonsBakeryAPI.Services;
 
 namespace LogiSyn.Views

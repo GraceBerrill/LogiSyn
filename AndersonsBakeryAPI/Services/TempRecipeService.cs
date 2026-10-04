@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using LogiSyn.Interface;
+using SharedLibrary.Interface;
 using SharedLibrary.Model;
 
 namespace AndersonsBakeryAPI.Services

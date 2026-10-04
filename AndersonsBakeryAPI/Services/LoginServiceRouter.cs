@@ -8,8 +8,14 @@ namespace AndersonsBakeryAPI.Services
     /// </summary>
     public class LoginServiceRouter
     {
-        private readonly MongoLoginService _mongo = new MongoLoginService();
-        private readonly LoginService _sql = new LoginService();
+        private readonly MongoLoginService _mongo;
+        private readonly LoginService _sql;
+
+        public LoginServiceRouter(MongoLoginService mongo, LoginService sql)
+        {
+            _mongo = mongo;
+            _sql = sql;
+        }
 
         public UserRow? Authenticate(string name, string password)
         {

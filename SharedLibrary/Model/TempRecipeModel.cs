@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace LogiSyn.Model
+namespace SharedLibrary.Model
 {
     public class RecipeIngredientModel
     {

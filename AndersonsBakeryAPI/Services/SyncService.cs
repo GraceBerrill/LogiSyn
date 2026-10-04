@@ -22,8 +22,14 @@ namespace AndersonsBakeryAPI.Services
 
     public class SyncService
     {
-        private readonly MongoUserService _mongo = new MongoUserService();
-        private readonly UserService _sql = new UserService();
+        private readonly MongoUserService _mongo;
+        private readonly UserService _sql;
+
+        public SyncService(MongoUserService mongo, UserService sql)
+        {
+            _mongo = mongo;
+            _sql = sql;
+        }
 
         public SyncResult SyncUsers()
         {
