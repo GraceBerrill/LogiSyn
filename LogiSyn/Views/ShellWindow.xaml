@@ -97,6 +97,7 @@
                             Tag="&#xE80F;"
                             Style="{StaticResource MenuButtonStyle}"
                             Click="DashboardButton_Click"/>
+                    <!-- Adriaan - Orders Navigation -->
                     <Button x:Name="OrdersButton"
                             Content="Orders"
                             Tag="&#xE8A1;"

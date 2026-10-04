@@ -1,6 +1,11 @@
 using System;
 using System.Windows;
+<<<<<<< HEAD
 using SharedLibrary.Model;
+=======
+using System.Windows.Threading;
+using LogiSyn.Model;
+>>>>>>> Adriaan
 using LogiSyn.Views;
 
 namespace LogiSyn
@@ -15,10 +20,15 @@ namespace LogiSyn
 			ShowLogin();
 		}
 
+<<<<<<< HEAD
 		private void ShowLogin()
 		{
 			var login = new LoginWindow();
 			bool? result = login.ShowDialog();
+=======
+            var login = new LogiSyn.Views.LoginWindow();
+            bool? result = login.ShowDialog();
+>>>>>>> Adriaan
 
 			if (result != true || login.LoggedInUser == null)
 			{
@@ -26,6 +36,7 @@ namespace LogiSyn
 				return;
 			}
 
+<<<<<<< HEAD
 			var user = login.LoggedInUser;
 
 			AppRole parsedRole = AppRole.User;
@@ -45,4 +56,26 @@ namespace LogiSyn
 			ShowLogin();
 		}
 	}
+=======
+                Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    // Map the user role string to the AppRole enum (Admin, Manager, User)
+                    if (!Enum.TryParse(user.Role, true, out AppRole role))
+                    {
+                        role = AppRole.User;
+                    }
+
+                    var shell = new ShellWindow(role);
+                    Application.Current.MainWindow = shell;
+                    shell.Show();
+
+                }), DispatcherPriority.ApplicationIdle);
+            }
+            else
+            {
+                Shutdown();
+            }
+        }
+    }
+>>>>>>> Adriaan
 }

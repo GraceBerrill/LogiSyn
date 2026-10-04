@@ -8,14 +8,31 @@ namespace LogiSyn.Views
 {
     public partial class ShellWindow : Window
     {
-        public static ShellWindow? Current { get; private set; }
+        public static ShellWindow? Current { get; set; }
 
+<<<<<<< HEAD
         private readonly AppRole _role;
         private bool _allowCloseWithoutShutdown;
+=======
+        private AppRole _role;
+
+        public AppRole Role
+        {
+            get => _role;
+            set
+            {
+                _role = value;
+                if (RoleText != null) RoleText.Text = value.ToString();
+                ConfigureNavigation();
+                Navigate("dashboard");
+            }
+        }
+>>>>>>> Adriaan
 
         public ShellWindow(AppRole role)
         {
             InitializeComponent();
+            _role = role;
 
             Current = this;
             _role = role;
@@ -52,6 +69,7 @@ namespace LogiSyn.Views
                     view = dv;
                     break;
 
+                // Adriaan - Order View Navigation
                 case "orders":
                     view = _role == AppRole.Admin || _role == AppRole.Manager
                         ? new AdminOrdersView()
@@ -70,22 +88,25 @@ namespace LogiSyn.Views
                     view = new ManageUsersView();
                     break;
 
+                // Adriaan - Order Creation, Sheets, and Breakdown Navigation
                 case "createorder":
                     view = new CreateOrderView();
                     break;
 
                 case "ordersheets":
-                    view = new OrderSheetsView();
+                    view = parameter is OrderScaled scaledOrder
+                        ? new OrderSheetsView(scaledOrder)
+                        : new OrderSheetsView();
                     break;
 
                 case "breakdown":
-                    if (parameter is not OrderRow order)
+                    if (parameter is not OrderRow orderRow)
                     {
                         Navigate("orders");
                         return;
                     }
 
-                    view = new OrderBreakdownView(_role, order);
+                    view = new OrderBreakdownView(_role, orderRow);
                     break;
 
                 case "usersheet":
@@ -166,6 +187,7 @@ namespace LogiSyn.Views
         }
 
         private void DashboardButton_Click(object sender, RoutedEventArgs e) => Navigate("dashboard");
+        // Adriaan
         private void OrdersButton_Click(object sender, RoutedEventArgs e) => Navigate("orders");
         private void HistoryButton_Click(object sender, RoutedEventArgs e) => Navigate("history");
         private void ProductsButton_Click(object sender, RoutedEventArgs e) => Navigate("products");

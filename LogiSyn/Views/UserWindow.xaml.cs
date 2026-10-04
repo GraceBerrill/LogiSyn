@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -15,19 +15,36 @@ namespace LogiSyn.Views
     /// Interaction logic for UserWindow.xaml
     /// </summary>
     public partial class UserWindow : Window
+<<<<<<< HEAD
+=======
+
+>>>>>>> Adriaan
     {
-        public UserWindow()
+        public UserWindow(LogiSyn.Model.UserRow user)
         {
             InitializeComponent();
 
+<<<<<<< HEAD
             // navigate shell window to dashboard by default for a regular user
             _ = new LogiSyn.Views.ShellWindow(SharedLibrary.Model.AppRole.User);
+=======
+            //navigate shell window to dashboard by default
+            if (!System.Enum.TryParse<LogiSyn.Model.AppRole>(user.Role, true, out var role))
+                role = LogiSyn.Model.AppRole.User;
+
+            LogiSyn.Views.ShellWindow.Current = new LogiSyn.Views.ShellWindow(role);
+
+            // initialize sidebar/profile
+            SetupSidebarNavigation(user.Role);
+            SetProfileName(user.Name);
+>>>>>>> Adriaan
         }
 
         public void SetupSidebarNavigation(string role)
         {
 
             //contrlls visibility based on role
+            // Adriaan - Orders Button Visibility
             BtnOrders.Visibility = (role == "Admin" || role == "User") ? Visibility.Visible : Visibility.Collapsed;
             BtnHistory.Visibility = (role == "Admin" || role == "Manager") ? Visibility.Visible : Visibility.Collapsed;
             BtnManageProducts.Visibility = (role == "Admin") ? Visibility.Visible : Visibility.Collapsed;
@@ -52,6 +69,7 @@ namespace LogiSyn.Views
             LogiSyn.Views.ShellWindow.Current?.Navigate("dashboard");
         }
 
+        // Adriaan - Navigate to Orders
         private void BtnOrders_Click(object sender, RoutedEventArgs e)
         {
             LogiSyn.Views.ShellWindow.Current?.Navigate("orders");
@@ -77,7 +95,7 @@ namespace LogiSyn.Views
         {
             try
             {
-                LogiSyn.Views.ShellWindow.Current?.CloseAllModals();
+                LogiSyn.Views.ShellWindow.Current?.CloseModal();
             }
             catch { }
 

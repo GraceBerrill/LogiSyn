@@ -1,7 +1,14 @@
+<<<<<<< HEAD
 ﻿using SharedLibrary.Interface;
 using SharedLibrary.Model;
 using AndersonsBakeryAPI.Services;
 
+=======
+// Adriaan
+using LogiSyn.Interface;
+using LogiSyn.Model;
+using LogiSyn.Services;
+>>>>>>> Adriaan
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -45,31 +52,12 @@ namespace LogiSyn.Views
             var history = _orderService.GetHistory().ToList();
 
             // If there are no orders in the history, create mock data for testing
-            // TODO : Remove this mock data creation in production
             if (!history.Any())
             {
-                var mock1 = new OrderScaled
-                {
-                    OrderId = "#001",
-                    Customer = "Checkers",
-                    OrderDate = new DateTime(2026, 5, 9),
-                    Status = "Completed",
-                    productionItems = new List<ProductionItem>
-                    {
-                        new ProductionItem
-                        {
-                            ProductName = "150 Sandwich Bread",
-                            ProductionLine = "Production 2",
-                            packaging = new Packaging { Pans = 4, Trolleys = 1 },
-                            ReqIngredients = new List<Ingredients>
-                            {
-                                new Ingredients { IngredientName = "Flour", IngredientAmount = 5, MeasuredIngredient = "bags" },
-                                new Ingredients { IngredientName = "Yeast", IngredientAmount = 1, MeasuredIngredient = "kg" }
-                            }
-                        }
-                    }
-                };
+                // Display text indicating no orders are available
+                TxtNoOrders.Visibility = Visibility.Visible;
 
+<<<<<<< HEAD
                 var mock2 = new OrderScaled
                 {
                     OrderId = "#002",
@@ -107,7 +95,13 @@ namespace LogiSyn.Views
 
                 _orderService.SaveOrder(mock1);
                 _orderService.SaveOrder(mock2);
+=======
+>>>>>>> Adriaan
                 history = _orderService.GetHistory().ToList();
+            }
+            else
+            {
+                TxtNoOrders.Visibility = Visibility.Collapsed;
             }
 
             _completedOrders = history;
@@ -145,8 +139,16 @@ namespace LogiSyn.Views
                     filtered = filtered.OrderBy(o => o.OrderDate);
             }
 
+            var list = filtered.ToList();
             HistoryDataGrid.ItemsSource = null;
-            HistoryDataGrid.ItemsSource = filtered.ToList();
+            HistoryDataGrid.ItemsSource = list;
+
+            if (TxtNoOrders != null)
+            {
+                TxtNoOrders.Visibility = (!_completedOrders.Any() || !list.Any())
+                    ? Visibility.Visible
+                    : Visibility.Collapsed;
+            }
         }
 
 

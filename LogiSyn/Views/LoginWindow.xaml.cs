@@ -1,8 +1,17 @@
+<<<<<<< HEAD
 using AndersonsBakeryAPI.Services;
 using SharedLibrary.Model;
 using System;
 using System.Windows;
 using System.Windows.Controls;
+=======
+using System;
+using LogiSyn.Model;
+using LogiSyn.Services;
+using System.Windows;
+using System.Windows.Controls;
+using LogiSyn.Views;
+>>>>>>> Adriaan
 
 namespace LogiSyn.Views
 {
@@ -86,6 +95,7 @@ namespace LogiSyn.Views
                                 "Login", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
+<<<<<<< HEAD
 
             UserRow? user;
             try
@@ -115,6 +125,30 @@ namespace LogiSyn.Views
 
             LoggedInUser = user;
             DialogResult = true;
+=======
+            try
+            {
+                UserRow? loggedInUser = _loginService.Authenticate(username, password);
+
+                if (loggedInUser != null)
+                {
+                    LoggedInUser = loggedInUser;
+
+                    this.DialogResult = true;
+                    this.Close();
+                }
+                else
+                {
+                    MessageBox.Show("Invalid username or password.", "Login Failed",
+                                    MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Database Error",
+                                MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+>>>>>>> Adriaan
         }
     }
 }

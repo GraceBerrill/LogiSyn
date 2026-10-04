@@ -14,6 +14,12 @@ namespace LogiSyn.Views
             InitializeComponent();
         }
 
+        public DashboardView(LogiSyn.Model.AppRole role)
+        {
+            InitializeComponent();
+            ConfigureRole(role.ToString());
+        }
+
         /********************************************************************************************/
         // this makes it so that the dashboard can be configured based on the role of the user
         public void ConfigureRole(string role)
@@ -42,6 +48,7 @@ namespace LogiSyn.Views
             LoadDashboardData();
         }
 
+        // Adriaan - Dashboard Orders Section
         //placeholder for loading dashboard data
         private void LoadDashboardData()
         {
@@ -118,6 +125,7 @@ namespace LogiSyn.Views
         }
     }
 
+    // Adriaan - Dashboard Order Item Model
     //order item class for the dashboard
     public class DashboardOrderItem
     {

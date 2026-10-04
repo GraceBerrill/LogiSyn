@@ -25,6 +25,48 @@ namespace AndersonsBakeryAPI.Services
             return Path.Combine(dataFolder, "products.json");
         }
 
+        // Get full Product models (with ingredients)
+        public List<Product> GetAllProducts()
+        {
+            var file = ProductsFilePath();
+            if (File.Exists(file))
+            {
+                try
+                {
+                    var prodList = JsonSerializer.Deserialize<List<Product>>(File.ReadAllText(file));
+                    if (prodList != null && prodList.Count > 0)
+                        return prodList;
+                }
+                catch { }
+
+                try
+                {
+                    var rowList = JsonSerializer.Deserialize<List<ProductRow>>(File.ReadAllText(file));
+                    if (rowList != null && rowList.Count > 0)
+                    {
+                        return rowList.ConvertAll(r => new Product
+                        {
+                            ProductName = r.Name,
+                            PricePerUnit = ParsePrice(r.Price),
+                            SellBy = ParseInt(r.SellBy),
+                            BestBefore = ParseInt(r.BestBefore),
+                            StorageLocation = r.Storage
+                        });
+                    }
+                }
+                catch { }
+            }
+
+            return GetAll().ConvertAll(r => new Product
+            {
+                ProductName = r.Name,
+                PricePerUnit = ParsePrice(r.Price),
+                SellBy = ParseInt(r.SellBy),
+                BestBefore = ParseInt(r.BestBefore),
+                StorageLocation = r.Storage
+            });
+        }
+
         // Get product rows for UI: prefer SQL, fall back to JSON. JSON may be either List<Product> or legacy List<ProductRow>.
         public List<ProductRow> GetAll()
         {

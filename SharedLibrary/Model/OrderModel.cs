@@ -1,4 +1,5 @@
-﻿using System;
+// Adriaan
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -22,10 +23,10 @@ namespace SharedLibrary.Model
     // Packaging pans and trolleys of products
     public class Packaging
     {
-        public int Pans { get; set; }
-        public int Trolleys { get; set; }
-        public int PansUsed { get; set; }
-        public int TrolleysUsed { get; set; }
+        public double Pans { get; set; }
+        public double Trolleys { get; set; }
+        public double PansUsed { get; set; }
+        public double TrolleysUsed { get; set; }
     }
 
     //------------------------------------------------------------------------------------------------//
@@ -94,16 +95,15 @@ namespace SharedLibrary.Model
 
         public Dictionary<string, RawMaterialValue> RawMaterials { get; set; } = new();
     }
-}
 
     //------------------------------------------------------------------------------------------------//
 
     // Email model
-
     public class EmailMessageModel
     {
         public string Subject { get; set; } = string.Empty;
         public string Body { get; set; } = string.Empty;
     }
+}
 
 //--------------------------------------End of File----------------------------------------------------------//

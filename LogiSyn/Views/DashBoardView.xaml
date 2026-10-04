@@ -39,7 +39,7 @@
             </Button>
         </StackPanel>
 
-        <!-- two stat cards -->
+        <!-- Adriaan - Orders Summary Stat Cards -->
         <ContentControl Grid.Row="1" Style="{StaticResource Card13}" Width="357.3"
                         HorizontalAlignment="Left">
             <Grid>
@@ -60,7 +60,7 @@
             </Grid>
         </ContentControl>
 
-        <!-- recent orders -->
+        <!-- Adriaan - Recent Orders Section -->
         <ContentControl Grid.Row="3" Style="{StaticResource Card28}" Margin="0,0,0,60">
             <Grid>
                 <TextBlock Text="Recent Orders" FontSize="26.7" VerticalAlignment="Top"

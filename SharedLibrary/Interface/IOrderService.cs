@@ -1,4 +1,9 @@
+<<<<<<< HEAD
 ﻿using SharedLibrary.Model;
+=======
+// Adriaan
+using LogiSyn.Model;
+>>>>>>> Adriaan
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -14,6 +19,7 @@ namespace SharedLibrary.Interface
         IEnumerable<OrderScaled> GetHistory();
         OrderScaled? GetOrderById(string orderId);
         void SaveOrder(OrderScaled order);
-        void CompleteOrder(string orderId, Action<OrderScaled> recordOrderData);
+        void CompleteOrder(string orderId, Action<OrderScaled>? recordOrderData = null);
+        EmailMessageModel BuildScalingSheetEmail(OrderScaled order);
     }
 }
