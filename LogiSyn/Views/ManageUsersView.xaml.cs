@@ -22,12 +22,6 @@ namespace LogiSyn.Views
             InitializeComponent();
             _ready = true;
 
-            Loaded += async (s, e) =>
-            {
-                if (_syncService.IsMongoConfigured)
-                    await RunSyncAsync(silentWhenNothingToDo: true);
-            };
-
             LoadUsers();
         }
 

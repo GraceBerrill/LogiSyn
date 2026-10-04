@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text.Json;
 using SharedLibrary.Model;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace AndersonsBakeryAPI.Data
 {
@@ -31,21 +32,22 @@ namespace AndersonsBakeryAPI.Data
             // Configure the OrderScaled entity
             modelBuilder.Entity<OrderScaled>()
                 .HasKey(o => o.OrderId);
+
             // Configure properties with appropriate constraints
             modelBuilder.Entity<OrderScaled>()
                 .Property(o => o.OrderId)
                 .IsRequired()
                 .HasMaxLength(255);
-            // Configure other properties as needed
+
             modelBuilder.Entity<OrderScaled>()
                 .Property(o => o.Customer)
                 .IsRequired()
                 .HasMaxLength(255);
-            //  Configure the OrderDate property
+
             modelBuilder.Entity<OrderScaled>()
                 .Property(o => o.OrderDate)
                 .IsRequired();
-            // Configure the Status property
+
             modelBuilder.Entity<OrderScaled>()
                 .Property(o => o.Status)
                 .IsRequired()
@@ -57,10 +59,18 @@ namespace AndersonsBakeryAPI.Data
                 .IsRequired(false)
                 .HasConversion(
                     v => JsonSerializer.Serialize(v, (JsonSerializerOptions?)null),
-                    v => string.IsNullOrWhiteSpace(v) 
-                        ? new List<ProductionItem>() 
+                    v => string.IsNullOrWhiteSpace(v)
+                        ? new List<ProductionItem>()
                         : JsonSerializer.Deserialize<List<ProductionItem>>(v, (JsonSerializerOptions?)null) ?? new List<ProductionItem>()
-                );
+                )
+                .Metadata.SetValueComparer(new ValueComparer<List<ProductionItem>>(
+                    (c1, c2) => JsonSerializer.Serialize(c1, (JsonSerializerOptions?)null) ==
+                                JsonSerializer.Serialize(c2, (JsonSerializerOptions?)null),
+                    c => c == null ? 0 : JsonSerializer.Serialize(c, (JsonSerializerOptions?)null).GetHashCode(),
+                    c => JsonSerializer.Deserialize<List<ProductionItem>>(
+                            JsonSerializer.Serialize(c, (JsonSerializerOptions?)null),
+                            (JsonSerializerOptions?)null) ?? new List<ProductionItem>()
+                ));
 
             modelBuilder.Entity<OrderScaled>()
                 .Ignore(o => o.productionItems);
@@ -71,10 +81,18 @@ namespace AndersonsBakeryAPI.Data
                 .IsRequired(false)
                 .HasConversion(
                     v => JsonSerializer.Serialize(v, (JsonSerializerOptions?)null),
-                    v => string.IsNullOrWhiteSpace(v) 
-                        ? new Dictionary<string, RawMaterialValue>() 
+                    v => string.IsNullOrWhiteSpace(v)
+                        ? new Dictionary<string, RawMaterialValue>()
                         : JsonSerializer.Deserialize<Dictionary<string, RawMaterialValue>>(v, (JsonSerializerOptions?)null) ?? new Dictionary<string, RawMaterialValue>()
-                );
+                )
+                .Metadata.SetValueComparer(new ValueComparer<Dictionary<string, RawMaterialValue>>(
+                    (d1, d2) => JsonSerializer.Serialize(d1, (JsonSerializerOptions?)null) ==
+                                JsonSerializer.Serialize(d2, (JsonSerializerOptions?)null),
+                    d => d == null ? 0 : JsonSerializer.Serialize(d, (JsonSerializerOptions?)null).GetHashCode(),
+                    d => JsonSerializer.Deserialize<Dictionary<string, RawMaterialValue>>(
+                            JsonSerializer.Serialize(d, (JsonSerializerOptions?)null),
+                            (JsonSerializerOptions?)null) ?? new Dictionary<string, RawMaterialValue>()
+                ));
         }
     }
 }
