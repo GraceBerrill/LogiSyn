@@ -1,3 +1,4 @@
+// Adriaan
 using LogiSyn.Interface;
 using LogiSyn.Model;
 using Microsoft.EntityFrameworkCore;
@@ -13,14 +14,34 @@ namespace AndersonsBakeryAPI.Repositories
     /// </summary>
     public class SqlOrderRepository : IOrderRepository
     {
-        private readonly Data.LogiSynDbContext _context;
+        private readonly string? _connectionString;
 
         //------------------------------------------------------------------------------------------------//
 
-        // Constructor for the SqlOrderRepository class, which takes a LogiSynDbContext as a dependency.
+        // Constructor for the SqlOrderRepository class
         public SqlOrderRepository(Data.LogiSynDbContext context)
         {
-            _context = context ?? throw new ArgumentNullException(nameof(context));
+            try
+            {
+                _connectionString = context?.Database?.GetConnectionString();
+            }
+            catch
+            {
+                _connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=LogiSynDb;Integrated Security=True;TrustServerCertificate=True;";
+            }
+        }
+
+        //------------------------------------------------------------------------------------------------//
+
+        // This method creates a new instance of the db using the string
+        private Data.LogiSynDbContext CreateContext()
+        {
+            var optionsBuilder = new DbContextOptionsBuilder<Data.LogiSynDbContext>();
+            string conn = !string.IsNullOrWhiteSpace(_connectionString)
+                ? _connectionString
+                : @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=LogiSynDb;Integrated Security=True;TrustServerCertificate=True;";
+            optionsBuilder.UseSqlServer(conn);
+            return new Data.LogiSynDbContext(optionsBuilder.Options);
         }
 
         //------------------------------------------------------------------------------------------------//
@@ -30,7 +51,8 @@ namespace AndersonsBakeryAPI.Repositories
         {
             try
             {
-                return await _context.Orders.ToListAsync();
+                await using var context = CreateContext();
+                return await context.Orders.AsNoTracking().ToListAsync();
             }
             catch (Exception ex)
             {
@@ -46,7 +68,8 @@ namespace AndersonsBakeryAPI.Repositories
         {
             try
             {
-                return await _context.Orders.FirstOrDefaultAsync(o => o.OrderId == orderId);
+                await using var context = CreateContext();
+                return await context.Orders.AsNoTracking().FirstOrDefaultAsync(o => o.OrderId == orderId);
             }
             catch (Exception ex)
             {
@@ -65,20 +88,23 @@ namespace AndersonsBakeryAPI.Repositories
 
             try
             {
-                var existingOrder = await _context.Orders.FirstOrDefaultAsync(o => o.OrderId == order.OrderId);
+                await using var context = CreateContext();
+                var existingOrder = await context.Orders.FirstOrDefaultAsync(o => o.OrderId == order.OrderId);
 
                 if (existingOrder != null)
                 {
-                    // Update existing order
-                    _context.Entry(existingOrder).CurrentValues.SetValues(order);
+                    existingOrder.Customer = order.Customer;
+                    existingOrder.OrderDate = order.OrderDate;
+                    existingOrder.Status = order.Status;
+                    existingOrder.ProductionItems = order.ProductionItems;
+                    existingOrder.RawMaterials = order.RawMaterials;
                 }
                 else
                 {
-                    // Add new order
-                    _context.Orders.Add(order);
+                    context.Orders.Add(order);
                 }
 
-                await _context.SaveChangesAsync();
+                await context.SaveChangesAsync();
                 return order;
             }
             catch (Exception ex)
@@ -95,12 +121,13 @@ namespace AndersonsBakeryAPI.Repositories
         {
             try
             {
-                var order = await _context.Orders.FirstOrDefaultAsync(o => o.OrderId == orderId);
+                await using var context = CreateContext();
+                var order = await context.Orders.FirstOrDefaultAsync(o => o.OrderId == orderId);
                 if (order == null)
                     return false;
 
-                _context.Orders.Remove(order);
-                await _context.SaveChangesAsync();
+                context.Orders.Remove(order);
+                await context.SaveChangesAsync();
                 return true;
             }
             catch (Exception ex)
@@ -117,12 +144,13 @@ namespace AndersonsBakeryAPI.Repositories
         {
             try
             {
-                var order = await _context.Orders.FirstOrDefaultAsync(o => o.OrderId == orderId);
+                await using var context = CreateContext();
+                var order = await context.Orders.FirstOrDefaultAsync(o => o.OrderId == orderId);
                 if (order == null)
                     return false;
 
                 order.Status = status;
-                await _context.SaveChangesAsync();
+                await context.SaveChangesAsync();
                 return true;
             }
             catch (Exception ex)
@@ -139,8 +167,9 @@ namespace AndersonsBakeryAPI.Repositories
         {
             try
             {
-                return await _context.Orders
-                    .Where(o => o.Status == "Completed")
+                await using var context = CreateContext();
+                return await context.Orders.AsNoTracking()
+                    .Where(o => o.Status == "Completed" || o.Status == "Complete")
                     .ToListAsync();
             }
             catch (Exception ex)

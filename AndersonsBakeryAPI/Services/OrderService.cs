@@ -1,3 +1,4 @@
+// Adriaan
 using LogiSyn.Interface;
 using LogiSyn.Model;
 using System;
@@ -27,6 +28,9 @@ namespace LogiSyn.Services
         private static readonly List<OrderScaled> _orders = new();
         private static bool _localLoaded = false;
 
+        //------------------------------------------------------------------------------------------------//
+
+        // Returns the file path for storing local orders in a JSON file
         private static string OrdersFilePath()
         {
             string dataFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data");
@@ -34,10 +38,14 @@ namespace LogiSyn.Services
             return Path.Combine(dataFolder, "orders.json");
         }
 
+        //------------------------------------------------------------------------------------------------//
+
+        // Loads orders from the local JSON file into memory, ensuring no duplicates are added
         private static void LoadLocalOrders()
         {
             try
             {
+                // Load orders from the local JSON file if it exists
                 string path = OrdersFilePath();
                 if (File.Exists(path))
                 {
@@ -67,10 +75,14 @@ namespace LogiSyn.Services
             }
         }
 
+        //------------------------------------------------------------------------------------------------//
+
+        // Saves the current in-memory orders to the local JSON file, ensuring thread safety
         private static void SaveLocalOrders()
         {
             try
             {
+                // Save the current in-memory orders to the local JSON file
                 string path = OrdersFilePath();
                 string json;
                 lock (_orders)
@@ -88,16 +100,21 @@ namespace LogiSyn.Services
             }
         }
 
+        //------------------------------------------------------------------------------------------------//
+
+        // Creates a default SQL repository for order storage, connecting to a local SQL Server database
         private static SqlOrderRepository? CreateDefaultSqlRepository()
         {
             try
             {
+                // Configure the DbContextOptionsBuilder to connect to a local SQL Server database
                 var optionsBuilder = new DbContextOptionsBuilder<LogiSynDbContext>();
                 optionsBuilder.UseSqlServer(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=LogiSynDb;Integrated Security=True;TrustServerCertificate=True;");
                 var context = new LogiSynDbContext(optionsBuilder.Options);
                 context.Database.EnsureCreated();
                 return new SqlOrderRepository(context);
             }
+            // Catch any exceptions that occur during the creation of the SQL repository and log the error
             catch (Exception ex)
             {
                 Console.WriteLine($"[SQL] Could not initialize SQL repository: {ex.Message}");
@@ -105,10 +122,15 @@ namespace LogiSyn.Services
             }
         }
 
+        //------------------------------------------------------------------------------------------------//
+
+        // Creates a default MongoDB repository for order storage, connecting to a MongoDB Atlas cluster
+        // NOTE: Ensure that the connection string is valid and that the MongoDB server is accessible
         private static MongoOrderRepository? CreateDefaultMongoRepository()
         {
             try
             {
+                // Configure the MongoDB client settings with a connection string and timeouts
                 string conn = "mongodb+srv://reannaude1_db_user:MPaJYcEqumlJbf0j@cluster0.twltvce.mongodb.net/?appName=Cluster0";
                 var settings = MongoClientSettings.FromConnectionString(conn);
                 settings.ServerSelectionTimeout = TimeSpan.FromSeconds(2);
@@ -124,11 +146,17 @@ namespace LogiSyn.Services
             }
         }
 
+        //------------------------------------------------------------------------------------------------//
+
+        // Static constructor to load local orders when the class is first accessed
         static OrderService()
         {
             LoadLocalOrders();
         }
 
+        //------------------------------------------------------------------------------------------------//
+
+        // constructors for OrderService, allowing for dependency injection of ProductService and repositories
         public OrderService() : this(new ProductService(), CreateDefaultMongoRepository(), CreateDefaultSqlRepository()) { }
 
         public OrderService(ProductService productService) : this(productService, CreateDefaultMongoRepository(), CreateDefaultSqlRepository()) { }
@@ -136,8 +164,12 @@ namespace LogiSyn.Services
         public OrderService(MongoOrderRepository? mongoRepository, SqlOrderRepository? sqlRepository)
             : this(new ProductService(), mongoRepository, sqlRepository) { }
 
+        //------------------------------------------------------------------------------------------------//
+
+        // Constructor that initializes the OrderService with a ProductService and optional repositories for MongoDB and SQL Server
         public OrderService(ProductService productService, MongoOrderRepository? mongoRepository, SqlOrderRepository? sqlRepository)
         {
+            // Use the provided ProductService or create a new one if null
             _productService = productService ?? new ProductService();
             _mongoRepository = mongoRepository;
             _sqlRepository = sqlRepository;
@@ -212,6 +244,7 @@ namespace LogiSyn.Services
                     var item = new ProductionItem
                     {
                         ProductName = $"{quantity} {product.ProductName}",
+                        Amount = quantity,
                         ProductionLine = !string.IsNullOrWhiteSpace(product.StorageLocation) ? product.StorageLocation : "Production 1",
                         packaging = new Packaging
                         {

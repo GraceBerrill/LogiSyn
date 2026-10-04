@@ -1,4 +1,4 @@
-﻿using LogiSyn.Views;
+using LogiSyn.Views;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -28,6 +28,7 @@ namespace LogiSyn.Views
             MainFrame.Navigate(new DashboardView(role));
         }
 
+        // Adriaan - Navigate to Orders Page
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
             MainFrame.Navigate(new OrdersPage());
@@ -38,6 +39,7 @@ namespace LogiSyn.Views
             MainFrame.Navigate(new DashboardView(LogiSyn.Model.AppRole.Manager));
         }
 
+        // Adriaan - Navigate to Order History
         private void NavHistory_Click(object sender, RoutedEventArgs e)
         {
              MainFrame.Navigate(new AdminOrderHistory());
@@ -55,6 +57,7 @@ namespace LogiSyn.Views
             this.Close();
         }
 
+        // Adriaan - Navigate to Users Order Page
         private void UserOrderTemp_Click(object sender, RoutedEventArgs e)
         {
             MainFrame.Navigate(new UsersOrderPage());

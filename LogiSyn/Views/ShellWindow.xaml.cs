@@ -62,6 +62,7 @@ namespace LogiSyn.Views
                     view = new DashboardView(_role);
                     break;
 
+                // Adriaan - Order View Navigation
                 case "orders":
                     view = _role == AppRole.Admin || _role == AppRole.Manager
                         ? new AdminOrdersView()
@@ -80,6 +81,7 @@ namespace LogiSyn.Views
                     view = new ManageUsersView();
                     break;
 
+                // Adriaan - Order Creation, Sheets, and Breakdown Navigation
                 case "createorder":
                     view = new CreateOrderView();
                     break;
@@ -171,6 +173,7 @@ namespace LogiSyn.Views
         }
 
         private void DashboardButton_Click(object sender, RoutedEventArgs e) => Navigate("dashboard");
+        // Adriaan
         private void OrdersButton_Click(object sender, RoutedEventArgs e) => Navigate("orders");
         private void HistoryButton_Click(object sender, RoutedEventArgs e) => Navigate("history");
         private void ProductsButton_Click(object sender, RoutedEventArgs e) => Navigate("products");

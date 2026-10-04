@@ -1,3 +1,4 @@
+// Adriaan
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +18,8 @@ namespace LogiSyn.Views
         private readonly OrderService _orderService = new OrderService();
         private DispatcherTimer _refreshTimer;
 
+        //------------------------------------------------------------------------------------------------//
+
         public AdminOrdersView()
         {
             InitializeComponent();
@@ -26,19 +29,18 @@ namespace LogiSyn.Views
             StatusFilter.SelectedIndex = 0;
             _ready = true;
 
-            // Load orders on initialization
             LoadOrdersAsync();
 
-            // Set up auto-refresh timer (refresh every 10 seconds)
+            // Set up auto-refresh timer so that orders are refreshed every 10 seconds
             _refreshTimer = new DispatcherTimer();
             _refreshTimer.Interval = TimeSpan.FromSeconds(10);
             _refreshTimer.Tick += (s, e) => LoadOrdersAsync();
             _refreshTimer.Start();
         }
 
-        /// <summary>
-        /// Loads orders from API or local OrderService
-        /// </summary>
+        //------------------------------------------------------------------------------------------------//
+
+        // Load orders asynchronously from the API or local OrderService
         private async void LoadOrdersAsync()
         {
             try
@@ -69,16 +71,20 @@ namespace LogiSyn.Views
                 }
                 else if (_all.Count == 0)
                 {
-                    _all = SampleData.Orders();
+                    MessageBox.Show("No orders available. Please check your connection or create a new order.");
                 }
                 Refresh();
             }
         }
 
+        //------------------------------------------------------------------------------------------------//
+
+        // Refresh the displayed list of orders based on search query and status filter
         private void Refresh()
         {
             if (!_ready) return;
 
+            // Get the search query and selected status filter
             string q = SearchBox.Text.Trim();
             var selected = StatusFilter.SelectedItem as ComboBoxItem;
             string status = selected == null ? "All Statuses" : (string)selected.Content;
@@ -90,6 +96,8 @@ namespace LogiSyn.Views
                 && (status == "All Statuses" || o.Status == status)).ToList();
         }
 
+        //------------------------------------------------------------------------------------------------//
+
         private void SearchBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             Refresh();
@@ -100,6 +108,9 @@ namespace LogiSyn.Views
             Refresh();
         }
 
+        //------------------------------------------------------------------------------------------------//
+
+        // Event handler for when an order row is clicked
         private void LinkOrdersButton_Click(object sender, RoutedEventArgs e)
         {
             if (_all.Count > 0)
@@ -111,6 +122,8 @@ namespace LogiSyn.Views
                 ShellWindow.Current?.Navigate("createorder");
             }
         }
+
+        //------------------------------------------------------------------------------------------------//
 
         private void CreateOrderButton_Click(object sender, RoutedEventArgs e)
         {
@@ -130,12 +143,14 @@ namespace LogiSyn.Views
             MessageBox.Show($"Could not find navigation container. Active window is: {parentWindow?.GetType().Name}");
         }
 
-        /// <summary>
-        /// Refresh orders manually (can be called from a refresh button if added to UI)
-        /// </summary>
+        //------------------------------------------------------------------------------------------------//
+
+        // Public method to refresh orders, can be called from other parts of the application
         public void RefreshOrders()
         {
             LoadOrdersAsync();
         }
     }
 }
+
+//--------------------------------------End of File----------------------------------------------------------//

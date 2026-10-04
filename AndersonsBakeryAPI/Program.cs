@@ -1,3 +1,4 @@
+// Adriaan
 using MongoDB.Driver;
 using AndersonsBakeryAPI.Data;
 using AndersonsBakeryAPI.Repositories;
@@ -24,6 +25,7 @@ builder.Services.AddScoped<IMongoDatabase>(sp =>
 builder.Services.AddDbContext<LogiSynDbContext>(options =>
     options.UseSqlServer(sqlConnectionString));
 
+// Adriaan - Orders Repositories and Services Registration
 // Register repositories
 builder.Services.AddScoped<MongoOrderRepository>();
 builder.Services.AddScoped<SqlOrderRepository>();

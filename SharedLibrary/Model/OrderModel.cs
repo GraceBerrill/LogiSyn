@@ -1,3 +1,4 @@
+// Adriaan
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -22,10 +23,10 @@ namespace LogiSyn.Model
     // Packaging pans and trolleys of products
     public class Packaging
     {
-        public int Pans { get; set; }
-        public int Trolleys { get; set; }
-        public int PansUsed { get; set; }
-        public int TrolleysUsed { get; set; }
+        public double Pans { get; set; }
+        public double Trolleys { get; set; }
+        public double PansUsed { get; set; }
+        public double TrolleysUsed { get; set; }
     }
 
     //------------------------------------------------------------------------------------------------//

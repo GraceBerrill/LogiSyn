@@ -48,6 +48,7 @@ namespace LogiSyn.Views
             LoadDashboardData();
         }
 
+        // Adriaan - Dashboard Orders Section
         //placeholder for loading dashboard data
         private void LoadDashboardData()
         {
@@ -124,6 +125,7 @@ namespace LogiSyn.Views
         }
     }
 
+    // Adriaan - Dashboard Order Item Model
     //order item class for the dashboard
     public class DashboardOrderItem
     {

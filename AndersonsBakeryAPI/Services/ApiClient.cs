@@ -1,3 +1,4 @@
+// Adriaan
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -22,13 +23,14 @@ namespace LogiSyn.Services
         // Constructor for the ApiClient class
         public ApiClient(string baseUrl = "https://localhost:7274")
         {
+            // Determine the primary base URL and add a fallback URL based on the port number
+            // TODO: replace connection string with render.com string after deployment
             var primary = baseUrl.TrimEnd('/');
-            // Support both HTTPS (7274) and HTTP (5109) development profiles
             _baseUrls = primary.Contains("7274")
                 ? new[] { primary, "http://localhost:5109" }
                 : new[] { primary, "https://localhost:7274" };
 
-            // Ignore SSL certificate errors for localhost development
+            // Configure HttpClient to ignore SSL certificate validation for development purposes
             var handler = new HttpClientHandler
             {
                 ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true
@@ -48,12 +50,15 @@ namespace LogiSyn.Services
             {
                 try
                 {
+                    // Attempt to fetch orders from the current base URL
                     var response = await _httpClient.GetAsync($"{baseUrl}/api/orders");
                     if (!response.IsSuccessStatusCode)
                     {
+                        Console.WriteLine($"Failed to fetch orders from {baseUrl}. Trying next candidate URL.");
                         continue;
                     }
 
+                    // Read the response content and deserialize it into a list of OrderScaled objects
                     var content = await response.Content.ReadAsStringAsync();
                     var orders = JsonSerializer.Deserialize<List<OrderScaled>>(content, new JsonSerializerOptions 
                     { 
@@ -64,7 +69,7 @@ namespace LogiSyn.Services
                 }
                 catch
                 {
-                    // Continue to next candidate URL
+                    Console.WriteLine($"Failed to fetch orders from {baseUrl}. Trying next candidate URL.");
                 }
             }
 
@@ -80,10 +85,12 @@ namespace LogiSyn.Services
             {
                 try
                 {
+                    // Attempt to fetch the order by ID from the current base URL
                     var response = await _httpClient.GetAsync($"{baseUrl}/api/orders/{orderId}");
                     if (!response.IsSuccessStatusCode)
                         continue;
 
+                    // Read the response content and deserialize it into an OrderScaled object
                     var content = await response.Content.ReadAsStringAsync();
                     var order = JsonSerializer.Deserialize<OrderScaled>(content, new JsonSerializerOptions 
                     { 
@@ -94,7 +101,7 @@ namespace LogiSyn.Services
                 }
                 catch
                 {
-                    // Continue to next candidate URL
+                    Console.WriteLine($"Failed to fetch order {orderId} from {baseUrl}. Trying next candidate URL.");
                 }
             }
 
@@ -111,6 +118,7 @@ namespace LogiSyn.Services
             {
                 try
                 {
+                    // Attempt to save the order to the current base URL
                     var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
                     var response = await _httpClient.PostAsync($"{baseUrl}/api/orders", content);
                     if (response.IsSuccessStatusCode)
@@ -118,7 +126,7 @@ namespace LogiSyn.Services
                 }
                 catch
                 {
-                    // Continue to next candidate URL
+                    Console.WriteLine($"Failed to save order {order.OrderId} to {baseUrl}. Trying next candidate URL.");
                 }
             }
 
@@ -136,6 +144,7 @@ namespace LogiSyn.Services
             {
                 try
                 {
+                    // Prepare the multipart form data content for the PDF file
                     using var form = new MultipartFormDataContent();
                     await using var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
                     using var streamContent = new StreamContent(fileStream);
@@ -156,7 +165,7 @@ namespace LogiSyn.Services
                 }
                 catch
                 {
-                    // Continue to next candidate URL
+                    Console.WriteLine($"Failed to parse PDF order from {baseUrl}. Trying next candidate URL.");
                 }
             }
 
@@ -173,6 +182,7 @@ namespace LogiSyn.Services
             {
                 try
                 {
+                    // Attempt to update the order status at the current base URL
                     var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
                     var response = await _httpClient.PutAsync($"{baseUrl}/api/orders/{orderId}/status", content);
                     if (response.IsSuccessStatusCode)
@@ -180,7 +190,7 @@ namespace LogiSyn.Services
                 }
                 catch
                 {
-                    // Continue to next candidate URL
+                    Console.WriteLine($"Failed to update status for order {orderId} at {baseUrl}. Trying next candidate URL.");
                 }
             }
 
@@ -196,13 +206,14 @@ namespace LogiSyn.Services
             {
                 try
                 {
+                    // Attempt to ping the API at the current base URL
                     var response = await _httpClient.GetAsync($"{baseUrl}/api/orders/debug/ping");
                     if (response.IsSuccessStatusCode)
                         return true;
                 }
                 catch
                 {
-                    // Continue to next candidate URL
+                    Console.WriteLine($"Failed to ping API at {baseUrl}. Trying next candidate URL.");
                 }
             }
 

@@ -1,3 +1,6 @@
+// Adriaan
+using System.Collections.Generic;
+using System.Text.Json;
 using LogiSyn.Model;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,6 +17,7 @@ namespace AndersonsBakeryAPI.Data
 
         //------------------------------------------------------------------------------------------------//
 
+        //Orders DbSet
         public DbSet<OrderScaled> Orders { get; set; }
 
         //------------------------------------------------------------------------------------------------//
@@ -23,6 +27,7 @@ namespace AndersonsBakeryAPI.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            // Adriaan - Order Model Configuration
             // Configure the OrderScaled entity
             modelBuilder.Entity<OrderScaled>()
                 .HasKey(o => o.OrderId);
@@ -46,16 +51,30 @@ namespace AndersonsBakeryAPI.Data
                 .IsRequired()
                 .HasMaxLength(50);
 
-            // Ignore the ProductionItems and productionItems properties for now
+            // Persist ProductionItems as serialized JSON in SQL Server
             modelBuilder.Entity<OrderScaled>()
-                .Ignore(o => o.ProductionItems);
+                .Property(o => o.ProductionItems)
+                .IsRequired(false)
+                .HasConversion(
+                    v => JsonSerializer.Serialize(v, (JsonSerializerOptions?)null),
+                    v => string.IsNullOrWhiteSpace(v) 
+                        ? new List<ProductionItem>() 
+                        : JsonSerializer.Deserialize<List<ProductionItem>>(v, (JsonSerializerOptions?)null) ?? new List<ProductionItem>()
+                );
 
             modelBuilder.Entity<OrderScaled>()
                 .Ignore(o => o.productionItems);
 
-            // Ignore the RawMaterials dictionary for now
+            // Persist RawMaterials as serialized JSON in SQL Server
             modelBuilder.Entity<OrderScaled>()
-                .Ignore(o => o.RawMaterials);
+                .Property(o => o.RawMaterials)
+                .IsRequired(false)
+                .HasConversion(
+                    v => JsonSerializer.Serialize(v, (JsonSerializerOptions?)null),
+                    v => string.IsNullOrWhiteSpace(v) 
+                        ? new Dictionary<string, RawMaterialValue>() 
+                        : JsonSerializer.Deserialize<Dictionary<string, RawMaterialValue>>(v, (JsonSerializerOptions?)null) ?? new Dictionary<string, RawMaterialValue>()
+                );
         }
     }
 }

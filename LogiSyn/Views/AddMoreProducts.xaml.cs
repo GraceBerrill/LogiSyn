@@ -1,4 +1,5 @@
-﻿using LogiSyn.Model;
+// Adriaan
+using LogiSyn.Model;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -65,8 +66,8 @@ namespace LogiSyn.Views
                 : TxtIngredientName.Text.Trim();
 
             // Parse Packaging
-            int.TryParse(TxtPackagingAmount.Text.Trim(), out int pkgAmount);
-            int.TryParse(TxtPackagingUsed.Text.Trim(), out int pkgUsed);
+            double.TryParse(TxtPackagingAmount.Text.Trim(), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out double pkgAmount);
+            double.TryParse(TxtPackagingUsed.Text.Trim(), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out double pkgUsed);
 
             // Construct new production line item
             CreatedItem = new ProductionItem

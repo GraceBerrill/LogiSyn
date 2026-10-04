@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -36,6 +36,7 @@ namespace LogiSyn.Views
         {
 
             //contrlls visibility based on role
+            // Adriaan - Orders Button Visibility
             BtnOrders.Visibility = (role == "Admin" || role == "User") ? Visibility.Visible : Visibility.Collapsed;
             BtnHistory.Visibility = (role == "Admin" || role == "Manager") ? Visibility.Visible : Visibility.Collapsed;
             BtnManageProducts.Visibility = (role == "Admin") ? Visibility.Visible : Visibility.Collapsed;
@@ -60,6 +61,7 @@ namespace LogiSyn.Views
             LogiSyn.Views.ShellWindow.Current?.Navigate("dashboard");
         }
 
+        // Adriaan - Navigate to Orders
         private void BtnOrders_Click(object sender, RoutedEventArgs e)
         {
             LogiSyn.Views.ShellWindow.Current?.Navigate("orders");

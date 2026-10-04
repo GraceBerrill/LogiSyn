@@ -1,9 +1,11 @@
-﻿<Page x:Class="LogiSyn.Views.UserOrderPageReview"
+<!-- Adriaan -->
+<Page x:Class="LogiSyn.Views.UserOrderPageReview"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       Title="User Order Review"
       d:DesignHeight="850" d:DesignWidth="1200"
       Background="#F5F6FA"
+      xmlns:local="clr-namespace:LogiSyn.Views"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       mc:Ignorable="d">
@@ -148,7 +150,8 @@
                                                                          BorderThickness="0" 
                                                                          Background="Transparent" 
                                                                          VerticalContentAlignment="Center" 
-                                                                         Padding="8,0"/>
+                                                                         Padding="8,0"
+                                                                         local:DoubleInputLimiter.IsEnabled="True"/>
                                                                 <Border Grid.Column="3" BorderBrush="#555555" BorderThickness="0,1,0,0"/>
                                                             </Grid>
                                                         </DataTemplate>
@@ -184,7 +187,14 @@
                                                     <TextBlock Grid.Column="1" Text="{Binding Packaging.Pans}" FontSize="14" Foreground="#152238" VerticalAlignment="Center" Margin="8,0,0,0"/>
                                                     <Border Grid.Column="1" BorderBrush="#555555" BorderThickness="0,1,1,0"/>
 
-                                                    <TextBox Grid.Column="2" Text="{Binding Packaging.PansUsed, Mode=TwoWay}" FontSize="14" BorderThickness="0" Background="Transparent" VerticalContentAlignment="Center" Padding="8,0"/>
+                                                    <TextBox Grid.Column="2" 
+                                                             Text="{Binding PansUsed, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                                             FontSize="14" 
+                                                             BorderThickness="0" 
+                                                             Background="Transparent" 
+                                                             VerticalContentAlignment="Center" 
+                                                             Padding="8,0"
+                                                             local:DoubleInputLimiter.IsEnabled="True"/>
                                                     <Border Grid.Column="2" BorderBrush="#555555" BorderThickness="0,1,0,0"/>
                                                 </Grid>
 
@@ -201,7 +211,14 @@
                                                     <TextBlock Grid.Column="1" Text="{Binding Packaging.Trolleys}" FontSize="14" Foreground="#152238" VerticalAlignment="Center" Margin="8,0,0,0"/>
                                                     <Border Grid.Column="1" BorderBrush="#555555" BorderThickness="0,1,1,0"/>
 
-                                                    <TextBox Grid.Column="2" Text="{Binding Packaging.TrolleysUsed, Mode=TwoWay}" FontSize="14" BorderThickness="0" Background="Transparent" VerticalContentAlignment="Center" Padding="8,0"/>
+                                                    <TextBox Grid.Column="2" 
+                                                             Text="{Binding TrolleysUsed, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                                             FontSize="14" 
+                                                             BorderThickness="0" 
+                                                             Background="Transparent" 
+                                                             VerticalContentAlignment="Center" 
+                                                             Padding="8,0"
+                                                             local:DoubleInputLimiter.IsEnabled="True"/>
                                                     <Border Grid.Column="2" BorderBrush="#555555" BorderThickness="0,1,0,0"/>
                                                 </Grid>
                                             </StackPanel>

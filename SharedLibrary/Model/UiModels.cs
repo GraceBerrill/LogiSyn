@@ -1,7 +1,10 @@
+// Adriaan
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
+using System.Linq;
+using System.Text.RegularExpressions;
 #if WINDOWS
 using System.Windows.Media;
 #else
@@ -11,11 +14,8 @@ using Brush = System.Object;
 
 namespace LogiSyn.Model
 {
-	// =====================================================================
-	//  Front-end models + sample data.
-	//  Everything in SampleData is placeholder text copied from the Figma
-	//  screens - swap these calls for your real data / services later.
-	// =====================================================================
+
+
 
 	public enum AppRole { Admin, Manager, User }
 
@@ -74,6 +74,7 @@ namespace LogiSyn.Model
 		}
 	#endif
 
+	// Adriaan - Orders section
 	public class OrderRow
 	{
 		public string Number { get; set; }
@@ -133,19 +134,87 @@ namespace LogiSyn.Model
 
 	public class SummaryData
 	{
-		public string Title { get; set; }
-		public string DateText { get; set; }
+		public string Title { get; set; } = string.Empty;
+		public string DateText { get; set; } = string.Empty;
 		public bool IsCompleted { get; set; }
-		public List<SummaryLine> Lines { get; set; }
+		public List<SummaryLine> Lines { get; set; } = new();
+
+		/// <summary>
+		/// Converts an OrderScaled domain model to SummaryData for display in SummaryPaper.
+		/// </summary>
+		public static SummaryData FromOrderScaled(OrderScaled order)
+		{
+			if (order == null) return SampleData.Summary(true);
+
+			bool completed = string.Equals(order.Status, "Completed", StringComparison.OrdinalIgnoreCase) ||
+			                 string.Equals(order.Status, "Complete", StringComparison.OrdinalIgnoreCase);
+
+			string title = $"{order.Customer} Order {order.OrderId}".Trim();
+			string dateText = order.OrderDate.ToString("d MMMM yyyy", CultureInfo.InvariantCulture);
+
+			var lines = new List<SummaryLine>();
+			var items = order.ProductionItems ?? order.productionItems ?? new List<ProductionItem>();
+
+			foreach (var item in items)
+			{
+				string prodName = item.ProductName ?? string.Empty;
+				if (!prodName.StartsWith(item.Amount.ToString()) && item.Amount > 0)
+				{
+					prodName = $"{item.Amount} {item.ProductName}".Trim();
+				}
+
+				var ingStrings = (item.ReqIngredients ?? new List<Ingredients>()).Select(i =>
+				{
+					double displayAmt = completed && i.AmountUsed > 0 
+						? i.AmountUsed 
+						: Math.Round(i.IngredientAmount + i.AdditionsAmount, 2);
+					string unit = string.IsNullOrWhiteSpace(i.MeasuredIngredient) ? "kg" : i.MeasuredIngredient;
+					return $"{i.IngredientName}: {displayAmt} {unit}".Trim();
+				});
+
+				double pans = completed && item.Packaging?.PansUsed > 0 ? item.Packaging.PansUsed : (item.Packaging?.Pans ?? 0);
+				double trolleys = completed && item.Packaging?.TrolleysUsed > 0 ? item.Packaging.TrolleysUsed : (item.Packaging?.Trolleys ?? 0);
+
+				lines.Add(new SummaryLine
+				{
+					Product = prodName,
+					Production = string.IsNullOrWhiteSpace(item.ProductionLine) ? "Production 1" : item.ProductionLine,
+					Ingredients = string.Join(",   ", ingStrings),
+					Packaging = $"Pans: {pans},   Trolleys: {trolleys}"
+				});
+			}
+
+			return new SummaryData
+			{
+				Title = title,
+				DateText = dateText,
+				IsCompleted = completed,
+				Lines = lines
+			};
+		}
 	}
 
 	public class RawMaterialData
 	{
-		public string Title { get; set; }
-		public string DateText { get; set; }
-		public List<string> Totals { get; set; }
+		public string Title { get; set; } = string.Empty;
+		public string DateText { get; set; } = string.Empty;
+		public List<string> Totals { get; set; } = new();
+
+		public static RawMaterialData FromOrderScaled(OrderScaled order)
+		{
+			if (order == null) return SampleData.RawMaterials();
+
+			return new RawMaterialData
+			{
+				Title = $"{order.Customer} Order {order.OrderId}".Trim(),
+				DateText = order.OrderDate.ToString("d MMMM yyyy", CultureInfo.InvariantCulture),
+				Totals = order.RawMaterials?.Select(kvp => $"{kvp.Key}: {kvp.Value.Amount} {kvp.Value.Unit}".Trim()).ToList() 
+				         ?? new List<string>()
+			};
+		}
 	}
 
+	// Adriaan - Order Sheet & Summary section
 	// ----- production sheet paper -----
 	public class SheetIngredient
 	{
@@ -176,10 +245,251 @@ namespace LogiSyn.Model
 
 	public class SheetData
 	{
-		public string Title { get; set; }
-		public string DateText { get; set; }
+		public string Title { get; set; } = string.Empty;
+		public string DateText { get; set; } = string.Empty;
 		public bool IsCompleted { get; set; }
-		public List<SheetProduct> Products { get; set; }
+		public List<SheetProduct> Products { get; set; } = new();
+
+		/// <summary>
+		/// Converts an OrderScaled domain model to SheetData for display in SheetPaper.
+		/// </summary>
+		public static SheetData FromOrderScaled(OrderScaled order)
+		{
+			if (order == null) return SampleData.Sheet(false);
+
+			bool isCompleted = string.Equals(order.Status, "Completed", StringComparison.OrdinalIgnoreCase) ||
+			                   string.Equals(order.Status, "Complete", StringComparison.OrdinalIgnoreCase);
+
+			Brush good = Palette.UserComplete;
+			Brush bad = Palette.UserPending;
+			Brush normalBrush = isCompleted ? good : Palette.Black;
+
+			var sheetProducts = new List<SheetProduct>();
+			var prodItems = order.ProductionItems ?? order.productionItems ?? new List<ProductionItem>();
+
+			foreach (var pi in prodItems)
+			{
+				// Extract clean product name and quantity
+				string cleanName = pi.ProductName ?? string.Empty;
+				string amountStr = pi.Amount > 0 ? pi.Amount.ToString() : "100";
+
+				var match = Regex.Match(cleanName, @"^(\d+)\s+(.+)$");
+				if (match.Success)
+				{
+					amountStr = match.Groups[1].Value;
+					cleanName = match.Groups[2].Value;
+				}
+
+				// Build ingredients list
+				var sheetIngredients = new List<SheetIngredient>();
+				foreach (var ing in pi.ReqIngredients ?? new List<Ingredients>())
+				{
+					double baseAmt = ing.IngredientAmount;
+					double additionalAmt = Math.Round(ing.IngredientAmount + ing.AdditionsAmount, 2);
+					string unit = string.IsNullOrWhiteSpace(ing.MeasuredIngredient) ? "kg" : ing.MeasuredIngredient;
+
+					string usedText = "";
+					Brush usedBrush = normalBrush;
+
+					if (ing.AmountUsed > 0)
+					{
+						usedText = isCompleted ? $"{ing.AmountUsed} {unit}".Trim() : ing.AmountUsed.ToString(CultureInfo.InvariantCulture);
+						usedBrush = ing.AmountUsed > additionalAmt ? bad : good;
+					}
+					else if (isCompleted)
+					{
+						usedText = $"{additionalAmt} {unit}".Trim();
+						usedBrush = good;
+					}
+
+					sheetIngredients.Add(new SheetIngredient
+					{
+						Name = ing.IngredientName,
+						Amount = $"{baseAmt} {unit}".Trim(),
+						Additional = $"{additionalAmt} {unit}".Trim(),
+						Used = usedText,
+						UsedBrush = usedBrush
+					});
+				}
+
+				// Build packaging list
+				var sheetPackaging = new List<SheetPackaging>();
+				var pack = pi.Packaging ?? new Packaging();
+
+				// Pans
+				string pansUsedText = "";
+				Brush pansBrush = normalBrush;
+				if (pack.PansUsed > 0)
+				{
+					pansUsedText = pack.PansUsed.ToString(CultureInfo.InvariantCulture);
+					pansBrush = pack.PansUsed > pack.Pans ? bad : good;
+				}
+				else if (isCompleted)
+				{
+					pansUsedText = pack.Pans.ToString(CultureInfo.InvariantCulture);
+					pansBrush = good;
+				}
+				sheetPackaging.Add(new SheetPackaging
+				{
+					Name = "Pans",
+					Amount = pack.Pans.ToString(CultureInfo.InvariantCulture),
+					Used = pansUsedText,
+					UsedBrush = pansBrush
+				});
+
+				// Trolleys
+				string trolleysUsedText = "";
+				Brush trolleysBrush = normalBrush;
+				if (pack.TrolleysUsed > 0)
+				{
+					trolleysUsedText = pack.TrolleysUsed.ToString(CultureInfo.InvariantCulture);
+					trolleysBrush = pack.TrolleysUsed > pack.Trolleys ? bad : good;
+				}
+				else if (isCompleted)
+				{
+					trolleysUsedText = pack.Trolleys.ToString(CultureInfo.InvariantCulture);
+					trolleysBrush = good;
+				}
+				sheetPackaging.Add(new SheetPackaging
+				{
+					Name = "Trolleys",
+					Amount = pack.Trolleys.ToString(CultureInfo.InvariantCulture),
+					Used = trolleysUsedText,
+					UsedBrush = trolleysBrush
+				});
+
+				sheetProducts.Add(new SheetProduct
+				{
+					Name = cleanName,
+					Amount = amountStr,
+					Production = string.IsNullOrWhiteSpace(pi.ProductionLine) ? "Production 1" : pi.ProductionLine,
+					Ingredients = sheetIngredients,
+					Packaging = sheetPackaging,
+					Notes = pi.Notes ?? string.Empty
+				});
+			}
+
+			return new SheetData
+			{
+				Title = $"{order.Customer} Order {order.OrderId}".Trim(),
+				DateText = order.OrderDate.ToString("d MMMM yyyy", CultureInfo.InvariantCulture),
+				IsCompleted = isCompleted,
+				Products = sheetProducts
+			};
+		}
+
+		/// <summary>
+		/// Applies edits from SheetData (worker inputs: Used ingredients, Used packaging, Notes) back to the OrderScaled domain model.
+		/// </summary>
+		public static void ApplyToOrderScaled(SheetData sheet, OrderScaled order, bool isCompleting = false)
+		{
+			if (sheet == null || order == null) return;
+
+			if (sheet.Products == null) return;
+
+			var orderItems = order.ProductionItems ?? order.productionItems ?? new List<ProductionItem>();
+
+			for (int i = 0; i < sheet.Products.Count; i++)
+			{
+				var sp = sheet.Products[i];
+				ProductionItem? pi = null;
+
+				if (i < orderItems.Count)
+				{
+					pi = orderItems[i];
+				}
+				else
+				{
+					pi = orderItems.FirstOrDefault(p =>
+						!string.IsNullOrWhiteSpace(sp.Name) &&
+						p.ProductName.IndexOf(sp.Name, StringComparison.OrdinalIgnoreCase) >= 0);
+				}
+
+				if (pi == null) continue;
+
+				// Save worker notes
+				pi.Notes = sp.Notes ?? string.Empty;
+
+				// Map ingredients
+				if (sp.Ingredients != null && pi.ReqIngredients != null)
+				{
+					foreach (var si in sp.Ingredients)
+					{
+						var ing = pi.ReqIngredients.FirstOrDefault(r =>
+							string.Equals(r.IngredientName, si.Name, StringComparison.OrdinalIgnoreCase));
+						if (ing != null)
+						{
+							var parsedUsed = ParseDouble(si.Used);
+							if (parsedUsed.HasValue)
+							{
+								ing.AmountUsed = parsedUsed.Value;
+							}
+							else if (isCompleting && ing.AmountUsed <= 0)
+							{
+								ing.AmountUsed = Math.Round(ing.IngredientAmount + ing.AdditionsAmount, 2);
+							}
+						}
+					}
+				}
+
+				// Map packaging
+				if (sp.Packaging != null)
+				{
+					pi.Packaging ??= new Packaging();
+
+					var pansItem = sp.Packaging.FirstOrDefault(p => string.Equals(p.Name, "Pans", StringComparison.OrdinalIgnoreCase));
+					if (pansItem != null)
+					{
+						var parsed = ParseDouble(pansItem.Used);
+						if (parsed.HasValue)
+						{
+							pi.Packaging.PansUsed = parsed.Value;
+						}
+						else if (isCompleting && pi.Packaging.PansUsed <= 0)
+						{
+							pi.Packaging.PansUsed = pi.Packaging.Pans;
+						}
+					}
+
+					var trolleysItem = sp.Packaging.FirstOrDefault(p => string.Equals(p.Name, "Trolleys", StringComparison.OrdinalIgnoreCase));
+					if (trolleysItem != null)
+					{
+						var parsed = ParseDouble(trolleysItem.Used);
+						if (parsed.HasValue)
+						{
+							pi.Packaging.TrolleysUsed = parsed.Value;
+						}
+						else if (isCompleting && pi.Packaging.TrolleysUsed <= 0)
+						{
+							pi.Packaging.TrolleysUsed = pi.Packaging.Trolleys;
+						}
+					}
+				}
+			}
+		}
+
+		private static double? ParseDouble(string? text)
+		{
+			if (string.IsNullOrWhiteSpace(text)) return null;
+			string normalized = text.Trim().Replace(',', '.');
+			var match = Regex.Match(normalized, @"(\d+(?:\.\d+)?)");
+			if (match.Success && double.TryParse(match.Groups[1].Value, NumberStyles.Any, CultureInfo.InvariantCulture, out double val))
+			{
+				return val;
+			}
+			return null;
+		}
+
+		private static int? ParseInt(string? text)
+		{
+			if (string.IsNullOrWhiteSpace(text)) return null;
+			var match = Regex.Match(text, @"\b(\d+)\b");
+			if (match.Success && int.TryParse(match.Groups[1].Value, NumberStyles.Any, CultureInfo.InvariantCulture, out int val))
+			{
+				return val;
+			}
+			return null;
+		}
 	}
 
 	// ----- product pop-up -----
@@ -206,6 +516,7 @@ namespace LogiSyn.Model
 			return DateTime.Now.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
 		}
 
+		// Adriaan - Sample Order Data
 		// Admin "Orders" list and the dashboard's recent orders
 		public static List<OrderRow> Orders()
 		{
@@ -255,6 +566,7 @@ namespace LogiSyn.Model
 			};
 		}
 
+		// Adriaan - Sample Order Summary and Sheet Generation
 		public static SummaryData Summary(bool completed)
 		{
 			return new SummaryData

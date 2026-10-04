@@ -1,3 +1,4 @@
+// Adriaan
 using LogiSyn.Interface;
 using LogiSyn.Model;
 using MongoDB.Bson.Serialization;
@@ -20,6 +21,9 @@ namespace AndersonsBakeryAPI.Repositories
         private readonly IMongoDatabase _database;
         private readonly IMongoCollection<OrderScaled> _ordersCollection;
 
+        //------------------------------------------------------------------------------------------------//
+
+        // Registers class mapping for OrderScaled and ProductionItem to handle serialization/deserialization with MongoDB
         static MongoOrderRepository()
         {
             if (!BsonClassMap.IsClassMapRegistered(typeof(OrderScaled)))
@@ -33,6 +37,7 @@ namespace AndersonsBakeryAPI.Repositories
                 });
             }
 
+            // Register the ProductionItem class mapping if not already registered
             if (!BsonClassMap.IsClassMapRegistered(typeof(ProductionItem)))
             {
                 BsonClassMap.RegisterClassMap<ProductionItem>(cm =>
@@ -69,11 +74,11 @@ namespace AndersonsBakeryAPI.Repositories
                     if (_indexesInitialized) return;
                     try
                     {
+                        // Create an index on the OrderId field for faster lookups
                         var indexKeysDefinition = Builders<OrderScaled>.IndexKeys.Ascending(o => o.OrderId);
                         var indexModel = new CreateIndexModel<OrderScaled>(indexKeysDefinition);
                         _ordersCollection.Indexes.CreateOne(indexModel);
 
-                        // Also create an index on Status for filtering completed orders
                         var statusIndexKeys = Builders<OrderScaled>.IndexKeys.Ascending(o => o.Status);
                         var statusIndexModel = new CreateIndexModel<OrderScaled>(statusIndexKeys);
                         _ordersCollection.Indexes.CreateOne(statusIndexModel);

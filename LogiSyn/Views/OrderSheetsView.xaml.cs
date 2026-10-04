@@ -1,3 +1,4 @@
+// Adriaan
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -242,8 +243,8 @@ namespace LogiSyn.Views
         {
             public string ProductName { get; set; } = string.Empty;
             public string ProductionLine { get; set; } = string.Empty;
-            public int Pans { get; set; }
-            public int Trolleys { get; set; }
+            public double Pans { get; set; }
+            public double Trolleys { get; set; }
             public string IngredientsSummary { get; set; } = string.Empty;
         }
 

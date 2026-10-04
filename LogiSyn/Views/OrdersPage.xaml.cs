@@ -1,4 +1,5 @@
-﻿using LogiSyn.Interface;
+// Adriaan
+using LogiSyn.Interface;
 using LogiSyn.Model;
 using LogiSyn.Services;
 using System;

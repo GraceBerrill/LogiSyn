@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -27,6 +27,7 @@ namespace LogiSyn.Views
             MainContent.Content = new DashboardView(role);
         }
 
+        // Adriaan - Navigate to Orders View
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             MainContent.Content = new AdminOrdersView();
