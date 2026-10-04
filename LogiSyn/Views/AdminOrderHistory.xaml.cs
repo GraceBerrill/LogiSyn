@@ -1,14 +1,6 @@
-<<<<<<< HEAD
 ﻿using SharedLibrary.Interface;
 using SharedLibrary.Model;
 using AndersonsBakeryAPI.Services;
-
-=======
-// Adriaan
-using LogiSyn.Interface;
-using LogiSyn.Model;
-using LogiSyn.Services;
->>>>>>> Adriaan
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -57,46 +49,6 @@ namespace LogiSyn.Views
                 // Display text indicating no orders are available
                 TxtNoOrders.Visibility = Visibility.Visible;
 
-<<<<<<< HEAD
-                var mock2 = new OrderScaled
-                {
-                    OrderId = "#002",
-                    Customer = "Spar",
-                    OrderDate = DateTime.Now,
-                    Status = "Completed",
-                    productionItems = new List<ProductionItem>
-                    {
-                        new ProductionItem
-                        {
-                            ProductName = "Product A",
-                            ProductionLine = "Production 1",
-                            packaging = new Packaging { Pans = 2, Trolleys = 1 },
-                            ReqIngredients = new List<Ingredients>
-                            {
-                                new Ingredients { IngredientName = "Flour", IngredientAmount = 6, MeasuredIngredient = "bags" },
-                                new Ingredients { IngredientName = "Eggs", IngredientAmount = 27, MeasuredIngredient = "dozen" },
-                                new Ingredients { IngredientName = "Salt", IngredientAmount = 3, MeasuredIngredient = "bags" }
-                            }
-                        },
-                        new ProductionItem
-                        {
-                            ProductName = "Product B",
-                            ProductionLine = "Production 1",
-                            packaging = new Packaging { Pans = 2, Trolleys = 1 },
-                            ReqIngredients = new List<Ingredients>
-                            {
-                                new Ingredients { IngredientName = "Flour", IngredientAmount = 6, MeasuredIngredient = "bags" },
-                                new Ingredients { IngredientName = "Eggs", IngredientAmount = 27, MeasuredIngredient = "dozen" },
-                                new Ingredients { IngredientName = "Salt", IngredientAmount = 3, MeasuredIngredient = "bags" }
-                            }
-                        }
-                    }
-                };
-
-                _orderService.SaveOrder(mock1);
-                _orderService.SaveOrder(mock2);
-=======
->>>>>>> Adriaan
                 history = _orderService.GetHistory().ToList();
             }
             else

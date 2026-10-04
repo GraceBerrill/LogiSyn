@@ -1,9 +1,9 @@
 // Adriaan
-using LogiSyn.Model;
+using SharedLibrary.Model;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace LogiSyn.Interface
+namespace SharedLibrary.Interface
 {
     /// <summary>
     /// Interface for order persistence operations across different data stores

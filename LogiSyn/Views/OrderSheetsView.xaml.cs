@@ -3,17 +3,13 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-<<<<<<< HEAD
 using System.Windows.Media;
 using SharedLibrary.Model;
-=======
 using System.Windows.Input;
-using LogiSyn.Model;
-using LogiSyn.Interface;
-using LogiSyn.Services;
+using SharedLibrary.Interface;
+using AndersonsBakeryAPI.Services;
 using System.Diagnostics;
 using Microsoft.Win32;
->>>>>>> Adriaan
 
 namespace LogiSyn.Views
 {

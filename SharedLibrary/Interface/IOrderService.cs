@@ -1,9 +1,4 @@
-<<<<<<< HEAD
 ﻿using SharedLibrary.Model;
-=======
-// Adriaan
-using LogiSyn.Model;
->>>>>>> Adriaan
 using System;
 using System.Collections.Generic;
 using System.Text;

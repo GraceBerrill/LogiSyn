@@ -1,11 +1,5 @@
-<<<<<<< HEAD
 ﻿using SharedLibrary.Interface;
 using SharedLibrary.Model;
-=======
-// Adriaan
-using LogiSyn.Interface;
-using LogiSyn.Model;
->>>>>>> Adriaan
 using System;
 using System.Collections.Generic;
 using System.IO;

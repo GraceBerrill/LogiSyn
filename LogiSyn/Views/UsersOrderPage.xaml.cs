@@ -1,14 +1,7 @@
-<<<<<<< HEAD
-﻿using SharedLibrary.Interface;
-using SharedLibrary.Model;
 using AndersonsBakeryAPI.Services;
-
-=======
-// Adriaan
-using LogiSyn.Interface;
-using LogiSyn.Model;
-using LogiSyn.Services;
->>>>>>> Adriaan
+using AndersonsBakeryAPI.Services;
+using SharedLibrary.Interface;
+using SharedLibrary.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -55,7 +48,6 @@ namespace LogiSyn.Views
             // Error message for when no orders are found
             if (!orders.Any())
             {
-<<<<<<< HEAD
                 orders = new()
                 {
                     new OrderScaled
@@ -73,9 +65,6 @@ namespace LogiSyn.Views
                         Status = "Pending"
                     }
                 };
-=======
-                MessageBox.Show("No orders found please add or create order");
->>>>>>> Adriaan
             }
 
             OrdersItemsControl.ItemsSource = orders;

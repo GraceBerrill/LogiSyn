@@ -1,6 +1,6 @@
 // Adriaan
-using LogiSyn.Interface;
-using LogiSyn.Model;
+using SharedLibrary.Interface;
+using SharedLibrary.Model;
 using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 using System;

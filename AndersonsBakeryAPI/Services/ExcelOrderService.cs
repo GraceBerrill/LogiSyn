@@ -1,13 +1,13 @@
 // Adriaan
 using ClosedXML.Excel;
-using LogiSyn.Model;
+using SharedLibrary.Model;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 
-namespace LogiSyn.Services
+namespace AndersonsBakeryAPI.Services
 {
     /// <summary>
     /// Service for exporting production orders to Excel (.xlsx) and importing

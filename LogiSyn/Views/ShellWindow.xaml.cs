@@ -10,24 +10,8 @@ namespace LogiSyn.Views
     {
         public static ShellWindow? Current { get; set; }
 
-<<<<<<< HEAD
         private readonly AppRole _role;
         private bool _allowCloseWithoutShutdown;
-=======
-        private AppRole _role;
-
-        public AppRole Role
-        {
-            get => _role;
-            set
-            {
-                _role = value;
-                if (RoleText != null) RoleText.Text = value.ToString();
-                ConfigureNavigation();
-                Navigate("dashboard");
-            }
-        }
->>>>>>> Adriaan
 
         public ShellWindow(AppRole role)
         {

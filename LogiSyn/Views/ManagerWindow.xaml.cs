@@ -17,13 +17,13 @@ namespace LogiSyn.Views
     /// </summary>
     public partial class ManagerWindow : Window
     {
-        public ManagerWindow(LogiSyn.Model.UserRow user)
+        public ManagerWindow(SharedLibrary.Model.UserRow user)
         {
             InitializeComponent();
 
             // navigate to dashboard by default
-            if (!System.Enum.TryParse<LogiSyn.Model.AppRole>(user.Role, true, out var role))
-                role = LogiSyn.Model.AppRole.User;
+            if (!System.Enum.TryParse<SharedLibrary.Model.AppRole>(user.Role, true, out var role))
+                role = SharedLibrary.Model.AppRole.User;
 
             MainFrame.Navigate(new DashboardView(role));
         }
@@ -36,11 +36,7 @@ namespace LogiSyn.Views
 
         private void NavDashboard_Click(object sender, RoutedEventArgs e)
         {
-<<<<<<< HEAD
             MainFrame.Navigate(new DashboardView(SharedLibrary.Model.AppRole.Manager));
-=======
-            MainFrame.Navigate(new DashboardView(LogiSyn.Model.AppRole.Manager));
->>>>>>> Adriaan
         }
 
         // Adriaan - Navigate to Order History

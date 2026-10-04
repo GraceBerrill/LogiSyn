@@ -1,56 +1,58 @@
-<<<<<<< HEAD
-using AndersonsBakeryAPI.Services;
-using MongoDB.Driver;
-using SharedLibrary.Interface;
-
-var builder = WebApplication.CreateBuilder(args);
-
-var mongoConnection = builder.Configuration.GetConnectionString("MongoConnection");
-=======
 // Adriaan
-using MongoDB.Driver;
+using AndersonsBakeryAPI.Services;
 using AndersonsBakeryAPI.Data;
 using AndersonsBakeryAPI.Repositories;
-using LogiSyn.Interface;
+using MongoDB.Driver;
+using SharedLibrary.Interface;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// --- Connection strings ---
+var mongoConnection = builder.Configuration.GetConnectionString("MongoConnection");
 var connectionString = builder.Configuration.GetConnectionString("MongoDb");
 var sqlConnectionString = builder.Configuration.GetConnectionString("SqlServer");
 
-var mongoSettings = MongoClientSettings.FromConnectionString(connectionString);
-mongoSettings.ServerSelectionTimeout = TimeSpan.FromSeconds(3);
-mongoSettings.ConnectTimeout = TimeSpan.FromSeconds(3);
-builder.Services.AddSingleton<IMongoClient>(new MongoClient(mongoSettings));
-
-builder.Services.AddScoped<IMongoDatabase>(sp =>
+// --- MongoDB client (with short timeouts so fallback is fast) ---
+if (!string.IsNullOrWhiteSpace(connectionString))
 {
-    var client = sp.GetRequiredService<IMongoClient>();
-    return client.GetDatabase("LogiSynDb");
-});
+	var mongoSettings = MongoClientSettings.FromConnectionString(connectionString);
+	mongoSettings.ServerSelectionTimeout = TimeSpan.FromSeconds(3);
+	mongoSettings.ConnectTimeout = TimeSpan.FromSeconds(3);
+	builder.Services.AddSingleton<IMongoClient>(new MongoClient(mongoSettings));
 
-// Add DbContext for SQL Server
-builder.Services.AddDbContext<LogiSynDbContext>(options =>
-    options.UseSqlServer(sqlConnectionString));
+	builder.Services.AddScoped<IMongoDatabase>(sp =>
+	{
+		var client = sp.GetRequiredService<IMongoClient>();
+		return client.GetDatabase("LogiSynDb");
+	});
+}
 
-// Adriaan - Orders Repositories and Services Registration
-// Register repositories
+// --- SQL Server DbContext (EF Core) ---
+if (!string.IsNullOrWhiteSpace(sqlConnectionString))
+{
+	builder.Services.AddDbContext<LogiSynDbContext>(options =>
+		options.UseSqlServer(sqlConnectionString));
+}
+else
+{
+	// Fall back to LocalDB used by the SQL-backed services
+	builder.Services.AddDbContext<LogiSynDbContext>(options =>
+		options.UseSqlServer(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=LogiSynDb;Integrated Security=True;"));
+}
+
+// --- Adriaan: Orders Repositories and Services Registration ---
 builder.Services.AddScoped<MongoOrderRepository>();
 builder.Services.AddScoped<SqlOrderRepository>();
 
-// Register services
-builder.Services.AddScoped<LogiSyn.Services.ProductService>();
+builder.Services.AddScoped<ProductService>();
 builder.Services.AddScoped<IOrderService>(sp =>
 {
-    var productService = sp.GetRequiredService<LogiSyn.Services.ProductService>();
-    var mongoRepo = sp.GetRequiredService<MongoOrderRepository>();
-    var sqlRepo = sp.GetRequiredService<SqlOrderRepository>();
-    return new LogiSyn.Services.OrderService(productService, mongoRepo, sqlRepo);
+	var productService = sp.GetRequiredService<ProductService>();
+	var mongoRepo = sp.GetRequiredService<MongoOrderRepository>();
+	var sqlRepo = sp.GetRequiredService<SqlOrderRepository>();
+	return new OrderService(productService, mongoRepo, sqlRepo);
 });
-
-// Add services to the container.
->>>>>>> Adriaan
 
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<LoginService>();
@@ -58,42 +60,39 @@ builder.Services.AddScoped<OrderService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<ProductService>();
 builder.Services.AddScoped<TempRecipeService>();
-builder.Services.AddControllers();
-builder.Services.AddOpenApi();
 
 if (!string.IsNullOrWhiteSpace(mongoConnection))
 {
-    builder.Services.AddSingleton<IMongoClient>(_ => new MongoClient(mongoConnection));
-    builder.Services.AddScoped<MongoUserService>();
-    builder.Services.AddScoped<MongoLoginService>();
-    builder.Services.AddScoped<UserServiceRouter>();
-    builder.Services.AddScoped<LoginServiceRouter>();
-    builder.Services.AddScoped<SyncService>();
+	builder.Services.AddSingleton<IMongoClient>(_ => new MongoClient(mongoConnection));
+	builder.Services.AddScoped<MongoUserService>();
+	builder.Services.AddScoped<MongoLoginService>();
+	builder.Services.AddScoped<UserServiceRouter>();
+	builder.Services.AddScoped<LoginServiceRouter>();
+	builder.Services.AddScoped<SyncService>();
 }
+
+builder.Services.AddControllers();
+builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
-<<<<<<< HEAD
-=======
-// Ensure local SQL Server database schema exists
+// --- Adriaan: Ensure local SQL Server database schema exists ---
 using (var scope = app.Services.CreateScope())
 {
-    try
-    {
-        var db = scope.ServiceProvider.GetRequiredService<LogiSynDbContext>();
-        db.Database.EnsureCreated();
-    }
-    catch (Exception ex)
-    {
-        Console.WriteLine($"[SQL] Warning: Unable to ensure SQL database created: {ex.Message}");
-    }
+	try
+	{
+		var db = scope.ServiceProvider.GetRequiredService<LogiSynDbContext>();
+		db.Database.EnsureCreated();
+	}
+	catch (Exception ex)
+	{
+		Console.WriteLine($"[SQL] Warning: Unable to ensure SQL database created: {ex.Message}");
+	}
 }
 
-// Configure the HTTP request pipeline.
->>>>>>> Adriaan
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+	app.MapOpenApi();
 }
 
 app.UseHttpsRedirection();

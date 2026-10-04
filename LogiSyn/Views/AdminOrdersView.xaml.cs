@@ -4,13 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-<<<<<<< HEAD
 using SharedLibrary.Model;
-=======
 using System.Windows.Threading;
-using LogiSyn.Model;
-using LogiSyn.Services;
->>>>>>> Adriaan
+using AndersonsBakeryAPI.Services;
 
 namespace LogiSyn.Views
 {

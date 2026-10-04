@@ -15,29 +15,13 @@ namespace LogiSyn.Views
     /// Interaction logic for UserWindow.xaml
     /// </summary>
     public partial class UserWindow : Window
-<<<<<<< HEAD
-=======
-
->>>>>>> Adriaan
     {
-        public UserWindow(LogiSyn.Model.UserRow user)
+        public UserWindow(SharedLibrary.Model.UserRow user)
         {
             InitializeComponent();
 
-<<<<<<< HEAD
             // navigate shell window to dashboard by default for a regular user
             _ = new LogiSyn.Views.ShellWindow(SharedLibrary.Model.AppRole.User);
-=======
-            //navigate shell window to dashboard by default
-            if (!System.Enum.TryParse<LogiSyn.Model.AppRole>(user.Role, true, out var role))
-                role = LogiSyn.Model.AppRole.User;
-
-            LogiSyn.Views.ShellWindow.Current = new LogiSyn.Views.ShellWindow(role);
-
-            // initialize sidebar/profile
-            SetupSidebarNavigation(user.Role);
-            SetProfileName(user.Name);
->>>>>>> Adriaan
         }
 
         public void SetupSidebarNavigation(string role)

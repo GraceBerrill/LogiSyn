@@ -5,8 +5,8 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using LogiSyn.Model;
-using LogiSyn.Services;
+using SharedLibrary.Model;
+using AndersonsBakeryAPI.Services;
 
 namespace LogiSyn.Views
 {

@@ -1,11 +1,6 @@
-<<<<<<< HEAD
 ﻿using SharedLibrary.Model;
-=======
-// Adriaan
-using LogiSyn.Interface;
-using LogiSyn.Model;
-using LogiSyn.Services;
->>>>>>> Adriaan
+using SharedLibrary.Interface;
+using AndersonsBakeryAPI.Services;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

@@ -14,11 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("LogiSyn")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-<<<<<<< HEAD
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+bdcc4c52c0e9739ac97f0006f0c375fffaee5fbc")]
-=======
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fb5fde816fb74a3c0971d8bbeab29dcd41cb51d5")]
->>>>>>> Adriaan
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+16c9eea0ca6e4b5cc9bc3d4c78e364be8af18fe2")]
 [assembly: System.Reflection.AssemblyProductAttribute("LogiSyn")]
 [assembly: System.Reflection.AssemblyTitleAttribute("LogiSyn")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -1,20 +1,12 @@
-<<<<<<< HEAD
 ﻿using SharedLibrary.Interface;
 using SharedLibrary.Model;
 using AndersonsBakeryAPI.Services;
-
-=======
-// Adriaan
-using LogiSyn.Interface;
-using LogiSyn.Model;
-using LogiSyn.Services;
->>>>>>> Adriaan
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using System.Windows;
-using System.Windows.Controls;
+using System.Windows.Controls;  
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;

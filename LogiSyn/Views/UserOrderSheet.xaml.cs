@@ -6,12 +6,9 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-<<<<<<< HEAD
 using SharedLibrary.Model;
-=======
-using LogiSyn.Model;
-using LogiSyn.Services;
->>>>>>> Adriaan
+using SharedLibrary.Model;
+using AndersonsBakeryAPI.Services;
 
 namespace LogiSyn.Views
 {

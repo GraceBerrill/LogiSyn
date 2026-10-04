@@ -6,9 +6,9 @@ using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
-using LogiSyn.Model;
+using SharedLibrary.Model;
 
-namespace LogiSyn.Services
+namespace AndersonsBakeryAPI.Services
 {
     /// <summary>
     /// HTTP client service for communicating with AndersonsBakeryAPI

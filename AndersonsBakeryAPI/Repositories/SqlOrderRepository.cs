@@ -1,6 +1,6 @@
 // Adriaan
-using LogiSyn.Interface;
-using LogiSyn.Model;
+using SharedLibrary.Interface;
+using SharedLibrary.Model;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

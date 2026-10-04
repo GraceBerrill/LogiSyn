@@ -16,12 +16,12 @@ namespace LogiSyn.Views
     /// </summary>
     public partial class AdminWindow : Window
     {
-        public AdminWindow(LogiSyn.Model.UserRow user)
+        public AdminWindow(SharedLibrary.Model.UserRow user)
         {
             InitializeComponent();
 
-            if (!System.Enum.TryParse<LogiSyn.Model.AppRole>(user.Role, true, out var role))
-                role = LogiSyn.Model.AppRole.User;
+            if (!System.Enum.TryParse<SharedLibrary.Model.AppRole>(user.Role, true, out var role))
+                role = SharedLibrary.Model.AppRole.User;
 
             // show dashboard by default
             MainContent.Content = new DashboardView(role);

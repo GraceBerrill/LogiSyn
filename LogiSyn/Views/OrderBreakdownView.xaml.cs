@@ -1,14 +1,10 @@
-// Adriaan
 using System;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
-<<<<<<< HEAD
 using SharedLibrary.Model;
-=======
-using LogiSyn.Model;
-using LogiSyn.Services;
->>>>>>> Adriaan
+using SharedLibrary.Model;
+using AndersonsBakeryAPI.Services;
 
 namespace LogiSyn.Views
 {

@@ -1,7 +1,7 @@
 // Adriaan
 using System.Collections.Generic;
 using System.Text.Json;
-using LogiSyn.Model;
+using SharedLibrary.Model;
 using Microsoft.EntityFrameworkCore;
 
 namespace AndersonsBakeryAPI.Data
