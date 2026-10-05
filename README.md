@@ -18,7 +18,7 @@ A desktop management system built for Anderson's Bakery. Written in C# / WPF (.N
 ![Windows](https://img.shields.io/badge/Platform-Windows-0078D6?style=flat&logo=windows&logoColor=white)
  
 <img src="Images/AndersonBakery.png" alt="Anderson's Silwood Bakery logo" width="200">
-<img src="Images/Logisyn.png" alt="LogiSyn logo" width="150">
+<img src="Images/Logisyn.png" alt="LogiSyn logo" width="130">
 
 </div>
 
@@ -62,11 +62,11 @@ That's where LogiSyn comes in. We built a system that keeps track of all incomin
 
 ### Prerequisites
 
-- **.NET 10 SDK** (the project targets `net10.0-windows`)
-- **Windows** with WPF support (this is a Windows desktop application)
-- **SQL Server Express LocalDB** (ships with Visual Studio, or install [SQL Server Express LocalDB](https://learn.microsoft.com/sql/database-engine/configure-windows/sql-server-express-localdb) separately)
-- **Visual Studio 2022+** (or VS Code with the C# Dev Kit) is recommended for opening `LogiSyn.slnx`
-- **MongoDB Atlas** is *optional*. The app runs fully offline on LocalDB if no cluster is configured or reachable (see [Security Notes](#security-notes))
+- **.NET 10 SDK** (the project targets `net10.0-windows`).
+- **Windows** With WPF support (this is a Windows desktop application).
+- **SQL Server Express LocalDB** (ships with Visual Studio, or install [SQL Server Express LocalDB](https://learn.microsoft.com/sql/database-engine/configure-windows/sql-server-express-localdb) separately).
+- **Visual Studio 2022+** (or VS Code with the C# Dev Kit) Is recommended for opening `LogiSyn.slnx`.
+- **MongoDB Atlas** The app runs fully offline on LocalDB if no cluster is configured or reachable.
 
 ### 1. Clone and open
 
