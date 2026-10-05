@@ -117,6 +117,7 @@ namespace SharedLibrary.Model
 
     public class ProductRow
     {
+        public int ProductId { get; set; }
         public string? Name { get; set; }
         public string? Price { get; set; }
         public string? SellBy { get; set; }

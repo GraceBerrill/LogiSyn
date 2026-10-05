@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Json;
 using System.Text.Json;
 using System.Threading.Tasks;
 using SharedLibrary.Model;
@@ -19,6 +20,8 @@ namespace AndersonsBakeryAPI.Services
         private readonly string[] _baseUrls;
 
         //------------------------------------------------------------------------------------------------//
+
+
 
         // Constructor for the ApiClient class
         public ApiClient(string baseUrl = "https://andersons-bakery-api.onrender.com")
@@ -131,6 +134,140 @@ namespace AndersonsBakeryAPI.Services
                 }
             }
 
+            return false;
+        }
+
+        //------------------------------------------------------------------------------------------------//
+
+        // Fetch a single product by id
+        public async Task<Product?> GetProductByIdAsync(string productId)
+        {
+            string safeId = Uri.EscapeDataString(productId ?? string.Empty);
+            foreach (var baseUrl in _baseUrls)
+            {
+                try
+                {
+                    var response = await _httpClient.GetAsync($"{baseUrl}/api/products/{safeId}");
+                    if (!response.IsSuccessStatusCode) continue;
+                    var body = await response.Content.ReadAsStringAsync();
+                    return JsonSerializer.Deserialize<Product>(body, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                }
+                catch { }
+            }
+            return null;
+        }
+
+        // Create a new product via the API
+        public async Task<bool> CreateProductAsync(Product product)
+        {
+            foreach (var baseUrl in _baseUrls)
+            {
+                try
+                {
+                    var response = await _httpClient.PostAsJsonAsync($"{baseUrl}/api/products", product);
+                    if (response.IsSuccessStatusCode) return true;
+                }
+                catch { }
+            }
+            return false;
+        }
+
+        // Update an existing product via the API
+        public async Task<bool> UpdateProductAsync(string productId, Product product)
+        {
+            string safeId = Uri.EscapeDataString(productId ?? string.Empty);
+            foreach (var baseUrl in _baseUrls)
+            {
+                try
+                {
+                    var response = await _httpClient.PutAsJsonAsync($"{baseUrl}/api/products/{safeId}", product);
+                    if (response.IsSuccessStatusCode) return true;
+                }
+                catch { }
+            }
+            return false;
+        }
+
+        // Delete a product via the API
+        public async Task<bool> DeleteProductAsync(string productId)
+        {
+            string safeId = Uri.EscapeDataString(productId ?? string.Empty);
+            foreach (var baseUrl in _baseUrls)
+            {
+                try
+                {
+                    var response = await _httpClient.DeleteAsync($"{baseUrl}/api/products/{safeId}");
+                    if (response.IsSuccessStatusCode) return true;
+                }
+                catch { }
+            }
+            return false;
+        }
+
+        //------------------------------------------------------------------------------------------------//
+
+        // Fetch a single user by id
+        public async Task<UserRow?> GetUserByIdAsync(string userId)
+        {
+            string safeId = Uri.EscapeDataString(userId ?? string.Empty);
+            foreach (var baseUrl in _baseUrls)
+            {
+                try
+                {
+                    var response = await _httpClient.GetAsync($"{baseUrl}/api/users/{safeId}");
+                    if (!response.IsSuccessStatusCode) continue;
+                    var body = await response.Content.ReadAsStringAsync();
+                    return JsonSerializer.Deserialize<UserRow>(body, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                }
+                catch { }
+            }
+            return null;
+        }
+
+        // Create a new user via the API
+        public async Task<bool> CreateUserAsync(UserRow user)
+        {
+            foreach (var baseUrl in _baseUrls)
+            {
+                try
+                {
+                    var response = await _httpClient.PostAsJsonAsync($"{baseUrl}/api/users", user);
+                    if (response.IsSuccessStatusCode) return true;
+                }
+                catch { }
+            }
+            return false;
+        }
+
+        // Update an existing user via the API
+        public async Task<bool> UpdateUserAsync(string userId, UserRow user)
+        {
+            string safeId = Uri.EscapeDataString(userId ?? string.Empty);
+            foreach (var baseUrl in _baseUrls)
+            {
+                try
+                {
+                    var response = await _httpClient.PutAsJsonAsync($"{baseUrl}/api/users/{safeId}", user);
+                    if (response.IsSuccessStatusCode) return true;
+                }
+                catch { }
+            }
+            return false;
+        }
+
+        // Delete a user via the API
+        public async Task<bool> DeleteUserAsync(string userId)
+        {
+            string safeId = Uri.EscapeDataString(userId ?? string.Empty);
+            foreach (var baseUrl in _baseUrls)
+            {
+                try
+                {
+                    var response = await _httpClient.DeleteAsync($"{baseUrl}/api/users/{safeId}");
+                    if (response.IsSuccessStatusCode) return true;
+                }
+                catch { }
+            }
             return false;
         }
 

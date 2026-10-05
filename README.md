@@ -57,7 +57,7 @@ LogiSyn is the resulting application: upload a customer's order as a PDF, and th
 
 ## System Architecture
 
-LogiSyn is a WPF desktop app (`LogiSyn`) that references its backend logic (`AndersonsBakeryAPI`) and shared models (`SharedLibrary`) **directly as .NET project references** — most screens call the C# service classes in-process. There is also a real, separately-runnable ASP.NET Core Web API (same `AndersonsBakeryAPI` project, run as a web host) that currently exposes **one** controller, for Orders — it's used opportunistically by a few views (with a 2-second timeout and an automatic fallback to the in-process services if it isn't running), and exists as scaffolding for a future hosted/multi-client deployment rather than something the desktop app depends on today.
+There is also a real, separately-runnable ASP.NET Core Web API (the `AndersonsBakeryAPI` project) that exposes multiple controllers (Orders, Users, Products and Authentication) and the same service-layer logic that the desktop app uses. The desktop client is able to use the hosted API when available, and will fall back to the in-process services (or local SQL/JSON) when the host is not reachable.
 
 Each kind of data is persisted differently:
 
@@ -65,7 +65,7 @@ Each kind of data is persisted differently:
 | --- | --- | --- |
 | **Users** | SQL LocalDB **and** MongoDB Atlas | Login tries Mongo first, falls back to SQL. A manual **Sync** button on Manage Users pushes any SQL-only ("orphaned") user up to Mongo. |
 | **Orders** | Local `orders.json` **+** SQL **+** MongoDB | Saved instantly to memory/disk, then written to SQL and Mongo in the background — no manual sync needed. |
-| **Products** | Local `products.json` only | No SQL, no Mongo — the simplest of the three. |
+| **Products** | SQL Server (primary) with local `products.json` fallback | ProductService prefers SQL for persistence; when the database is empty or unavailable the app falls back to a local products.json catalog. |
 
 ```
 ┌─────────────────────────┐

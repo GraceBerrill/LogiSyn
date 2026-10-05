@@ -1,5 +1,6 @@
 using SharedLibrary.Model;
 using AndersonsBakeryAPI.Services;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,7 @@ namespace LogiSyn.Views
     public partial class ManageUsersView : UserControl
     {
         private readonly UserServiceRouter _userService = new UserServiceRouter();
+        private readonly AndersonsBakeryAPI.Services.ApiClient _apiClient = App.ServiceProvider.GetService<AndersonsBakeryAPI.Services.ApiClient>() ?? new AndersonsBakeryAPI.Services.ApiClient();
         private readonly SyncService _syncService = new SyncService();
         private List<UserRow> _all = new();
         private bool _ready;
@@ -29,7 +31,16 @@ namespace LogiSyn.Views
         {
             try
             {
-                _all = _userService.GetAllUsers();
+                // Try API first, fall back to local router
+                try
+                {
+                    var users = _apiClient.GetUsersAsync().GetAwaiter().GetResult();
+                    _all = users;
+                }
+                catch
+                {
+                    _all = _userService.GetAllUsers();
+                }
             }
             catch (Exception ex)
             {
@@ -186,7 +197,19 @@ namespace LogiSyn.Views
 
             try
             {
-                _userService.DeleteUser(identifier);
+                // Try remote API delete first, fallback to local delete
+                var deleted = false;
+                try
+                {
+                    deleted = _apiClient.DeleteUserAsync(identifier).GetAwaiter().GetResult();
+                }
+                catch { }
+
+                if (!deleted)
+                {
+                    _userService.DeleteUser(identifier);
+                }
+
                 _all.Remove(row);
                 Refresh();
             }
