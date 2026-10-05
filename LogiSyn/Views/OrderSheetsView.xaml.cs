@@ -14,7 +14,7 @@ using Microsoft.Win32;
 namespace LogiSyn.Views
 {
     /// <summary>
-    /// Interaction logic for OrderReviewPage.xaml
+    /// Interaction logic for OrderSheetsView.xaml
     /// </summary>
     public partial class OrderSheetsView : UserControl
     {
@@ -298,8 +298,8 @@ namespace LogiSyn.Views
             }
         }
 
-        // Lightweight display models used by OrderReviewPage for UI binding
-        internal class ProductionItemDisplayModel
+        // Lightweight display models used by OrderSheetsView for UI binding
+        public class ProductionItemDisplayModel
         {
             public string ProductName { get; set; } = string.Empty;
             public string ProductionLine { get; set; } = string.Empty;
@@ -310,8 +310,8 @@ namespace LogiSyn.Views
 
         //------------------------------------------------------------------------------------------------//
 
-        // Lightweight display model for raw materials used by OrderReviewPage for UI binding
-        internal class ScalingItemDisplayModel
+        // Lightweight display model for raw materials used by OrderSheetsView for UI binding
+        public class ScalingItemDisplayModel
         {
             public string Key { get; set; } = string.Empty;
             public string DisplayValue { get; set; } = string.Empty;

@@ -267,13 +267,8 @@ LogiSyn/
 
 ## Known Limitations
 
-- **Dashboard summary cards show fixed demo data**, not real order counts — the live equivalent is the Orders and History screens.
-- **Only PDF uploads actually parse** today, despite the file picker also listing Excel/CSV as accepted types.
-- **Products are not synced** to SQL or MongoDB — they live only in a local `products.json` file, unlike Users and Orders.
-- **The Web API only covers Orders** — Users and Products have no HTTP endpoints, so it can't yet serve a non-WPF client on its own.
 - **Order status is binary** (Pending/Completed only) — there's no "in progress" or partially-fulfilled state.
-- The repository contains a second, unused set of views (`AdminWindow`, `ManagerWindow`, `UserWindow`, and related pages) left over from an earlier navigation design — the live app only ever opens `ShellWindow`.
-- The CI/CD workflow (`.github/workflows/ci-cd.yml`) currently installs .NET 8/9 SDKs, while the project targets .NET 10 — the pipeline needs updating to match.
+- **Printing environment**: WPF printing visual relies on standard Windows print spooler and dialogs.
 
 ## Security Notes
 
