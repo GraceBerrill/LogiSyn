@@ -1,9 +1,6 @@
 <Solution>
   <Project Path="AndersonsBakeryAPI/AndersonsBakeryAPI.csproj" Id="befaea94-05ce-4044-a137-3515287fdd22" />
   <Project Path="LogiSyn/LogiSyn.csproj" />
+  <Project Path="LogiSyn.Tests/LogiSyn.Tests.csproj" />
   <Project Path="SharedLibrary/SharedLibrary.csproj" Id="77608da4-8432-4890-947a-b236e2147999" />
-  <Project Path="UserDB/LogiSynDB.sqlproj" Id="1ba9740e-8519-42f0-b792-ed1fd66c12a9">
-    <Build />
-    <Deploy />
-  </Project>
 </Solution>

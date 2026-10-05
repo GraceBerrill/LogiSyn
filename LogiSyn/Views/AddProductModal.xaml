@@ -1,0 +1,135 @@
+<UserControl x:Class="LogiSyn.Views.AddProductModal"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Width="720">
+    <Border Background="White" 
+            BorderBrush="#E2E8F0" 
+            BorderThickness="1" 
+            CornerRadius="12" 
+            Padding="24">
+        <StackPanel>
+            <!-- Title -->
+            <TextBlock Text="Add Product" Style="{StaticResource PageTitle}" Margin="0,0,0,20"/>
+
+            <!-- Product Name -->
+            <StackPanel Margin="0,0,0,12">
+                <TextBlock Text="Product Name" Style="{StaticResource HeadTextSmall}" Margin="0,0,0,4"/>
+                <TextBox x:Name="ProductBox" Height="36" Style="{StaticResource CellTextBox}" HorizontalAlignment="Stretch"/>
+            </StackPanel>
+
+            <!-- Product Details Row -->
+            <Grid Margin="0,0,0,12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="12"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="12"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="12"/>
+                    <ColumnDefinition Width="1.2*"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0">
+                    <TextBlock Text="Price" Style="{StaticResource HeadTextSmall}" Margin="0,0,0,4"/>
+                    <TextBox x:Name="ProductPriceBox" Height="36" Style="{StaticResource CellTextBox}"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="2">
+                    <TextBlock Text="Sell By (days)" Style="{StaticResource HeadTextSmall}" Margin="0,0,0,4"/>
+                    <TextBox x:Name="SellByBox" Height="36" Style="{StaticResource CellTextBox}"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="4">
+                    <TextBlock Text="Best Before (days)" Style="{StaticResource HeadTextSmall}" Margin="0,0,0,4"/>
+                    <TextBox x:Name="BestBeforeBox" Height="36" Style="{StaticResource CellTextBox}"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="6">
+                    <TextBlock Text="Storage Location" Style="{StaticResource HeadTextSmall}" Margin="0,0,0,4"/>
+                    <ComboBox x:Name="StorageBox" Height="36" Style="{StaticResource FilterCombo}" SelectedIndex="0">
+                        <ComboBoxItem Content="Freezer"/>
+                        <ComboBoxItem Content="Fridge"/>
+                        <ComboBoxItem Content="Dry Store"/>
+                    </ComboBox>
+                </StackPanel>
+            </Grid>
+
+            <!-- Preparation Method -->
+            <StackPanel Margin="0,0,0,16">
+                <TextBlock Text="Preparation Method" Style="{StaticResource HeadTextSmall}" Margin="0,0,0,4"/>
+                <TextBox x:Name="MethodBox" Height="80" Style="{StaticResource CellTextBox}" 
+                         TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto"/>
+            </StackPanel>
+
+            <!-- Dynamic Ingredients Table -->
+            <StackPanel Margin="0,0,0,20">
+                <Grid Margin="0,0,0,6">
+                    <TextBlock Text="Ingredients" Style="{StaticResource HeadTextSmall}" VerticalAlignment="Center"/>
+                    <Button Content="+ Add Ingredient" HorizontalAlignment="Right" Click="AddIngredientButton_Click"
+                            Style="{StaticResource LinkButton}" FontSize="13" Foreground="#0F172A" FontWeight="SemiBold"/>
+                </Grid>
+
+                <Border BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="12" Background="#FAFAFA">
+                    <StackPanel>
+                        <!-- Column Headers -->
+                        <Grid Margin="0,0,0,6">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="3*"/>
+                                <ColumnDefinition Width="8"/>
+                                <ColumnDefinition Width="1.2*"/>
+                                <ColumnDefinition Width="8"/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="8"/>
+                                <ColumnDefinition Width="32"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="Ingredient Name" FontSize="11" Foreground="#64748B"/>
+                            <TextBlock Grid.Column="2" Text="Quantity" FontSize="11" Foreground="#64748B"/>
+                            <TextBlock Grid.Column="4" Text="Unit" FontSize="11" Foreground="#64748B"/>
+                        </Grid>
+
+                        <!-- Scrollable Dynamic Rows Container -->
+                        <ScrollViewer MaxHeight="160" VerticalScrollBarVisibility="Auto" Focusable="False">
+                            <ItemsControl x:Name="IngredientsItemsControl">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Margin="0,0,0,6">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="3*"/>
+                                                <ColumnDefinition Width="8"/>
+                                                <ColumnDefinition Width="1.2*"/>
+                                                <ColumnDefinition Width="8"/>
+                                                <ColumnDefinition Width="1*"/>
+                                                <ColumnDefinition Width="8"/>
+                                                <ColumnDefinition Width="32"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <TextBox Grid.Column="0" Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                                     Height="32" Style="{StaticResource CellTextBox}"/>
+                                            <TextBox Grid.Column="2" Text="{Binding Quantity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                                     Height="32" Style="{StaticResource CellTextBox}"/>
+                                            <TextBox Grid.Column="4" Text="{Binding Unit, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                                     Height="32" Style="{StaticResource CellTextBox}"/>
+
+                                            <!-- Row Delete Button -->
+                                            <Button Grid.Column="6" Content="✕" Click="RemoveIngredientButton_Click"
+                                                    Height="32" Width="32" Style="{StaticResource IconButton}" 
+                                                    Foreground="#EF4444" FontSize="14" FontWeight="Bold"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+
+            <!-- Actions -->
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Content="Cancel" Width="100" Height="38" Click="CancelButton_Click" 
+                        Style="{StaticResource NavyButton}" Margin="0,0,10,0" Opacity="0.7"/>
+                <Button Content="Add Product" Width="140" Height="38" Click="AddButton_Click" 
+                        Style="{StaticResource NavyButton}"/>
+            </StackPanel>
+        </StackPanel>
+    </Border>
+</UserControl>

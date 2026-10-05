@@ -9,17 +9,16 @@
 *.user
 *.userosscache
 *.sln.docstates
-*.sql
-*.dbmdl
 
-# Ignore the entire UserDB folder and any db model metadata
-UserDB/
+# Database project build results and SSDT cache files
 *.dbmdl
 *.jfm
 *.dacpac
 *.mdf
 *.ldf
 *.ndf
+UserDB/bin/
+UserDB/obj/
 LogiSynDB/bin/
 LogiSynDB/obj/
 
@@ -374,3 +373,14 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+.vs/
+bin/
+obj/
+*.suo
+*.user
+
+*.dbmdl
+*.jfm
+
+**/MongoConfig.cs

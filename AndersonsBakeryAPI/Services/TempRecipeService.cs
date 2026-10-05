@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using LogiSyn.Interface;
-using LogiSyn.Model;
+using SharedLibrary.Interface;
+using SharedLibrary.Model;
 
-namespace LogiSyn.Services
+namespace AndersonsBakeryAPI.Services
 {
     public class TempRecipeService : ITempRecipeService
     {

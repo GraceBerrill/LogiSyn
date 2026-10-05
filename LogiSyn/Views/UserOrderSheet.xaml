@@ -1,0 +1,30 @@
+<!-- Adriaan -->
+<UserControl x:Class="LogiSyn.Views.UserOrderSheetView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:LogiSyn.Views">
+
+    <!-- User > Orders > one order: the production sheet with PRINT and Mark As Completed -->
+    <Grid>
+        <Button x:Name="BackButton" Style="{StaticResource BackButton}" HorizontalAlignment="Left"
+                VerticalAlignment="Top" Margin="15,17,0,0" Click="BackButton_Click"/>
+
+        <ScrollViewer Style="{StaticResource PaperPanel}" Width="639.3" HorizontalAlignment="Left"
+                      Margin="36,73,0,20">
+            <local:SheetPaper x:Name="Sheet" IsReadOnly="False"/>
+        </ScrollViewer>
+
+        <StackPanel HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="685.7,0,0,35">
+            <!-- Adriaan - Upload Excel Sheet with used quantities and notes -->
+            <Button x:Name="UploadExcelButton" Content="Upload Excel" Style="{StaticResource NavyButton}"
+                    Width="251.7" Height="54" Margin="0,0,0,18" Click="UploadExcelButton_Click"/>
+            <!-- Adriaan - Email updated Excel back to admin -->
+            <Button x:Name="EmailButton" Content="EMAIL" Style="{StaticResource NavyButton}"
+                    Width="251.7" Height="54" Margin="0,0,0,18" Click="EmailButton_Click"/>
+            <Button x:Name="PrintButton" Content="PRINT" Style="{StaticResource NavyButton}"
+                    Width="251.7" Height="54" Click="PrintButton_Click"/>
+            <Button x:Name="CompleteButton" Content="Mark As Completed" Style="{StaticResource GreenButton}"
+                    Width="251.7" Height="54" Margin="0,18,0,0" Click="CompleteButton_Click"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

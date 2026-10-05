@@ -1,0 +1,131 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows;
+using System.Windows.Controls;
+using SharedLibrary.Model;
+using Microsoft.Extensions.Logging;
+using AndersonsBakeryAPI.Services;
+
+namespace LogiSyn.Views
+{
+    public partial class HistoryView : UserControl
+    {
+        private List<OrderRow> _all = new();
+        private bool _ready;
+        private readonly ApiClient _apiClient = new ApiClient();
+        private readonly OrderService _orderService = new OrderService();
+
+        //------------------------------------------------------------------------------------------------//
+
+        // Constructor for the HistoryView class
+        public HistoryView(AppRole role)
+        {
+            InitializeComponent();
+
+            // Set the date text and header based on the role
+            DateText.Text = DateTime.Now.ToString("dd MMMM yyyy");
+            DateHeader.Text = role == AppRole.Admin ? "Date Completed" : "Date";
+
+            DateFilter.SelectedIndex = 0;
+            _ready = true;
+
+            LoadHistoryAsync();
+        }
+
+        //------------------------------------------------------------------------------------------------//
+
+        // Load the order history asynchronously from the API or local OrderService
+        private async void LoadHistoryAsync()
+        {
+            try
+            {
+                // Fetch orders from the API
+                var apiOrders = await _apiClient.GetOrdersAsync();
+                List<OrderScaled> orders;
+                if (apiOrders == null || !apiOrders.Any())
+                {
+                    orders = (await _orderService.GetOrdersAsync())?.ToList() ?? new List<OrderScaled>();
+                }
+                else
+                {
+                    orders = apiOrders.ToList();
+                }
+
+                var completed = orders
+                    .Where(o => string.Equals(o.Status, "Completed", StringComparison.OrdinalIgnoreCase)
+                             || string.Equals(o.Status, "Complete", StringComparison.OrdinalIgnoreCase))
+                    .Select(o => OrderRow.FromOrderScaled(o))
+                    .ToList();
+
+                _all = completed;
+            }
+                catch (Exception ex)
+                {
+                    var logger = App.ServiceProvider.GetService(typeof(ILogger<HistoryView>)) as ILogger<HistoryView>;
+                    logger?.LogWarning(ex, "Error loading history");
+                    var localOrders = (await _orderService.GetOrdersAsync())
+                    .Where(o => string.Equals(o.Status, "Completed", StringComparison.OrdinalIgnoreCase)
+                             || string.Equals(o.Status, "Complete", StringComparison.OrdinalIgnoreCase))
+                    .Select(o => OrderRow.FromOrderScaled(o))
+                    .ToList();
+                _all = localOrders;
+            }
+
+            Refresh();
+        }
+
+        //------------------------------------------------------------------------------------------------//
+
+        // Refresh the order list based on the search query and selected date filter
+        private void Refresh()
+        {
+            // Check if the view is ready before proceeding
+            if (!_ready) return;
+
+            // Get the search query and selected date filter
+            string q = SearchBox.Text.Trim();
+            var selected = DateFilter.SelectedItem as ComboBoxItem;
+            string sort = selected == null ? "DATE" : (string)selected.Content;
+
+            // Searches the order list based on the search query
+            IEnumerable<OrderRow> rows = _all.Where(o =>
+                q.Length == 0
+                || o.Number.IndexOf(q, StringComparison.OrdinalIgnoreCase) >= 0
+                || o.Customer.IndexOf(q, StringComparison.OrdinalIgnoreCase) >= 0);
+
+            // Sort the order list based on the selected date filter
+            if (sort == "Newest first") rows = rows.OrderByDescending(o => o.Date);
+            else if (sort == "Oldest first") rows = rows.OrderBy(o => o.Date);
+
+            OrderList.ItemsSource = rows.ToList();
+        }
+
+        //------------------------------------------------------------------------------------------------//
+
+        // Event handler for the SearchBox text changed event
+        private void SearchBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            Refresh();
+        }
+
+        //------------------------------------------------------------------------------------------------//
+
+        // Event handler for the DateFilter selection changed event
+        private void DateFilter_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            Refresh();
+        }
+
+        //------------------------------------------------------------------------------------------------//
+
+        // Event handler for the ViewButton click event to navigate to the breakdown view for the selected order
+        private void ViewButton_Click(object sender, RoutedEventArgs e)
+        {
+            var order = ((FrameworkElement)sender).DataContext as OrderRow;
+            ShellWindow.Current?.Navigate("breakdown", order);
+        }
+    }
+}
+
+//--------------------------------------End of File----------------------------------------------------------//

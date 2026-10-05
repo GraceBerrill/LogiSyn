@@ -1,0 +1,78 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--
+      ICONS - simple line-style vector icons drawn directly as Path geometry data (24x24 grid),
+      so they render crisp at any size and recolor with whatever Stroke brush the consumer sets,
+      instead of depending on exported PNG assets.
+
+      Usage:
+        <Path Data="{StaticResource IconEditGeometry}" Style="{StaticResource IconPath}"
+              Stroke="{StaticResource Navy}" Width="26" Height="26"/>
+
+      If real Figma-exported artwork becomes available later, these can be swapped back for
+      BitmapImage resources of the same key names without touching any of the views.
+    -->
+
+    <!-- Shared look for every icon: outline style, no fill, rounded joins/caps, scales to its box -->
+    <Style x:Key="IconPath" TargetType="Path">
+        <Setter Property="Fill" Value="Transparent"/>
+        <Setter Property="StrokeThickness" Value="2"/>
+        <Setter Property="StrokeLineJoin" Value="Round"/>
+        <Setter Property="StrokeStartLineCap" Value="Round"/>
+        <Setter Property="StrokeEndLineCap" Value="Round"/>
+        <Setter Property="Stretch" Value="Uniform"/>
+    </Style>
+
+    <!-- login: user icon -->
+    <Geometry x:Key="IconUserGeometry">M12,4 A4,4 0 1,0 12,12 A4,4 0 1,0 12,4 Z M4,20 A8,8 0 0,1 20,20</Geometry>
+
+    <!-- login: password visible -->
+    <Geometry x:Key="IconEyeGeometry">M2,12 Q12,2 22,12 Q12,22 2,12 Z M15,12 A3,3 0 1,0 9,12 A3,3 0 1,0 15,12 Z</Geometry>
+
+    <!-- login: password hidden (eye + slash) -->
+    <Geometry x:Key="IconEyeOffGeometry">M2,12 Q12,2 22,12 Q12,22 2,12 Z M15,12 A3,3 0 1,0 9,12 A3,3 0 1,0 15,12 Z M3,3 L21,21</Geometry>
+
+    <!-- magnifier -->
+    <Geometry x:Key="IconSearchGeometry">M11,3 A8,8 0 1,0 11,19 A8,8 0 1,0 11,3 Z M16.65,16.65 L21,21</Geometry>
+
+    <!-- dropdown chevron -->
+    <Geometry x:Key="IconArrowDownGeometry">M5,9 L12,16 L19,9</Geometry>
+
+    <!-- round back arrow -->
+    <Geometry x:Key="IconBackGeometry">M20,12 L4,12 M11,5 L4,12 L11,19</Geometry>
+
+    <!-- upload: arrow into tray -->
+    <Geometry x:Key="IconUploadGeometry">M12,16 L12,3 M5,10 L12,3 L19,10 M3,16 L3,20 L21,20 L21,16</Geometry>
+
+    <!-- excel / export: simple spreadsheet grid -->
+    <Geometry x:Key="IconExcelGeometry">M3,3 L21,3 L21,21 L3,21 Z M3,9 L21,9 M11,3 L11,21</Geometry>
+
+    <!-- email: envelope -->
+    <Geometry x:Key="IconEmailGeometry">M2,5 L22,5 L22,19 L2,19 Z M2,5 L12,14 L22,5</Geometry>
+
+    <!-- edit: pencil -->
+    <Geometry x:Key="IconEditGeometry">M3,21 L3,17 L17,3 L21,7 L7,21 Z M17,3 L21,7</Geometry>
+
+    <!-- trash: bin -->
+    <Geometry x:Key="IconTrashGeometry">M4,7 L20,7 M9,7 L9,4 L15,4 L15,7 M6,7 L7,21 L17,21 L18,7 M10,11 L10,17 M14,11 L14,17</Geometry>
+
+    <!-- close: X -->
+    <Geometry x:Key="IconCloseGeometry">M5,5 L19,19 M19,5 L5,19</Geometry>
+
+    <!-- add: plus -->
+    <Geometry x:Key="IconAddGeometry">M12,4 L12,20 M4,12 L20,12</Geometry>
+
+    <!-- check: tick -->
+    <Geometry x:Key="IconCheckGeometry">M4,13 L9,18 L20,6</Geometry>
+
+    <!-- sidebar (not wired into ShellWindow yet, kept ready for when it is) -->
+    <Geometry x:Key="IconAvatarGeometry">M12,4 A4,4 0 1,0 12,12 A4,4 0 1,0 12,4 Z M4,20 A8,8 0 0,1 20,20</Geometry>
+    <Geometry x:Key="IconDashboardGeometry">M3,3 L10,3 L10,10 L3,10 Z M14,3 L21,3 L21,10 L14,10 Z M3,14 L10,14 L10,21 L3,21 Z M14,14 L21,14 L21,21 L14,21 Z</Geometry>
+    <Geometry x:Key="IconListGeometry">M4,6 L20,6 M4,12 L20,12 M4,18 L20,18</Geometry>
+    <Geometry x:Key="IconHistoryGeometry">M12,21 A9,9 0 1,0 12,3 A9,9 0 1,0 12,21 Z M12,7 L12,12 L16,15</Geometry>
+    <Geometry x:Key="IconProductsGeometry">M3,8 L12,3 L21,8 L21,17 L12,22 L3,17 Z M3,8 L12,13 L21,8 M12,13 L12,22</Geometry>
+    <Geometry x:Key="IconUsersGeometry">M8,4 A3,3 0 1,0 8,10 A3,3 0 1,0 8,4 Z M1,20 A7,7 0 0,1 15,20 M16,5 A2.5,2.5 0 1,0 16,10 A2.5,2.5 0 1,0 16,5 Z M14,13 A6,7 0 0,1 23,19</Geometry>
+    <Geometry x:Key="IconLogoutGeometry">M14,3 L6,3 L6,21 L14,21 M10,12 L21,12 M17,8 L21,12 L17,16</Geometry>
+
+</ResourceDictionary>

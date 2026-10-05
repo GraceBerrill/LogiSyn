@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
@@ -6,15 +6,38 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
+	<UserSecretsId>02cdf853-a885-4b1d-9977-3e6fb4e4347d</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Data.SqlClient" Version="7.1.0" />
+    <Compile Remove="Views\AdminViews\**" />
+    <EmbeddedResource Remove="Views\AdminViews\**" />
+    <None Remove="Views\AdminViews\**" />
+    <Page Remove="Views\AdminViews\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="7.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.12" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.12" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\**\*.png" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\SharedLibrary\SharedLibrary.csproj" />
     <ProjectReference Include="..\AndersonsBakeryAPI\AndersonsBakeryAPI.csproj" />
   </ItemGroup>
+
+	<ItemGroup>
+		<None Include="..\AndersonsBakeryAPI\appsettings.json" Link="appsettings.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
 
 </Project>

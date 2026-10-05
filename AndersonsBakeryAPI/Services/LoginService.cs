@@ -1,55 +1,92 @@
-﻿using System;
+using System;
 using Microsoft.Data.SqlClient;
-using LogiSyn.Model;
+using SharedLibrary.Model;
 
-namespace LogiSyn.Services
+namespace AndersonsBakeryAPI.Services
 {
     public class LoginService
     {
-        private readonly string _connectionString =
-            @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=LogiSynDb;Integrated Security=True;";
-
-        public User? Authenticate(string name, string password)
+        private string GetConnectionString()
         {
-            User? user = null;
+            var env = Environment.GetEnvironmentVariable("LOGISYN_CONNECTION");
+            return string.IsNullOrWhiteSpace(env)
+                ? @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=LogiSynDb;Integrated Security=True;"
+                : env;
+        }
 
-            string query =
-                "SELECT Id, Username, Password, Role " +
+        public UserRow? Authenticate(string name, string password)
+        {
+            const string query =
+                "SELECT Id, MongoId, Username, Password, Role, DateAdded " +
                 "FROM [User] " +
-                "WHERE Username = @Username AND Password = @Password";
+                "WHERE Username = @Username";
 
-            using (var conn = new SqlConnection(_connectionString))
-            using (var cmd = new SqlCommand(query, conn))
+            using var conn = new SqlConnection(GetConnectionString());
+            using var cmd = new SqlCommand(query, conn);
+            cmd.Parameters.AddWithValue("@Username", name);
+
+            try
             {
-                cmd.Parameters.AddWithValue("@Username", name);
-                cmd.Parameters.AddWithValue("@Password", password);
+                conn.Open();
 
-                try
-                {
-                    conn.Open();
+                using var reader = cmd.ExecuteReader();
 
-                    using (SqlDataReader reader = cmd.ExecuteReader())
-                    {
-                        if (reader.Read())
-                        {
-                            user = new User
-                            {
-                                Id = (int)reader["Id"],
-                                Username = reader["Username"] as string ?? string.Empty,
-                                Password = reader["Password"] as string ?? string.Empty,
-                                Role = reader["Role"] as string ?? string.Empty
-                            };
-                        }
-                    }
-                }
-                catch (Exception ex)
+                if (!reader.Read())
+                    return null;
+
+                string storedPassword = reader["Password"] as string ?? string.Empty;
+                bool isHashed = PasswordHasher.IsHash(storedPassword);
+
+                bool valid;
+                if (isHashed)
                 {
-                    throw new Exception(
-                        "Database connection error: " + ex.Message);
+                    valid = PasswordHasher.VerifyPassword(password, storedPassword);
                 }
+                else
+                {
+                    // Constant-time comparison for legacy plaintext migration to prevent timing leakage
+                    byte[] inputBytes = System.Text.Encoding.UTF8.GetBytes(password);
+                    byte[] storedBytes = System.Text.Encoding.UTF8.GetBytes(storedPassword);
+                    valid = inputBytes.Length == storedBytes.Length &&
+                            System.Security.Cryptography.CryptographicOperations.FixedTimeEquals(inputBytes, storedBytes);
+                }
+
+                if (!valid)
+                    return null;
+
+                var user = new UserRow
+                {
+                    SqlId = ((int)reader["Id"]).ToString(),
+                    Id = reader["MongoId"] as string ?? string.Empty,
+                    Name = reader["Username"] as string ?? string.Empty,
+                    Password = string.Empty, // Zero-out in memory for security
+                    Role = reader["Role"] as string ?? string.Empty,
+                    DateAdded = reader["DateAdded"] == DBNull.Value
+                        ? string.Empty
+                        : ((DateTime)reader["DateAdded"]).ToString("yyyy-MM-dd")
+                };
+
+                reader.Close();
+
+                if (!isHashed)
+                {
+                    string upgradedHash = PasswordHasher.HashPassword(password);
+
+                    using var updateCmd = new SqlCommand(
+                    "UPDATE [User] SET Password = @Password WHERE Id = @Id",
+                        conn);
+
+                    updateCmd.Parameters.AddWithValue("@Password", upgradedHash);
+                    updateCmd.Parameters.AddWithValue("@Id", int.Parse(user.SqlId));
+                    updateCmd.ExecuteNonQuery();
+                }
+
+                return user;
             }
-
-            return user;
+            catch (Exception ex)
+            {
+                throw new Exception("Database connection error: " + ex.Message, ex);
+            }
         }
     }
 }

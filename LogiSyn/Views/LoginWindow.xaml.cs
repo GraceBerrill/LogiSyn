@@ -1,20 +1,27 @@
-﻿using System.Windows;
+using AndersonsBakeryAPI.Services;
+using SharedLibrary.Model;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Windows;
 using System.Windows.Controls;
+using Microsoft.Extensions.DependencyInjection;
+using LogiSyn.Views;
 
 namespace LogiSyn.Views
 {
     public partial class LoginWindow : Window
     {
+        private readonly LoginServiceRouter _loginService = App.ServiceProvider.GetService<LoginServiceRouter>() ?? new LoginServiceRouter();
+
         private bool _passwordRevealed;
         private bool _syncing;
+
+        public UserRow? LoggedInUser { get; private set; }
 
         public LoginWindow()
         {
             InitializeComponent();
-
-            // Spreads "ANDERSON'S BAKERY" out letter by letter (WPF has no letter-spacing property)
             BrandLetters.ItemsSource = "ANDERSON'S BAKERY";
-
             UsernameBox.Focus();
         }
 
@@ -50,14 +57,15 @@ namespace LogiSyn.Views
                 string.IsNullOrEmpty(PasswordBox.Password) ? Visibility.Visible : Visibility.Collapsed;
         }
 
-        // ---------- show / hide password (the eye icon) ----------
+        // ---------- show / hide password ----------
 
         private void ToggleReveal_Click(object sender, RoutedEventArgs e)
         {
             _passwordRevealed = !_passwordRevealed;
-
             PasswordBox.Visibility = _passwordRevealed ? Visibility.Collapsed : Visibility.Visible;
             PasswordRevealBox.Visibility = _passwordRevealed ? Visibility.Visible : Visibility.Collapsed;
+            EyeIcon.Visibility = _passwordRevealed ? Visibility.Visible : Visibility.Collapsed;
+            EyeOffIcon.Visibility = _passwordRevealed ? Visibility.Collapsed : Visibility.Visible;
 
             if (_passwordRevealed)
             {
@@ -72,10 +80,10 @@ namespace LogiSyn.Views
 
         // ---------- log in ----------
 
-        private void LoginButton_Click(object sender, RoutedEventArgs e)
+        private async void LoginButton_Click(object sender, RoutedEventArgs e)
         {
             string username = UsernameBox.Text.Trim();
-            string password = PasswordBox.Password;
+            string password = _passwordRevealed ? PasswordRevealBox.Text : PasswordBox.Password;
 
             if (username.Length == 0 || password.Length == 0)
             {
@@ -84,10 +92,66 @@ namespace LogiSyn.Views
                 return;
             }
 
-            // TODO: check the credentials, then open the Admin / Manager / User window
-            // and close this one, e.g.:
-            // new MainWindow().Show();
-            // Close();
+            UserRow? user = null;
+
+            LoginButton.IsEnabled = false;
+            try
+            {
+                // First try the hosted API via ApiClient if available
+                var api = App.ServiceProvider.GetService<ApiClient>() ?? new ApiClient();
+                try
+                {
+                    // Await without ConfigureAwait so continuation runs on the UI thread
+                    user = await api.AuthenticateAsync(username, password);
+                }
+                catch (Exception apiEx)
+                {
+                    // API failed; log and fall back to local auth
+                    var logger = App.ServiceProvider.GetService(typeof(Microsoft.Extensions.Logging.ILogger<LoginWindow>)) as Microsoft.Extensions.Logging.ILogger<LoginWindow>;
+                    logger?.LogWarning(apiEx, "API auth failed during login");
+                    user = null;
+                }
+
+                if (user == null)
+                {
+                    try
+                    {
+                        // Fallback to the local login router
+                        user = _loginService.Authenticate(username, password);
+                    }
+                    catch (Exception localEx)
+                    {
+                        // Both methods failed - show an error
+                        MessageBox.Show("Could not authenticate using API or local router:\n" + localEx.Message,
+                                        "Login error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
+                }
+            }
+            finally
+            {
+                LoginButton.IsEnabled = true;
+            }
+
+            if (user == null)
+            {
+                MessageBox.Show("Invalid username or password.",
+                                "Login", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            if (!Enum.TryParse<AppRole>(user.Role, ignoreCase: true, out var appRole))
+            {
+                MessageBox.Show($"Unknown role '{user.Role}' for this account.",
+                                "Login", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            user.Role = appRole.ToString();
+
+            // Continuation is on UI thread, safe to set DialogResult
+            LoggedInUser = user;
+            DialogResult = true;
         }
     }
 }

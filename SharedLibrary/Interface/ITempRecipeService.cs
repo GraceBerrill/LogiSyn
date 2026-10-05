@@ -1,9 +1,9 @@
-﻿using LogiSyn.Model;
+﻿using SharedLibrary.Model;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace LogiSyn.Interface
+namespace SharedLibrary.Interface
 {
     public interface ITempRecipeService
     {

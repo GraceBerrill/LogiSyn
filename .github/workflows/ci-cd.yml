@@ -1,7 +1,11 @@
 name: LogiSyn CI/CD Pipeline
 
-# Triggers on push or pull request across ALL developer branches
-on: [push, pull_request]
+on:
+  push:
+    branches: [ main, Dev, Fix, fix ]
+    tags: [ 'v*' ]
+  pull_request:
+    branches: [ main, Dev, Fix, fix ]
 
 jobs:
   build-and-test:
@@ -12,34 +16,38 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      # Sets up .NET SDKs
-      - name: Setup .NET SDK
+      - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: |
-            8.0.x
-            9.0.x
+          dotnet-version: '10.0.x'
 
       - name: Restore Dependencies
-        run: dotnet restore LogiSyn/LogiSyn.csproj
+        run: dotnet restore LogiSyn.slnx
 
-      - name: Build LogiSyn Application
-        run: dotnet build LogiSyn/LogiSyn.csproj --configuration Release --no-restore
+      - name: Build Solution
+        run: dotnet build LogiSyn.slnx --configuration Release --no-restore
 
       - name: Run Unit Tests
-        run: dotnet test LogiSyn/LogiSyn.csproj --configuration Release --no-build --verbosity normal
+        run: dotnet test LogiSyn.Tests/LogiSyn.Tests.csproj --configuration Release --no-build --verbosity normal --logger "trx;LogFileName=test_results.trx"
 
-      # AUTOMATED PACKAGING & DEPLOYMENT ARTIFACT
-
-      - name: Publish Application
+      - name: Publish Desktop Application
         run: dotnet publish LogiSyn/LogiSyn.csproj --configuration Release --output ./publish
 
       - name: Zip Published Executables
-        run: Compress-Archive -Path ./publish/* -DestinationPath ./LogiSyn-Build.zip
+        run: Compress-Archive -Path ./publish/* -DestinationPath ./LogiSyn-Release.zip
 
-      - name: Upload Deployment Artifact to GitHub
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      - name: Upload Build Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: LogiSyn-Release
-          path: ./LogiSyn-Build.zip
+          name: LogiSyn-Release-Binaries
+          path: ./LogiSyn-Release.zip
+          retention-days: 30
+
+      - name: Create GitHub Release on Tag
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ./LogiSyn-Release.zip
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

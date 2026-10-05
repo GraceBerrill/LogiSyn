@@ -1,0 +1,64 @@
+<!-- Adriaan -->
+<UserControl x:Class="LogiSyn.Views.SummaryPaper"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             FontFamily="{StaticResource FontVarela}" Foreground="Black" Background="White">
+
+	<!-- The white summary page: "Spar Order #002", then one block per product.
+         DataContext = SummaryData. IsCompleted shows the green COMPLETED label. -->
+	<StackPanel Margin="16,8,16,20">
+
+		<TextBlock Text="COMPLETED" FontSize="21.3" Margin="-5,0,0,0"
+                   Foreground="{StaticResource CompletedGreen}"
+                   Visibility="{Binding IsCompleted, Converter={StaticResource BoolToVis}}"/>
+
+		<Grid Margin="0,4,0,0">
+			<TextBlock Text="{Binding Title}" FontSize="21.3"/>
+			<TextBlock Text="{Binding DateText}" FontSize="16" HorizontalAlignment="Right"
+                       VerticalAlignment="Bottom" Margin="0,0,0,3"
+                       Foreground="{StaticResource PaperMuted}"/>
+		</Grid>
+
+		<Border Height="1" Background="#CC000000" Margin="0,10,0,0"/>
+
+		<ItemsControl ItemsSource="{Binding Lines}" Focusable="False">
+			<ItemsControl.ItemTemplate>
+				<DataTemplate>
+					<Border BorderBrush="{StaticResource PaperRule}" BorderThickness="0,0,0,1" Padding="0,10,0,10">
+						<StackPanel>
+							<StackPanel Orientation="Horizontal">
+								<TextBlock Text="{Binding Product}" FontSize="21.3"/>
+								<Ellipse Width="6" Height="6" Fill="Black" Margin="14,3,14,0"/>
+								<TextBlock Text="{Binding Production}" FontSize="21.3"/>
+							</StackPanel>
+
+							<TextBlock Text="Ingredients" FontSize="16" Margin="0,3,0,0"
+                                       Foreground="{StaticResource PaperMuted}"/>
+							<TextBlock Text="{Binding Ingredients}" FontSize="20" TextWrapping="Wrap"/>
+
+							<TextBlock Text="Packaging" FontSize="16" Margin="0,8,0,0"
+                                       Foreground="{StaticResource PaperMuted}"/>
+							<TextBlock Text="{Binding Packaging}" FontSize="20" TextWrapping="Wrap"/>
+
+							<!-- Usage Metrics (Baker Actuals) -->
+							<StackPanel Visibility="{Binding HasUsageMetrics, Converter={StaticResource BoolToVis}}">
+								<TextBlock Text="Usage Metrics (Baker Actuals)" FontSize="16" Margin="0,8,0,0"
+                                           Foreground="{StaticResource PaperMuted}"/>
+								<TextBlock Text="{Binding UsageMetrics}" FontSize="18" FontWeight="SemiBold"
+                                           Foreground="#1E3029" TextWrapping="Wrap"/>
+							</StackPanel>
+
+							<!-- User / Baker Notes -->
+							<StackPanel Visibility="{Binding HasNotes, Converter={StaticResource BoolToVis}}">
+								<TextBlock Text="Notes" FontSize="16" Margin="0,8,0,0"
+                                           Foreground="{StaticResource PaperMuted}"/>
+								<TextBlock Text="{Binding Notes}" FontSize="18" FontStyle="Italic"
+                                           Foreground="#333333" TextWrapping="Wrap"/>
+							</StackPanel>
+						</StackPanel>
+					</Border>
+				</DataTemplate>
+			</ItemsControl.ItemTemplate>
+		</ItemsControl>
+	</StackPanel>
+</UserControl>
