@@ -19,6 +19,9 @@ A desktop management system built for Anderson's Bakery. Written in C# / WPF (.N
  
 *A desktop app that turns customer order PDFs into ready-to-bake production sheets.*
  
+ ![Dashboard screenshot](Images/Group34.png)
+ ![Dashboard screenshot](Images/image002.jpg)
+
 
 </div>
 
