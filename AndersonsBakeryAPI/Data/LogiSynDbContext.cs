@@ -1,4 +1,3 @@
-// Adriaan
 using System.Collections.Generic;
 using System.Text.Json;
 using SharedLibrary.Model;
