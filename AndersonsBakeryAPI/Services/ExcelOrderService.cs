@@ -10,10 +10,6 @@ using System.Text.RegularExpressions;
 
 namespace AndersonsBakeryAPI.Services
 {
-    /// <summary>
-    /// Service for exporting production orders to Excel (.xlsx) and importing
-    /// baker-edited Excel files with actual used quantities and notes.
-    /// </summary>
     public class ExcelOrderService
     {
         //------------------------------------------------------------------------------------------------//
@@ -687,4 +683,3 @@ namespace AndersonsBakeryAPI.Services
 }
 
 //--------------------------------------End of File----------------------------------------------------------//
-

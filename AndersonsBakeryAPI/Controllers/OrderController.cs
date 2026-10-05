@@ -13,7 +13,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AndersonsBakeryAPI.Controllers
 {
-    // Initialise the API controller for handling order-related HTTP requests
     [Authorize]
     [ApiController]
     [Route("api/[controller]")]
@@ -148,4 +147,3 @@ namespace AndersonsBakeryAPI.Controllers
 }
 
 //--------------------------------------End of File----------------------------------------------------------//
-

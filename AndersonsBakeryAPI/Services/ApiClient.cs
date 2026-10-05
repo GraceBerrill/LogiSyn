@@ -13,9 +13,6 @@ using Microsoft.Extensions.Logging;
 
 namespace AndersonsBakeryAPI.Services
 {
-    /// <summary>
-    /// HTTP client service for communicating with AndersonsBakeryAPI
-    /// </summary>
     public class ApiClient
     {
         private readonly HttpClient _httpClient;
@@ -672,4 +669,3 @@ namespace AndersonsBakeryAPI.Services
 }
 
 //--------------------------------------End of File----------------------------------------------------------//
-

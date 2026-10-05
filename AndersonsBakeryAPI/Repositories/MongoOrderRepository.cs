@@ -10,9 +10,6 @@ using System.Threading.Tasks;
 
 namespace AndersonsBakeryAPI.Repositories
 {
-    /// <summary>
-    /// MongoDB implementation of IOrderRepository using MongoDB.Driver
-    /// </summary>
     public class MongoOrderRepository : IOrderRepository
     {
         private static bool _indexesInitialized;
@@ -33,6 +30,7 @@ namespace AndersonsBakeryAPI.Repositories
                 {
                     cm.AutoMap();
                     cm.MapIdProperty(c => c.OrderId);
+
                     // productionItems is a [JsonIgnore] alias — AutoMap handles PascalCase ProductionItems correctly;
                     // UnmapProperty removed to allow production items to persist to MongoDB.
                     cm.SetIgnoreExtraElements(true);
@@ -45,6 +43,7 @@ namespace AndersonsBakeryAPI.Repositories
                 BsonClassMap.RegisterClassMap<ProductionItem>(cm =>
                 {
                     cm.AutoMap();
+
                     // packaging is a [JsonIgnore] alias — AutoMap handles PascalCase Packaging correctly;
                     // UnmapProperty removed to allow packaging data to persist to MongoDB.
                     cm.SetIgnoreExtraElements(true);

@@ -40,7 +40,7 @@ namespace AndersonsBakeryAPI.Controllers
             if (user == null)
                 return Unauthorized(new { message = "Invalid username or password." });
 
-            // Create JWT token
+            //create the JWT token
             var jwt = _configuration.GetSection("Jwt");
             var key = jwt["Key"] ?? string.Empty;
             if (key.Length < 16)
@@ -70,7 +70,6 @@ namespace AndersonsBakeryAPI.Controllers
             var token = tokenHandler.CreateToken(tokenDescriptor);
             var tokenString = tokenHandler.WriteToken(token);
 
-            // Project to a safe shape — never return the full UserRow (hashed password would be included)
             return Ok(new
             {
                 token = tokenString,
@@ -79,4 +78,4 @@ namespace AndersonsBakeryAPI.Controllers
         }
     }
 }
-
+/*********************************************MAR26EOF*******************************************/

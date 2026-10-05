@@ -22,6 +22,7 @@ namespace AndersonsBakeryAPI.Controllers
             _logger = logger;
         }
 
+        /********************************************************************************************/
         public class CreateUserRequest
         {
             public string Username { get; set; } = string.Empty;
@@ -29,6 +30,7 @@ namespace AndersonsBakeryAPI.Controllers
             public string Role { get; set; } = string.Empty;
         }
 
+        /********************************************************************************************/
         public class UpdateUserRequest
         {
             public string Username { get; set; } = string.Empty;
@@ -36,6 +38,7 @@ namespace AndersonsBakeryAPI.Controllers
             public string? Password { get; set; }
         }
 
+        /********************************************************************************************/
         [HttpGet]
         [Authorize(Roles = "Admin,Manager")]
         public ActionResult<IEnumerable<UserRow>> GetAllUsers()
@@ -45,6 +48,7 @@ namespace AndersonsBakeryAPI.Controllers
             return Ok(users);
         }
 
+        /********************************************************************************************/
         [HttpPost]
         [Authorize(Roles = "Admin")]
         public IActionResult CreateUser([FromBody] CreateUserRequest request)
@@ -68,6 +72,7 @@ namespace AndersonsBakeryAPI.Controllers
             }
         }
 
+        /********************************************************************************************/
         [HttpPut("{id}")]
         [Authorize(Roles = "Admin")]
         public IActionResult UpdateUser(string id, [FromBody] UpdateUserRequest request)
@@ -91,6 +96,7 @@ namespace AndersonsBakeryAPI.Controllers
             }
         }
 
+        /********************************************************************************************/
         [HttpDelete("{id}")]
         [Authorize(Roles = "Admin")]
         public IActionResult DeleteUser(string id)
@@ -112,5 +118,4 @@ namespace AndersonsBakeryAPI.Controllers
         }
     }
 }
-
-
+/*********************************************MAR26EOF*******************************************/

@@ -25,6 +25,8 @@ namespace AndersonsBakeryAPI.Services
             _logger = logger;
         }
 
+        //handels the creation of the default MongoProductRepository instance
+        /********************************************************************************************/
         private static MongoProductRepository? CreateDefaultMongoRepository()
         {
             try
@@ -42,16 +44,14 @@ namespace AndersonsBakeryAPI.Services
             }
         }
 
+        //checks for the connection string in environment variables and returns it, or defualts to a localdb instance if not found
+        /********************************************************************************************/
         private string GetConnectionString()
         {
-            // Priority: explicit env var, then common environment keys used for app configuration,
-            // then fall back to a sensible localdb default. This helps both the API and the WPF client
-            // find the same SQL Server when running locally.
             var env = Environment.GetEnvironmentVariable("LOGISYN_CONNECTION");
             if (!string.IsNullOrEmpty(env))
                 return env;
 
-            // Support container/hosting style env var names that map to Configuration: ConnectionStrings:SqlServer
             var alt1 = Environment.GetEnvironmentVariable("ConnectionStrings__SqlServer")
                        ?? Environment.GetEnvironmentVariable("ConnectionStrings:SqlServer");
             if (!string.IsNullOrEmpty(alt1))
@@ -63,10 +63,11 @@ namespace AndersonsBakeryAPI.Services
             if (!string.IsNullOrEmpty(alt2))
                 return alt2;
 
-            // Default to a localdb instance (include TrustServerCertificate to avoid cert issues on dev machines)
             return @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=LogiSynDb;Integrated Security=True;TrustServerCertificate=True;";
         }
 
+        //returns the path to the products.json file in the Data folder, creating the folder if it doesn't exist
+        /********************************************************************************************/
         private string ProductsFilePath()
         {
             string dataFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data");
@@ -74,10 +75,10 @@ namespace AndersonsBakeryAPI.Services
             return Path.Combine(dataFolder, "products.json");
         }
 
-        // Get full Product models (with ingredients)
+        //gets profuct modle from mongo, sql, or local json file, in that order of preference
+        /********************************************************************************************/
         public List<Product> GetAllProducts()
         {
-            // 1. Try to load products from Mongo
             if (_mongoRepository != null)
             {
                 try
@@ -95,7 +96,6 @@ namespace AndersonsBakeryAPI.Services
                 }
             }
 
-            // 2. Try to load products from SQL
             var sqlProducts = LoadProductsFromSql();
             if (sqlProducts != null && sqlProducts.Count > 0)
             {
@@ -104,7 +104,6 @@ namespace AndersonsBakeryAPI.Services
                 return sqlProducts;
             }
 
-            // 3. Fallback to local JSON file
             var file = ProductsFilePath();
             if (File.Exists(file))
             {
@@ -154,7 +153,6 @@ namespace AndersonsBakeryAPI.Services
                 }
             }
 
-            // 4. Default fallback catalog
             var fallbackCatalog = DefaultProductCatalog();
             try
             {
@@ -169,7 +167,8 @@ namespace AndersonsBakeryAPI.Services
             return fallbackCatalog;
         }
 
-        // Get product rows for UI: calls GetAllProducts() so Mongo/SQL/JSON consistency is maintained
+        //get product rows for UI
+        /********************************************************************************************/
         public List<ProductRow> GetAll()
         {
             try
@@ -197,12 +196,12 @@ namespace AndersonsBakeryAPI.Services
             return SampleDefaults();
         }
 
-        // Add a full Product model to Mongo, SQL, and JSON
+        //adds full Product model to Mongo, SQL, and JSON
+        /********************************************************************************************/
         public void Add(Product product)
         {
             if (product == null) return;
 
-            // 1. Save to MongoDB
             if (_mongoRepository != null)
             {
                 try
@@ -215,7 +214,6 @@ namespace AndersonsBakeryAPI.Services
                     }
             }
 
-            // 2. Save to SQL
             try
             {
                 using var conn = new SqlConnection(GetConnectionString());
@@ -251,11 +249,9 @@ namespace AndersonsBakeryAPI.Services
                     _logger?.LogError(ex, "Error adding product to SQL");
                 }
 
-            // 3. Always synchronize local JSON file
             PersistProductToFile(product);
         }
 
-        // Add using older ProductRow (keeps backward compatibility)
         public void Add(ProductRow row)
         {
             if (row == null) return;
@@ -275,12 +271,12 @@ namespace AndersonsBakeryAPI.Services
             Add(newProd);
         }
 
-        // Update existing product by name/id across Mongo, SQL, and JSON
+        //update existing product by name/id
+        /********************************************************************************************/
         public void UpdateFromDetail(Product product)
         {
             if (product == null || string.IsNullOrEmpty(product.ProductName)) return;
 
-            // 1. Update in MongoDB
             if (_mongoRepository != null)
             {
                 try
@@ -293,7 +289,6 @@ namespace AndersonsBakeryAPI.Services
                     }
             }
 
-            // 2. Update in SQL Server
             try
             {
                 using var conn = new SqlConnection(GetConnectionString());
@@ -319,7 +314,6 @@ namespace AndersonsBakeryAPI.Services
                     _logger?.LogError(ex, "Error updating product in SQL");
                 }
 
-            // 3. Update in local JSON file
             try
             {
                 var file = ProductsFilePath();
@@ -344,12 +338,12 @@ namespace AndersonsBakeryAPI.Services
             catch { }
         }
 
-        // Get single product by name or id
+        //get single product by name or id
+        /********************************************************************************************/
         public Product? GetProductByName(string name)
         {
             if (string.IsNullOrEmpty(name)) return null;
 
-            // 1. Try MongoDB
             if (_mongoRepository != null)
             {
                 try
@@ -369,7 +363,6 @@ namespace AndersonsBakeryAPI.Services
                     }
             }
 
-            // 2. Try SQL
             try
             {
                 using var conn = new SqlConnection(GetConnectionString());
@@ -413,7 +406,6 @@ namespace AndersonsBakeryAPI.Services
             }
             catch { }
 
-            // 3. Try JSON file
             var file = ProductsFilePath();
             if (File.Exists(file))
             {
@@ -455,12 +447,12 @@ namespace AndersonsBakeryAPI.Services
             return null;
         }
 
-        // Delete by name or id across Mongo, SQL, and JSON
+        //delete by name or id
+        /********************************************************************************************/
         public void DeleteByName(string name)
         {
             if (string.IsNullOrEmpty(name)) return;
 
-            // 1. Delete from MongoDB
             if (_mongoRepository != null)
             {
                 try
@@ -477,7 +469,6 @@ namespace AndersonsBakeryAPI.Services
                     }
             }
 
-            // 2. Delete from SQL Server
             try
             {
                 using var conn = new SqlConnection(GetConnectionString());
@@ -502,7 +493,6 @@ namespace AndersonsBakeryAPI.Services
                     _logger?.LogError(ex, "Error deleting product from SQL");
                 }
 
-            // 3. Delete from local JSON file
             var file = ProductsFilePath();
             if (File.Exists(file))
             {
@@ -528,6 +518,8 @@ namespace AndersonsBakeryAPI.Services
             }
         }
 
+        //get products from SQL database
+        /********************************************************************************************/
         private List<Product> LoadProductsFromSql()
         {
             try
@@ -568,6 +560,8 @@ namespace AndersonsBakeryAPI.Services
             }
         }
 
+        //ensures that products have ingredients and methods from the default catalog if they are missing
+        /********************************************************************************************/
         private static void EnsureIngredientsFromCatalog(List<Product> products)
         {
             var defaults = DefaultProductCatalog();
@@ -585,6 +579,8 @@ namespace AndersonsBakeryAPI.Services
             }
         }
 
+        //seeds products to Mongo if the collection is empty
+        /********************************************************************************************/
         private void SeedMongoProductsIfEmpty(IEnumerable<Product> products)
         {
             if (_mongoRepository != null)
@@ -623,6 +619,8 @@ namespace AndersonsBakeryAPI.Services
             };
         }
 
+        //persists a product to the local JSON file, updating if it exists or adding if it doesn't
+        /********************************************************************************************/
         private void PersistProductToFile(Product product)
         {
             try
@@ -673,6 +671,8 @@ namespace AndersonsBakeryAPI.Services
                 }
         }
 
+        //returns a hardcoded list of default products with their details and ingredients
+        /********************************************************************************************/
         public static List<Product> DefaultProductCatalog()
         {
             return new List<Product>
@@ -789,4 +789,4 @@ namespace AndersonsBakeryAPI.Services
         }
     }
 }
-
+/*********************************************MAR26EOF*******************************************/

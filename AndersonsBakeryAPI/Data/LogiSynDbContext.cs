@@ -6,16 +6,12 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace AndersonsBakeryAPI.Data
 {
-    /// <summary>
-    /// Entity Framework Core DbContext for LogiSyn local SQL Server database
-    /// </summary>
     public class LogiSynDbContext : DbContext
     {
         public LogiSynDbContext(DbContextOptions<LogiSynDbContext> options) : base(options)
         {
-        }
 
-        /// <summary>Safely converts a SqlId string to an int, returning 0 for null/empty/non-numeric values.</summary>
+        }
         private static int ParseSqlId(string? v)
         {
             if (string.IsNullOrEmpty(v)) return 0;

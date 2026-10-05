@@ -10,9 +10,6 @@ using Microsoft.Extensions.Logging;
 
 namespace AndersonsBakeryAPI.Repositories
 {
-    /// <summary>
-    /// SQL Server implementation of IOrderRepository using Entity Framework Core
-    /// </summary>
     public class SqlOrderRepository : IOrderRepository
     {
         private readonly string? _connectionString;

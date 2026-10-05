@@ -30,6 +30,7 @@ namespace AndersonsBakeryAPI.Controllers
             return Ok(products);
         }
 
+        /********************************************************************************************/
         [HttpGet("{name}")]
         public ActionResult<Product> GetProductByName(string name)
         {
@@ -43,6 +44,7 @@ namespace AndersonsBakeryAPI.Controllers
             return Ok(product);
         }
 
+        /********************************************************************************************/
         [HttpPost]
         [Authorize(Roles = "Admin,Manager")]
         public ActionResult<Product> AddProduct([FromBody] Product product)
@@ -63,6 +65,7 @@ namespace AndersonsBakeryAPI.Controllers
             }
         }
 
+        /********************************************************************************************/
         [HttpPut("{name}")]
         [Authorize(Roles = "Admin,Manager")]
         public ActionResult<Product> UpdateProduct(string name, [FromBody] Product product)
@@ -90,6 +93,7 @@ namespace AndersonsBakeryAPI.Controllers
             }
         }
 
+        /********************************************************************************************/
         [HttpDelete("{name}")]
         [Authorize(Roles = "Admin,Manager")]
         public IActionResult DeleteProduct(string name)
@@ -115,3 +119,4 @@ namespace AndersonsBakeryAPI.Controllers
         }
     }
 }
+/*********************************************MAR26EOF*******************************************/

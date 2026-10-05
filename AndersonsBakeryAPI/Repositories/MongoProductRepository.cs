@@ -10,9 +10,6 @@ using SharedLibrary.Model;
 
 namespace AndersonsBakeryAPI.Repositories
 {
-    /// <summary>
-    /// MongoDB implementation for Product collection storage and retrieval.
-    /// </summary>
     public class MongoProductRepository
     {
         private static bool _indexesInitialized;
@@ -21,6 +18,8 @@ namespace AndersonsBakeryAPI.Repositories
         private readonly IMongoCollection<Product> _productsCollection;
         private readonly Microsoft.Extensions.Logging.ILogger<MongoProductRepository>? _logger;
 
+        //maps the Product and IngredientRequirement classes to MongoDB
+        /********************************************************************************************/
         static MongoProductRepository()
         {
             if (!BsonClassMap.IsClassMapRegistered(typeof(Product)))
@@ -42,6 +41,8 @@ namespace AndersonsBakeryAPI.Repositories
             }
         }
 
+        //used for dependency injection
+        /********************************************************************************************/
         [Microsoft.Extensions.DependencyInjection.ActivatorUtilitiesConstructor]
         public MongoProductRepository(IMongoDatabase database, Microsoft.Extensions.Logging.ILogger<MongoProductRepository>? logger = null)
         {
@@ -51,6 +52,8 @@ namespace AndersonsBakeryAPI.Repositories
             EnsureIndexes();
         }
 
+        //used for direct instantiation with connection string and database name
+        /********************************************************************************************/
         public MongoProductRepository(string connectionString, string databaseName, Microsoft.Extensions.Logging.ILogger<MongoProductRepository>? logger = null)
         {
             _logger = logger;
@@ -67,6 +70,8 @@ namespace AndersonsBakeryAPI.Repositories
             EnsureIndexes();
         }
 
+        //makes sure the ProductName field is indexed
+        /********************************************************************************************/
         private void EnsureIndexes()
         {
             if (_indexesInitialized) return;
@@ -90,6 +95,8 @@ namespace AndersonsBakeryAPI.Repositories
             });
         }
 
+        //sections below are for crud and getting all products
+        /********************************************************************************************/
         public List<Product> GetAllProducts()
         {
             return _productsCollection.Find(_ => true).ToList();
@@ -121,6 +128,8 @@ namespace AndersonsBakeryAPI.Repositories
             _productsCollection.InsertOne(product);
         }
 
+        //this update method will update the product if it exists, otherwise it will return false
+        /********************************************************************************************/
         public bool Update(Product product)
         {
             if (product == null || string.IsNullOrWhiteSpace(product.ProductName)) return false;
@@ -158,6 +167,8 @@ namespace AndersonsBakeryAPI.Repositories
             return result.MatchedCount > 0;
         }
 
+        //upserts the product, if it exists it will update it, otherwise it will insert it
+        /********************************************************************************************/
         public void Upsert(Product product)
         {
             if (product == null || string.IsNullOrWhiteSpace(product.ProductName)) return;
@@ -197,6 +208,8 @@ namespace AndersonsBakeryAPI.Repositories
             }
         }
 
+        //deletes a product by name, id, or productId
+        /********************************************************************************************/
         public bool DeleteByName(string name)
         {
             if (string.IsNullOrWhiteSpace(name)) return false;
@@ -220,6 +233,8 @@ namespace AndersonsBakeryAPI.Repositories
             return result.DeletedCount > 0;
         }
 
+        //seeds the products collection with initial data if it is empty
+        /********************************************************************************************/
         public void SeedIfEmpty(IEnumerable<Product> catalog)
         {
             try
@@ -240,4 +255,4 @@ namespace AndersonsBakeryAPI.Repositories
         }
     }
 }
-
+/*********************************************MAR26EOF*******************************************/
