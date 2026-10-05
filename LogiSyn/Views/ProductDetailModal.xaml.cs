@@ -20,6 +20,8 @@ namespace LogiSyn.Views
             set { SetValue(IsReadOnlyProperty, value); }
         }
 
+        public event System.Action? Saved;
+
         public ProductDetailModal(ProductDetail detail, bool editable)
         {
             InitializeComponent();
@@ -84,6 +86,7 @@ namespace LogiSyn.Views
             try
             {
                 svc.UpdateFromDetail(prod);
+                Saved?.Invoke();
             }
             catch { }
 

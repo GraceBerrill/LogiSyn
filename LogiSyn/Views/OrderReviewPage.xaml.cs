@@ -126,6 +126,7 @@ namespace LogiSyn.Views
                 var printDlg = new PrintDialog();
                 if (printDlg.ShowDialog() == true)
                 {
+                    printDlg.PrintVisual(this, $"Order {_currentOrder.OrderId}");
                     MessageBox.Show($"Order {_currentOrder.OrderId} sent to printer.", "Printing", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
 

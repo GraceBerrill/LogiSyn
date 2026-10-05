@@ -211,6 +211,7 @@ namespace LogiSyn.Views
             var printDlg = new PrintDialog();
             if (printDlg.ShowDialog() == true)
             {
+                printDlg.PrintVisual(Sheet, $"Sheet for {_order?.Number ?? _scaledOrder?.OrderId}");
                 MessageBox.Show($"Sheet for {_order?.Number ?? _scaledOrder?.OrderId} sent to printer.", "Print", MessageBoxButton.OK, MessageBoxImage.Information);
                 ShellWindow.Current?.Navigate("orders");
             }

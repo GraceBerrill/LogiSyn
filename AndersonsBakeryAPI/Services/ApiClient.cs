@@ -85,12 +85,13 @@ namespace AndersonsBakeryAPI.Services
         // Fetches a specific order by ID from the API
         public async Task<OrderScaled?> GetOrderByIdAsync(string orderId)
         {
+            string safeId = Uri.EscapeDataString(orderId ?? string.Empty);
             foreach (var baseUrl in _baseUrls)
             {
                 try
                 {
                     // Attempt to fetch the order by ID from the current base URL
-                    var response = await _httpClient.GetAsync($"{baseUrl}/api/orders/{orderId}");
+                    var response = await _httpClient.GetAsync($"{baseUrl}/api/orders/{safeId}");
                     if (!response.IsSuccessStatusCode)
                         continue;
 
@@ -181,6 +182,7 @@ namespace AndersonsBakeryAPI.Services
         // Updates the status of an order via the API
         public async Task<bool> UpdateOrderStatusAsync(string orderId, string status)
         {
+            string safeId = Uri.EscapeDataString(orderId ?? string.Empty);
             var json = JsonSerializer.Serialize(status);
             foreach (var baseUrl in _baseUrls)
             {
@@ -188,7 +190,7 @@ namespace AndersonsBakeryAPI.Services
                 {
                     // Attempt to update the order status at the current base URL
                     var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
-                    var response = await _httpClient.PutAsync($"{baseUrl}/api/orders/{orderId}/status", content);
+                    var response = await _httpClient.PutAsync($"{baseUrl}/api/orders/{safeId}/status", content);
                     if (response.IsSuccessStatusCode)
                         return true;
                 }
@@ -199,6 +201,67 @@ namespace AndersonsBakeryAPI.Services
             }
 
             return false;
+        }
+
+        //------------------------------------------------------------------------------------------------//
+
+        // Authenticates a user against the API
+        public async Task<UserRow?> AuthenticateAsync(string username, string password)
+        {
+            var payload = JsonSerializer.Serialize(new { username, password });
+            foreach (var baseUrl in _baseUrls)
+            {
+                try
+                {
+                    var content = new StringContent(payload, System.Text.Encoding.UTF8, "application/json");
+                    var response = await _httpClient.PostAsync($"{baseUrl}/api/auth/login", content);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var body = await response.Content.ReadAsStringAsync();
+                        return JsonSerializer.Deserialize<UserRow>(body, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                    }
+                }
+                catch { }
+            }
+            return null;
+        }
+
+        // Fetches all products from the API
+        public async Task<List<Product>> GetProductsAsync()
+        {
+            foreach (var baseUrl in _baseUrls)
+            {
+                try
+                {
+                    var response = await _httpClient.GetAsync($"{baseUrl}/api/products");
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var body = await response.Content.ReadAsStringAsync();
+                        return JsonSerializer.Deserialize<List<Product>>(body, new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new List<Product>();
+                    }
+                }
+                catch { }
+            }
+            return new List<Product>();
+        }
+
+        // Fetches all users from the API
+        public async Task<List<UserRow>> GetUsersAsync()
+        {
+            foreach (var baseUrl in _baseUrls)
+            {
+                try
+                {
+                    var response = await _httpClient.GetAsync($"{baseUrl}/api/users");
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var body = await response.Content.ReadAsStringAsync();
+                        return JsonSerializer.Deserialize<List<UserRow>>(body, new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new List<UserRow>();
+                    }
+                }
+                catch { }
+            }
+            return new List<UserRow>();
         }
 
         //------------------------------------------------------------------------------------------------//

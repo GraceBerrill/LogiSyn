@@ -110,12 +110,14 @@ namespace LogiSyn.Views
                 return;
             }
 
-            if (!Enum.TryParse<AppRole>(user.Role, out _))
+            if (!Enum.TryParse<AppRole>(user.Role, ignoreCase: true, out var appRole))
             {
                 MessageBox.Show($"Unknown role '{user.Role}' for this account.",
                                 "Login", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
+
+            user.Role = appRole.ToString();
 
             LoggedInUser = user;
             DialogResult = true;

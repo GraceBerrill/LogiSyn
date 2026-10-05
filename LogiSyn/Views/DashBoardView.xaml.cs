@@ -1,14 +1,21 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using AndersonsBakeryAPI.Services;
+using SharedLibrary.Model;
 
 namespace LogiSyn.Views
 {
 	public partial class DashboardView : UserControl
 	{
+		private readonly ApiClient _apiClient = new ApiClient();
+		private readonly OrderService _orderService = new OrderService();
+		private List<DashboardOrderItem> _currentDashboardOrders = new();
+
 		public DashboardView(SharedLibrary.Model.AppRole role)
 		{
 			InitializeComponent();
@@ -44,18 +51,69 @@ namespace LogiSyn.Views
 		}
 
 		// Adriaan - Dashboard Orders Section
-		//placeholder for loading dashboard data
-		private void LoadDashboardData()
+		private async void LoadDashboardData()
 		{
-			var orders = GetDashboardOrders();
+			_currentDashboardOrders = await GetDashboardOrdersAsync();
 
-			NewOrdersValue.Text = orders.Count(o => o.Status == "Pending").ToString();
-			CompletedValue.Text = orders.Count(o => o.Status == "Complete" || o.Status == "Completed").ToString();
+			NewOrdersValue.Text = _currentDashboardOrders.Count(o =>
+				string.Equals(o.Status, "Pending", StringComparison.OrdinalIgnoreCase) ||
+				string.Equals(o.Status, "In Production", StringComparison.OrdinalIgnoreCase)).ToString();
 
-			RecentList.ItemsSource = orders;
+			CompletedValue.Text = _currentDashboardOrders.Count(o =>
+				string.Equals(o.Status, "Complete", StringComparison.OrdinalIgnoreCase) ||
+				string.Equals(o.Status, "Completed", StringComparison.OrdinalIgnoreCase)).ToString();
+
+			RecentList.ItemsSource = _currentDashboardOrders;
 		}
 
-		//placeholder data
+		private async Task<List<DashboardOrderItem>> GetDashboardOrdersAsync()
+		{
+			List<OrderScaled> sourceOrders = new();
+			try
+			{
+				sourceOrders = await _apiClient.GetOrdersAsync();
+			}
+			catch { }
+
+			if (sourceOrders == null || sourceOrders.Count == 0)
+			{
+				try
+				{
+					sourceOrders = (await _orderService.GetOrdersAsync()).ToList();
+				}
+				catch { }
+			}
+
+			if (sourceOrders == null || sourceOrders.Count == 0)
+			{
+				sourceOrders = _orderService.GetOrders().ToList();
+			}
+
+			if (sourceOrders != null && sourceOrders.Count > 0)
+			{
+				var items = new List<DashboardOrderItem>();
+				foreach (var o in sourceOrders)
+				{
+					bool isComp = string.Equals(o.Status, "Complete", StringComparison.OrdinalIgnoreCase) ||
+					              string.Equals(o.Status, "Completed", StringComparison.OrdinalIgnoreCase);
+
+					items.Add(new DashboardOrderItem
+					{
+						Number = o.OrderId,
+						Customer = o.Customer,
+						Status = o.Status,
+						DashStatusBrush = isComp
+							? new SolidColorBrush((Color)ColorConverter.ConvertFromString("#8DBE98"))
+							: new SolidColorBrush((Color)ColorConverter.ConvertFromString("#C29D70"))
+					});
+				}
+				return items;
+			}
+
+			return GetDashboardOrders();
+		}
+
+		// Fallback sample data if no orders found
 		private List<DashboardOrderItem> GetDashboardOrders()
 		{
 			return new List<DashboardOrderItem>
@@ -70,7 +128,7 @@ namespace LogiSyn.Views
 		{
 			try
 			{
-				var orders = GetDashboardOrders();
+				var orders = _currentDashboardOrders.Count > 0 ? _currentDashboardOrders : GetDashboardOrders();
 				var docs = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 				var outDir = System.IO.Path.Combine(docs, "LogiSyn_exports");
 				System.IO.Directory.CreateDirectory(outDir);

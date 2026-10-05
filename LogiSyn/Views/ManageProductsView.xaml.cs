@@ -113,23 +113,35 @@ namespace LogiSyn.Views
                     detail = SampleData.DetailFor(row);
                 }
 
-                ShellWindow.Current?.ShowModal(new ProductDetailModal(detail, editable), overlayScrim);
-                var updated = _service.GetAll();
-                _all.Clear();
-                _all.AddRange(updated);
-                Refresh();
+                var modal = new ProductDetailModal(detail, editable);
+                modal.Saved += () =>
+                {
+                    try
+                    {
+                        var updated = _service.GetAll();
+                        _all.Clear();
+                        _all.AddRange(updated);
+                        Refresh();
+                    }
+                    catch { }
+                };
+                ShellWindow.Current?.ShowModal(modal, overlayScrim);
             }
             catch
             {
-                ShellWindow.Current?.ShowModal(new ProductDetailModal(SampleData.DetailFor(row), editable), overlayScrim);
-                try
+                var fallbackModal = new ProductDetailModal(SampleData.DetailFor(row), editable);
+                fallbackModal.Saved += () =>
                 {
-                    var updated = _service.GetAll();
-                    _all.Clear();
-                    _all.AddRange(updated);
-                    Refresh();
-                }
-                catch { }
+                    try
+                    {
+                        var updated = _service.GetAll();
+                        _all.Clear();
+                        _all.AddRange(updated);
+                        Refresh();
+                    }
+                    catch { }
+                };
+                ShellWindow.Current?.ShowModal(fallbackModal, overlayScrim);
             }
         }
 
@@ -175,16 +187,19 @@ namespace LogiSyn.Views
                 overlayScrim = new SolidColorBrush(Color.FromArgb(120, 0, 0, 0));
             }
 
-            ShellWindow.Current?.ShowModal(new AddProductModal(), overlayScrim);
-
-            try
+            var modal = new AddProductModal();
+            modal.Saved += () =>
             {
-                var updated = _service.GetAll();
-                _all.Clear();
-                _all.AddRange(updated);
-                Refresh();
-            }
-            catch { }
+                try
+                {
+                    var updated = _service.GetAll();
+                    _all.Clear();
+                    _all.AddRange(updated);
+                    Refresh();
+                }
+                catch { }
+            };
+            ShellWindow.Current?.ShowModal(modal, overlayScrim);
         }
     }
 }

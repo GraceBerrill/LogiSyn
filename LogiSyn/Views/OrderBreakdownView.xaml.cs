@@ -14,6 +14,7 @@ namespace LogiSyn.Views
         private readonly ApiClient _apiClient = new ApiClient();
         private readonly AppRole _role;
         private readonly OrderRow? _order;
+        private OrderScaled? _scaledOrder;
 
         //------------------------------------------------------------------------------------------------//
 
@@ -32,11 +33,11 @@ namespace LogiSyn.Views
         private void LoadBreakdown()
         {
             string orderId = _order?.Number ?? "";
-            var scaledOrder = _orderService.GetOrderById(orderId);
+            _scaledOrder = _orderService.GetOrderById(orderId);
 
-            if (scaledOrder != null)
+            if (_scaledOrder != null)
             {
-                RenderOrder(scaledOrder);
+                RenderOrder(_scaledOrder);
             }
             else
             {
@@ -69,6 +70,7 @@ namespace LogiSyn.Views
                 var apiOrder = await _apiClient.GetOrderByIdAsync(orderId);
                 if (apiOrder != null)
                 {
+                    _scaledOrder = apiOrder;
                     RenderOrder(apiOrder);
                 }
             }
@@ -106,26 +108,23 @@ namespace LogiSyn.Views
         private async void DoneButton_Click(object sender, RoutedEventArgs e)
         {
             string orderId = _order?.Number ?? "";
-            if (!string.IsNullOrWhiteSpace(orderId))
+            var scaledOrder = _scaledOrder ?? (!string.IsNullOrWhiteSpace(orderId) ? _orderService.GetOrderById(orderId) : null);
+            if (scaledOrder != null)
             {
-                var scaledOrder = _orderService.GetOrderById(orderId);
-                if (scaledOrder != null)
+                // Save to API first then if it fails it falls back to local save
+                scaledOrder.Status = "Completed";
+                try
                 {
-                    // Save to API first then if it fails it falls back to local save
-                    scaledOrder.Status = "Completed";
-                    try
-                    {
-                        await _apiClient.SaveOrderAsync(scaledOrder);
-                    }
-                    catch
-                    {
-                        _orderService.SaveOrder(scaledOrder);
-                    }
+                    await _apiClient.SaveOrderAsync(scaledOrder);
                 }
-                else if (_order != null)
+                catch
                 {
-                    _order.Status = "Complete";
+                    _orderService.SaveOrder(scaledOrder);
                 }
+            }
+            else if (_order != null)
+            {
+                _order.Status = "Complete";
             }
 
             ShellWindow.Current?.Navigate("history");
@@ -137,7 +136,7 @@ namespace LogiSyn.Views
         private void EmailButton_Click(object sender, RoutedEventArgs e)
         {
             string orderId = _order?.Number ?? "";
-            var scaledOrder = _orderService.GetOrderById(orderId);
+            var scaledOrder = _scaledOrder ?? (!string.IsNullOrWhiteSpace(orderId) ? _orderService.GetOrderById(orderId) : null);
             if (scaledOrder == null)
             {
                 MessageBox.Show("No active order data available to email.", "Email Error", MessageBoxButton.OK, MessageBoxImage.Warning);

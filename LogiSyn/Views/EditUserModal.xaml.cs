@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using SharedLibrary.Model;
@@ -23,7 +23,7 @@ namespace LogiSyn.Views
             AccessBox.ItemsSource = Enum.GetValues(typeof(AppRole));
 
             UsernameBox.Text = username;
-            if (Enum.TryParse<AppRole>(role, out var parsedRole))
+            if (Enum.TryParse<AppRole>(role, ignoreCase: true, out var parsedRole))
                 AccessBox.SelectedItem = parsedRole;
             else
                 AccessBox.SelectedItem = AppRole.User;

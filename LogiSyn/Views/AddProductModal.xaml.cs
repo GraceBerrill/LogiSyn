@@ -14,6 +14,7 @@ namespace LogiSyn.Views
     public partial class AddProductModal : UserControl
     {
         public ObservableCollection<IngredientInputRow> IngredientsList { get; set; } = new();
+        public event Action? Saved;
 
         public AddProductModal()
         {
@@ -110,6 +111,7 @@ namespace LogiSyn.Views
             {
                 var service = new ProductService();
                 service.Add(product);
+                Saved?.Invoke();
                 ShellWindow.Current?.CloseModal();
             }
             catch (Exception ex)
