@@ -54,9 +54,10 @@ namespace LogiSyn.Views
                 var orders = await _apiClient.GetOrdersAsync();
 
                 // If API returned no orders (e.g. API down or empty), fallback to local OrderService
-                if (orders.Count == 0)
+                if (orders == null || orders.Count == 0)
                 {
-                    orders = _orderService.GetOrders().ToList();
+                    try { orders = (await _orderService.GetOrdersAsync()).ToList(); }
+                    catch { orders = new System.Collections.Generic.List<OrderScaled>(); }
                 }
 
                 // Convert OrderScaled to OrderRow for UI display
@@ -69,7 +70,7 @@ namespace LogiSyn.Views
             catch (Exception ex)
             {
                 Console.WriteLine($"Error loading orders: {ex.Message}");
-                var localOrders = _orderService.GetOrders().ToList();
+                var localOrders = (await _orderService.GetOrdersAsync()).ToList();
                 if (localOrders.Count > 0)
                 {
                     _all = localOrders.Select(o => OrderRow.FromOrderScaled(o)).ToList();

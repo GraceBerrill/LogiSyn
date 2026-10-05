@@ -41,7 +41,7 @@ namespace LogiSyn.Views
             Cancelled?.Invoke();
         }
 
-        private void Save_Click(object sender, RoutedEventArgs e)
+        private async void Save_Click(object sender, RoutedEventArgs e)
         {
             ErrorText.Visibility = Visibility.Collapsed;
 
@@ -65,7 +65,8 @@ namespace LogiSyn.Views
                 {
                     var user = new UserRow { Id = _mongoId, Name = username, Role = access };
                     if (!string.IsNullOrWhiteSpace(password)) user.Password = password;
-                    var updated = api.UpdateUserAsync(_mongoId, user).GetAwaiter().GetResult();
+                    bool updated = false;
+                    try { updated = await api.UpdateUserAsync(_mongoId, user); } catch { }
                     if (updated)
                     {
                         Saved?.Invoke();

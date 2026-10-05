@@ -13,7 +13,7 @@ namespace LogiSyn.Views
 {
     public partial class ManageProductsView : UserControl
     {
-        private readonly List<ProductRow> _all;
+        private List<ProductRow> _all = new();
         private readonly ProductService _service;
         private readonly AndersonsBakeryAPI.Services.ApiClient _apiClient = App.ServiceProvider.GetService<AndersonsBakeryAPI.Services.ApiClient>() ?? new AndersonsBakeryAPI.Services.ApiClient();
         private bool _ready;
@@ -24,9 +24,15 @@ namespace LogiSyn.Views
 
             DateText.Text = SampleData.Today();
             _service = App.ServiceProvider.GetService<ProductService>() ?? new ProductService();
+
+            Loaded += async (s, e) => await LoadProductsAsync();
+        }
+
+        private async System.Threading.Tasks.Task LoadProductsAsync()
+        {
             try
             {
-                var products = _apiClient.GetProductsAsync().GetAwaiter().GetResult();
+                var products = await _apiClient.GetProductsAsync();
                 _all = products.Select(p => new ProductRow
                 {
                     ProductId = p.ProductID,
@@ -39,7 +45,8 @@ namespace LogiSyn.Views
             }
             catch
             {
-                _all = _service.GetAll();
+                try { _all = _service.GetAll(); }
+                catch { _all = new List<ProductRow>(); }
             }
 
             StorageFilter.SelectedIndex = 0;
@@ -177,7 +184,7 @@ namespace LogiSyn.Views
 
         /********************************************************************************************/
         //deletes a product from the list after confirmation
-        private void DeleteButton_Click(object sender, RoutedEventArgs e)
+        private async void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
             var row = RowOf(sender);
             if (row == null) return;
@@ -189,26 +196,29 @@ namespace LogiSyn.Views
             // Try API delete by id first, fallback to local delete by name
             try
             {
-                var deleted = false;
+                bool deleted = false;
                 try
                 {
                     if (row.ProductId > 0)
                     {
-                        deleted = _apiClient.DeleteProductAsync(row.ProductId.ToString()).GetAwaiter().GetResult();
+                        deleted = await _apiClient.DeleteProductAsync(row.ProductId.ToString());
                     }
                 }
                 catch { }
 
                 if (!deleted)
                 {
-                    try { _service.DeleteByName(row.Name); }
-                    catch { }
+                    _service.DeleteByName(row.Name);
                 }
 
                 _all.Remove(row);
                 Refresh();
             }
-            catch { }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Delete failed: " + ex.Message,
+                                "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         /********************************************************************************************/

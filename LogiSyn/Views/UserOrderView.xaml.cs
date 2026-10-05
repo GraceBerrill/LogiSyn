@@ -35,9 +35,17 @@ namespace LogiSyn.Views
             try
             {
                 var orders = await _apiClient.GetOrdersAsync();
-                if (orders.Count == 0)
+                if (orders == null || orders.Count == 0)
                 {
-                    orders = _orderService.GetOrders().ToList();
+                    try
+                    {
+                        var localOrders = await _orderService.GetOrdersAsync();
+                        orders = localOrders?.ToList() ?? new System.Collections.Generic.List<OrderScaled>();
+                    }
+                    catch
+                    {
+                        orders = new System.Collections.Generic.List<OrderScaled>();
+                    }
                 }
 
                 var rows = orders.Select(o => OrderRow.FromOrderScaled(o)).ToList();
@@ -46,7 +54,7 @@ namespace LogiSyn.Views
             catch (Exception ex)
             {
                 Console.WriteLine($"Error loading user orders: {ex.Message}");
-                var localOrders = _orderService.GetOrders().ToList();
+                var localOrders = (await _orderService.GetOrdersAsync()).ToList();
                 var rows = localOrders.Select(o => OrderRow.FromOrderScaled(o)).ToList();
                 OrderList.ItemsSource = rows;
             }
@@ -99,11 +107,11 @@ namespace LogiSyn.Views
                         // Save to API first if it cant it falls back to Local save
                         try
                         {
-                            await _apiClient.SaveOrderAsync(orderToUse);
+                        await _apiClient.SaveOrderAsync(orderToUse);
                         }
                         catch 
                         {
-                            _orderService.SaveOrder(orderToUse);
+                            await _orderService.SaveOrderAsync(orderToUse);
                         }
 
                         LoadOrdersAsync();
@@ -111,13 +119,13 @@ namespace LogiSyn.Views
                     }
                     else if (res == MessageBoxResult.No)
                     {
-                       try
+                        try
                         {
                             await _apiClient.SaveOrderAsync(orderToUse);
                         }
                         catch
                         {
-                            _orderService.SaveOrder(orderToUse);
+                            await _orderService.SaveOrderAsync(orderToUse);
                         }
 
                         LoadOrdersAsync();

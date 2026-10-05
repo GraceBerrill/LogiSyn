@@ -111,7 +111,7 @@ namespace LogiSyn.Views
             var scaledOrder = _scaledOrder ?? (!string.IsNullOrWhiteSpace(orderId) ? _orderService.GetOrderById(orderId) : null);
             if (scaledOrder != null)
             {
-                // Save to API first then if it fails it falls back to local save
+                // Save to API first then if it fails try local async save, falling back to synchronous save as last resort
                 scaledOrder.Status = "Completed";
                 try
                 {
@@ -119,7 +119,18 @@ namespace LogiSyn.Views
                 }
                 catch
                 {
-                    _orderService.SaveOrder(scaledOrder);
+                    try
+                    {
+                        await _orderService.SaveOrderAsync(scaledOrder);
+                    }
+                    catch
+                    {
+                        try
+                        {
+                            _orderService.SaveOrder(scaledOrder);
+                        }
+                        catch { }
+                    }
                 }
             }
             else if (_order != null)

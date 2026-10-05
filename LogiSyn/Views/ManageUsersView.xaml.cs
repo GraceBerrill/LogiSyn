@@ -25,17 +25,17 @@ namespace LogiSyn.Views
             InitializeComponent();
             _ready = true;
 
-            LoadUsers();
+            Loaded += async (s, e) => await LoadUsersAsync();
         }
 
-        private void LoadUsers()
+        private async System.Threading.Tasks.Task LoadUsersAsync()
         {
             try
             {
                 // Try API first, fall back to local router
                 try
                 {
-                    var users = _apiClient.GetUsersAsync().GetAwaiter().GetResult();
+                    var users = await _apiClient.GetUsersAsync();
                     _all = users;
                 }
                 catch
@@ -104,7 +104,7 @@ namespace LogiSyn.Views
                                 MessageBoxButton.OK, icon);
 
                 if (result.SqlToMongo > 0)
-                    LoadUsers();
+                    await LoadUsersAsync();
             }
             catch (Exception ex)
             {
@@ -126,7 +126,7 @@ namespace LogiSyn.Views
         }
 
 
-        private void AddUserButton_Click(object sender, RoutedEventArgs e)
+        private async void AddUserButton_Click(object sender, RoutedEventArgs e)
         {
             var modal = new AddUserModal();
 
@@ -145,10 +145,10 @@ namespace LogiSyn.Views
             modal.Cancelled += () => { host.DialogResult = false; host.Close(); };
 
             if (host.ShowDialog() == true)
-                LoadUsers();
+                await LoadUsersAsync();
         }
 
-        private void EditButton_Click(object sender, RoutedEventArgs e)
+        private async void EditButton_Click(object sender, RoutedEventArgs e)
         {
             var row = ((FrameworkElement)sender).DataContext as UserRow;
             if (row == null) return;
@@ -177,10 +177,10 @@ namespace LogiSyn.Views
             modal.Cancelled += () => { host.DialogResult = false; host.Close(); };
 
             if (host.ShowDialog() == true)
-                LoadUsers();
+                await LoadUsersAsync();
         }
 
-        private void DeleteButton_Click(object sender, RoutedEventArgs e)
+        private async void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
             var row = ((FrameworkElement)sender).DataContext as UserRow;
             if (row == null) return;
@@ -202,7 +202,7 @@ namespace LogiSyn.Views
                 var deleted = false;
                 try
                 {
-                    deleted = _apiClient.DeleteUserAsync(identifier).GetAwaiter().GetResult();
+                    deleted = await _apiClient.DeleteUserAsync(identifier);
                 }
                 catch { }
 

@@ -27,7 +27,7 @@ namespace LogiSyn.Views
             Cancelled?.Invoke();
         }
 
-        private void Save_Click(object sender, RoutedEventArgs e)
+        private async void Save_Click(object sender, RoutedEventArgs e)
         {
             ErrorText.Visibility = Visibility.Collapsed;
 
@@ -44,7 +44,8 @@ namespace LogiSyn.Views
             {
                 var api = App.ServiceProvider.GetService<ApiClient>() ?? new ApiClient();
                 var newUser = new UserRow { Name = username, Password = password, Role = access };
-                var created = api.CreateUserAsync(newUser).GetAwaiter().GetResult();
+                bool created = false;
+                try { created = await api.CreateUserAsync(newUser); } catch { }
                 if (created)
                 {
                     Saved?.Invoke();

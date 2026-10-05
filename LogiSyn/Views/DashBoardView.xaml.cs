@@ -114,7 +114,7 @@ namespace LogiSyn.Views
 			{
 				try
 				{
-					sourceOrders = _orderService.GetOrders().ToList();
+				sourceOrders = (await _orderService.GetOrdersAsync()).ToList();
 				}
 				catch { }
 			}
