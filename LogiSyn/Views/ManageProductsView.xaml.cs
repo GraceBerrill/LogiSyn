@@ -7,13 +7,14 @@ using System.Windows.Media;
 using SharedLibrary.Model;
 using AndersonsBakeryAPI.Services;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace LogiSyn.Views
 {
     public partial class ManageProductsView : UserControl
     {
         private readonly List<ProductRow> _all;
-        private readonly ProductService _service = new ProductService();
+        private readonly ProductService _service;
         private readonly AndersonsBakeryAPI.Services.ApiClient _apiClient = App.ServiceProvider.GetService<AndersonsBakeryAPI.Services.ApiClient>() ?? new AndersonsBakeryAPI.Services.ApiClient();
         private bool _ready;
 
@@ -22,6 +23,7 @@ namespace LogiSyn.Views
             InitializeComponent();
 
             DateText.Text = SampleData.Today();
+            _service = App.ServiceProvider.GetService<ProductService>() ?? new ProductService();
             try
             {
                 var products = _apiClient.GetProductsAsync().GetAwaiter().GetResult();

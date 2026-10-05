@@ -1,6 +1,7 @@
 using SharedLibrary.Model;
 using AndersonsBakeryAPI.Services;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,7 @@ namespace LogiSyn.Views
 {
     public partial class ManageUsersView : UserControl
     {
-        private readonly UserServiceRouter _userService = new UserServiceRouter();
+        private readonly UserServiceRouter _userService = App.ServiceProvider.GetService<UserServiceRouter>() ?? new UserServiceRouter();
         private readonly AndersonsBakeryAPI.Services.ApiClient _apiClient = App.ServiceProvider.GetService<AndersonsBakeryAPI.Services.ApiClient>() ?? new AndersonsBakeryAPI.Services.ApiClient();
         private readonly SyncService _syncService = new SyncService();
         private List<UserRow> _all = new();

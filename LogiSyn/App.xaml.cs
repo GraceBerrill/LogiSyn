@@ -18,6 +18,12 @@ namespace LogiSyn
 			// Register ApiClient as a singleton for the WPF client to use
 			services.AddSingleton<ApiClient>();
 
+			// Register common backend services so views can resolve them from DI
+			services.AddSingleton<AndersonsBakeryAPI.Services.ProductService>();
+			services.AddSingleton<AndersonsBakeryAPI.Services.UserServiceRouter>();
+			services.AddSingleton<AndersonsBakeryAPI.Services.LoginServiceRouter>();
+			services.AddSingleton<AndersonsBakeryAPI.Services.OrderService>();
+
 			ServiceProvider = services.BuildServiceProvider();
 
 			base.OnStartup(e);

@@ -6,20 +6,26 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using AndersonsBakeryAPI.Services;
+using Microsoft.Extensions.DependencyInjection;
 using SharedLibrary.Model;
 
 namespace LogiSyn.Views
 {
 	public partial class DashboardView : UserControl
 	{
-		private readonly ApiClient _apiClient = new ApiClient();
-		private readonly OrderService _orderService = new OrderService();
+	private readonly ApiClient _apiClient;
+	private readonly OrderService _orderService;
 		private List<OrderScaled> _currentOrdersScaled = new();
 		private List<DashboardOrderItem> _currentDashboardOrders = new();
 
 		public DashboardView(SharedLibrary.Model.AppRole role)
 		{
 			InitializeComponent();
+
+			// Resolve services from the WPF application's DI container
+			_apiClient = App.ServiceProvider.GetService<ApiClient>() ?? new ApiClient();
+			_orderService = App.ServiceProvider.GetService<OrderService>() ?? new OrderService();
+
 			ConfigureRole(role.ToString());
 		}
 
@@ -81,6 +87,9 @@ namespace LogiSyn.Views
 			}).ToList();
 
 			RecentList.ItemsSource = _currentDashboardOrders;
+
+			// Show an explicit empty-state when there are no orders
+			NoOrdersText.Visibility = _currentDashboardOrders.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
 		}
 
 		private async Task<List<OrderScaled>> GetOrdersScaledAsync()

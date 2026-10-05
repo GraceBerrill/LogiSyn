@@ -1,4 +1,5 @@
 ﻿using AndersonsBakeryAPI.Services;
+using Microsoft.Extensions.DependencyInjection;
 using SharedLibrary.Model;
 using System;
 using System.Windows;
@@ -8,7 +9,7 @@ namespace LogiSyn.Views
 {
     public partial class AddUserModal : UserControl
     {
-        private readonly UserServiceRouter _userService = new UserServiceRouter();
+        private readonly UserServiceRouter _userService = App.ServiceProvider.GetService<UserServiceRouter>() ?? new UserServiceRouter();
 
         public event Action? Saved;
         public event Action? Cancelled;
@@ -41,6 +42,15 @@ namespace LogiSyn.Views
 
             try
             {
+                var api = App.ServiceProvider.GetService<ApiClient>() ?? new ApiClient();
+                var newUser = new UserRow { Name = username, Password = password, Role = access };
+                var created = api.CreateUserAsync(newUser).GetAwaiter().GetResult();
+                if (created)
+                {
+                    Saved?.Invoke();
+                    return;
+                }
+
                 if (_userService.UsernameExists(username))
                 {
                     ShowError("That username is already taken.");

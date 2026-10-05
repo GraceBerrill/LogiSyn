@@ -7,7 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using SharedLibrary.Model;
 using AndersonsBakeryAPI.Services;
-
+using Microsoft.Extensions.DependencyInjection;
 
 namespace LogiSyn.Views
 {
@@ -60,7 +60,7 @@ namespace LogiSyn.Views
 
         /********************************************************************************************/
         // Add product to the list of products and save it to the file
-        private void AddButton_Click(object sender, RoutedEventArgs e)
+        private async void AddButton_Click(object sender, RoutedEventArgs e)
         {
             string name = ProductBox.Text.Trim();
             if (string.IsNullOrEmpty(name))
@@ -109,7 +109,17 @@ namespace LogiSyn.Views
 
             try
             {
-                var service = new ProductService();
+                var api = App.ServiceProvider.GetService<ApiClient>() ?? new ApiClient();
+                bool created = await api.CreateProductAsync(product);
+                if (created)
+                {
+                    Saved?.Invoke();
+                    ShellWindow.Current?.CloseModal();
+                    return;
+                }
+
+                // Fallback to local ProductService if API unavailable
+                var service = App.ServiceProvider.GetService<ProductService>() ?? new ProductService();
                 service.Add(product);
                 Saved?.Invoke();
                 ShellWindow.Current?.CloseModal();

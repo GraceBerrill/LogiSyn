@@ -3,14 +3,14 @@ using SharedLibrary.Model;
 using System;
 using System.Windows;
 using System.Windows.Controls;
-using System;
+using Microsoft.Extensions.DependencyInjection;
 using LogiSyn.Views;
 
 namespace LogiSyn.Views
 {
     public partial class LoginWindow : Window
     {
-        private readonly LoginServiceRouter _loginService = new LoginServiceRouter();
+        private readonly LoginServiceRouter _loginService = App.ServiceProvider.GetService<LoginServiceRouter>() ?? new LoginServiceRouter();
 
         private bool _passwordRevealed;
         private bool _syncing;
@@ -94,7 +94,14 @@ namespace LogiSyn.Views
             UserRow? user;
             try
             {
-                user = _loginService.Authenticate(username, password);
+                // First try the hosted API via ApiClient if available
+                var api = App.ServiceProvider.GetService<ApiClient>() ?? new ApiClient();
+                user = api.AuthenticateAsync(username, password).GetAwaiter().GetResult();
+                if (user == null)
+                {
+                    // Fallback to the local login router
+                    user = _loginService.Authenticate(username, password);
+                }
             }
             catch (Exception ex)
             {
