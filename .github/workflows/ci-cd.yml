@@ -1,7 +1,10 @@
 name: LogiSyn CI/CD Pipeline
 
-# Triggers on push or pull request across ALL developer branches
-on: [push, pull_request]
+on:
+  push:
+    branches: [ main, Dev, fix ]
+  pull_request:
+    branches: [ main, Dev, fix ]
 
 jobs:
   build-and-test:
@@ -12,19 +15,19 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      # Sets up .NET SDKs (targeting net10.0 / net10.0-windows)
-      - name: Setup .NET SDK
+      - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '10.0.x'
 
       - name: Restore Dependencies
-        run: dotnet restore LogiSyn/LogiSyn.csproj
+        run: dotnet restore LogiSyn.sln
 
-      - name: Build LogiSyn Application
-        run: dotnet build LogiSyn/LogiSyn.csproj --configuration Release --no-restore
+      - name: Build Solution
+        run: dotnet build LogiSyn.sln --configuration Release --no-restore
 
-      # AUTOMATED PACKAGING & DEPLOYMENT ARTIFACT
+      - name: Run Unit Tests
+        run: dotnet test LogiSyn.Tests/LogiSyn.Tests.csproj --configuration Release --no-build --verbosity normal
 
       - name: Publish Application
         run: dotnet publish LogiSyn/LogiSyn.csproj --configuration Release --output ./publish

@@ -115,7 +115,8 @@ namespace LogiSyn.Views
 				return sourceOrders;
 			}
 
-			return SampleData.SampleOrdersScaled();
+			// No orders available; return an empty list so the UI shows a true empty state instead of sample data.
+			return new List<OrderScaled>();
 		}
 
 		// Opens the Excel export modal allowing the user to select one or multiple orders with complete details
@@ -123,7 +124,7 @@ namespace LogiSyn.Views
 		{
 			try
 			{
-				var orders = _currentOrdersScaled.Count > 0 ? _currentOrdersScaled : SampleData.SampleOrdersScaled();
+				var orders = _currentOrdersScaled;
 				var modal = new ExportOrdersModal(orders);
 
 				if (ShellWindow.Current != null)
@@ -154,7 +155,7 @@ namespace LogiSyn.Views
 		{
 			try
 			{
-				var orders = _currentOrdersScaled.Count > 0 ? _currentOrdersScaled : SampleData.SampleOrdersScaled();
+				var orders = _currentOrdersScaled;
 				var modal = new EmailOrdersModal(orders);
 
 				if (ShellWindow.Current != null)

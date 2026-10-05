@@ -41,14 +41,14 @@ namespace LogiSyn.Views
                 }
 
                 var rows = orders.Select(o => OrderRow.FromOrderScaled(o)).ToList();
-                OrderList.ItemsSource = rows.Count > 0 ? rows : SampleData.UserOrders();
+                OrderList.ItemsSource = rows;
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error loading user orders: {ex.Message}");
                 var localOrders = _orderService.GetOrders().ToList();
                 var rows = localOrders.Select(o => OrderRow.FromOrderScaled(o)).ToList();
-                OrderList.ItemsSource = rows.Count > 0 ? rows : SampleData.UserOrders();
+                OrderList.ItemsSource = rows;
             }
         }
 

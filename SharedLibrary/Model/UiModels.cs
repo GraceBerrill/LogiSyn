@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Text.Json.Serialization;
 using MongoDB.Bson;
 
 using MongoDB.Bson.Serialization.Attributes;
@@ -136,6 +137,7 @@ namespace SharedLibrary.Model
         public string Name { get; set; } = string.Empty;
 
         [BsonElement("Password")]
+        [JsonIgnore]
         public string Password { get; set; } = string.Empty;
 
         [BsonElement("Role")]

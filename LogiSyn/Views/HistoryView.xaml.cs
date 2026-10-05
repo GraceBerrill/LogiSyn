@@ -52,7 +52,7 @@ namespace LogiSyn.Views
                     .Select(o => OrderRow.FromOrderScaled(o))
                     .ToList();
 
-                _all = completed.Count > 0 ? completed : SampleData.HistoryOrders();
+                _all = completed;
             }
             catch (Exception ex)
             {
@@ -60,7 +60,7 @@ namespace LogiSyn.Views
                 var localOrders = _orderService.GetHistory()
                     .Select(o => OrderRow.FromOrderScaled(o))
                     .ToList();
-                _all = localOrders.Count > 0 ? localOrders : SampleData.HistoryOrders();
+                _all = localOrders;
             }
 
             Refresh();

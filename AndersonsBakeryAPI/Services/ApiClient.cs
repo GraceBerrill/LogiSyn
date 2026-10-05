@@ -34,14 +34,10 @@ namespace AndersonsBakeryAPI.Services
                 "http://localhost:5109"    
             };            
             
-            // Configure HttpClient to ignore SSL certificate validation for development purposes
-            var handler = new HttpClientHandler
+            // Configure HttpClient with a longer timeout. Do not disable SSL validation.
+            _httpClient = new HttpClient()
             {
-                ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true
-            };
-            _httpClient = new HttpClient(handler)
-            {
-                Timeout = TimeSpan.FromSeconds(20)
+                Timeout = TimeSpan.FromSeconds(60)
             };
         }
 
