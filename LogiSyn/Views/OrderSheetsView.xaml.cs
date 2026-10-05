@@ -96,7 +96,15 @@ namespace LogiSyn.Views
         {
             try
             {
-                _orderService.SaveOrder(_currentOrder);
+                try
+                {
+                    await _orderService.SaveOrderAsync(_currentOrder);
+                }
+                catch (Exception localEx)
+                {
+                    Console.WriteLine($"Local save failed: {localEx.Message}");
+                }
+
                 try
                 {
                     await _apiClient.SaveOrderAsync(_currentOrder);

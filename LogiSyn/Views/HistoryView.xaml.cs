@@ -40,10 +40,15 @@ namespace LogiSyn.Views
             try
             {
                 // Fetch orders from the API
-                var orders = await _apiClient.GetOrdersAsync();
-                if (orders.Count == 0)
+                var apiOrders = await _apiClient.GetOrdersAsync();
+                List<OrderScaled> orders;
+                if (apiOrders == null || !apiOrders.Any())
                 {
-                    orders = _orderService.GetOrders().ToList();
+                    orders = (await _orderService.GetOrdersAsync())?.ToList() ?? new List<OrderScaled>();
+                }
+                else
+                {
+                    orders = apiOrders.ToList();
                 }
 
                 var completed = orders
@@ -57,7 +62,9 @@ namespace LogiSyn.Views
             catch (Exception ex)
             {
                 Console.WriteLine($"Error loading history: {ex.Message}");
-                var localOrders = _orderService.GetHistory()
+                var localOrders = (await _orderService.GetOrdersAsync())
+                    .Where(o => string.Equals(o.Status, "Completed", StringComparison.OrdinalIgnoreCase)
+                             || string.Equals(o.Status, "Complete", StringComparison.OrdinalIgnoreCase))
                     .Select(o => OrderRow.FromOrderScaled(o))
                     .ToList();
                 _all = localOrders;

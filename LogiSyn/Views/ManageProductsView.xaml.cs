@@ -6,21 +6,48 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using SharedLibrary.Model;
 using AndersonsBakeryAPI.Services;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace LogiSyn.Views
 {
     public partial class ManageProductsView : UserControl
     {
-        private readonly List<ProductRow> _all;
-        private readonly ProductService _service = new ProductService();
+        private List<ProductRow> _all = new();
+        private readonly ProductService _service;
+        private readonly AndersonsBakeryAPI.Services.ApiClient _apiClient = App.ServiceProvider.GetService<AndersonsBakeryAPI.Services.ApiClient>() ?? new AndersonsBakeryAPI.Services.ApiClient();
         private bool _ready;
 
         public ManageProductsView()
         {
             InitializeComponent();
 
-            DateText.Text = DateTime.Now.ToString("dd MMMM yyyy");
-            _all = _service.GetAll();
+            DateText.Text = SampleData.Today();
+            _service = App.ServiceProvider.GetService<ProductService>() ?? new ProductService();
+
+            Loaded += async (s, e) => await LoadProductsAsync();
+        }
+
+        private async System.Threading.Tasks.Task LoadProductsAsync()
+        {
+            try
+            {
+                var products = await _apiClient.GetProductsAsync();
+                _all = products.Select(p => new ProductRow
+                {
+                    ProductId = p.ProductID,
+                    Name = p.ProductName,
+                    Price = p.PricePerUnit.ToString(),
+                    SellBy = p.SellBy.ToString(),
+                    BestBefore = p.BestBefore.ToString(),
+                    Storage = p.StorageLocation
+                }).ToList();
+            }
+            catch
+            {
+                try { _all = _service.GetAll(); }
+                catch { _all = new List<ProductRow>(); }
+            }
 
             StorageFilter.SelectedIndex = 0;
             _ready = true;
@@ -110,14 +137,7 @@ namespace LogiSyn.Views
                 }
                 else
                 {
-                    detail = new ProductDetail
-                    {
-                        Name = row.Name,
-                        DateAdded = DateTime.Now.ToString("dd/MM/yyyy"),
-                        Ingredients = new List<IngredientLine>(),
-                        Method = "",
-                        Storage = row.Storage
-                    };
+                    detail = SampleData.DetailFor(row);
                 }
 
                 var modal = new ProductDetailModal(detail, editable);
@@ -136,15 +156,7 @@ namespace LogiSyn.Views
             }
             catch
             {
-                var fallbackDetail = new ProductDetail
-                {
-                    Name = row.Name,
-                    DateAdded = DateTime.Now.ToString("dd/MM/yyyy"),
-                    Ingredients = new List<IngredientLine>(),
-                    Method = "",
-                    Storage = row.Storage
-                };
-                var fallbackModal = new ProductDetailModal(fallbackDetail, editable);
+                var fallbackModal = new ProductDetailModal(SampleData.DetailFor(row), editable);
                 fallbackModal.Saved += () =>
                 {
                     try
@@ -172,7 +184,7 @@ namespace LogiSyn.Views
 
         /********************************************************************************************/
         //deletes a product from the list after confirmation
-        private void DeleteButton_Click(object sender, RoutedEventArgs e)
+        private async void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
             var row = RowOf(sender);
             if (row == null) return;
@@ -181,12 +193,32 @@ namespace LogiSyn.Views
                                          MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (answer != MessageBoxResult.Yes) return;
 
-            //delete via service then refresh
-            try { _service.DeleteByName(row.Name); }
-            catch { }
-            _all.Remove(row);
-            Refresh();
-            ShellWindow.Current?.ShowToast($"Product '{row.Name}' deleted.");
+            // Try API delete by id first, fallback to local delete by name
+            try
+            {
+                bool deleted = false;
+                try
+                {
+                    if (row.ProductId > 0)
+                    {
+                        deleted = await _apiClient.DeleteProductAsync(row.ProductId.ToString());
+                    }
+                }
+                catch { }
+
+                if (!deleted)
+                {
+                    _service.DeleteByName(row.Name);
+                }
+
+                _all.Remove(row);
+                Refresh();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Delete failed: " + ex.Message,
+                                "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         /********************************************************************************************/

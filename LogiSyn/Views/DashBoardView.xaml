@@ -84,8 +84,9 @@
                 </Border>
 
                 <!-- rows -->
-                <ItemsControl x:Name="RecentList" VerticalAlignment="Top" Margin="23.6,144.4,22.4,0"
-                              Focusable="False">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="23.6,144.4,22.4,0" Height="360">
+                    <ItemsControl x:Name="RecentList" VerticalAlignment="Top"
+                                  Focusable="False">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Border Style="{StaticResource RowLine}" Height="62.3"
@@ -106,7 +107,11 @@
                             </Border>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
-                </ItemsControl>
+                    </ItemsControl>
+                </ScrollViewer>
+
+                <TextBlock x:Name="NoOrdersText" Text="No orders found in database." FontSize="18"
+                           HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed"/>
             </Grid>
         </ContentControl>
     </Grid>

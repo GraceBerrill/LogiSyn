@@ -64,6 +64,8 @@ var builder = WebApplication.CreateBuilder(args);
 
     builder.Services.AddControllers();
     builder.Services.AddOpenApi();
+    // Lightweight Health Checks to support cloud probes and keep-alive pings
+    builder.Services.AddHealthChecks();
 
     var app = builder.Build();
 
@@ -72,8 +74,16 @@ using (var scope = app.Services.CreateScope())
 {
 	try
 	{
-		var db = scope.ServiceProvider.GetRequiredService<LogiSynDbContext>();
-		db.Database.EnsureCreated();
+        var db = scope.ServiceProvider.GetRequiredService<LogiSynDbContext>();
+        // Use EF Core migrations if available; fall back to EnsureCreated for very early setups
+        try
+        {
+            db.Database.Migrate();
+        }
+        catch (Exception)
+        {
+            db.Database.EnsureCreated();
+        }
 	}
 	catch (Exception ex)
 	{
@@ -83,8 +93,11 @@ using (var scope = app.Services.CreateScope())
 
 if (app.Environment.IsDevelopment())
 {
-	app.MapOpenApi();
+    app.MapOpenApi();
 }
+
+// Expose a simple health check endpoint for monitoring and keep-alive probes
+app.MapHealthChecks("/health");
 
 app.UseHttpsRedirection();
 app.UseAuthorization();

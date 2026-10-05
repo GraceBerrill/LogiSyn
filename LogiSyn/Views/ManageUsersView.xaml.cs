@@ -1,5 +1,7 @@
 using SharedLibrary.Model;
 using AndersonsBakeryAPI.Services;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +13,8 @@ namespace LogiSyn.Views
 {
     public partial class ManageUsersView : UserControl
     {
-        private readonly UserServiceRouter _userService = new UserServiceRouter();
+        private readonly UserServiceRouter _userService = App.ServiceProvider.GetService<UserServiceRouter>() ?? new UserServiceRouter();
+        private readonly AndersonsBakeryAPI.Services.ApiClient _apiClient = App.ServiceProvider.GetService<AndersonsBakeryAPI.Services.ApiClient>() ?? new AndersonsBakeryAPI.Services.ApiClient();
         private readonly SyncService _syncService = new SyncService();
         private List<UserRow> _all = new();
         private bool _ready;
@@ -22,14 +25,23 @@ namespace LogiSyn.Views
             InitializeComponent();
             _ready = true;
 
-            LoadUsers();
+            Loaded += async (s, e) => await LoadUsersAsync();
         }
 
-        private void LoadUsers()
+        private async System.Threading.Tasks.Task LoadUsersAsync()
         {
             try
             {
-                _all = _userService.GetAllUsers();
+                // Try API first, fall back to local router
+                try
+                {
+                    var users = await _apiClient.GetUsersAsync();
+                    _all = users;
+                }
+                catch
+                {
+                    _all = _userService.GetAllUsers();
+                }
             }
             catch (Exception ex)
             {
@@ -92,7 +104,7 @@ namespace LogiSyn.Views
                                 MessageBoxButton.OK, icon);
 
                 if (result.SqlToMongo > 0)
-                    LoadUsers();
+                    await LoadUsersAsync();
             }
             catch (Exception ex)
             {
@@ -114,7 +126,7 @@ namespace LogiSyn.Views
         }
 
 
-        private void AddUserButton_Click(object sender, RoutedEventArgs e)
+        private async void AddUserButton_Click(object sender, RoutedEventArgs e)
         {
             var modal = new AddUserModal();
 
@@ -133,10 +145,10 @@ namespace LogiSyn.Views
             modal.Cancelled += () => { host.DialogResult = false; host.Close(); };
 
             if (host.ShowDialog() == true)
-                LoadUsers();
+                await LoadUsersAsync();
         }
 
-        private void EditButton_Click(object sender, RoutedEventArgs e)
+        private async void EditButton_Click(object sender, RoutedEventArgs e)
         {
             var row = ((FrameworkElement)sender).DataContext as UserRow;
             if (row == null) return;
@@ -165,10 +177,10 @@ namespace LogiSyn.Views
             modal.Cancelled += () => { host.DialogResult = false; host.Close(); };
 
             if (host.ShowDialog() == true)
-                LoadUsers();
+                await LoadUsersAsync();
         }
 
-        private void DeleteButton_Click(object sender, RoutedEventArgs e)
+        private async void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
             var row = ((FrameworkElement)sender).DataContext as UserRow;
             if (row == null) return;
@@ -186,7 +198,19 @@ namespace LogiSyn.Views
 
             try
             {
-                _userService.DeleteUser(identifier);
+                // Try remote API delete first, fallback to local delete
+                var deleted = false;
+                try
+                {
+                    deleted = await _apiClient.DeleteUserAsync(identifier);
+                }
+                catch { }
+
+                if (!deleted)
+                {
+                    _userService.DeleteUser(identifier);
+                }
+
                 _all.Remove(row);
                 Refresh();
             }

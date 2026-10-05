@@ -3,14 +3,14 @@ using SharedLibrary.Model;
 using System;
 using System.Windows;
 using System.Windows.Controls;
-using System;
+using Microsoft.Extensions.DependencyInjection;
 using LogiSyn.Views;
 
 namespace LogiSyn.Views
 {
     public partial class LoginWindow : Window
     {
-        private readonly LoginServiceRouter _loginService = new LoginServiceRouter();
+        private readonly LoginServiceRouter _loginService = App.ServiceProvider.GetService<LoginServiceRouter>() ?? new LoginServiceRouter();
 
         private bool _passwordRevealed;
         private bool _syncing;
@@ -79,7 +79,7 @@ namespace LogiSyn.Views
 
         // ---------- log in ----------
 
-        private void LoginButton_Click(object sender, RoutedEventArgs e)
+        private async void LoginButton_Click(object sender, RoutedEventArgs e)
         {
             string username = UsernameBox.Text.Trim();
             string password = _passwordRevealed ? PasswordRevealBox.Text : PasswordBox.Password;
@@ -91,16 +91,44 @@ namespace LogiSyn.Views
                 return;
             }
 
-            UserRow? user;
+            UserRow? user = null;
+
+            LoginButton.IsEnabled = false;
             try
             {
-                user = _loginService.Authenticate(username, password);
+                // First try the hosted API via ApiClient if available
+                var api = App.ServiceProvider.GetService<ApiClient>() ?? new ApiClient();
+                try
+                {
+                    // Await without ConfigureAwait so continuation runs on the UI thread
+                    user = await api.AuthenticateAsync(username, password);
+                }
+                catch (Exception apiEx)
+                {
+                    // API failed; log and fall back to local auth
+                    Console.WriteLine($"[Login] API auth failed: {apiEx.Message}");
+                    user = null;
+                }
+
+                if (user == null)
+                {
+                    try
+                    {
+                        // Fallback to the local login router
+                        user = _loginService.Authenticate(username, password);
+                    }
+                    catch (Exception localEx)
+                    {
+                        // Both methods failed - show an error
+                        MessageBox.Show("Could not authenticate using API or local router:\n" + localEx.Message,
+                                        "Login error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
+                }
             }
-            catch (Exception ex)
+            finally
             {
-                MessageBox.Show("Could not reach the database:\n" + ex.Message,
-                                "Login error", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
+                LoginButton.IsEnabled = true;
             }
 
             if (user == null)
@@ -119,6 +147,7 @@ namespace LogiSyn.Views
 
             user.Role = appRole.ToString();
 
+            // Continuation is on UI thread, safe to set DialogResult
             LoggedInUser = user;
             DialogResult = true;
         }

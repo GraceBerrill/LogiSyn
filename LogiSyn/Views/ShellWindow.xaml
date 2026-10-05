@@ -97,29 +97,39 @@
                             Content="Dashboard"
                             Tag="&#xE80F;"
                             Style="{StaticResource MenuButtonStyle}"
-                            Click="DashboardButton_Click"/>
+                            Click="DashboardButton_Click"
+                            AutomationProperties.Name="Dashboard"
+                            AutomationProperties.HelpText="Navigate to the main dashboard overview" />
                     <!-- Adriaan - Orders Navigation -->
                     <Button x:Name="OrdersButton"
                             Content="Orders"
                             Tag="&#xE8A1;"
                             Style="{StaticResource MenuButtonStyle}"
-                            Click="OrdersButton_Click"/>
+                            Click="OrdersButton_Click"
+                            AutomationProperties.Name="Orders"
+                            AutomationProperties.HelpText="View and manage active orders" />
                     <Button x:Name="HistoryButton"
                             Content="History"
                             Tag="&#xE81C;"
                             Style="{StaticResource MenuButtonStyle}"
-                            Click="HistoryButton_Click"/>
+                            Click="HistoryButton_Click"
+                            AutomationProperties.Name="Order History"
+                            AutomationProperties.HelpText="View completed and historical orders" />
                     <Button x:Name="ProductsButton"
                             Content="Manage Products"
                             Tag="&#xE7B8;"
                             Style="{StaticResource MenuButtonStyle}"
-                            Click="ProductsButton_Click"/>
+                            Click="ProductsButton_Click"
+                            AutomationProperties.Name="Manage Products"
+                            AutomationProperties.HelpText="Open the product and recipe management view" />
                     <Button x:Name="UsersButton"
                             Content="Manage Users"
                             Tag="&#xE716;"
                             Style="{StaticResource MenuButtonStyle}"
                             Click="UsersButton_Click"
-                            Visibility="Collapsed"/>
+                            Visibility="Collapsed"
+                            AutomationProperties.Name="Manage Users"
+                            AutomationProperties.HelpText="Open the user management view" />
                 </StackPanel>
 
                 <StackPanel Grid.Row="2" Margin="20,0,20,30">

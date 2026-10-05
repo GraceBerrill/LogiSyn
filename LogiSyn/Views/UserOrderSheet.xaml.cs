@@ -172,7 +172,16 @@ namespace LogiSyn.Views
             }
 
             // Persist order to local storage/database
-            _orderService.SaveOrder(_scaledOrder);
+            try
+            {
+                await _orderService.SaveOrderAsync(_scaledOrder);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[UserOrderSheet] Local save failed: {ex.Message}");
+                // fallback to synchronous save if async failed for some reason
+                try { _orderService.SaveOrder(_scaledOrder); } catch { }
+            }
 
             // Asynchronously sync order and status with the backend REST API
             try

@@ -3,12 +3,13 @@ using System.Windows;
 using System.Windows.Controls;
 using SharedLibrary.Model;
 using AndersonsBakeryAPI.Services;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace LogiSyn.Views
 {
     public partial class EditUserModal : UserControl
     {
-        private readonly UserServiceRouter _userService = new UserServiceRouter();
+        private readonly UserServiceRouter _userService = App.ServiceProvider.GetService<UserServiceRouter>() ?? new UserServiceRouter();
         private readonly string _mongoId;
 
         public event Action? Saved;
@@ -40,7 +41,7 @@ namespace LogiSyn.Views
             Cancelled?.Invoke();
         }
 
-        private void Save_Click(object sender, RoutedEventArgs e)
+        private async void Save_Click(object sender, RoutedEventArgs e)
         {
             ErrorText.Visibility = Visibility.Collapsed;
 
@@ -58,6 +59,21 @@ namespace LogiSyn.Views
 
             try
             {
+                var api = App.ServiceProvider.GetService<ApiClient>() ?? new ApiClient();
+                // Try to update via API (if we have a MongoId / API record)
+                if (!string.IsNullOrWhiteSpace(_mongoId))
+                {
+                    var user = new UserRow { Id = _mongoId, Name = username, Role = access };
+                    if (!string.IsNullOrWhiteSpace(password)) user.Password = password;
+                    bool updated = false;
+                    try { updated = await api.UpdateUserAsync(_mongoId, user); } catch { }
+                    if (updated)
+                    {
+                        Saved?.Invoke();
+                        return;
+                    }
+                }
+
                 // Exclude the current user from the "already taken" check by MongoId
                 if (_userService.UsernameExists(username, _mongoId))
                 {
