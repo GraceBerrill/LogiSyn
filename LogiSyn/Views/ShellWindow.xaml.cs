@@ -33,7 +33,7 @@ namespace LogiSyn.Views
                 ? Visibility.Collapsed
                 : Visibility.Visible;
 
-            UsersButton.Visibility = _role == AppRole.Admin
+            UsersButton.Visibility = (_role == AppRole.Admin || _role == AppRole.Manager)
                 ? Visibility.Visible
                 : Visibility.Collapsed;
 

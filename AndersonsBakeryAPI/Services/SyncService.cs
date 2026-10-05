@@ -11,7 +11,6 @@ namespace AndersonsBakeryAPI.Services
         public int Skipped { get; set; }
         public int Failed { get; set; }
         public List<string> Messages { get; set; } = new List<string>();
-        public bool Success => Failed == 0;
 
         public override string ToString() =>
             $"Pushed SQL → Mongo: {SqlToMongo}\n" +
@@ -33,14 +32,6 @@ namespace AndersonsBakeryAPI.Services
                 MongoConfiguration.GetDatabaseName());
         }
 
-        public bool IsMongoConfigured => _mongo != null;
-
-        public SyncService(MongoUserService mongo, UserService sql)
-        {
-            _mongo = mongo ?? throw new ArgumentNullException(nameof(mongo));
-            _sql = sql ?? throw new ArgumentNullException(nameof(sql));
-        }
-
         public SyncResult SyncUsers()
         {
             var result = new SyncResult();
@@ -60,7 +51,6 @@ namespace AndersonsBakeryAPI.Services
             catch (Exception ex)
             {
                 result.Failed++;
-                result.Messages.Add("Could not read SQL: " + ex.Message);
                 return result;
             }
 
