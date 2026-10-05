@@ -4,9 +4,6 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.Json.Serialization;
 
-/// <summary> 
-/// This model represents the data that is collected and shown in the ordering process
-/// </summary>
 namespace SharedLibrary.Model
 {
     public class Ingredients
