@@ -51,10 +51,10 @@ That's where LogiSyn comes in. We built a system that keeps track of all incomin
 #
 ## YouTube Video Link
 
-**See LogiSyn in action:** a full walkthrough of the system, from login to completed order.
+**See LogiSyn in action:** A full walkthrough of the system, from login to completed order:
 
-<a href="https://www.youtube.com/watch?v=VIDEO_ID">
-  <img src="https://img.shields.io/badge/Watch_the_Demo-FF0000?style=for-the-badge&logo=youtube&logoColor=white" alt="Click here to watch on YouTube">
+<a href="https://youtu.be/CByFgbEQakI">
+  <img src="https://img.shields.io/badge/Click_here_to_watch_on_YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white" alt="Click here to watch on YouTube">
 </a>
 
 #
