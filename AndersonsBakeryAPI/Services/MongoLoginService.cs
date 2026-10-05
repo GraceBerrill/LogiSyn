@@ -45,9 +45,20 @@ namespace AndersonsBakeryAPI.Services
 
             string storedPassword = user.Password ?? string.Empty;
             bool isHashed = PasswordHasher.IsHash(storedPassword);
-            bool valid = isHashed
-                ? PasswordHasher.VerifyPassword(password, storedPassword)
-                : string.Equals(password, storedPassword, StringComparison.Ordinal);
+
+            bool valid;
+            if (isHashed)
+            {
+                valid = PasswordHasher.VerifyPassword(password, storedPassword);
+            }
+            else
+            {
+                // Constant-time comparison for legacy plaintext migration to prevent timing leakage
+                byte[] inputBytes = System.Text.Encoding.UTF8.GetBytes(password);
+                byte[] storedBytes = System.Text.Encoding.UTF8.GetBytes(storedPassword);
+                valid = inputBytes.Length == storedBytes.Length &&
+                        System.Security.Cryptography.CryptographicOperations.FixedTimeEquals(inputBytes, storedBytes);
+            }
 
             if (!valid) return null;
 
@@ -57,8 +68,9 @@ namespace AndersonsBakeryAPI.Services
                 _usersCollection.UpdateOne(
                     Builders<UserRow>.Filter.Eq(u => u.Id, user.Id),
                     Builders<UserRow>.Update.Set(u => u.Password, upgradedHash));
-                user.Password = upgradedHash;
             }
+
+            user.Password = string.Empty; // Zero-out in memory for security
             return user;
         }
     }

@@ -109,6 +109,30 @@
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
                 </ScrollViewer>
+
+                <!-- UX Empty State Placeholder -->
+                <StackPanel x:Name="EmptyProductsStatePanel"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Center"
+                            Margin="0,60,0,0"
+                            Visibility="Collapsed">
+                    <TextBlock Text="&#xE8B7;"
+                               FontFamily="Segoe MDL2 Assets"
+                               FontSize="36"
+                               Foreground="#757575"
+                               HorizontalAlignment="Center"
+                               Margin="0,0,0,10"/>
+                    <TextBlock Text="No Products Found"
+                               FontSize="16"
+                               FontWeight="SemiBold"
+                               Foreground="#E0E0E0"
+                               HorizontalAlignment="Center"
+                               Margin="0,0,0,4"/>
+                    <TextBlock Text="No bakery products match your search or filter criteria."
+                               FontSize="13"
+                               Foreground="#9E9E9E"
+                               HorizontalAlignment="Center"/>
+                </StackPanel>
             </Grid>
         </ContentControl>
     </Grid>

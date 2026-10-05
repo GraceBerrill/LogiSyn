@@ -39,6 +39,22 @@
 							<TextBlock Text="Packaging" FontSize="16" Margin="0,8,0,0"
                                        Foreground="{StaticResource PaperMuted}"/>
 							<TextBlock Text="{Binding Packaging}" FontSize="20" TextWrapping="Wrap"/>
+
+							<!-- Usage Metrics (Baker Actuals) -->
+							<StackPanel Visibility="{Binding HasUsageMetrics, Converter={StaticResource BoolToVis}}">
+								<TextBlock Text="Usage Metrics (Baker Actuals)" FontSize="16" Margin="0,8,0,0"
+                                           Foreground="{StaticResource PaperMuted}"/>
+								<TextBlock Text="{Binding UsageMetrics}" FontSize="18" FontWeight="SemiBold"
+                                           Foreground="#1E3029" TextWrapping="Wrap"/>
+							</StackPanel>
+
+							<!-- User / Baker Notes -->
+							<StackPanel Visibility="{Binding HasNotes, Converter={StaticResource BoolToVis}}">
+								<TextBlock Text="Notes" FontSize="16" Margin="0,8,0,0"
+                                           Foreground="{StaticResource PaperMuted}"/>
+								<TextBlock Text="{Binding Notes}" FontSize="18" FontStyle="Italic"
+                                           Foreground="#333333" TextWrapping="Wrap"/>
+							</StackPanel>
 						</StackPanel>
 					</Border>
 				</DataTemplate>

@@ -37,9 +37,19 @@ namespace AndersonsBakeryAPI.Services
                 string storedPassword = reader["Password"] as string ?? string.Empty;
                 bool isHashed = PasswordHasher.IsHash(storedPassword);
 
-                bool valid = isHashed
-                    ? PasswordHasher.VerifyPassword(password, storedPassword)
-                    : string.Equals(password, storedPassword, StringComparison.Ordinal);
+                bool valid;
+                if (isHashed)
+                {
+                    valid = PasswordHasher.VerifyPassword(password, storedPassword);
+                }
+                else
+                {
+                    // Constant-time comparison for legacy plaintext migration to prevent timing leakage
+                    byte[] inputBytes = System.Text.Encoding.UTF8.GetBytes(password);
+                    byte[] storedBytes = System.Text.Encoding.UTF8.GetBytes(storedPassword);
+                    valid = inputBytes.Length == storedBytes.Length &&
+                            System.Security.Cryptography.CryptographicOperations.FixedTimeEquals(inputBytes, storedBytes);
+                }
 
                 if (!valid)
                     return null;
@@ -49,7 +59,7 @@ namespace AndersonsBakeryAPI.Services
                     SqlId = ((int)reader["Id"]).ToString(),
                     Id = reader["MongoId"] as string ?? string.Empty,
                     Name = reader["Username"] as string ?? string.Empty,
-                    Password = storedPassword,
+                    Password = string.Empty, // Zero-out in memory for security
                     Role = reader["Role"] as string ?? string.Empty,
                     DateAdded = reader["DateAdded"] == DBNull.Value
                         ? string.Empty
@@ -69,8 +79,6 @@ namespace AndersonsBakeryAPI.Services
                     updateCmd.Parameters.AddWithValue("@Password", upgradedHash);
                     updateCmd.Parameters.AddWithValue("@Id", int.Parse(user.SqlId));
                     updateCmd.ExecuteNonQuery();
-
-                    user.Password = upgradedHash;
                 }
 
                 return user;

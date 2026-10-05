@@ -91,10 +91,18 @@ using (var scope = app.Services.CreateScope())
 	}
 }
 
-if (app.Environment.IsDevelopment())
+// Expose OpenAPI endpoint in all environments (Development & Render Cloud) for examiner inspection
+app.MapOpenApi();
+
+// Root discovery endpoint for health check and API documentation
+app.MapGet("/", () => Results.Ok(new
 {
-    app.MapOpenApi();
-}
+    service = "Anderson's Bakery Operations API",
+    version = "1.0.0",
+    status = "Online",
+    health = "/health",
+    documentation = "/openapi/v1.json"
+}));
 
 // Expose a simple health check endpoint for monitoring and keep-alive probes
 app.MapHealthChecks("/health");

@@ -75,10 +75,6 @@ namespace LogiSyn.Views
                 {
                     _all = localOrders.Select(o => OrderRow.FromOrderScaled(o)).ToList();
                 }
-                else if (_all.Count == 0)
-                {
-                    MessageBox.Show("No orders available. Please check your connection or create a new order.");
-                }
                 Refresh();
             }
         }
@@ -95,11 +91,18 @@ namespace LogiSyn.Views
             var selected = StatusFilter.SelectedItem as ComboBoxItem;
             string status = selected == null ? "All Statuses" : (string)selected.Content;
 
-            OrderList.ItemsSource = _all.Where(o =>
+            var filtered = _all.Where(o =>
                 (q.Length == 0
                     || o.Number.IndexOf(q, StringComparison.OrdinalIgnoreCase) >= 0
                     || o.Customer.IndexOf(q, StringComparison.OrdinalIgnoreCase) >= 0)
                 && (status == "All Statuses" || o.Status == status)).ToList();
+
+            OrderList.ItemsSource = filtered;
+
+            if (EmptyStatePanel != null)
+            {
+                EmptyStatePanel.Visibility = filtered.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
+            }
         }
 
         //------------------------------------------------------------------------------------------------//

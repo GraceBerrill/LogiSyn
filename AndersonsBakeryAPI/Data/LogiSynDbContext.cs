@@ -56,6 +56,10 @@ namespace AndersonsBakeryAPI.Data
                 .IsRequired()
                 .HasMaxLength(50);
 
+            // Database index for frequent date & status filtering
+            modelBuilder.Entity<OrderScaled>()
+                .HasIndex(o => new { o.OrderDate, o.Status });
+
             // Persist ProductionItems as serialized JSON in SQL Server
             modelBuilder.Entity<OrderScaled>()
                 .Property(o => o.ProductionItems)
@@ -102,6 +106,7 @@ namespace AndersonsBakeryAPI.Data
                 entity.HasKey(p => p.ProductID);
                 entity.Property(p => p.ProductID).ValueGeneratedOnAdd();
                 entity.Property(p => p.ProductName).IsRequired().HasMaxLength(255);
+                entity.HasIndex(p => p.ProductName).IsUnique();
                 entity.Property(p => p.PricePerUnit).HasPrecision(18, 2);
                 entity.Property(p => p.SellBy);
                 entity.Property(p => p.BestBefore);
@@ -126,6 +131,7 @@ namespace AndersonsBakeryAPI.Data
                     .HasConversion(v => string.IsNullOrEmpty(v) ? 0 : int.Parse(v), v => v.ToString())
                     .ValueGeneratedOnAdd();
                 entity.Property(u => u.Name).HasColumnName("Username").IsRequired().HasMaxLength(50);
+                entity.HasIndex(u => u.Name).IsUnique();
                 entity.Property(u => u.Role).IsRequired().HasMaxLength(50);
                 entity.Property(u => u.Password).HasMaxLength(100);
                 entity.Property(u => u.Id).HasColumnName("MongoId").HasMaxLength(50).IsRequired(false);

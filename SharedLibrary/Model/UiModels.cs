@@ -166,10 +166,14 @@ namespace SharedLibrary.Model
     // ----- summary paper (Order Sheets / Order Breakdown) -----
     public class SummaryLine
     {
-        public string Product { get; set; }
-        public string Production { get; set; }
-        public string Ingredients { get; set; }
-        public string Packaging { get; set; }
+        public string Product { get; set; } = string.Empty;
+        public string Production { get; set; } = string.Empty;
+        public string Ingredients { get; set; } = string.Empty;
+        public string Packaging { get; set; } = string.Empty;
+        public string Notes { get; set; } = string.Empty;
+        public string UsageMetrics { get; set; } = string.Empty;
+        public bool HasNotes => !string.IsNullOrWhiteSpace(Notes);
+        public bool HasUsageMetrics => !string.IsNullOrWhiteSpace(UsageMetrics);
     }
 
     // ----- production sheet paper -----
@@ -493,12 +497,34 @@ namespace SharedLibrary.Model
                 double pans = completed && item.Packaging?.PansUsed > 0 ? item.Packaging.PansUsed : (item.Packaging?.Pans ?? 0);
                 double trolleys = completed && item.Packaging?.TrolleysUsed > 0 ? item.Packaging.TrolleysUsed : (item.Packaging?.Trolleys ?? 0);
 
+                // Extract user / baker notes
+                string notes = item.Notes ?? string.Empty;
+
+                // Build usage metrics comparing planned vs actual used quantities
+                var usageList = new List<string>();
+                if (item.Packaging != null)
+                {
+                    if (item.Packaging.PansUsed > 0)
+                        usageList.Add($"Pans: {item.Packaging.Pans} planned, {item.Packaging.PansUsed} used");
+                    if (item.Packaging.TrolleysUsed > 0)
+                        usageList.Add($"Trolleys: {item.Packaging.Trolleys} planned, {item.Packaging.TrolleysUsed} used");
+                }
+
+                var usedIngredients = (item.ReqIngredients ?? new List<Ingredients>())
+                    .Where(i => i.AmountUsed > 0)
+                    .Select(i => $"{i.IngredientName}: {i.AmountUsed} {i.MeasuredIngredient} used (planned {Math.Round(i.IngredientAmount + i.AdditionsAmount, 2)})");
+                usageList.AddRange(usedIngredients);
+
+                string usageMetrics = usageList.Count > 0 ? string.Join("   |   ", usageList) : string.Empty;
+
                 lines.Add(new SummaryLine
                 {
                     Product = prodName,
                     Production = string.IsNullOrWhiteSpace(item.ProductionLine) ? "Production 1" : item.ProductionLine,
                     Ingredients = string.Join(",   ", ingStrings),
-                    Packaging = $"Pans: {pans},   Trolleys: {trolleys}"
+                    Packaging = $"Pans: {pans},   Trolleys: {trolleys}",
+                    Notes = notes,
+                    UsageMetrics = usageMetrics
                 });
             }
 

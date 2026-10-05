@@ -84,7 +84,7 @@
                                 <TextBox x:Name="TxtProduct" Grid.Column="0" FontSize="15" BorderThickness="0" Background="Transparent" VerticalContentAlignment="Center" Padding="8,0"/>
                                 <Border Grid.Column="0" BorderBrush="#555555" BorderThickness="0,0,1,0"/>
 
-                                <TextBox x:Name="TxtProductAmount" Grid.Column="1" FontSize="15" BorderThickness="0" Background="Transparent" VerticalContentAlignment="Center" Padding="8,0"/>
+                                <TextBox x:Name="TxtProductAmount" Grid.Column="1" FontSize="15" BorderThickness="0" Background="Transparent" VerticalContentAlignment="Center" Padding="8,0" local:IntegerInputLimiter.IsEnabled="True"/>
                                 <Border Grid.Column="1" BorderBrush="#555555" BorderThickness="0,0,1,0"/>
 
                                 <TextBox x:Name="TxtProduction" Grid.Column="2" FontSize="15" BorderThickness="0" Background="Transparent" VerticalContentAlignment="Center" Padding="8,0"/>

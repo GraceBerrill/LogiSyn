@@ -85,13 +85,38 @@
                                         <!-- Adriaan - View Order Button -->
                                         <Button Grid.Column="4" Content="VIEW" Style="{StaticResource OutlineButton}"
                                                 Height="32" Width="90" HorizontalAlignment="Left" VerticalAlignment="Center"
-                                                Click="BtnViewOrder_Click"/>
+                                                Click="BtnViewOrder_Click"
+                                                AutomationProperties.Name="View Order Details"/>
                                     </Grid>
                                 </Border>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
                 </ScrollViewer>
+
+                <!-- UX Empty State Placeholder -->
+                <StackPanel x:Name="EmptyStatePanel"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Center"
+                            Margin="0,60,0,0"
+                            Visibility="Collapsed">
+                    <TextBlock Text="&#xE8B7;"
+                               FontFamily="Segoe MDL2 Assets"
+                               FontSize="36"
+                               Foreground="#757575"
+                               HorizontalAlignment="Center"
+                               Margin="0,0,0,10"/>
+                    <TextBlock Text="No Orders Found"
+                               FontSize="16"
+                               FontWeight="SemiBold"
+                               Foreground="#E0E0E0"
+                               HorizontalAlignment="Center"
+                               Margin="0,0,0,4"/>
+                    <TextBlock Text="No active orders match your search or filter criteria."
+                               FontSize="13"
+                               Foreground="#9E9E9E"
+                               HorizontalAlignment="Center"/>
+                </StackPanel>
             </Grid>
         </ContentControl>
 

@@ -141,7 +141,9 @@
                             Margin="0,0,0,14"
                             ToolTip="Current API status. Click to test connection."
                             Cursor="Hand"
-                            MouseDown="ApiStatusBadge_MouseDown">
+                            MouseDown="ApiStatusBadge_MouseDown"
+                            AutomationProperties.Name="API Connectivity Status Badge"
+                            AutomationProperties.HelpText="Displays real-time cloud and local API connectivity. Click to re-test connection.">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>
@@ -177,7 +179,9 @@
                             BorderThickness="0"
                             HorizontalContentAlignment="Left"
                             Cursor="Hand"
-                            Click="LogoutButton_Click">
+                            Click="LogoutButton_Click"
+                            AutomationProperties.Name="Log Out"
+                            AutomationProperties.HelpText="Sign out of the current user session">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="&#xE7E8;"
                                        FontFamily="Segoe MDL2 Assets"

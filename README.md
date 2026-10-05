@@ -18,7 +18,7 @@ LogiSyn is the resulting application: upload a customer's order as a PDF, and th
 
 - [Key Features](#key-features)
 - [Tech Stack](#tech-stack)
-- [System Architecture](#system-architecture)
+- [System Architecture & Rationale](#system-architecture) — [Full Architectural Decision Document](ARCHITECTURE_RATIONALE.md)
 - [Getting Started](#getting-started)
 - [Default Login Credentials](#default-login-credentials)
 - [Roles & Permissions](#roles--permissions)
@@ -56,6 +56,9 @@ LogiSyn is the resulting application: upload a customer's order as a PDF, and th
 | Password hashing | PBKDF2-HMAC-SHA256 (custom implementation, no external library) |
 
 ## System Architecture
+
+> [!NOTE]
+> For a detailed breakdown of architectural decisions, technology trade-offs (CAP theorem, hybrid persistence, offline-first resilience), and cloud infrastructure rationale, see [**ARCHITECTURE_RATIONALE.md**](ARCHITECTURE_RATIONALE.md).
 
 There is also a real, separately-runnable ASP.NET Core Web API (the `AndersonsBakeryAPI` project) that exposes multiple controllers (Orders, Users, Products and Authentication) and the same service-layer logic that the desktop app uses. The desktop client is able to use the hosted API when available, and will fall back to the in-process services (or local SQL/JSON) when the host is not reachable.
 

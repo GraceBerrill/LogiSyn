@@ -63,9 +63,16 @@ namespace LogiSyn.Views
             var selected = StorageFilter.SelectedItem as ComboBoxItem;
             string storage = selected == null ? "Storage" : (string)selected.Content;
 
-            ProductList.ItemsSource = _all.Where(p =>
+            var filtered = _all.Where(p =>
                 (q.Length == 0 || p.Name.IndexOf(q, StringComparison.OrdinalIgnoreCase) >= 0)
                 && (storage == "Storage" || p.Storage.Equals(storage, StringComparison.OrdinalIgnoreCase))).ToList();
+
+            ProductList.ItemsSource = filtered;
+
+            if (EmptyProductsStatePanel != null)
+            {
+                EmptyProductsStatePanel.Visibility = filtered.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
+            }
         }
 
         private void SearchBox_TextChanged(object sender, TextChangedEventArgs e)

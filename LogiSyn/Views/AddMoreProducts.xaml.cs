@@ -48,9 +48,16 @@ namespace LogiSyn.Views
                 return;
             }
 
-            // Parse Product Amount
-            int.TryParse(TxtProductAmount.Text.Trim(), out int qty);
-            if (qty <= 0) qty = 100;
+            // Validate and parse Product Amount - must be a valid positive integer
+            string rawAmount = TxtProductAmount.Text.Trim();
+            if (string.IsNullOrWhiteSpace(rawAmount) || !int.TryParse(rawAmount, out int qty) || qty <= 0)
+            {
+                MessageBox.Show("Please enter a valid positive integer for the product amount (e.g. 50, 100).",
+                                "Validation Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                TxtProductAmount.Focus();
+                TxtProductAmount.SelectAll();
+                return;
+            }
 
             // If quantity was embedded in the product name (e.g. "50 Hamburger Rolls"), strip it out and set Amount explicitly
             var qtyMatch = System.Text.RegularExpressions.Regex.Match(productTitle, @"^(\d+)\s+(.+)$");

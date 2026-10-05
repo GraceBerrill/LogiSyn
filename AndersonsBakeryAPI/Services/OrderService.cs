@@ -525,20 +525,27 @@ namespace AndersonsBakeryAPI.Services
                 string.Equals(o.Status, "Complete", StringComparison.OrdinalIgnoreCase)).ToList();
         }
 
-        // Asynchronously retrieves an order by ID
+        // Asynchronously retrieves an order by ID (with resilient # prefix matching)
         public async Task<OrderScaled?> GetOrderByIdAsync(string orderId)
         {
             if (string.IsNullOrWhiteSpace(orderId)) return null;
 
+            string cleanTarget = orderId.Trim().TrimStart('#');
             var all = await GetOrdersAsync(forceRefresh: false);
-            return all.FirstOrDefault(o => o.OrderId.Equals(orderId, StringComparison.OrdinalIgnoreCase));
+            return all.FirstOrDefault(o =>
+                o.OrderId.Equals(orderId, StringComparison.OrdinalIgnoreCase) ||
+                (!string.IsNullOrEmpty(cleanTarget) && o.OrderId.Trim().TrimStart('#').Equals(cleanTarget, StringComparison.OrdinalIgnoreCase)));
         }
 
-        // Synchronous retrieval by ID
+        // Synchronous retrieval by ID (with resilient # prefix matching)
         public OrderScaled? GetOrderById(string orderId)
         {
             if (string.IsNullOrWhiteSpace(orderId)) return null;
-            return GetOrders().FirstOrDefault(o => o.OrderId.Equals(orderId, StringComparison.OrdinalIgnoreCase));
+
+            string cleanTarget = orderId.Trim().TrimStart('#');
+            return GetOrders().FirstOrDefault(o =>
+                o.OrderId.Equals(orderId, StringComparison.OrdinalIgnoreCase) ||
+                (!string.IsNullOrEmpty(cleanTarget) && o.OrderId.Trim().TrimStart('#').Equals(cleanTarget, StringComparison.OrdinalIgnoreCase)));
         }
 
         // Asynchronously saves or updates an order locally and persists across MongoDB and SQL Server

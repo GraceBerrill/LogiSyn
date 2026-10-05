@@ -9,6 +9,9 @@ namespace AndersonsBakeryAPI.Services
 {
     public class MongoUserService
     {
+        private static bool _indexesInitialized;
+        private static readonly object _indexLock = new();
+
         private readonly IMongoCollection<UserRow> _usersCollection;
 
         public MongoUserService(IMongoClient client, IConfiguration configuration)
@@ -18,6 +21,7 @@ namespace AndersonsBakeryAPI.Services
 
             var database = client.GetDatabase(databaseName);
             _usersCollection = database.GetCollection<UserRow>("Users");
+            EnsureIndexes();
         }
 
         public MongoUserService(string connectionString, string databaseName)
@@ -31,6 +35,30 @@ namespace AndersonsBakeryAPI.Services
             settings.ConnectTimeout = TimeSpan.FromSeconds(3);
             var client = new MongoClient(settings);
             _usersCollection = client.GetDatabase(databaseName).GetCollection<UserRow>("Users");
+            EnsureIndexes();
+        }
+
+        private void EnsureIndexes()
+        {
+            if (_indexesInitialized) return;
+            Task.Run(() =>
+            {
+                lock (_indexLock)
+                {
+                    if (_indexesInitialized) return;
+                    try
+                    {
+                        var keys = Builders<UserRow>.IndexKeys.Ascending(u => u.Name);
+                        var options = new CreateIndexOptions { Unique = true, Sparse = true };
+                        _usersCollection.Indexes.CreateOne(new CreateIndexModel<UserRow>(keys, options));
+                        _indexesInitialized = true;
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"[MONGO] Warning: Failed to create Users index: {ex.Message}");
+                    }
+                }
+            });
         }
         public List<UserRow> GetAllUsers()
         {
