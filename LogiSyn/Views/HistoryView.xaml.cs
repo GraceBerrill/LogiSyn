@@ -23,7 +23,7 @@ namespace LogiSyn.Views
             InitializeComponent();
 
             // Set the date text and header based on the role
-            DateText.Text = SampleData.Today();
+            DateText.Text = DateTime.Now.ToString("dd MMMM yyyy");
             DateHeader.Text = role == AppRole.Admin ? "Date Completed" : "Date";
 
             DateFilter.SelectedIndex = 0;

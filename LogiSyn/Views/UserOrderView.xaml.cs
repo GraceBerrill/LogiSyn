@@ -21,7 +21,7 @@ namespace LogiSyn.Views
         {
             InitializeComponent();
 
-            DateText.Text = SampleData.Today();
+            DateText.Text = DateTime.Now.ToString("dd MMMM yyyy");
 
             LoadOrdersAsync();
         }

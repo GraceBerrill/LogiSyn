@@ -48,8 +48,13 @@ namespace LogiSyn.Views
             {
                 // Fallback while loading
                 bool done = _order.IsComplete;
-                var data = SampleData.Sheet(done);
-                data.Title = $"{_order.Customer} Order {_order.Number}".Trim();
+                var data = new SheetData
+                {
+                    Title = $"{_order.Customer} Order {_order.Number}".Trim(),
+                    DateText = DateTime.Now.ToString("dd MMMM yyyy"),
+                    IsCompleted = done,
+                    Products = new List<SheetProduct>()
+                };
                 Sheet.IsReadOnly = done;
                 Sheet.DataContext = data;
                 CompleteButton.Visibility = done ? Visibility.Collapsed : Visibility.Visible;

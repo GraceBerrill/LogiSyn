@@ -19,7 +19,7 @@ namespace LogiSyn.Views
         {
             InitializeComponent();
 
-            DateText.Text = SampleData.Today();
+            DateText.Text = DateTime.Now.ToString("dd MMMM yyyy");
             _all = _service.GetAll();
 
             StorageFilter.SelectedIndex = 0;
@@ -110,7 +110,14 @@ namespace LogiSyn.Views
                 }
                 else
                 {
-                    detail = SampleData.DetailFor(row);
+                    detail = new ProductDetail
+                    {
+                        Name = row.Name,
+                        DateAdded = DateTime.Now.ToString("dd/MM/yyyy"),
+                        Ingredients = new List<IngredientLine>(),
+                        Method = "",
+                        Storage = row.Storage
+                    };
                 }
 
                 var modal = new ProductDetailModal(detail, editable);
@@ -129,7 +136,15 @@ namespace LogiSyn.Views
             }
             catch
             {
-                var fallbackModal = new ProductDetailModal(SampleData.DetailFor(row), editable);
+                var fallbackDetail = new ProductDetail
+                {
+                    Name = row.Name,
+                    DateAdded = DateTime.Now.ToString("dd/MM/yyyy"),
+                    Ingredients = new List<IngredientLine>(),
+                    Method = "",
+                    Storage = row.Storage
+                };
+                var fallbackModal = new ProductDetailModal(fallbackDetail, editable);
                 fallbackModal.Saved += () =>
                 {
                     try
@@ -171,6 +186,7 @@ namespace LogiSyn.Views
             catch { }
             _all.Remove(row);
             Refresh();
+            ShellWindow.Current?.ShowToast($"Product '{row.Name}' deleted.");
         }
 
         /********************************************************************************************/

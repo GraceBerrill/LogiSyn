@@ -37,18 +37,18 @@ namespace LogiSyn.Views
                 var order = _order ?? _orderService.GetOrders().LastOrDefault();
                 if (order == null)
                 {
-                    MessageBox.Show("No active order available to print.", "Print Excel", MessageBoxButton.OK, MessageBoxImage.Information);
+                    ShellWindow.Current?.ShowToast("No active order available to print.", isWarning: true);
                     return;
                 }
 
                 // Export the order to Excel and open it for printing
                 string path = _excelService.ExportOrderToExcel(order);
                 Process.Start(new ProcessStartInfo { FileName = path, UseShellExecute = true });
-                MessageBox.Show($"Order {order.OrderId} exported as Excel and opened for printing:\n{path}", "Print Excel", MessageBoxButton.OK, MessageBoxImage.Information);
+                ShellWindow.Current?.ShowToast($"Order {order.OrderId} exported as Excel and opened for printing.");
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Print failed: {ex.Message}", "Print Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                ShellWindow.Current?.ShowToast($"Print failed: {ex.Message}", isWarning: true);
             }
         }
 
@@ -64,7 +64,7 @@ namespace LogiSyn.Views
                 var order = _order ?? _orderService.GetOrders().LastOrDefault();
                 if (order == null)
                 {
-                    MessageBox.Show("No active order available to email.", "Email Excel", MessageBoxButton.OK, MessageBoxImage.Information);
+                    ShellWindow.Current?.ShowToast("No active order available to email.", isWarning: true);
                     return;
                 }
 
@@ -102,12 +102,12 @@ namespace LogiSyn.Views
                     catch { }
 
                     Process.Start(new ProcessStartInfo { FileName = "explorer.exe", Arguments = $"/select,\"{path}\"", UseShellExecute = true });
-                    MessageBox.Show($"Order exported to Excel:\n{path}\n\nPlease attach this file to your email draft.", "Email Excel", MessageBoxButton.OK, MessageBoxImage.Information);
+                    ShellWindow.Current?.ShowToast("Order exported to Excel and opened in Explorer.");
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Email failed: {ex.Message}", "Email Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                ShellWindow.Current?.ShowToast($"Email failed: {ex.Message}", isWarning: true);
             }
         }
     }

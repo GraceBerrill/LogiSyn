@@ -124,8 +124,13 @@ namespace LogiSyn.Views
 		{
 			try
 			{
-				var orders = _currentOrdersScaled;
-				var modal = new ExportOrdersModal(orders);
+				if (_currentOrdersScaled.Count == 0)
+				{
+					ShellWindow.Current?.ShowToast("No orders available to export.", isWarning: true);
+					return;
+				}
+
+				var modal = new ExportOrdersModal(_currentOrdersScaled);
 
 				if (ShellWindow.Current != null)
 				{
@@ -146,7 +151,7 @@ namespace LogiSyn.Views
 			}
 			catch (Exception ex)
 			{
-				MessageBox.Show($"Failed to open Excel export: {ex.Message}", "Export Error", MessageBoxButton.OK, MessageBoxImage.Error);
+				ShellWindow.Current?.ShowToast($"Failed to open Excel export: {ex.Message}", isWarning: true);
 			}
 		}
 
@@ -155,8 +160,13 @@ namespace LogiSyn.Views
 		{
 			try
 			{
-				var orders = _currentOrdersScaled;
-				var modal = new EmailOrdersModal(orders);
+				if (_currentOrdersScaled.Count == 0)
+				{
+					ShellWindow.Current?.ShowToast("No orders available to email.", isWarning: true);
+					return;
+				}
+
+				var modal = new EmailOrdersModal(_currentOrdersScaled);
 
 				if (ShellWindow.Current != null)
 				{
@@ -177,7 +187,7 @@ namespace LogiSyn.Views
 			}
 			catch (Exception ex)
 			{
-				MessageBox.Show($"Failed to open Email modal: {ex.Message}", "Email Error", MessageBoxButton.OK, MessageBoxImage.Error);
+				ShellWindow.Current?.ShowToast($"Failed to open Email modal: {ex.Message}", isWarning: true);
 			}
 		}
 

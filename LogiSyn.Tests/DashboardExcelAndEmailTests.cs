@@ -16,7 +16,7 @@ namespace LogiSyn.Tests
         // test shows that smaple order contains details
         public void SampleOrdersScaled_ContainsRichDetailsForCheckersAndSpar()
         {
-            var samples = SampleData.SampleOrdersScaled();
+            var samples = TestOrderFactory.CreateTestOrders();
             Assert.NotNull(samples);
             Assert.True(samples.Count >= 2);
 
@@ -42,7 +42,7 @@ namespace LogiSyn.Tests
         public void ExportOrdersToExcel_MultiOrder_CreatesOverviewAndDedicatedSheetsWithDetails()
         {
             var excelService = new ExcelOrderService();
-            var orders = SampleData.SampleOrdersScaled();
+            var orders = TestOrderFactory.CreateTestOrders();
             var tempFile = Path.Combine(Path.GetTempPath(), $"multi_order_test_{Guid.NewGuid():N}.xlsx");
 
             try
@@ -109,7 +109,7 @@ namespace LogiSyn.Tests
         public void ExportOrdersToIndividualFiles_ExportsAllOrdersIntoFolder()
         {
             var excelService = new ExcelOrderService();
-            var orders = SampleData.SampleOrdersScaled();
+            var orders = TestOrderFactory.CreateTestOrders();
             var tempFolder = Path.Combine(Path.GetTempPath(), $"order_export_folder_{Guid.NewGuid():N}");
 
             try
@@ -138,7 +138,7 @@ namespace LogiSyn.Tests
         [Fact]
         public void OrderSelectionItem_CorrectlyFormatsDetailsAndToggles()
         {
-            var order = SampleData.SampleOrdersScaled().First(o => o.Customer == "Spar");
+            var order = TestOrderFactory.CreateTestOrders().First(o => o.Customer == "Spar");
             var item = new OrderSelectionItem
             {
                 Order = order,
@@ -161,7 +161,7 @@ namespace LogiSyn.Tests
         public void OrderService_BuildScalingSheetEmail_IncludesFullProductionAndMaterialDetails()
         {
             var orderService = new OrderService();
-            var sparOrder = SampleData.SampleOrdersScaled().First(o => o.Customer == "Spar");
+            var sparOrder = TestOrderFactory.CreateTestOrders().First(o => o.Customer == "Spar");
 
             var email = orderService.BuildScalingSheetEmail(sparOrder);
             Assert.NotNull(email);

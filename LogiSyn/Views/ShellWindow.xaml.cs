@@ -2,6 +2,7 @@ using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Threading;
 using SharedLibrary.Model;
 
 namespace LogiSyn.Views
@@ -132,6 +133,36 @@ namespace LogiSyn.Views
         public void CloseAllModals()
         {
             CloseModal();
+        }
+
+        private DispatcherTimer? _toastTimer;
+
+        public void ShowToast(string message, bool isWarning = false)
+        {
+            if (!Dispatcher.CheckAccess())
+            {
+                Dispatcher.Invoke(() => ShowToast(message, isWarning));
+                return;
+            }
+
+            if (ToastMessage == null || ToastNotification == null || ToastIcon == null) return;
+
+            ToastMessage.Text = message;
+            ToastIcon.Text = isWarning ? "\uE7BA" : "\uE73E";
+            ToastIcon.Foreground = isWarning
+                ? Brushes.Orange
+                : new SolidColorBrush((Color)ColorConverter.ConvertFromString("#8DBE98"));
+
+            ToastNotification.Visibility = Visibility.Visible;
+
+            _toastTimer?.Stop();
+            _toastTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(3.5) };
+            _toastTimer.Tick += (s, e) =>
+            {
+                ToastNotification.Visibility = Visibility.Collapsed;
+                _toastTimer.Stop();
+            };
+            _toastTimer.Start();
         }
 
         private void UpdateActiveButton(string page)

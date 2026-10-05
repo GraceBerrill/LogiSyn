@@ -10,6 +10,7 @@
         Background="#F5F6FA">
 
     <Window.Resources>
+
         <Style x:Key="MenuButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="Foreground" Value="#E0E0E0"/>
@@ -146,6 +147,28 @@
 
         <Grid Grid.Column="1">
             <ContentControl x:Name="MainContent"/>
+
+            <!-- Top-Floating Toast Notification -->
+            <Border x:Name="ToastNotification"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Top"
+                    Margin="0,20,0,0"
+                    Background="#1B2136"
+                    CornerRadius="8"
+                    Padding="20,12"
+                    Visibility="Collapsed"
+                    Panel.ZIndex="999">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="16" ShadowDepth="4" Direction="270" Opacity="0.3"/>
+                </Border.Effect>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock x:Name="ToastIcon" Text="&#xE73E;" FontFamily="Segoe MDL2 Assets" 
+                               Foreground="#8DBE98" FontSize="16" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                    <TextBlock x:Name="ToastMessage" Text="Notification message" 
+                               Foreground="White" FontSize="14" FontWeight="SemiBold" VerticalAlignment="Center"
+                               MaxWidth="450" TextWrapping="Wrap"/>
+                </StackPanel>
+            </Border>
 
             <Grid x:Name="ModalLayer" Visibility="Collapsed">
                 <Border x:Name="ModalScrim"

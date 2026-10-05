@@ -9,11 +9,10 @@ using System.Text.Json.Serialization;
 using MongoDB.Bson;
 
 using MongoDB.Bson.Serialization.Attributes;
+using System.Text.Json.Serialization;
 
 #if WINDOWS
 using System.Windows.Media;
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
 #else
 using ImageSource = System.Object;
 using Brush = System.Object;
@@ -22,9 +21,7 @@ using Brush = System.Object;
 namespace SharedLibrary.Model
 {
     // =====================================================================
-    //  Front-end models + sample data.
-    //  Everything in SampleData is placeholder text copied from the Figma
-    //  screens - swap these calls for your real data / services later.
+    //  Front-end models for WPF and shared across applications.
     // =====================================================================
 
     public enum AppRole { Admin, Manager, User }
@@ -103,14 +100,25 @@ namespace SharedLibrary.Model
         /// <summary>
         /// Factory method to create an OrderRow from an OrderScaled (API response)
         /// </summary>
-        public static OrderRow FromOrderScaled(OrderScaled order)
+        public static OrderRow FromOrderScaled(OrderScaled? order)
         {
+            if (order == null)
+            {
+                return new OrderRow
+                {
+                    Number = string.Empty,
+                    Customer = string.Empty,
+                    Date = DateTime.Now,
+                    Status = "Pending"
+                };
+            }
+
             return new OrderRow
             {
-                Number = order.OrderId,
-                Customer = order.Customer,
+                Number = order.OrderId ?? string.Empty,
+                Customer = order.Customer ?? string.Empty,
                 Date = order.OrderDate,
-                Status = order.Status == "Completed" ? "Complete" : order.Status
+                Status = order.Status == "Completed" ? "Complete" : (order.Status ?? "Pending")
             };
         }
     }
@@ -197,7 +205,7 @@ namespace SharedLibrary.Model
         /// </summary>
         public static SheetData FromOrderScaled(OrderScaled order)
         {
-            if (order == null) return SampleData.Sheet(false);
+            if (order == null) return new SheetData();
 
             bool isCompleted = string.Equals(order.Status, "Completed", StringComparison.OrdinalIgnoreCase) ||
                                string.Equals(order.Status, "Complete", StringComparison.OrdinalIgnoreCase);
@@ -444,9 +452,9 @@ namespace SharedLibrary.Model
         /// <summary>
         /// Converts an OrderScaled domain model to SummaryData for display in SummaryPaper.
         /// </summary>
-        public static SummaryData FromOrderScaled(OrderScaled order)
+        public static SummaryData FromOrderScaled(OrderScaled? order)
         {
-            if (order == null) return SampleData.Summary(true);
+            if (order == null) return new SummaryData();
 
             bool completed = string.Equals(order.Status, "Completed", StringComparison.OrdinalIgnoreCase) ||
                              string.Equals(order.Status, "Complete", StringComparison.OrdinalIgnoreCase);
@@ -502,9 +510,9 @@ namespace SharedLibrary.Model
         public string DateText { get; set; } = string.Empty;
         public List<string> Totals { get; set; } = new();
 
-        public static RawMaterialData FromOrderScaled(OrderScaled order)
+        public static RawMaterialData FromOrderScaled(OrderScaled? order)
         {
-            if (order == null) return SampleData.RawMaterials();
+            if (order == null) return new RawMaterialData();
 
             return new RawMaterialData
             {
@@ -519,332 +527,16 @@ namespace SharedLibrary.Model
     // ----- product pop-up -----
     public class IngredientLine
     {
-        public string Name { get; set; }
-        public string Quantity { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string Quantity { get; set; } = string.Empty;
     }
 
     public class ProductDetail
     {
-        public string Name { get; set; }
-        public string DateAdded { get; set; }
-        public List<IngredientLine> Ingredients { get; set; }
-        public string Method { get; set; }
-        public string Storage { get; set; }
-    }
-
-    // =====================================================================
-    public static class SampleData
-    {
-        public static string Today()
-        {
-            return DateTime.Now.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
-        }
-
-        // Adriaan - Sample Order Data
-        // Admin "Orders" list and the dashboard's recent orders
-        public static List<OrderRow> Orders()
-        {
-            return new List<OrderRow>
-            {
-                new OrderRow { Number = "#001", Customer = "Checkers", Date = new DateTime(2026, 5, 9), Status = "Pending" },
-                new OrderRow { Number = "#002", Customer = "Spar",     Date = new DateTime(2026, 5, 9), Status = "Complete" }
-            };
-        }
-
-        public static List<OrderScaled> SampleOrdersScaled()
-        {
-            return new List<OrderScaled>
-            {
-                new OrderScaled
-                {
-                    OrderId = "#001",
-                    Customer = "Checkers",
-                    OrderDate = DateTime.Now.Date.AddDays(-1),
-                    Status = "Pending",
-                    ProductionItems = new List<ProductionItem>
-                    {
-                        new ProductionItem
-                        {
-                            ProductName = "Hotdog Rolls",
-                            Amount = 200,
-                            ProductionLine = "Production 1",
-                            packaging = new Packaging(3, 1),
-                            ReqIngredients = new List<Ingredients>
-                            {
-                                new Ingredients { IngredientName = "Flour", IngredientAmount = 4, AdditionsAmount = 0.5, MeasuredIngredient = "bags" },
-                                new Ingredients { IngredientName = "Sugar", IngredientAmount = 2, AdditionsAmount = 0.2, MeasuredIngredient = "bags" },
-                                new Ingredients { IngredientName = "Yeast", IngredientAmount = 1, AdditionsAmount = 0.1, MeasuredIngredient = "bags" },
-                                new Ingredients { IngredientName = "Salt", IngredientAmount = 2, AdditionsAmount = 0.1, MeasuredIngredient = "bags" }
-                            },
-                            Notes = "Use fine grain yeast for quick rise."
-                        },
-                        new ProductionItem
-                        {
-                            ProductName = "Hamburger Rolls",
-                            Amount = 150,
-                            ProductionLine = "Production 2",
-                            packaging = new Packaging(2, 1),
-                            ReqIngredients = new List<Ingredients>
-                            {
-                                new Ingredients { IngredientName = "Flour", IngredientAmount = 3, AdditionsAmount = 0.5, MeasuredIngredient = "bags" },
-                                new Ingredients { IngredientName = "Eggs", IngredientAmount = 15, AdditionsAmount = 1, MeasuredIngredient = "dozen" },
-                                new Ingredients { IngredientName = "Salt", IngredientAmount = 2, AdditionsAmount = 0.2, MeasuredIngredient = "bags" },
-                                new Ingredients { IngredientName = "Butter", IngredientAmount = 2, AdditionsAmount = 0.2, MeasuredIngredient = "bags" }
-                            },
-                            Notes = "Glaze tops with egg wash before baking."
-                        }
-                    },
-                    RawMaterials = new Dictionary<string, RawMaterialValue>(StringComparer.OrdinalIgnoreCase)
-                    {
-                        { "Flour", new RawMaterialValue(8, "bags") },
-                        { "Eggs", new RawMaterialValue(16, "dozen") },
-                        { "Sugar", new RawMaterialValue(2.2, "bags") },
-                        { "Salt", new RawMaterialValue(4.3, "bags") },
-                        { "Yeast", new RawMaterialValue(1.1, "bags") },
-                        { "Butter", new RawMaterialValue(2.2, "bags") }
-                    }
-                },
-                new OrderScaled
-                {
-                    OrderId = "#002",
-                    Customer = "Spar",
-                    OrderDate = DateTime.Now.Date,
-                    Status = "Complete",
-                    ProductionItems = new List<ProductionItem>
-                    {
-                        new ProductionItem
-                        {
-                            ProductName = "Hamburger Rolls",
-                            Amount = 250,
-                            ProductionLine = "Production 1",
-                            packaging = new Packaging(4, 2, 4, 2),
-                            ReqIngredients = new List<Ingredients>
-                            {
-                                new Ingredients { IngredientName = "Flour", IngredientAmount = 5, AdditionsAmount = 1, MeasuredIngredient = "bags", AmountUsed = 6 },
-                                new Ingredients { IngredientName = "Eggs", IngredientAmount = 20, AdditionsAmount = 1, MeasuredIngredient = "dozen", AmountUsed = 27 },
-                                new Ingredients { IngredientName = "Salt", IngredientAmount = 4, AdditionsAmount = 1, MeasuredIngredient = "bags", AmountUsed = 4 },
-                                new Ingredients { IngredientName = "Butter", IngredientAmount = 4, AdditionsAmount = 1, MeasuredIngredient = "bags", AmountUsed = 2 }
-                            },
-                            Notes = "Extra flour was used due to spillage."
-                        },
-                        new ProductionItem
-                        {
-                            ProductName = "Croissants",
-                            Amount = 110,
-                            ProductionLine = "Croissant Room",
-                            packaging = new Packaging(4, 2, 4, 2),
-                            ReqIngredients = new List<Ingredients>
-                            {
-                                new Ingredients { IngredientName = "Flour", IngredientAmount = 5, AdditionsAmount = 1, MeasuredIngredient = "bags", AmountUsed = 6 },
-                                new Ingredients { IngredientName = "Eggs", IngredientAmount = 20, AdditionsAmount = 1, MeasuredIngredient = "dozen", AmountUsed = 27 },
-                                new Ingredients { IngredientName = "Salt", IngredientAmount = 4, AdditionsAmount = 1, MeasuredIngredient = "bags", AmountUsed = 4 }
-                            },
-                            Notes = "Baked to golden brown."
-                        }
-                    },
-                    RawMaterials = new Dictionary<string, RawMaterialValue>(StringComparer.OrdinalIgnoreCase)
-                    {
-                        { "Flour", new RawMaterialValue(12, "bags") },
-                        { "Eggs", new RawMaterialValue(48, "dozen") },
-                        { "Salt", new RawMaterialValue(10, "bags") },
-                        { "Butter", new RawMaterialValue(5, "bags") }
-                    }
-                },
-                new OrderScaled
-                {
-                    OrderId = "#003",
-                    Customer = "Woolworths",
-                    OrderDate = DateTime.Now.Date,
-                    Status = "Pending",
-                    ProductionItems = new List<ProductionItem>
-                    {
-                        new ProductionItem
-                        {
-                            ProductName = "Sourdough Loaves",
-                            Amount = 120,
-                            ProductionLine = "Artisan Bakery",
-                            packaging = new Packaging(6, 2),
-                            ReqIngredients = new List<Ingredients>
-                            {
-                                new Ingredients { IngredientName = "Bread Flour", IngredientAmount = 25, AdditionsAmount = 2, MeasuredIngredient = "kg" },
-                                new Ingredients { IngredientName = "Sourdough Starter", IngredientAmount = 10, AdditionsAmount = 1, MeasuredIngredient = "kg" },
-                                new Ingredients { IngredientName = "Water", IngredientAmount = 18, AdditionsAmount = 1, MeasuredIngredient = "L" },
-                                new Ingredients { IngredientName = "Sea Salt", IngredientAmount = 0.5, AdditionsAmount = 0.05, MeasuredIngredient = "kg" }
-                            },
-                            Notes = "24-hour cold fermentation."
-                        },
-                        new ProductionItem
-                        {
-                            ProductName = "French Baguettes",
-                            Amount = 80,
-                            ProductionLine = "Artisan Bakery",
-                            packaging = new Packaging(4, 1),
-                            ReqIngredients = new List<Ingredients>
-                            {
-                                new Ingredients { IngredientName = "Bread Flour", IngredientAmount = 15, AdditionsAmount = 1, MeasuredIngredient = "kg" },
-                                new Ingredients { IngredientName = "Water", IngredientAmount = 10, AdditionsAmount = 0.5, MeasuredIngredient = "L" },
-                                new Ingredients { IngredientName = "Yeast", IngredientAmount = 0.4, AdditionsAmount = 0.02, MeasuredIngredient = "kg" },
-                                new Ingredients { IngredientName = "Salt", IngredientAmount = 0.3, AdditionsAmount = 0.02, MeasuredIngredient = "kg" }
-                            },
-                            Notes = "Score diagonals with razor lame."
-                        }
-                    },
-                    RawMaterials = new Dictionary<string, RawMaterialValue>(StringComparer.OrdinalIgnoreCase)
-                    {
-                        { "Bread Flour", new RawMaterialValue(43, "kg") },
-                        { "Water", new RawMaterialValue(29.5, "L") },
-                        { "Sourdough Starter", new RawMaterialValue(11, "kg") },
-                        { "Sea Salt", new RawMaterialValue(0.55, "kg") },
-                        { "Yeast", new RawMaterialValue(0.42, "kg") },
-                        { "Salt", new RawMaterialValue(0.32, "kg") }
-                    }
-                }
-            };
-        }
-
-        // History (completed orders)
-        public static List<OrderRow> HistoryOrders()
-        {
-            return new List<OrderRow>
-            {
-                new OrderRow { Number = "#001", Customer = "Checkers", Date = new DateTime(2026, 5, 9), Status = "Complete" },
-                new OrderRow { Number = "#002", Customer = "Spar",     Date = new DateTime(2026, 5, 9), Status = "Complete" }
-            };
-        }
-
-        // The "User" role's orders
-        public static List<OrderRow> UserOrders()
-        {
-            return new List<OrderRow>
-            {
-                new OrderRow { Number = "#001", Customer = "Checkers", Date = new DateTime(2026, 5, 9), Status = "Complete" },
-                new OrderRow { Number = "#002", Customer = "Spar",     Date = new DateTime(2026, 5, 9), Status = "Pending" }
-            };
-        }
-
-        public static List<ProductRow> Products()
-        {
-            return new List<ProductRow>
-            {
-                new ProductRow { Name = "Hamburger Rolls", Price = "R24.99", SellBy = "5", BestBefore = "5", Storage = "Freezer" },
-                new ProductRow { Name = "Hotdog Rolls",    Price = "R24.99", SellBy = "6", BestBefore = "6", Storage = "Freezer" }
-            };
-        }
-
-        public static List<UserRow> Users()
-        {
-            return new List<UserRow>
-            {
-                new UserRow { Id = "01", Name = "Blessings",        Role = "Admin",   DateAdded = "12/08/2026" },
-                new UserRow { Id = "02", Name = "Paul",             Role = "Manager", DateAdded = "12/08/2026" },
-                new UserRow { Id = "03", Name = "Bread Station #1", Role = "User",    DateAdded = "12/08/2026" }
-            };
-        }
-
-        // Adriaan - Sample Order Summary and Sheet Generation
-        public static SummaryData Summary(bool completed)
-        {
-            return new SummaryData
-            {
-                Title = "Spar Order #002",
-                DateText = "5 August 2026",
-                IsCompleted = completed,
-                Lines = new List<SummaryLine>
-                {
-                    new SummaryLine
-                    {
-                        Product = "250 Hamburger Rolls", Production = "Production 1",
-                        Ingredients = "Flour: 6 bags,   Eggs: 27 dozen,   Salt: 3 bags",
-                        Packaging = "Pans: 2,   Trolleys: 1"
-                    },
-                    new SummaryLine
-                    {
-                        Product = "100 Rolls", Production = "Production 1",
-                        Ingredients = "Flour: 6 bags,   Eggs: 27 dozen,   Salt: 3 bags",
-                        Packaging = "Pans: 2,   Trolleys: 1"
-                    }
-                }
-            };
-        }
-
-        public static RawMaterialData RawMaterials()
-        {
-            return new RawMaterialData
-            {
-                Title = "Spar Order #002",
-                DateText = "5 August 2026",
-                Totals = new List<string> { "Eggs: 50 dozen", "Flour: 100 bags", "Salt: 50 bags" }
-            };
-        }
-
-        /// <summary>
-        /// The production sheet. filled = true gives the completed version (Used values in
-        /// green / red, notes filled in); false gives the blank one a baker fills in.
-        /// </summary>
-        public static SheetData Sheet(bool filled)
-        {
-            Brush good = filled ? Palette.UserComplete : Palette.Black;
-            Brush bad = filled ? Palette.UserPending : Palette.Black;
-
-            return new SheetData
-            {
-                Title = "Spar Order #002",
-                DateText = "5 August 2026",
-                IsCompleted = filled,
-                Products = new List<SheetProduct>
-                {
-                    new SheetProduct
-                    {
-                        Name = "Hamburger Rolls", Amount = "250", Production = "Production 1",
-                        Ingredients = new List<SheetIngredient>
-                        {
-                            new SheetIngredient { Name = "Flour",  Amount = "5 bags",   Additional = "6 bags",   Used = filled ? "6 bags"   : "", UsedBrush = good },
-                            new SheetIngredient { Name = "Eggs",   Amount = "20 dozen", Additional = "21 dozen", Used = filled ? "27 dozen" : "", UsedBrush = bad },
-                            new SheetIngredient { Name = "Salt",   Amount = "4 bags",   Additional = "5 bags",   Used = filled ? "4 bags"   : "", UsedBrush = good },
-                            new SheetIngredient { Name = "Butter", Amount = "4 bags",   Additional = "5 bags",   Used = filled ? "2 bags"   : "", UsedBrush = good }
-                        },
-                        Packaging = new List<SheetPackaging>
-                        {
-                            new SheetPackaging { Name = "Pans",     Amount = "4", Used = filled ? "4" : "", UsedBrush = good },
-                            new SheetPackaging { Name = "Trolleys", Amount = "2", Used = filled ? "2" : "", UsedBrush = good }
-                        },
-                        Notes = filled ? "Extra flour was used due to spillage." : ""
-                    },
-                    new SheetProduct
-                    {
-                        Name = "Croissants", Amount = "110", Production = "Croissant Room",
-                        Ingredients = new List<SheetIngredient>
-                        {
-                            new SheetIngredient { Name = "Flour", Amount = "5 bags",   Additional = "6 bags",   Used = filled ? "6 bags"   : "", UsedBrush = good },
-                            new SheetIngredient { Name = "Eggs",  Amount = "20 dozen", Additional = "21 dozen", Used = filled ? "27 dozen" : "", UsedBrush = bad },
-                            new SheetIngredient { Name = "Salt",  Amount = "4 bags",   Additional = "5 bags",   Used = filled ? "4 bags"   : "", UsedBrush = good }
-                        },
-                        Packaging = new List<SheetPackaging>
-                        {
-                            new SheetPackaging { Name = "Pans",     Amount = "4", Used = filled ? "4" : "", UsedBrush = good },
-                            new SheetPackaging { Name = "Trolleys", Amount = "2", Used = filled ? "2" : "", UsedBrush = good }
-                        },
-                        Notes = ""
-                    }
-                }
-            };
-        }
-
-        public static ProductDetail DetailFor(ProductRow row)
-        {
-            return new ProductDetail
-            {
-                Name = row.Name,
-                DateAdded = "10 August 2026",
-                Ingredients = new List<IngredientLine>
-                {
-                    new IngredientLine { Name = "Eggs",  Quantity = "5" },
-                    new IngredientLine { Name = "Flour", Quantity = "5 Cups" },
-                    new IngredientLine { Name = "Salt",  Quantity = "1 Cup" }
-                },
-                Method = "Mix eggs, flour and salt until combine. Place on baking tray and put into oven at 180 degrees for 20 minutes.",
-                Storage = row.Storage + " Room 1"
-            };
-        }
+        public string Name { get; set; } = string.Empty;
+        public string DateAdded { get; set; } = string.Empty;
+        public List<IngredientLine> Ingredients { get; set; } = new();
+        public string Method { get; set; } = string.Empty;
+        public string Storage { get; set; } = string.Empty;
     }
 }

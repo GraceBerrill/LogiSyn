@@ -24,7 +24,7 @@ namespace LogiSyn.Views
         {
             InitializeComponent();
 
-            DateText.Text = SampleData.Today();
+            DateText.Text = DateTime.Now.ToString("dd MMMM yyyy");
 
             StatusFilter.SelectedIndex = 0;
             _ready = true;

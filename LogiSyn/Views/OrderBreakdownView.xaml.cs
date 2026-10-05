@@ -41,17 +41,15 @@ namespace LogiSyn.Views
             }
             else
             {
-                string title = _order == null ? "Spar Order #002" : $"{_order.Customer} Order {_order.Number}".Trim();
+                string title = _order == null ? "Order Breakdown" : $"{_order.Customer} Order {_order.Number}".Trim();
                 if (_role == AppRole.Manager)
                 {
-                    var data = SampleData.Sheet(true);
-                    data.Title = title;
+                    var data = new SheetData { Title = title, DateText = DateTime.Now.ToString("dd MMMM yyyy") };
                     PaperHost.Content = new SheetPaper { IsReadOnly = true, DataContext = data };
                 }
                 else
                 {
-                    var data = SampleData.Summary(true);
-                    data.Title = title;
+                    var data = new SummaryData { Title = title, DateText = DateTime.Now.ToString("dd MMMM yyyy") };
                     PaperHost.Content = new SummaryPaper { DataContext = data };
                 }
 
@@ -139,7 +137,7 @@ namespace LogiSyn.Views
             var scaledOrder = _scaledOrder ?? (!string.IsNullOrWhiteSpace(orderId) ? _orderService.GetOrderById(orderId) : null);
             if (scaledOrder == null)
             {
-                MessageBox.Show("No active order data available to email.", "Email Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                ShellWindow.Current?.ShowToast("No active order data available to email.", isWarning: true);
                 return;
             }
 
@@ -178,12 +176,12 @@ namespace LogiSyn.Views
                     catch { }
 
                     Process.Start(new ProcessStartInfo { FileName = "explorer.exe", Arguments = $"/select,\"{filePath}\"", UseShellExecute = true });
-                    MessageBox.Show($"Updated order exported to Excel:\n{filePath}\n\nPlease attach this file to email back to the admin.", "Email Excel", MessageBoxButton.OK, MessageBoxImage.Information);
+                    ShellWindow.Current?.ShowToast("Updated order exported to Excel and opened in Explorer.");
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Email failed: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                ShellWindow.Current?.ShowToast($"Email failed: {ex.Message}", isWarning: true);
             }
         }
     }
