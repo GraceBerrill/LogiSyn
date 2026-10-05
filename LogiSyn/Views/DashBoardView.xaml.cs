@@ -14,6 +14,7 @@ namespace LogiSyn.Views
 	{
 		private readonly ApiClient _apiClient = new ApiClient();
 		private readonly OrderService _orderService = new OrderService();
+		private List<OrderScaled> _currentOrdersScaled = new();
 		private List<DashboardOrderItem> _currentDashboardOrders = new();
 
 		public DashboardView(SharedLibrary.Model.AppRole role)
@@ -53,20 +54,36 @@ namespace LogiSyn.Views
 		// Adriaan - Dashboard Orders Section
 		private async void LoadDashboardData()
 		{
-			_currentDashboardOrders = await GetDashboardOrdersAsync();
+			_currentOrdersScaled = await GetOrdersScaledAsync();
 
-			NewOrdersValue.Text = _currentDashboardOrders.Count(o =>
+			NewOrdersValue.Text = _currentOrdersScaled.Count(o =>
 				string.Equals(o.Status, "Pending", StringComparison.OrdinalIgnoreCase) ||
 				string.Equals(o.Status, "In Production", StringComparison.OrdinalIgnoreCase)).ToString();
 
-			CompletedValue.Text = _currentDashboardOrders.Count(o =>
+			CompletedValue.Text = _currentOrdersScaled.Count(o =>
 				string.Equals(o.Status, "Complete", StringComparison.OrdinalIgnoreCase) ||
 				string.Equals(o.Status, "Completed", StringComparison.OrdinalIgnoreCase)).ToString();
+
+			_currentDashboardOrders = _currentOrdersScaled.Select(o =>
+			{
+				bool isComp = string.Equals(o.Status, "Complete", StringComparison.OrdinalIgnoreCase) ||
+				              string.Equals(o.Status, "Completed", StringComparison.OrdinalIgnoreCase);
+
+				return new DashboardOrderItem
+				{
+					Number = o.OrderId,
+					Customer = o.Customer,
+					Status = o.Status,
+					DashStatusBrush = isComp
+						? new SolidColorBrush((Color)ColorConverter.ConvertFromString("#8DBE98"))
+						: new SolidColorBrush((Color)ColorConverter.ConvertFromString("#C29D70"))
+				};
+			}).ToList();
 
 			RecentList.ItemsSource = _currentDashboardOrders;
 		}
 
-		private async Task<List<DashboardOrderItem>> GetDashboardOrdersAsync()
+		private async Task<List<OrderScaled>> GetOrdersScaledAsync()
 		{
 			List<OrderScaled> sourceOrders = new();
 			try
@@ -86,95 +103,103 @@ namespace LogiSyn.Views
 
 			if (sourceOrders == null || sourceOrders.Count == 0)
 			{
-				sourceOrders = _orderService.GetOrders().ToList();
+				try
+				{
+					sourceOrders = _orderService.GetOrders().ToList();
+				}
+				catch { }
 			}
 
 			if (sourceOrders != null && sourceOrders.Count > 0)
 			{
-				var items = new List<DashboardOrderItem>();
-				foreach (var o in sourceOrders)
-				{
-					bool isComp = string.Equals(o.Status, "Complete", StringComparison.OrdinalIgnoreCase) ||
-					              string.Equals(o.Status, "Completed", StringComparison.OrdinalIgnoreCase);
-
-					items.Add(new DashboardOrderItem
-					{
-						Number = o.OrderId,
-						Customer = o.Customer,
-						Status = o.Status,
-						DashStatusBrush = isComp
-							? new SolidColorBrush((Color)ColorConverter.ConvertFromString("#8DBE98"))
-							: new SolidColorBrush((Color)ColorConverter.ConvertFromString("#C29D70"))
-					});
-				}
-				return items;
+				return sourceOrders;
 			}
 
-			return GetDashboardOrders();
+			return SampleData.SampleOrdersScaled();
 		}
 
-		// Fallback sample data if no orders found
-		private List<DashboardOrderItem> GetDashboardOrders()
-		{
-			return new List<DashboardOrderItem>
-			{
-				new DashboardOrderItem { Number = "#001", Customer = "Checkers", Status = "Pending", DashStatusBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#C29D70")) },
-				new DashboardOrderItem { Number = "#002", Customer = "Spar", Status = "Complete", DashStatusBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#8DBE98")) }
-			};
-		}
-
-		//this is to export the dashboard data to a csv file
+		// Opens the Excel export modal allowing the user to select one or multiple orders with complete details
 		private void ExcelButton_Click(object sender, RoutedEventArgs e)
 		{
 			try
 			{
-				var orders = _currentDashboardOrders.Count > 0 ? _currentDashboardOrders : GetDashboardOrders();
-				var docs = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-				var outDir = System.IO.Path.Combine(docs, "LogiSyn_exports");
-				System.IO.Directory.CreateDirectory(outDir);
-				var file = System.IO.Path.Combine(outDir, $"orders_{DateTime.Now:yyyyMMdd_HHmmss}.csv");
+				var orders = _currentOrdersScaled.Count > 0 ? _currentOrdersScaled : SampleData.SampleOrdersScaled();
+				var modal = new ExportOrdersModal(orders);
 
-				var sb = new System.Text.StringBuilder();
-				sb.AppendLine("OrderNumber,Customer,Status");
-				foreach (var o in orders)
+				if (ShellWindow.Current != null)
 				{
-					string number = EscapeCsv(o.Number);
-					string customer = EscapeCsv(o.Customer);
-					string status = EscapeCsv(o.Status);
-					sb.AppendLine($"{number},{customer},{status}");
+					ShellWindow.Current.ShowModal(modal, (Brush)FindResource("ScrimDetail"));
 				}
-
-				System.IO.File.WriteAllText(file, sb.ToString());
-
-				MessageBox.Show($"Orders exported to:\r\n{file}", "Export Complete", MessageBoxButton.OK, MessageBoxImage.Information);
+				else
+				{
+					var win = new Window
+					{
+						Content = modal,
+						SizeToContent = SizeToContent.WidthAndHeight,
+						WindowStartupLocation = WindowStartupLocation.CenterScreen,
+						ResizeMode = ResizeMode.NoResize,
+						Title = "Export Orders to Excel"
+					};
+					win.ShowDialog();
+				}
 			}
 			catch (Exception ex)
 			{
-				MessageBox.Show($"Export failed: {ex.Message}", "Export Error", MessageBoxButton.OK, MessageBoxImage.Error);
+				MessageBox.Show($"Failed to open Excel export: {ex.Message}", "Export Error", MessageBoxButton.OK, MessageBoxImage.Error);
 			}
 		}
 
-		//placeholder for email functinality
+		// Opens the Email modal allowing the user to select one or multiple orders to email with full details and attachments
 		private void EmailButton_Click(object sender, RoutedEventArgs e)
 		{
 			try
 			{
-				LogiSyn.Views.ShellWindow.Current?.ShowModal(new PrintEmailModal(), (Brush)FindResource("ScrimPrint"));
+				var orders = _currentOrdersScaled.Count > 0 ? _currentOrdersScaled : SampleData.SampleOrdersScaled();
+				var modal = new EmailOrdersModal(orders);
+
+				if (ShellWindow.Current != null)
+				{
+					ShellWindow.Current.ShowModal(modal, (Brush)FindResource("ScrimDetail"));
+				}
+				else
+				{
+					var win = new Window
+					{
+						Content = modal,
+						SizeToContent = SizeToContent.WidthAndHeight,
+						WindowStartupLocation = WindowStartupLocation.CenterScreen,
+						ResizeMode = ResizeMode.NoResize,
+						Title = "Email Orders"
+					};
+					win.ShowDialog();
+				}
 			}
 			catch (Exception ex)
 			{
-				MessageBox.Show($"Email action failed: {ex.Message}", "Email", MessageBoxButton.OK, MessageBoxImage.Error);
+				MessageBox.Show($"Failed to open Email modal: {ex.Message}", "Email Error", MessageBoxButton.OK, MessageBoxImage.Error);
 			}
 		}
 
-		private static string EscapeCsv(string input)
+		// Clicking a recent order navigates to its detailed breakdown
+		private void RecentOrderRow_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)
 		{
-			if (input == null) return string.Empty;
-			if (input.Contains(',') || input.Contains('"') || input.Contains('\n') || input.Contains('\r'))
+			if (sender is FrameworkElement elem && elem.DataContext is DashboardOrderItem item)
 			{
-				return '"' + input.Replace("\"", "\"\"") + '"';
+				var orderScaled = _currentOrdersScaled.FirstOrDefault(o =>
+					o.OrderId.Equals(item.Number, StringComparison.OrdinalIgnoreCase));
+
+				var row = orderScaled != null
+					? OrderRow.FromOrderScaled(orderScaled)
+					: new OrderRow
+					{
+						Number = item.Number,
+						Customer = item.Customer,
+						Status = item.Status,
+						Date = DateTime.Now
+					};
+
+				ShellWindow.Current?.Navigate("breakdown", row);
 			}
-			return input;
 		}
 	}
 

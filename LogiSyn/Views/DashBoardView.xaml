@@ -88,7 +88,8 @@
                               Focusable="False">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Border Style="{StaticResource RowLine}" Height="62.3">
+                            <Border Style="{StaticResource RowLine}" Height="62.3"
+                                    Background="Transparent" Cursor="Hand" MouseLeftButtonUp="RecentOrderRow_Click">
                                 <Grid Margin="5.4,0,0,0">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="304"/>

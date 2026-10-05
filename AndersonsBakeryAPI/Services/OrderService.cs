@@ -500,6 +500,18 @@ namespace AndersonsBakeryAPI.Services
                     LoadLocalOrders();
                     _localLoaded = true;
                 }
+                if (_orders.Count == 0)
+                {
+                    var defaults = SampleData.SampleOrdersScaled();
+                    foreach (var d in defaults)
+                    {
+                        if (!_orders.Any(o => o.OrderId.Equals(d.OrderId, StringComparison.OrdinalIgnoreCase)))
+                        {
+                            _orders.Add(d);
+                        }
+                    }
+                    SaveLocalOrders();
+                }
                 return _orders.ToList();
             }
         }
