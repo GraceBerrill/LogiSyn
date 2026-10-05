@@ -104,19 +104,18 @@ namespace AndersonsBakeryAPI.Services
 
         //------------------------------------------------------------------------------------------------//
 
-        // Creates a default SQL repository for order storage, connecting to a local SQL Server database
+        // Creates a default SQL repository for order storage, connecting to the local SQL Server database
         private static SqlOrderRepository? CreateDefaultSqlRepository()
         {
             try
             {
-                // Configure the DbContextOptionsBuilder to connect to a local SQL Server database
+                // Configure the DbContextOptionsBuilder to connect to the local SQL Server database
                 var optionsBuilder = new DbContextOptionsBuilder<LogiSynDbContext>();
                 optionsBuilder.UseSqlServer(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=LogiSynDb;Integrated Security=True;TrustServerCertificate=True;");
                 var context = new LogiSynDbContext(optionsBuilder.Options);
                 context.Database.EnsureCreated();
                 return new SqlOrderRepository(context);
             }
-            // Catch any exceptions that occur during the creation of the SQL repository and log the error
             catch (Exception ex)
             {
                 Trace.WriteLine($"[SQL] Could not initialize SQL repository: {ex.Message}");
@@ -127,7 +126,6 @@ namespace AndersonsBakeryAPI.Services
         //------------------------------------------------------------------------------------------------//
 
         // Creates a default MongoDB repository for order storage, connecting to a MongoDB Atlas cluster
-        // NOTE: Ensure that the connection string is valid and that the MongoDB server is accessible
         private static MongoOrderRepository? CreateDefaultMongoRepository()
         {
             try
@@ -171,6 +169,7 @@ namespace AndersonsBakeryAPI.Services
             : this(productService, mongoRepository, sqlRepository, new TempRecipeService()) { }
 
         // Constructor that initializes the OrderService with ProductService, repositories, and TempRecipeService
+        // Note: TempRecipeService to be replaced once recipes are given
         public OrderService(IProductService productService, MongoOrderRepository? mongoRepository, SqlOrderRepository? sqlRepository, ITempRecipeService? recipeService, ILogger<OrderService>? logger = null)
         {
             // Use the provided ProductService or create a new one if null
@@ -458,7 +457,7 @@ namespace AndersonsBakeryAPI.Services
                 InvalidateCache();
             }
 
-            // 1. Attempt fetch from MongoDB to synchronize and update cache
+            // Attempt fetch from MongoDB to synchronize and update cache
             if (_mongoRepository != null)
             {
                 try
@@ -477,7 +476,7 @@ namespace AndersonsBakeryAPI.Services
                 }
             }
 
-            // 2. Fallback: Attempt fetch from SQL Server to synchronize and update cache
+            // Fallback: Attempt fetch from SQL Server to synchronize and update cache
             if (_sqlRepository != null)
             {
                 try
@@ -496,7 +495,7 @@ namespace AndersonsBakeryAPI.Services
                 }
             }
 
-            // 3. Fallback: Return in-memory list (includes orders from Data/orders.json)
+            // Fallback: Return in-memory list (includes orders from Data/orders.json)
             lock (_orders)
             {
                 if (_orders.Count == 0 && !_localLoaded)

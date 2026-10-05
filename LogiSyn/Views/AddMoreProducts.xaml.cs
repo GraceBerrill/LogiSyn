@@ -59,18 +59,90 @@ namespace LogiSyn.Views
                 ? "Production 1"
                 : TxtProduction.Text.Trim();
 
-            //parses the ingredients
+            // Parses the ingredients
             double.TryParse(TxtIngredientAmount.Text.Trim(), out double ingAmount);
             double.TryParse(TxtIngredientAdditional.Text.Trim(), out double ingAdditional);
             double.TryParse(TxtIngredientUsed.Text.Trim(), out double ingUsed);
-            string ingName = string.IsNullOrWhiteSpace(TxtIngredientName.Text)
-                ? "Flour"
-                : TxtIngredientName.Text.Trim();
+            string userIngName = TxtIngredientName.Text.Trim();
+            string userUnit = !string.IsNullOrWhiteSpace(TxtIngredientUnit.Text)
+                ? TxtIngredientUnit.Text.Trim()
+                : "kg";
 
             double.TryParse(TxtPackagingAmount.Text.Trim(), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out double pkgAmount);
             double.TryParse(TxtPackagingUsed.Text.Trim(), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out double pkgUsed);
 
-            //creates new product
+            var reqIngredients = new List<Ingredients>();
+
+            if (!string.IsNullOrWhiteSpace(userIngName))
+            {
+                // User explicitly provided an ingredient name
+                reqIngredients.Add(new Ingredients
+                {
+                    IngredientName = userIngName,
+                    IngredientAmount = ingAmount,
+                    AdditionsAmount = ingAdditional,
+                    MeasuredIngredient = userUnit,
+                    AmountUsed = ingUsed
+                });
+            }
+            else
+            {
+                // Check if product exists in recipe service or product database
+                var recipeService = new AndersonsBakeryAPI.Services.TempRecipeService();
+                var recipe = recipeService.FindRecipeByProductName(productTitle);
+
+                if (recipe != null && recipe.Ingredients != null && recipe.Ingredients.Count > 0)
+                {
+                    foreach (var rIng in recipe.Ingredients)
+                    {
+                        reqIngredients.Add(new Ingredients
+                        {
+                            IngredientName = rIng.Name,
+                            IngredientAmount = Math.Round(rIng.AmountPerUnit * qty, 3),
+                            AdditionsAmount = Math.Round(rIng.AdditionalRatio * qty, 3),
+                            MeasuredIngredient = rIng.Unit ?? userUnit,
+                            AmountUsed = 0
+                        });
+                    }
+
+                    if (pkgAmount <= 0 && recipe.UnitsPerPan > 0)
+                    {
+                        pkgAmount = Math.Ceiling((double)qty / recipe.UnitsPerPan);
+                    }
+                }
+                else
+                {
+                    var productService = new AndersonsBakeryAPI.Services.ProductService();
+                    var prod = productService.GetProductByName(productTitle);
+                    if (prod != null && prod.Ingredients != null && prod.Ingredients.Count > 0)
+                    {
+                        foreach (var pIng in prod.Ingredients)
+                        {
+                            double baseAmt = (double)pIng.Quantity;
+                            reqIngredients.Add(new Ingredients
+                            {
+                                IngredientName = pIng.IngredientName,
+                                IngredientAmount = Math.Round(baseAmt * qty, 3),
+                                AdditionsAmount = Math.Round(baseAmt * 0.1 * qty, 3),
+                                MeasuredIngredient = pIng.Unit ?? userUnit,
+                                AmountUsed = 0
+                            });
+                        }
+                    }
+                }
+
+                if (reqIngredients.Count == 0)
+                {
+                    MessageBox.Show("Please enter an ingredient name and unit for this product.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    TxtIngredientName.Focus();
+                    return;
+                }
+            }
+
+            double finalPans = pkgAmount > 0 ? pkgAmount : 2;
+            int finalTrolleys = (int)Math.Ceiling(finalPans / 2.0);
+
+            // Creates new product
             CreatedItem = new ProductionItem
             {
                 ProductName = productTitle,
@@ -78,26 +150,13 @@ namespace LogiSyn.Views
                 ProductionLine = productionLine,
                 packaging = new Packaging
                 {
-                    Pans = pkgAmount > 0 ? pkgAmount : 2,
-                    Trolleys = 1,
+                    Pans = finalPans,
+                    Trolleys = finalTrolleys > 0 ? finalTrolleys : 1,
                     PansUsed = pkgUsed,
                     TrolleysUsed = 0
                 },
-
-                //set ingredients
-                ReqIngredients = new List<Ingredients>
-                {
-                    new Ingredients
-                    {
-                        IngredientName = ingName,
-                        IngredientAmount = ingAmount,
-                        AdditionsAmount = ingAdditional,
-                        MeasuredIngredient = "bags",
-                        AmountUsed = ingUsed
-                    }
-                }
+                ReqIngredients = reqIngredients
             };
-
 
             DialogResult = true;
             Close();

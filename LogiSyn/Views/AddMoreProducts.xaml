@@ -124,6 +124,7 @@
                         <TextBlock Grid.Row="4" Grid.Column="0" Text="Packaging" FontSize="18" Foreground="#6B7280" Margin="4,20,0,6"/>
                         <TextBlock Grid.Row="4" Grid.Column="1" Text="Amount" FontSize="18" Foreground="#6B7280" Margin="6,20,0,6"/>
                         <TextBlock Grid.Row="4" Grid.Column="2" Text="Used" FontSize="18" Foreground="#6B7280" Margin="6,20,0,6"/>
+                        <TextBlock Grid.Row="4" Grid.Column="3" Text="Unit" FontSize="18" Foreground="#6B7280" Margin="6,20,0,6"/>
 
                         <!-- Row 3 Table Box -->
                         <Border Grid.Row="5" Grid.ColumnSpan="4" BorderBrush="#555555" BorderThickness="1">
@@ -144,8 +145,7 @@
                                 <TextBox x:Name="TxtPackagingUsed" Grid.Column="2" FontSize="15" BorderThickness="0" Background="Transparent" VerticalContentAlignment="Center" Padding="8,0" local:DoubleInputLimiter.IsEnabled="True"/>
                                 <Border Grid.Column="2" BorderBrush="#555555" BorderThickness="0,0,1,0"/>
 
-                                <!-- Unused 4th cell matching screenshot -->
-                                <Border Grid.Column="3" Background="Transparent"/>
+                                <TextBox x:Name="TxtIngredientUnit" Grid.Column="3" Text="kg" FontSize="15" BorderThickness="0" Background="Transparent" VerticalContentAlignment="Center" Padding="8,0"/>
                             </Grid>
                         </Border>
                     </Grid>

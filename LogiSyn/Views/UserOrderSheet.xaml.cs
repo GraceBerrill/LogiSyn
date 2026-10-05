@@ -65,6 +65,9 @@ namespace LogiSyn.Views
             }
         }
 
+        //------------------------------------------------------------------------------------------------//
+
+        // Fetches file from API
         private async void FetchOrderFromApiAsync()
         {
             if (_order == null) return;
@@ -85,6 +88,9 @@ namespace LogiSyn.Views
                 }
         }
 
+        //------------------------------------------------------------------------------------------------//
+
+        // Adds Found file data to UI
         private void PopulateUI(OrderScaled scaled)
         {
             var data = SheetData.FromOrderScaled(scaled);
@@ -104,7 +110,7 @@ namespace LogiSyn.Views
             // Ensure sheet DataContext contains a valid SheetData instance
             if (Sheet.DataContext is not SheetData sheetData) return;
 
-            // If we don't have a loaded OrderScaled yet, try to load it from storage
+            // If orderScaled is not loaded, try to load it from storage
             if (_scaledOrder == null && _order != null)
             {
                 _scaledOrder = _orderService.GetOrderById(_order.Number);
@@ -113,6 +119,7 @@ namespace LogiSyn.Views
             // If still not found, construct a new skeleton OrderScaled model from sheet products
             if (_scaledOrder == null && _order != null)
             {
+                // Parse data
                 _scaledOrder = new OrderScaled
                 {
                     OrderId = _order.Number,
@@ -133,6 +140,7 @@ namespace LogiSyn.Views
                             cleanName = match.Groups[2].Value.Trim();
                         }
 
+                        // Write sanitised data
                         return new ProductionItem
                         {
                             ProductName = cleanName,
@@ -240,11 +248,13 @@ namespace LogiSyn.Views
         // Event handler to email updated order Excel back to admin
         private async void EmailButton_Click(object sender, RoutedEventArgs e)
         {
+            // Save any pending user changes in the sheet before proceeding
             if (!Sheet.IsReadOnly)
             {
                 await SaveUserSheetChangesAsync(markAsCompleted: false);
             }
 
+            // Ensure the scaled order data is loaded if only the base order exists
             if (_scaledOrder == null && _order != null)
             {
                 _scaledOrder = _orderService.GetOrderById(_order.Number);
@@ -258,11 +268,13 @@ namespace LogiSyn.Views
 
             try
             {
+                // Export data to excel sheet
                 string filePath = _excelService.ExportOrderToExcel(_scaledOrder);
 
                 bool emailSent = false;
                 try
                 {
+                    // create and display email draft
                     Type? outlookType = Type.GetTypeFromProgID("Outlook.Application");
                     if (outlookType != null)
                     {
@@ -281,6 +293,7 @@ namespace LogiSyn.Views
                         logger?.LogWarning(comEx, "Direct Outlook launch unavailable");
                     }
 
+                    // If COM interop fails attempt default mailing client through mailto
                 if (!emailSent)
                 {
                     string subject = Uri.EscapeDataString($"Completed Production Order {_scaledOrder.OrderId} - {_scaledOrder.Customer}");
@@ -306,12 +319,14 @@ namespace LogiSyn.Views
         // Event handler to upload an Excel file with notes and used quantities
         private async void UploadExcelButton_Click(object sender, RoutedEventArgs e)
         {
+            // opens dialog
             var dialog = new Microsoft.Win32.OpenFileDialog
             {
                 Title = "Upload Production Excel Sheet",
                 Filter = "Excel Files (*.xlsx;*.xls)|*.xlsx;*.xls|All files (*.*)|*.*"
             };
 
+            // start parsing
             if (dialog.ShowDialog() == true)
             {
                 try

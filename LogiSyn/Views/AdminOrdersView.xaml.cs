@@ -21,6 +21,7 @@ namespace LogiSyn.Views
 
         //------------------------------------------------------------------------------------------------//
 
+        // constructor
         public AdminOrdersView()
         {
             InitializeComponent();
@@ -38,9 +39,7 @@ namespace LogiSyn.Views
             _refreshTimer.Tick += (s, e) => LoadOrdersAsync();
             _refreshTimer.Start();
 
-            // Stop the timer once this view is navigated away from, otherwise it
-            // keeps ticking in the background forever (DispatcherTimer isn't tied
-            // to the visual tree lifetime) and a new one piles up on every visit.
+            // Stop the timer once this view is navigated away from
             Unloaded += (s, e) => _refreshTimer.Stop();
         }
 
