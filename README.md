@@ -42,10 +42,10 @@ That's where LogiSyn comes in. We built a system that keeps track of all incomin
 - [Key Features](#key-features)
 - [Tech Stack](#tech-stack)
 - [System Architecture](#system-architecture)
+- [Design Decisions](#design-decisions)
 - [Algorithms & Core Logic](#algorithms--core-logic)
 - [Project Structure](#project-structure)
-- [Known Limitations](#known-limitations)
-- [Security Notes](#security-notes)
+- [Branching & CI/CD](#branching--cicd)
 - [AI Declaration](#ai-declaration)
 
 #
@@ -216,6 +216,32 @@ Each kind of data is stored differently, depending on how important and how ofte
    (LogiSynDb)   (user secrets)
 ```
 
+### Hosted API (Render)
+ 
+The Web API is containerised with Docker and deployed on Render at `https://andersons-bakery-api.onrender.com`. Docker keeps the .NET 10 runtime identical on our machines and on the server.
+ 
+Render's free tier puts the container to sleep after 15 minutes of inactivity, and waking it takes 30–50 seconds. `ApiClient` handles this by trying each option in turn:
+ 
+1. The Render endpoint
+2. A local development host (`https://localhost:7274` / `http://localhost:5109`), used during development only
+3. The in-process services, backed by LocalDB
+The UI shows a status badge while it waits instead of freezing.
+
+#
+## Design Decisions
+
+### Availability over consistency
+On a factory floor, being able to keep working matters more than every copy of the data matching at every moment. LogiSyn never waits on the cloud: changes are saved locally first and reach MongoDB when it's reachable. The trade-off is that SQL and Mongo can briefly disagree. For example, a user created offline stays "orphaned" until someone presses Sync. In CAP theorem terms, LogiSyn favours availability and partition tolerance over strict consistency.
+ 
+### Why MongoDB for the cloud copy
+Orders are nested by nature: an order has line items, and each line item has its own scaled ingredients, pans and trolleys. A document database stores each order as one document that matches `OrderScaled` directly, instead of splitting it across several tables and joining it back together.
+ 
+### Why SQL LocalDB for the local copy
+LocalDB gives us proper transactions and constraints (like unique usernames) without installing or running a database server. It's free, ships with Visual Studio and works with no internet at all.
+ 
+### Why desktop instead of a web app
+A web app would need a server to be reachable before anyone could log in, and customer PDFs would have to be uploaded before they could be read. As a desktop app, LogiSyn parses PDFs, builds Excel files and opens Outlook directly on the bakery's PC, with or without a connection.
+
 #
 ## Algorithms & Core Logic
 
@@ -226,6 +252,10 @@ This section explains the logic behind the UI, the parts a screenshot doesn't sh
 - `LoginServiceRouter.Authenticate` tries MongoDB first (`MongoLoginService`). Any exception (network, auth, timeout) is caught and it silently falls back to `LoginService`, which queries SQL LocalDB. The user never sees which path succeeded.
 - Passwords are hashed with **PBKDF2-HMAC-SHA256**, a random 16-byte salt per account and **600,000 iterations** (`PasswordHasher.cs`). The high iteration count is deliberate: it makes a stolen password table very slow and costly to crack, and matches current OWASP guidance.
 - **Lazy migration:** if a stored password isn't hashed yet, it's compared as plain text, then immediately re-saved as a proper hash on successful login. This let us upgrade existing accounts without a separate migration script.
+- Salts come from `RandomNumberGenerator`, .NET's cryptographically secure random generator.
+- Hashes are compared with `CryptographicOperations.FixedTimeEquals`, which takes the same time no matter where the mismatch is, so an attacker can't learn anything from how long a login takes to fail.
+- The password field on `UserRow` is marked `[JsonIgnore]`, so hashes are never included in API responses.
+- All API calls use HTTPS with certificate validation switched on, so unverified certificates are rejected.
 
 ### Dual-database fallback pattern
 
@@ -294,35 +324,29 @@ LogiSyn/
 │   ├── Views/                # Screens & modals (Login, Dashboard, Orders, Products, Users, …)
 │   ├── Styles/               # Shared XAML styles, theme colours, vector icon set
 │   └── Assets/               # Icons, images
-├── AndersonsBakeryAPI/       # Backend logic + optional ASP.NET Core Web API
+├── AndersonsBakeryAPI/       # Backend logic + ASP.NET Core Web API
 │   ├── Services/             # Login/User/Order/Product/Sync services, dual-DB routers,
-│   │                         #   PDF parsing, password hashing, Excel export, email
+│   │                         #   PDF parsing, password hashing, Excel export, email, ApiClient
 │   ├── Controllers/          # OrderController (the API's only controller today)
 │   └── Repositories/         # SQL / Mongo order repositories
 ├── SharedLibrary/            # Shared models (UserRow, OrderScaled, ProductRow, …)
 ├── Images/                   # README images
+├── .github/workflows/        # CI/CD pipeline (ci-cd.yml)
 └── LogiSyn.slnx              # Solution file
 ```
 
 `SharedLibrary` exists so the UI and backend use the exact same model classes, which avoids the two drifting out of sync.
 
 #
-## Known Limitations
-
-- **Dashboard summary cards show demo data**, not real order counts. Use the Orders and History screens for live figures.
-- **Only PDF uploads parse**, even though the file picker also lists Excel/CSV.
-- **Products aren't synced** to SQL or MongoDB. They live only in a local `products.json` file.
-- **The Web API only covers Orders.** Users and Products have no HTTP endpoints yet, so it can't serve a non-WPF client on its own.
-- **Order status is binary** (Pending / Completed), with no partially-fulfilled state.
-- **Leftover views** (`AdminWindow`, `ManagerWindow`, `UserWindow` and related pages) from an earlier navigation design are still in the repo but unused. The live app only opens `ShellWindow`.
-- **CI/CD is out of date.** `.github/workflows/ci-cd.yml` installs .NET 8/9 SDKs while the project targets .NET 10.
-
-#
-## Security Notes
-
-- `AndersonsBakeryAPI/appsettings.json` contains a MongoDB Atlas connection string checked into source control. **Before making this repository public (or straight away if it already is), rotate that credential and move it to [.NET user secrets](https://learn.microsoft.com/aspnet/core/security/app-secrets) or an environment variable.** See [MongoDB configuration](#3-mongodb-configuration-optional). User secrets are already set up (`UserSecretsId` in `AndersonsBakeryAPI.csproj`), so only the hardcoded fallback needs removing.
-- SQL LocalDB uses Windows Integrated Security by default, so no SQL credentials are stored.
-- Seed account passwords are demo-only. They auto-upgrade to salted PBKDF2 hashes on first login, but should still be changed before real data is entered.
+## Branching & CI/CD
+ 
+| Branch | Purpose |
+| --- | --- |
+| `main` | Stable, release-ready code |
+| `Dev` | Integration branch for finished features |
+| `Fix` | Bug fixes, refactoring and security fixes |
+ 
+A GitHub Actions workflow (`.github/workflows/ci-cd.yml`) runs on every push and pull request. It restores NuGet packages, builds `LogiSyn.slnx` in Release mode, runs all 19 unit tests, and uploads the zipped build as a downloadable artifact. A pull request is only merged once the build and tests pass.
 
 #
 ## AI Declaration
