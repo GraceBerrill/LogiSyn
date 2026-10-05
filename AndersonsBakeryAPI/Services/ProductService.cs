@@ -8,20 +8,21 @@ using MongoDB.Driver;
 using SharedLibrary.Interface;
 using SharedLibrary.Model;
 using AndersonsBakeryAPI.Repositories;
+using Microsoft.Extensions.Logging;
 
 namespace AndersonsBakeryAPI.Services
 {
     public class ProductService : IProductService
     {
         private readonly MongoProductRepository? _mongoRepository;
+        private readonly ILogger<ProductService>? _logger;
 
-        public ProductService() : this(CreateDefaultMongoRepository())
-        {
-        }
+        public ProductService() : this(CreateDefaultMongoRepository()) { }
 
-        public ProductService(MongoProductRepository? mongoRepository)
+        public ProductService(MongoProductRepository? mongoRepository, ILogger<ProductService>? logger = null)
         {
             _mongoRepository = mongoRepository;
+            _logger = logger;
         }
 
         private static MongoProductRepository? CreateDefaultMongoRepository()
@@ -34,19 +35,36 @@ namespace AndersonsBakeryAPI.Services
                 string dbName = MongoConfiguration.GetDatabaseName();
                 return new MongoProductRepository(conn, dbName);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine($"[ProductService] Could not initialize Mongo repository: {ex.Message}");
+                // Initialization failed; fallback to SQL/local storage. Logging is not available in static context.
                 return null;
             }
         }
 
         private string GetConnectionString()
         {
+            // Priority: explicit env var, then common environment keys used for app configuration,
+            // then fall back to a sensible localdb default. This helps both the API and the WPF client
+            // find the same SQL Server when running locally.
             var env = Environment.GetEnvironmentVariable("LOGISYN_CONNECTION");
             if (!string.IsNullOrEmpty(env))
                 return env;
-            return @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=LogiSynDb;Integrated Security=True;";
+
+            // Support container/hosting style env var names that map to Configuration: ConnectionStrings:SqlServer
+            var alt1 = Environment.GetEnvironmentVariable("ConnectionStrings__SqlServer")
+                       ?? Environment.GetEnvironmentVariable("ConnectionStrings:SqlServer");
+            if (!string.IsNullOrEmpty(alt1))
+                return alt1;
+
+            var alt2 = Environment.GetEnvironmentVariable("SqlServer")
+                       ?? Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection")
+                       ?? Environment.GetEnvironmentVariable("ConnectionStrings:DefaultConnection");
+            if (!string.IsNullOrEmpty(alt2))
+                return alt2;
+
+            // Default to a localdb instance (include TrustServerCertificate to avoid cert issues on dev machines)
+            return @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=LogiSynDb;Integrated Security=True;TrustServerCertificate=True;";
         }
 
         private string ProductsFilePath()
@@ -73,7 +91,7 @@ namespace AndersonsBakeryAPI.Services
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"[ProductService] Error loading products from Mongo: {ex.Message}");
+                    _logger?.LogWarning(ex, "Error loading products from Mongo; falling back to SQL/local.");
                 }
             }
 
@@ -100,7 +118,10 @@ namespace AndersonsBakeryAPI.Services
                         return prodList;
                     }
                 }
-                catch { }
+                catch (Exception ex)
+                {
+                    _logger?.LogWarning(ex, "Failed to read products from local JSON file.");
+                }
 
                 try
                 {
@@ -127,7 +148,10 @@ namespace AndersonsBakeryAPI.Services
                         return converted;
                     }
                 }
-                catch { }
+                catch (Exception ex)
+                {
+                    _logger?.LogWarning(ex, "Failed to parse legacy product rows from local JSON file.");
+                }
             }
 
             // 4. Default fallback catalog
@@ -136,7 +160,10 @@ namespace AndersonsBakeryAPI.Services
             {
                 File.WriteAllText(file, JsonSerializer.Serialize(fallbackCatalog, new JsonSerializerOptions { WriteIndented = true }));
             }
-            catch { }
+            catch (Exception ex)
+            {
+                _logger?.LogWarning(ex, "Failed to write fallback catalog to local JSON.");
+            }
 
             SeedMongoProductsIfEmpty(fallbackCatalog);
             return fallbackCatalog;
@@ -162,10 +189,10 @@ namespace AndersonsBakeryAPI.Services
                     });
                 }
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"[ProductService] Error in GetAll: {ex.Message}");
-            }
+                catch (Exception ex)
+                {
+                    _logger?.LogWarning(ex, "Error in GetAll when loading products from Mongo");
+                }
 
             return SampleDefaults();
         }
@@ -182,10 +209,10 @@ namespace AndersonsBakeryAPI.Services
                 {
                     _mongoRepository.Upsert(product);
                 }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"[ProductService] Error adding product to Mongo: {ex.Message}");
-                }
+                    catch (Exception ex)
+                    {
+                        _logger?.LogWarning(ex, "Error adding product to Mongo");
+                    }
             }
 
             // 2. Save to SQL
@@ -219,10 +246,10 @@ namespace AndersonsBakeryAPI.Services
                     }
                 }
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"[ProductService] Error adding product to SQL: {ex.Message}");
-            }
+                catch (Exception ex)
+                {
+                    _logger?.LogError(ex, "Error adding product to SQL");
+                }
 
             // 3. Always synchronize local JSON file
             PersistProductToFile(product);
@@ -260,10 +287,10 @@ namespace AndersonsBakeryAPI.Services
                 {
                     _mongoRepository.Upsert(product);
                 }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"[ProductService] Error updating product in Mongo: {ex.Message}");
-                }
+                    catch (Exception ex)
+                    {
+                        _logger?.LogWarning(ex, "Error updating product in Mongo");
+                    }
             }
 
             // 2. Update in SQL Server
@@ -287,10 +314,10 @@ namespace AndersonsBakeryAPI.Services
                 conn.Open();
                 cmd.ExecuteNonQuery();
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"[ProductService] Error updating product in SQL: {ex.Message}");
-            }
+                catch (Exception ex)
+                {
+                    _logger?.LogError(ex, "Error updating product in SQL");
+                }
 
             // 3. Update in local JSON file
             try
@@ -336,10 +363,10 @@ namespace AndersonsBakeryAPI.Services
                         if (prod != null) return prod;
                     }
                 }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"[ProductService] Error getting product from Mongo: {ex.Message}");
-                }
+                    catch (Exception ex)
+                    {
+                        _logger?.LogWarning(ex, "Error getting product from Mongo");
+                    }
             }
 
             // 2. Try SQL
@@ -444,10 +471,10 @@ namespace AndersonsBakeryAPI.Services
                         _mongoRepository.DeleteByProductId(parsedId);
                     }
                 }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"[ProductService] Error deleting product from Mongo: {ex.Message}");
-                }
+                    catch (Exception ex)
+                    {
+                        _logger?.LogWarning(ex, "Error deleting product from Mongo");
+                    }
             }
 
             // 2. Delete from SQL Server
@@ -470,10 +497,10 @@ namespace AndersonsBakeryAPI.Services
                 conn.Open();
                 cmd.ExecuteNonQuery();
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"[ProductService] Error deleting product from SQL: {ex.Message}");
-            }
+                catch (Exception ex)
+                {
+                    _logger?.LogError(ex, "Error deleting product from SQL");
+                }
 
             // 3. Delete from local JSON file
             var file = ProductsFilePath();
@@ -536,7 +563,7 @@ namespace AndersonsBakeryAPI.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[ProductService] Error loading products from SQL: {ex.Message}");
+                _logger?.LogWarning(ex, "Error loading products from SQL");
                 return new List<Product>();
             }
         }
@@ -566,10 +593,10 @@ namespace AndersonsBakeryAPI.Services
                 {
                     _mongoRepository.SeedIfEmpty(products);
                 }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"[ProductService] Error seeding products to Mongo: {ex.Message}");
-                }
+                    catch (Exception ex)
+                    {
+                        _logger?.LogWarning(ex, "Error seeding products to Mongo");
+                    }
             }
         }
 
@@ -640,10 +667,10 @@ namespace AndersonsBakeryAPI.Services
 
                 File.WriteAllText(file, JsonSerializer.Serialize(prodList, new JsonSerializerOptions { WriteIndented = true }));
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"[ProductService] Error saving product to file: {ex.Message}");
-            }
+                catch (Exception ex)
+                {
+                    _logger?.LogWarning(ex, "Error saving product to file");
+                }
         }
 
         public static List<Product> DefaultProductCatalog()

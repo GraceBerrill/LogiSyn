@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using SharedLibrary.Model;
+using Microsoft.Extensions.Logging;
 using AndersonsBakeryAPI.Services;
 
 namespace LogiSyn.Views
@@ -72,10 +73,11 @@ namespace LogiSyn.Views
                     RenderOrder(apiOrder);
                 }
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"[OrderBreakdown] Error fetching order from API: {ex.Message}");
-            }
+                catch (Exception ex)
+                {
+                    var logger = App.ServiceProvider.GetService(typeof(Microsoft.Extensions.Logging.ILogger<OrderBreakdownView>)) as Microsoft.Extensions.Logging.ILogger<OrderBreakdownView>;
+                    logger?.LogWarning(ex, "Error fetching order from API");
+                }
         }
 
         //------------------------------------------------------------------------------------------------//
@@ -171,10 +173,11 @@ namespace LogiSyn.Views
                         emailSent = true;
                     }
                 }
-                catch (Exception comEx)
-                {
-                    Console.WriteLine($"[Outlook COM] Direct Outlook launch unavailable: {comEx.Message}");
-                }
+                    catch (Exception comEx)
+                    {
+                        var logger = App.ServiceProvider.GetService(typeof(Microsoft.Extensions.Logging.ILogger<OrderBreakdownView>)) as Microsoft.Extensions.Logging.ILogger<OrderBreakdownView>;
+                        logger?.LogWarning(comEx, "Direct Outlook launch unavailable");
+                    }
 
                 if (!emailSent)
                 {

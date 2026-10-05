@@ -128,7 +128,8 @@ namespace LogiSyn.Views
 			return new List<OrderScaled>();
 		}
 
-		private void ExcelButton_Click(object sender, RoutedEventArgs e)
+        //button that handles the excel export of the orders
+        private void ExcelButton_Click(object sender, RoutedEventArgs e)
 		{
 			try
 			{
@@ -200,6 +201,8 @@ namespace LogiSyn.Views
 			}
 		}
 
+		/********************************************************************************************/
+		//recent order row navigation
 		private void RecentOrderRow_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)
 		{
 			if (sender is FrameworkElement elem && elem.DataContext is DashboardOrderItem item)

@@ -5,6 +5,10 @@ using AndersonsBakeryAPI.Repositories;
 using MongoDB.Driver;
 using SharedLibrary.Interface;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Microsoft.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -45,6 +49,28 @@ var builder = WebApplication.CreateBuilder(args);
     builder.Services.AddScoped<LoginServiceRouter>();
     builder.Services.AddScoped<SyncService>();
 
+    // --- Jwt Authentication (reads settings from configuration) ---
+    var jwtSection = builder.Configuration.GetSection("Jwt");
+    var jwtKey = jwtSection["Key"] ?? string.Empty;
+    if (!string.IsNullOrWhiteSpace(jwtKey))
+    {
+        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
+                    ValidateIssuer = !string.IsNullOrWhiteSpace(jwtSection["Issuer"]),
+                    ValidIssuer = jwtSection["Issuer"],
+                    ValidateAudience = !string.IsNullOrWhiteSpace(jwtSection["Audience"]),
+                    ValidAudience = jwtSection["Audience"],
+                    ValidateLifetime = true,
+                    ClockSkew = TimeSpan.FromMinutes(2)
+                };
+            });
+    }
+
     // --- Orders & Product Services Registration ---
     builder.Services.AddScoped<SqlOrderRepository>();
     builder.Services.AddScoped<IProductService>(sp =>
@@ -68,6 +94,11 @@ var builder = WebApplication.CreateBuilder(args);
     });
 
     builder.Services.AddControllers();
+    // Register ApiClient via IHttpClientFactory and allow configuration-driven base URLs
+    builder.Services.AddHttpClient<ApiClient>(client =>
+    {
+        client.Timeout = TimeSpan.FromSeconds(60);
+    });
     builder.Services.AddOpenApi();
     // Lightweight Health Checks to support cloud probes and keep-alive pings
     builder.Services.AddHealthChecks();
@@ -77,27 +108,68 @@ var builder = WebApplication.CreateBuilder(args);
 // --- Adriaan: Ensure local SQL Server database schema exists ---
 using (var scope = app.Services.CreateScope())
 {
-	try
-	{
-        var db = scope.ServiceProvider.GetRequiredService<LogiSynDbContext>();
-        // Use EF Core migrations if available; fall back to EnsureCreated for very early setups
-        try
-        {
-            db.Database.Migrate();
-        }
-        catch (Exception)
-        {
-            db.Database.EnsureCreated();
-        }
-	}
-	catch (Exception ex)
-	{
-		Console.WriteLine($"[SQL] Warning: Unable to ensure SQL database created: {ex.Message}");
-	}
+    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+    var db = scope.ServiceProvider.GetRequiredService<LogiSynDbContext>();
+    // Prefer migrations to ensure schema correctness. Fail fast if migrations cannot be applied.
+    try
+    {
+        db.Database.Migrate();
+        logger.LogInformation("SQL database migrations applied successfully.");
+    }
+    catch (Exception ex)
+    {
+        logger.LogCritical(ex, "Failed to apply EF Core migrations. Startup cannot continue.");
+        // Rethrow to stop application startup so deployment can detect and correct schema issues.
+        throw;
+    }
 }
 
-// Expose OpenAPI endpoint in all environments (Development & Render Cloud) for examiner inspection
-app.MapOpenApi();
+// Ensure Product table columns are sized to accept long text created by the model
+using (var scope = app.Services.CreateScope())
+{
+    try
+    {
+        var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+        var db = scope.ServiceProvider.GetRequiredService<LogiSynDbContext>();
+        var conn = db.Database.GetDbConnection();
+        try
+        {
+            conn.Open();
+            using var cmd = conn.CreateCommand();
+            // If Method or Ingredients columns are not nvarchar(max), alter them to nvarchar(max)
+            cmd.CommandText = @"IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='Product' AND COLUMN_NAME='Method' AND (CHARACTER_MAXIMUM_LENGTH IS NOT NULL AND CHARACTER_MAXIMUM_LENGTH <> -1))
+                                BEGIN
+                                    ALTER TABLE [Product] ALTER COLUMN [Method] NVARCHAR(MAX) NULL;
+                                END
+                                IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='Product' AND COLUMN_NAME='Ingredients' AND (CHARACTER_MAXIMUM_LENGTH IS NOT NULL AND CHARACTER_MAXIMUM_LENGTH <> -1))
+                                BEGIN
+                                    ALTER TABLE [Product] ALTER COLUMN [Ingredients] NVARCHAR(MAX) NULL;
+                                END";
+            cmd.CommandType = System.Data.CommandType.Text;
+            cmd.ExecuteNonQuery();
+        }
+        catch (Exception ex)
+        {
+            var logger2 = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+            logger2.LogWarning(ex, "Could not alter Product columns to nvarchar(max). Continuing startup, but schema should be reviewed.");
+        }
+        finally
+        {
+            try { conn.Close(); } catch { }
+        }
+    }
+    catch (Exception ex)
+    {
+        var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+        logger.LogWarning(ex, "Ensure Product column sizing step failed.");
+    }
+}
+
+// Expose OpenAPI endpoint only in development to avoid leaking schema in production
+if (app.Environment.IsDevelopment())
+{
+    app.MapOpenApi();
+}
 
 // Root discovery endpoint for health check and API documentation
 app.MapGet("/", () => Results.Ok(new
@@ -113,6 +185,7 @@ app.MapGet("/", () => Results.Ok(new
 app.MapHealthChecks("/health");
 
 app.UseHttpsRedirection();
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 

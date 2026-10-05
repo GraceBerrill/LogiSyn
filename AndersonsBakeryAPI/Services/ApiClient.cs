@@ -8,6 +8,8 @@ using System.Net.Http.Json;
 using System.Text.Json;
 using System.Threading.Tasks;
 using SharedLibrary.Model;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace AndersonsBakeryAPI.Services
 {
@@ -23,25 +25,44 @@ namespace AndersonsBakeryAPI.Services
 
 
 
-        // Constructor for the ApiClient class
-        public ApiClient(string baseUrl = "https://andersons-bakery-api.onrender.com")
+        // Constructor for the ApiClient class - HttpClient provided by IHttpClientFactory
+        private readonly ILogger<ApiClient>? _logger;
+
+        public ApiClient(HttpClient httpClient, IConfiguration configuration, ILogger<ApiClient> logger)
         {
+            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
+            _httpClient.Timeout = TimeSpan.FromSeconds(60);
+            _logger = logger;
 
-            var primary = baseUrl.TrimEnd('/');
+            var configured = configuration?.GetSection("ApiClient:BaseUrls").Get<string[]>();
+            if (configured != null && configured.Length > 0)
+            {
+                _baseUrls = configured.Select(u => u?.TrimEnd('/') ?? string.Empty).Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
+            }
+            else
+            {
+                _baseUrls = new[]
+                {
+                    "https://andersons-bakery-api.onrender.com",
+                    "https://localhost:7274",
+                    "http://localhost:5109"
+                };
+            }
+        }
 
-            // Prioritize the live Render cloud API, with local ports as offline fallbacks
-            _baseUrls = new[]
-            {
-                primary,                   
-                "https://localhost:7274",  
-                "http://localhost:5109"    
-            };            
-            
-            // Configure HttpClient with a longer timeout. Do not disable SSL validation.
-            _httpClient = new HttpClient()
-            {
-                Timeout = TimeSpan.FromSeconds(60)
-            };
+        // Legacy / convenience constructor: parameterless for desktop client usage
+        public ApiClient()
+        {
+            _httpClient = new HttpClient { Timeout = TimeSpan.FromSeconds(60) };
+            _baseUrls = new[] { "https://andersons-bakery-api.onrender.com" };
+        }
+
+        // Legacy / convenience constructor: allow creating with a single base URL (used by WPF startup)
+        public ApiClient(string baseUrl)
+        {
+            if (string.IsNullOrWhiteSpace(baseUrl)) baseUrl = "https://andersons-bakery-api.onrender.com";
+            _httpClient = new HttpClient { Timeout = TimeSpan.FromSeconds(60) };
+            _baseUrls = new[] { baseUrl.TrimEnd('/') };
         }
 
         public static event Action<ApiConnectionState, string?>? OnStatusChanged;
@@ -109,7 +130,7 @@ namespace AndersonsBakeryAPI.Services
                         var response = await _httpClient.GetAsync($"{baseUrl}/api/orders");
                         if (!response.IsSuccessStatusCode)
                         {
-                            Console.WriteLine($"Failed to fetch orders from {baseUrl}. Trying next candidate URL.");
+                            _logger?.LogWarning("Failed to fetch orders from {BaseUrl} (Status: {Status}). Trying next candidate URL.", baseUrl, (int)response.StatusCode);
                             continue;
                         }
 
@@ -125,9 +146,9 @@ namespace AndersonsBakeryAPI.Services
                             return orders;
                         }
                     }
-                    catch
+                    catch (Exception ex)
                     {
-                        Console.WriteLine($"Failed to fetch orders from {baseUrl}. Trying next candidate URL.");
+                        _logger?.LogWarning(ex, "Failed to fetch orders from {BaseUrl}. Trying next candidate URL.", baseUrl);
                     }
                 }
 
@@ -156,7 +177,10 @@ namespace AndersonsBakeryAPI.Services
                         // Attempt to fetch the order by ID from the current base URL
                         var response = await _httpClient.GetAsync($"{baseUrl}/api/orders/{safeId}");
                         if (!response.IsSuccessStatusCode)
+                        {
+                            _logger?.LogDebug("GetOrderById failed at {BaseUrl} with status {Status}", baseUrl, (int)response.StatusCode);
                             continue;
+                        }
 
                         // Read the response content and deserialize it into an OrderScaled object
                         var content = await response.Content.ReadAsStringAsync();
@@ -170,9 +194,9 @@ namespace AndersonsBakeryAPI.Services
                             return order;
                         }
                     }
-                    catch
+                    catch (Exception ex)
                     {
-                        Console.WriteLine($"Failed to fetch order {orderId} from {baseUrl}. Trying next candidate URL.");
+                        _logger?.LogWarning(ex, "Failed to fetch order {OrderId} from {BaseUrl}. Trying next candidate URL.", orderId, baseUrl);
                     }
                 }
 
@@ -207,9 +231,9 @@ namespace AndersonsBakeryAPI.Services
                             return true;
                         }
                     }
-                    catch
+                    catch (Exception ex)
                     {
-                        Console.WriteLine($"Failed to save order {order.OrderId} to {baseUrl}. Trying next candidate URL.");
+                        _logger?.LogWarning(ex, "Failed to save order {OrderId} to {BaseUrl}. Trying next candidate URL.", order.OrderId, baseUrl);
                     }
                 }
 
@@ -232,11 +256,18 @@ namespace AndersonsBakeryAPI.Services
                 try
                 {
                     var response = await _httpClient.GetAsync($"{baseUrl}/api/products/{safeId}");
-                    if (!response.IsSuccessStatusCode) continue;
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        _logger?.LogDebug("GetProductById returned non-success {Status} at {BaseUrl}", (int)response.StatusCode, baseUrl);
+                        continue;
+                    }
                     var body = await response.Content.ReadAsStringAsync();
                     return JsonSerializer.Deserialize<Product>(body, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
                 }
-                catch { }
+                catch (Exception ex)
+                {
+                    _logger?.LogWarning(ex, "Error fetching product by id {ProductId} from {BaseUrl}", productId, baseUrl);
+                }
             }
             return null;
         }
@@ -257,7 +288,10 @@ namespace AndersonsBakeryAPI.Services
                     var response = await _httpClient.PostAsJsonAsync($"{baseUrl}/api/products", product);
                     if (response.IsSuccessStatusCode) return true;
                 }
-                catch { }
+                catch (Exception ex)
+                {
+                    _logger?.LogWarning(ex, "Error creating product at {BaseUrl}", baseUrl);
+                }
             }
             return false;
         }
@@ -273,7 +307,10 @@ namespace AndersonsBakeryAPI.Services
                     var response = await _httpClient.PutAsJsonAsync($"{baseUrl}/api/products/{safeId}", product);
                     if (response.IsSuccessStatusCode) return true;
                 }
-                catch { }
+                catch (Exception ex)
+                {
+                    _logger?.LogWarning(ex, "Error updating product {ProductId} at {BaseUrl}", productId, baseUrl);
+                }
             }
             return false;
         }
@@ -289,7 +326,10 @@ namespace AndersonsBakeryAPI.Services
                     var response = await _httpClient.DeleteAsync($"{baseUrl}/api/products/{safeId}");
                     if (response.IsSuccessStatusCode) return true;
                 }
-                catch { }
+                catch (Exception ex)
+                {
+                    _logger?.LogWarning(ex, "Error deleting product {ProductId} at {BaseUrl}", productId, baseUrl);
+                }
             }
             return false;
         }
@@ -305,11 +345,18 @@ namespace AndersonsBakeryAPI.Services
                 try
                 {
                     var response = await _httpClient.GetAsync($"{baseUrl}/api/users/{safeId}");
-                    if (!response.IsSuccessStatusCode) continue;
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        _logger?.LogDebug("GetUserById returned non-success {Status} at {BaseUrl}", (int)response.StatusCode, baseUrl);
+                        continue;
+                    }
                     var body = await response.Content.ReadAsStringAsync();
                     return JsonSerializer.Deserialize<UserRow>(body, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
                 }
-                catch { }
+                catch (Exception ex)
+                {
+                    _logger?.LogWarning(ex, "Error fetching user by id {UserId} from {BaseUrl}", userId, baseUrl);
+                }
             }
             return null;
         }
@@ -324,7 +371,10 @@ namespace AndersonsBakeryAPI.Services
                     var response = await _httpClient.PostAsJsonAsync($"{baseUrl}/api/users", user);
                     if (response.IsSuccessStatusCode) return true;
                 }
-                catch { }
+                catch (Exception ex)
+                {
+                    _logger?.LogWarning(ex, "Error creating user at {BaseUrl}", baseUrl);
+                }
             }
             return false;
         }
@@ -340,7 +390,10 @@ namespace AndersonsBakeryAPI.Services
                     var response = await _httpClient.PutAsJsonAsync($"{baseUrl}/api/users/{safeId}", user);
                     if (response.IsSuccessStatusCode) return true;
                 }
-                catch { }
+                catch (Exception ex)
+                {
+                    _logger?.LogWarning(ex, "Error updating user {UserId} at {BaseUrl}", userId, baseUrl);
+                }
             }
             return false;
         }
@@ -356,7 +409,10 @@ namespace AndersonsBakeryAPI.Services
                     var response = await _httpClient.DeleteAsync($"{baseUrl}/api/users/{safeId}");
                     if (response.IsSuccessStatusCode) return true;
                 }
-                catch { }
+                catch (Exception ex)
+                {
+                    _logger?.LogWarning(ex, "Error deleting user {UserId} at {BaseUrl}", userId, baseUrl);
+                }
             }
             return false;
         }
@@ -398,9 +454,9 @@ namespace AndersonsBakeryAPI.Services
                             return order;
                         }
                     }
-                    catch
+                    catch (Exception ex)
                     {
-                        Console.WriteLine($"Failed to parse PDF order from {baseUrl}. Trying next candidate URL.");
+                        _logger?.LogWarning(ex, "Failed to parse PDF order from {BaseUrl}. Trying next candidate URL.", baseUrl);
                     }
                 }
 
@@ -436,9 +492,9 @@ namespace AndersonsBakeryAPI.Services
                             return true;
                         }
                     }
-                    catch
+                    catch (Exception ex)
                     {
-                        Console.WriteLine($"Failed to update status for order {orderId} at {baseUrl}. Trying next candidate URL.");
+                        _logger?.LogWarning(ex, "Failed to update status for order {OrderId} at {BaseUrl}. Trying next candidate URL.", orderId, baseUrl);
                     }
                 }
 
@@ -468,7 +524,10 @@ namespace AndersonsBakeryAPI.Services
                         return JsonSerializer.Deserialize<UserRow>(body, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
                     }
                 }
-                catch { }
+                catch (Exception ex)
+                {
+                    _logger?.LogWarning(ex, "Error authenticating against {BaseUrl}", baseUrl);
+                }
             }
             return null;
         }
@@ -487,7 +546,10 @@ namespace AndersonsBakeryAPI.Services
                         return JsonSerializer.Deserialize<List<Product>>(body, new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new List<Product>();
                     }
                 }
-                catch { }
+                catch (Exception ex)
+                {
+                    _logger?.LogWarning(ex, "Error fetching products from {BaseUrl}", baseUrl);
+                }
             }
             return new List<Product>();
         }
@@ -506,7 +568,10 @@ namespace AndersonsBakeryAPI.Services
                         return JsonSerializer.Deserialize<List<UserRow>>(body, new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new List<UserRow>();
                     }
                 }
-                catch { }
+                catch (Exception ex)
+                {
+                    _logger?.LogWarning(ex, "Error fetching users from {BaseUrl}", baseUrl);
+                }
             }
             return new List<UserRow>();
         }
@@ -532,9 +597,9 @@ namespace AndersonsBakeryAPI.Services
                             return true;
                         }
                     }
-                    catch
+                    catch (Exception ex)
                     {
-                        Console.WriteLine($"Failed to ping API at {baseUrl}. Trying next candidate URL.");
+                        _logger?.LogWarning(ex, "Failed to ping API at {BaseUrl}. Trying next candidate URL.", baseUrl);
                     }
                 }
 

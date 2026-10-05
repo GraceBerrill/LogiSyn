@@ -10,6 +10,8 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using AndersonsBakeryAPI.Services;
 using SharedLibrary.Model;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace LogiSyn.Views
 {
@@ -229,10 +231,11 @@ namespace LogiSyn.Views
                         emailSent = true;
                     }
                 }
-                catch (Exception comEx)
-                {
-                    Console.WriteLine($"[Outlook COM] Direct Outlook launch unavailable: {comEx.Message}");
-                }
+                    catch (Exception comEx)
+                    {
+                        var logger = App.ServiceProvider.GetService(typeof(Microsoft.Extensions.Logging.ILogger<EmailOrdersModal>)) as Microsoft.Extensions.Logging.ILogger<EmailOrdersModal>;
+                        logger?.LogWarning(comEx, "Direct Outlook launch unavailable");
+                    }
 
                 CloseModal();
 

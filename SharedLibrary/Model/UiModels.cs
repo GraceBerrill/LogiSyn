@@ -38,9 +38,9 @@ namespace SharedLibrary.Model
     {
         private bool _isActive;
 
-        public string Key { get; set; }
-        public string Label { get; set; }
-        public ImageSource Icon { get; set; }
+        public string Key { get; set; } = string.Empty;
+        public string Label { get; set; } = string.Empty;
+        public ImageSource Icon { get; set; } = null!;
 
         public bool IsActive
         {
@@ -53,7 +53,7 @@ namespace SharedLibrary.Model
             }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
     }
 
 #if WINDOWS
@@ -61,7 +61,8 @@ namespace SharedLibrary.Model
     {
         public static Brush From(string hex)
         {
-            var brush = (SolidColorBrush)new BrushConverter().ConvertFromString(hex);
+            var brush = new BrushConverter().ConvertFromString(hex) as SolidColorBrush
+                        ?? throw new InvalidOperationException($"Cannot convert '{hex}' to a SolidColorBrush.");
             brush.Freeze();
             return brush;
         }
@@ -91,10 +92,10 @@ namespace SharedLibrary.Model
     // Adriaan - Orders section
     public class OrderRow
     {
-        public string Number { get; set; }
-        public string Customer { get; set; }
+        public string Number { get; set; } = string.Empty;
+        public string Customer { get; set; } = string.Empty;
         public DateTime Date { get; set; }
-        public string Status { get; set; }              // "Pending" or "Complete"
+        public string Status { get; set; } = AppConstants.OrderStatus.Pending;
 
         public bool IsComplete { get { return Status == "Complete" || Status == "Completed"; } }
         public string DateText { get { return Date.ToString("dd/MM/yy", CultureInfo.InvariantCulture); } }
@@ -180,29 +181,29 @@ namespace SharedLibrary.Model
     // ----- production sheet paper -----
     public class SheetIngredient
     {
-        public string Name { get; set; }
-        public string Amount { get; set; }
-        public string Additional { get; set; }
-        public string Used { get; set; }
-        public Brush UsedBrush { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string Amount { get; set; } = string.Empty;
+        public string Additional { get; set; } = string.Empty;
+        public string Used { get; set; } = string.Empty;
+        public Brush UsedBrush { get; set; } = null!;
     }
 
     public class SheetPackaging
     {
-        public string Name { get; set; }
-        public string Amount { get; set; }
-        public string Used { get; set; }
-        public Brush UsedBrush { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string Amount { get; set; } = string.Empty;
+        public string Used { get; set; } = string.Empty;
+        public Brush UsedBrush { get; set; } = null!;
     }
 
     public class SheetProduct
     {
-        public string Name { get; set; }
-        public string Amount { get; set; }
-        public string Production { get; set; }
-        public List<SheetIngredient> Ingredients { get; set; }
-        public List<SheetPackaging> Packaging { get; set; }
-        public string Notes { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string Amount { get; set; } = string.Empty;
+        public string Production { get; set; } = string.Empty;
+        public List<SheetIngredient> Ingredients { get; set; } = new();
+        public List<SheetPackaging> Packaging { get; set; } = new();
+        public string Notes { get; set; } = string.Empty;
     }
 
     // Adriaan - Order Sheet & Summary section

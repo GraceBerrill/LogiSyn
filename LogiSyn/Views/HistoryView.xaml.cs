@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using SharedLibrary.Model;
+using Microsoft.Extensions.Logging;
 using AndersonsBakeryAPI.Services;
 
 namespace LogiSyn.Views
@@ -59,10 +60,11 @@ namespace LogiSyn.Views
 
                 _all = completed;
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error loading history: {ex.Message}");
-                var localOrders = (await _orderService.GetOrdersAsync())
+                catch (Exception ex)
+                {
+                    var logger = App.ServiceProvider.GetService(typeof(ILogger<HistoryView>)) as ILogger<HistoryView>;
+                    logger?.LogWarning(ex, "Error loading history");
+                    var localOrders = (await _orderService.GetOrdersAsync())
                     .Where(o => string.Equals(o.Status, "Completed", StringComparison.OrdinalIgnoreCase)
                              || string.Equals(o.Status, "Complete", StringComparison.OrdinalIgnoreCase))
                     .Select(o => OrderRow.FromOrderScaled(o))

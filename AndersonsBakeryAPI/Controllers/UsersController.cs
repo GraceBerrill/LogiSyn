@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
 using AndersonsBakeryAPI.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SharedLibrary.Model;
 
 namespace AndersonsBakeryAPI.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class UsersController : ControllerBase

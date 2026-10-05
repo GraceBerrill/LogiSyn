@@ -1,5 +1,6 @@
 using System;
 using SharedLibrary.Model;
+using Microsoft.Extensions.Logging;
 
 namespace AndersonsBakeryAPI.Services
 {
@@ -10,9 +11,11 @@ namespace AndersonsBakeryAPI.Services
     {
         private readonly MongoLoginService? _mongo;
         private readonly LoginService _sql;
+        private readonly ILogger<LoginServiceRouter>? _logger;
 
-        public LoginServiceRouter()
+        public LoginServiceRouter(ILogger<LoginServiceRouter>? logger = null)
         {
+            _logger = logger;
             var conn = MongoConfiguration.TryGetConnectionString();
             if (!string.IsNullOrWhiteSpace(conn))
             {
@@ -22,7 +25,7 @@ namespace AndersonsBakeryAPI.Services
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"[MONGO] Could not initialize MongoLoginService: {ex.Message}");
+                    _logger?.LogWarning(ex, "Could not initialize MongoLoginService; falling back to SQL authentication.");
                     _mongo = null;
                 }
             }
@@ -46,7 +49,7 @@ namespace AndersonsBakeryAPI.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Mongo auth failed, falling back to SQL: " + ex.Message);
+                _logger?.LogWarning(ex, "Mongo auth failed; falling back to SQL for user {User}.", name);
                 return _sql.Authenticate(name, password);
             }
         }

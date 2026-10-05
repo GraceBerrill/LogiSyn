@@ -6,24 +6,29 @@ using System.Linq;
 using System.Threading.Tasks;
 using SharedLibrary.Model;
 using SharedLibrary.Interface;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AndersonsBakeryAPI.Controllers
 {
     // Initialise the API controller for handling order-related HTTP requests
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class OrdersController : ControllerBase
     {
         private readonly IOrderService _orderService;
+        private readonly ILogger<OrdersController>? _logger;
 
         //------------------------------------------------------------------------------------------------//
 
         // Constructor for the OrdersController class
-        public OrdersController(IOrderService orderService)
+        public OrdersController(IOrderService orderService, ILogger<OrdersController>? logger = null)
         {
             _orderService = orderService;
+            _logger = logger;
         }
 
         //------------------------------------------------------------------------------------------------//
@@ -32,9 +37,9 @@ namespace AndersonsBakeryAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<OrderScaled>>> GetOrders([FromQuery] bool refresh = false)
         {
-            Console.WriteLine($"[API] GET /api/orders called (refresh={refresh})");
+            _logger?.LogInformation("GET /api/orders called (refresh={Refresh})", refresh);
             var orders = await _orderService.GetOrdersAsync(refresh);
-            Console.WriteLine($"[API] Returning {orders.Count()} orders");
+            _logger?.LogInformation("Returning {Count} orders", orders.Count());
             return Ok(orders);
         }
 
@@ -44,7 +49,7 @@ namespace AndersonsBakeryAPI.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<OrderScaled>> GetOrderById(string id)
         {
-            Console.WriteLine($"[API] GET /api/orders/{id} called");
+            _logger?.LogInformation("GET /api/orders/{Id} called", id);
             var order = await _orderService.GetOrderByIdAsync(id);
             if (order == null) return NotFound();
             return Ok(order);
@@ -57,7 +62,7 @@ namespace AndersonsBakeryAPI.Controllers
         public async Task<ActionResult<OrderScaled>> ParsePdfOrder([FromForm] IFormFile file)
         {
             // Log the request and check if a file was uploaded
-            Console.WriteLine("[API] POST /api/orders/parse called");
+            _logger?.LogInformation("POST /api/orders/parse called");
             if (file == null || file.Length == 0)
                 return BadRequest("No PDF file uploaded.");
 
@@ -71,15 +76,15 @@ namespace AndersonsBakeryAPI.Controllers
                 }
 
                 // Log the parsing process and call the order service to read and scale the order
-                Console.WriteLine($"[API] Parsing PDF from {tempPath}");
+                _logger?.LogInformation("Parsing PDF from {Path}", tempPath);
                 var scaledOrder = _orderService.ReadAndScaleOrder(tempPath);
-                Console.WriteLine($"[API] PDF parsed successfully, order ID: {scaledOrder.OrderId}");
+                _logger?.LogInformation("PDF parsed successfully, order ID: {OrderId}", scaledOrder.OrderId);
                 return Ok(scaledOrder);
             }
             catch (Exception ex)
             {
                 // Log any errors that occur during parsing and return a BadRequest response
-                Console.WriteLine($"[API] ERROR parsing PDF: {ex.Message}");
+                _logger?.LogWarning(ex, "ERROR parsing PDF");
                 return BadRequest($"Error parsing PDF: {ex.Message}");
             }
             finally
@@ -97,13 +102,13 @@ namespace AndersonsBakeryAPI.Controllers
         public async Task<ActionResult<OrderScaled>> SaveOrder([FromBody] OrderScaled order)
         {
             // Log the request and validate the order payload
-            Console.WriteLine("[API] POST /api/orders called with SaveOrder");
+            _logger?.LogInformation("POST /api/orders called with SaveOrder");
             if (order == null) return BadRequest("Invalid order payload.");
 
             // Log the order details and call the order service to save the order
-            Console.WriteLine($"[API] Saving order: ID={order.OrderId}, Customer={order.Customer}, Status={order.Status}");
+            _logger?.LogInformation("Saving order: ID={OrderId}, Customer={Customer}, Status={Status}", order.OrderId, order.Customer, order.Status);
             var saved = await _orderService.SaveOrderAsync(order);
-            Console.WriteLine($"[API] Order {saved.OrderId} saved successfully");
+            _logger?.LogInformation("Order {OrderId} saved successfully", saved.OrderId);
             return CreatedAtAction(nameof(GetOrderById), new { id = saved.OrderId }, saved);
         }
 
@@ -113,7 +118,7 @@ namespace AndersonsBakeryAPI.Controllers
         [HttpPut("{id}/status")]
         public async Task<ActionResult> UpdateOrderStatus(string id, [FromBody] string status)
         {
-            Console.WriteLine($"[API] PUT /api/orders/{id}/status called with {status}");
+            _logger?.LogInformation("PUT /api/orders/{Id}/status called with {Status}", id, status);
             var order = await _orderService.GetOrderByIdAsync(id);
             if (order == null) return NotFound();
 
@@ -125,10 +130,11 @@ namespace AndersonsBakeryAPI.Controllers
         //------------------------------------------------------------------------------------------------//
 
         // GET endpoint for debugging purposes, returns a simple ping response with the current timestamp and order count
+        [AllowAnonymous]
         [HttpGet("debug/ping")]
         public ActionResult<object> DebugPing()
         {
-            Console.WriteLine("[DEBUG] Ping endpoint called");
+            _logger?.LogDebug("Ping endpoint called");
             return Ok(new
             {
                 timestamp = DateTime.UtcNow,

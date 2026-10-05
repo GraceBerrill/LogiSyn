@@ -14,6 +14,8 @@ using AndersonsBakeryAPI.Repositories;
 using AndersonsBakeryAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using MongoDB.Driver;
+using Microsoft.Extensions.Logging;
+using System.Diagnostics;
 
 namespace AndersonsBakeryAPI.Services
 {
@@ -26,6 +28,7 @@ namespace AndersonsBakeryAPI.Services
         private readonly ITempRecipeService? _recipeService;
         private static readonly List<OrderScaled> _orders = new();
         private static bool _localLoaded = false;
+        private readonly ILogger<OrderService>? _logger;
 
         //------------------------------------------------------------------------------------------------//
 
@@ -70,7 +73,7 @@ namespace AndersonsBakeryAPI.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[LOCAL] Error loading local orders.json: {ex.Message}");
+                Trace.WriteLine($"[LOCAL] Error loading local orders.json: {ex.Message}");
             }
         }
 
@@ -95,7 +98,7 @@ namespace AndersonsBakeryAPI.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[LOCAL] Error saving local orders.json: {ex.Message}");
+                Trace.WriteLine($"[LOCAL] Error saving local orders.json: {ex.Message}");
             }
         }
 
@@ -116,7 +119,7 @@ namespace AndersonsBakeryAPI.Services
             // Catch any exceptions that occur during the creation of the SQL repository and log the error
             catch (Exception ex)
             {
-                Console.WriteLine($"[SQL] Could not initialize SQL repository: {ex.Message}");
+                Trace.WriteLine($"[SQL] Could not initialize SQL repository: {ex.Message}");
                 return null;
             }
         }
@@ -142,7 +145,7 @@ namespace AndersonsBakeryAPI.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[MONGODB] Could not initialize MongoDB repository: {ex.Message}");
+                Trace.WriteLine($"[MONGODB] Could not initialize MongoDB repository: {ex.Message}");
                 return null;
             }
         }
@@ -168,13 +171,14 @@ namespace AndersonsBakeryAPI.Services
             : this(productService, mongoRepository, sqlRepository, new TempRecipeService()) { }
 
         // Constructor that initializes the OrderService with ProductService, repositories, and TempRecipeService
-        public OrderService(IProductService productService, MongoOrderRepository? mongoRepository, SqlOrderRepository? sqlRepository, ITempRecipeService? recipeService)
+        public OrderService(IProductService productService, MongoOrderRepository? mongoRepository, SqlOrderRepository? sqlRepository, ITempRecipeService? recipeService, ILogger<OrderService>? logger = null)
         {
             // Use the provided ProductService or create a new one if null
             _productService = productService ?? new ProductService();
             _mongoRepository = mongoRepository;
             _sqlRepository = sqlRepository;
             _recipeService = recipeService ?? new TempRecipeService();
+            _logger = logger;
 
             if (!_localLoaded)
             {
@@ -469,7 +473,7 @@ namespace AndersonsBakeryAPI.Services
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"[OrderService] Error fetching orders from MongoDB: {ex.Message}");
+                    _logger?.LogWarning(ex, "Error fetching orders from MongoDB");
                 }
             }
 
@@ -488,7 +492,7 @@ namespace AndersonsBakeryAPI.Services
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"[OrderService] Error fetching orders from SQL: {ex.Message}");
+                    _logger?.LogWarning(ex, "Error fetching orders from SQL");
                 }
             }
 
@@ -568,11 +572,11 @@ namespace AndersonsBakeryAPI.Services
                 try
                 {
                     await _mongoRepository.SaveOrderAsync(order);
-                    Console.WriteLine($"[MONGODB] Successfully saved order {order.OrderId}");
+                    _logger?.LogInformation("Successfully saved order {OrderId} to MongoDB", order.OrderId);
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"[MONGODB] Error saving order to MongoDB: {ex.Message}");
+                    _logger?.LogWarning(ex, "Error saving order to MongoDB for {OrderId}", order.OrderId);
                 }
             }
 
@@ -582,11 +586,11 @@ namespace AndersonsBakeryAPI.Services
                 try
                 {
                     await _sqlRepository.SaveOrderAsync(order);
-                    Console.WriteLine($"[SQL] Successfully saved order {order.OrderId}");
+                    _logger?.LogInformation("Successfully saved order {OrderId} to SQL", order.OrderId);
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"[SQL] Error saving order to SQL: {ex.Message}");
+                    _logger?.LogWarning(ex, "Error saving order to SQL for {OrderId}", order.OrderId);
                 }
             }
 
@@ -603,7 +607,7 @@ namespace AndersonsBakeryAPI.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[OrderService] Error in sync SaveOrder: {ex.Message}");
+                _logger?.LogWarning(ex, "Error in sync SaveOrder");
             }
         }
 

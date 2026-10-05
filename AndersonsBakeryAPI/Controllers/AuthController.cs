@@ -1,7 +1,12 @@
 using System;
 using System.Threading.Tasks;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 using AndersonsBakeryAPI.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using SharedLibrary.Model;
 
 namespace AndersonsBakeryAPI.Controllers
@@ -11,10 +16,12 @@ namespace AndersonsBakeryAPI.Controllers
     public class AuthController : ControllerBase
     {
         private readonly LoginServiceRouter _loginRouter;
+        private readonly IConfiguration _configuration;
 
-        public AuthController(LoginServiceRouter loginRouter)
+        public AuthController(LoginServiceRouter loginRouter, IConfiguration configuration)
         {
             _loginRouter = loginRouter;
+            _configuration = configuration;
         }
 
         public class LoginRequest
@@ -24,7 +31,7 @@ namespace AndersonsBakeryAPI.Controllers
         }
 
         [HttpPost("login")]
-        public ActionResult<UserRow> Login([FromBody] LoginRequest request)
+        public ActionResult<object> Login([FromBody] LoginRequest request)
         {
             if (request == null || string.IsNullOrWhiteSpace(request.Username) || string.IsNullOrWhiteSpace(request.Password))
                 return BadRequest(new { message = "Username and password are required." });
@@ -33,7 +40,35 @@ namespace AndersonsBakeryAPI.Controllers
             if (user == null)
                 return Unauthorized(new { message = "Invalid username or password." });
 
-            return Ok(user);
+            // Create JWT token
+            var jwt = _configuration.GetSection("Jwt");
+            var key = jwt["Key"] ?? string.Empty;
+            var issuer = jwt["Issuer"];
+            var audience = jwt["Audience"];
+            var expiresMinutes = int.TryParse(jwt["ExpiresMinutes"], out var m) ? m : 60;
+
+            var claims = new[]
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, user.Id ?? user.Name),
+                new Claim("username", user.Name ?? string.Empty),
+                new Claim(ClaimTypes.Role, user.Role ?? string.Empty)
+            };
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var keyBytes = Encoding.UTF8.GetBytes(key);
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(claims),
+                Expires = DateTime.UtcNow.AddMinutes(expiresMinutes),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(keyBytes), SecurityAlgorithms.HmacSha256Signature),
+                Issuer = issuer,
+                Audience = audience
+            };
+
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            var tokenString = tokenHandler.WriteToken(token);
+
+            return Ok(new { token = tokenString, user });
         }
     }
 }

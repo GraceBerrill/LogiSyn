@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using SharedLibrary.Model;
 using System.Windows.Threading;
 using AndersonsBakeryAPI.Services;
+using Microsoft.Extensions.Logging;
 
 namespace LogiSyn.Views
 {
@@ -69,7 +70,8 @@ namespace LogiSyn.Views
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error loading orders: {ex.Message}");
+                var logger = App.ServiceProvider?.GetService(typeof(Microsoft.Extensions.Logging.ILogger<AdminOrdersView>)) as Microsoft.Extensions.Logging.ILogger<AdminOrdersView>;
+                logger?.LogWarning(ex, "Error loading orders");
                 var localOrders = (await _orderService.GetOrdersAsync()).ToList();
                 if (localOrders.Count > 0)
                 {

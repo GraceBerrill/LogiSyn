@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using SharedLibrary.Model;
 using AndersonsBakeryAPI.Repositories;
+using Microsoft.Extensions.Logging;
 
 namespace AndersonsBakeryAPI.Services
 {
@@ -27,9 +28,11 @@ namespace AndersonsBakeryAPI.Services
         private readonly UserService _sql;
         private readonly MongoProductRepository? _mongoProducts;
         private readonly ProductService _productService;
+        private readonly ILogger<SyncService>? _logger;
 
-        public SyncService()
+        public SyncService(ILogger<SyncService>? logger = null)
         {
+            _logger = logger;
             _sql = new UserService();
             var conn = MongoConfiguration.TryGetConnectionString();
             if (!string.IsNullOrWhiteSpace(conn))
@@ -40,7 +43,7 @@ namespace AndersonsBakeryAPI.Services
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"[MONGO] Could not initialize MongoUserService for sync: {ex.Message}");
+                    _logger?.LogWarning(ex, "Could not initialize MongoUserService for sync; continuing without Mongo user sync.");
                     _mongo = null;
                 }
 
@@ -50,7 +53,7 @@ namespace AndersonsBakeryAPI.Services
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"[MONGO] Could not initialize MongoProductRepository for sync: {ex.Message}");
+                    _logger?.LogWarning(ex, "Could not initialize MongoProductRepository for sync; continuing without Mongo product sync.");
                     _mongoProducts = null;
                 }
             }
@@ -59,8 +62,9 @@ namespace AndersonsBakeryAPI.Services
 
         public bool IsMongoConfigured => _mongo != null || _mongoProducts != null;
 
-        public SyncService(MongoUserService? mongo, UserService sql, MongoProductRepository? mongoProducts = null, ProductService? productService = null)
+        public SyncService(MongoUserService? mongo, UserService sql, MongoProductRepository? mongoProducts = null, ProductService? productService = null, ILogger<SyncService>? logger = null)
         {
+            _logger = logger;
             _mongo = mongo;
             _sql = sql ?? throw new ArgumentNullException(nameof(sql));
             _mongoProducts = mongoProducts;

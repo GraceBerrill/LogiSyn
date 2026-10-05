@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using SharedLibrary.Model;
+using Microsoft.Extensions.Logging;
 
 namespace AndersonsBakeryAPI.Services
 {
@@ -8,9 +9,10 @@ namespace AndersonsBakeryAPI.Services
     {
         private readonly MongoUserService? _mongo;
         private readonly UserService _sql;
-
-        public UserServiceRouter()
+        private readonly ILogger<UserServiceRouter>? _logger;
+        public UserServiceRouter(ILogger<UserServiceRouter>? logger = null)
         {
+            _logger = logger;
             var conn = MongoConfiguration.TryGetConnectionString();
             if (!string.IsNullOrWhiteSpace(conn))
             {
@@ -20,17 +22,18 @@ namespace AndersonsBakeryAPI.Services
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"[MONGO] Could not initialize MongoUserService: {ex.Message}");
+                    _logger?.LogWarning(ex, "Could not initialize MongoUserService; continuing in SQL-only mode.");
                     _mongo = null;
                 }
             }
             _sql = new UserService();
         }
 
-        public UserServiceRouter(MongoUserService mongo, UserService sql)
+        public UserServiceRouter(MongoUserService mongo, UserService sql, ILogger<UserServiceRouter>? logger = null)
         {
             _mongo = mongo ?? throw new ArgumentNullException(nameof(mongo));
             _sql = sql ?? throw new ArgumentNullException(nameof(sql));
+            _logger = logger;
         }
 
         public List<UserRow> GetAllUsers()
@@ -39,7 +42,11 @@ namespace AndersonsBakeryAPI.Services
                 return _sql.GetAllUsers();
 
             try { return _mongo.GetAllUsers(); }
-            catch { return _sql.GetAllUsers(); }
+            catch (Exception ex)
+            {
+                _logger?.LogWarning(ex, "Mongo GetAllUsers failed; falling back to SQL.");
+                return _sql.GetAllUsers();
+            }
         }
 
         public bool UsernameExists(string username, string? excludedMongoId = null)
@@ -48,7 +55,11 @@ namespace AndersonsBakeryAPI.Services
                 return _sql.UsernameExists(username, excludedMongoId);
 
             try { return _mongo.UsernameExists(username, excludedMongoId); }
-            catch { return _sql.UsernameExists(username, excludedMongoId); }
+            catch (Exception ex)
+            {
+                _logger?.LogWarning(ex, "Mongo UsernameExists failed; falling back to SQL for username {Username}.", username);
+                return _sql.UsernameExists(username, excludedMongoId);
+            }
         }
 
         public void AddUser(string username, string plainPassword, string role)
@@ -72,7 +83,7 @@ namespace AndersonsBakeryAPI.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Mongo write failed: " + ex.Message);
+                _logger?.LogWarning(ex, "Mongo write failed when adding user {Username}.", username);
             }
 
             try
@@ -82,7 +93,7 @@ namespace AndersonsBakeryAPI.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine("SQL write failed: " + ex.Message);
+                _logger?.LogError(ex, "SQL write failed when adding user {Username}.", username);
             }
 
             if (!mongoOk && !sqlOk)
@@ -99,7 +110,7 @@ namespace AndersonsBakeryAPI.Services
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("Mongo update failed: " + ex.Message);
+                    _logger?.LogWarning(ex, "Mongo update failed for user {MongoId}.", mongoId);
                 }
             }
 
@@ -113,7 +124,7 @@ namespace AndersonsBakeryAPI.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine("SQL update failed: " + ex.Message);
+                _logger?.LogError(ex, "SQL update failed for user {MongoId}.", mongoId);
                 if (_mongo == null || string.IsNullOrWhiteSpace(mongoId) || int.TryParse(mongoId, out _))
                     throw;
             }
@@ -124,13 +135,13 @@ namespace AndersonsBakeryAPI.Services
             if (_mongo != null && !string.IsNullOrWhiteSpace(mongoId) && mongoId.Length == 24 && !int.TryParse(mongoId, out _))
             {
                 try { _mongo.DeleteUser(mongoId); }
-                catch (Exception ex) { Console.WriteLine("Mongo delete failed: " + ex.Message); }
+                catch (Exception ex) { _logger?.LogWarning(ex, "Mongo delete failed for {MongoId}.", mongoId); }
             }
 
             try { _sql.DeleteUser(mongoId); }
             catch (Exception ex)
             {
-                Console.WriteLine("SQL delete failed: " + ex.Message);
+                _logger?.LogError(ex, "SQL delete failed for {MongoId}.", mongoId);
                 if (_mongo == null || string.IsNullOrWhiteSpace(mongoId) || int.TryParse(mongoId, out _))
                     throw;
             }

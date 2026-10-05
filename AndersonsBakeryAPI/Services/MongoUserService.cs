@@ -13,9 +13,11 @@ namespace AndersonsBakeryAPI.Services
         private static readonly object _indexLock = new();
 
         private readonly IMongoCollection<UserRow> _usersCollection;
+        private readonly Microsoft.Extensions.Logging.ILogger<MongoUserService>? _logger;
 
-        public MongoUserService(IMongoClient client, IConfiguration configuration)
+        public MongoUserService(IMongoClient client, IConfiguration configuration, Microsoft.Extensions.Logging.ILogger<MongoUserService>? logger = null)
         {
+            _logger = logger;
             var databaseName = configuration["MongoDatabase"]
                 ?? throw new InvalidOperationException("Missing 'MongoDatabase' value.");
 
@@ -24,8 +26,9 @@ namespace AndersonsBakeryAPI.Services
             EnsureIndexes();
         }
 
-        public MongoUserService(string connectionString, string databaseName)
+        public MongoUserService(string connectionString, string databaseName, Microsoft.Extensions.Logging.ILogger<MongoUserService>? logger = null)
         {
+            _logger = logger;
             if (string.IsNullOrWhiteSpace(connectionString))
                 throw new ArgumentException("MongoDB connection string is required.", nameof(connectionString));
             if (string.IsNullOrWhiteSpace(databaseName))
@@ -55,7 +58,7 @@ namespace AndersonsBakeryAPI.Services
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"[MONGO] Warning: Failed to create Users index: {ex.Message}");
+                        _logger?.LogWarning(ex, "Failed to create Users index");
                     }
                 }
             });

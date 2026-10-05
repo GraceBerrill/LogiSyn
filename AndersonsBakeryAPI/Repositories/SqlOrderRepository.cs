@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace AndersonsBakeryAPI.Repositories
 {
@@ -15,18 +16,21 @@ namespace AndersonsBakeryAPI.Repositories
     public class SqlOrderRepository : IOrderRepository
     {
         private readonly string? _connectionString;
+        private readonly ILogger<SqlOrderRepository>? _logger;
 
         //------------------------------------------------------------------------------------------------//
 
         // Constructor for the SqlOrderRepository class
-        public SqlOrderRepository(Data.LogiSynDbContext context)
+        public SqlOrderRepository(Data.LogiSynDbContext context, ILogger<SqlOrderRepository>? logger = null)
         {
+            _logger = logger;
             try
             {
                 _connectionString = context?.Database?.GetConnectionString();
             }
-            catch
+            catch (Exception ex)
             {
+                _logger?.LogWarning(ex, "Failed to get connection string from DbContext; falling back to localdb.");
                 _connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=LogiSynDb;Integrated Security=True;TrustServerCertificate=True;";
             }
         }
@@ -56,7 +60,7 @@ namespace AndersonsBakeryAPI.Repositories
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error retrieving orders from SQL: {ex.Message}");
+                _logger?.LogWarning(ex, "Error retrieving orders from SQL");
                 return new List<OrderScaled>();
             }
         }
@@ -73,7 +77,7 @@ namespace AndersonsBakeryAPI.Repositories
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error retrieving order {orderId} from SQL: {ex.Message}");
+                _logger?.LogWarning(ex, "Error retrieving order {OrderId} from SQL", orderId);
                 return null;
             }
         }
@@ -112,7 +116,7 @@ namespace AndersonsBakeryAPI.Repositories
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error saving order {order.OrderId} to SQL: {ex.Message}");
+                _logger?.LogError(ex, "Error saving order {OrderId} to SQL", order.OrderId);
                 throw;
             }
         }
@@ -135,7 +139,7 @@ namespace AndersonsBakeryAPI.Repositories
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error deleting order {orderId} from SQL: {ex.Message}");
+                _logger?.LogWarning(ex, "Error deleting order {OrderId} from SQL", orderId);
                 return false;
             }
         }
@@ -158,7 +162,7 @@ namespace AndersonsBakeryAPI.Repositories
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error updating status for order {orderId} in SQL: {ex.Message}");
+                _logger?.LogWarning(ex, "Error updating status for order {OrderId} in SQL", orderId);
                 return false;
             }
         }
@@ -177,7 +181,7 @@ namespace AndersonsBakeryAPI.Repositories
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error retrieving completed orders from SQL: {ex.Message}");
+                _logger?.LogWarning(ex, "Error retrieving completed orders from SQL");
                 return new List<OrderScaled>();
             }
         }

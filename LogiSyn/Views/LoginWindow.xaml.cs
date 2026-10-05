@@ -1,5 +1,6 @@
 using AndersonsBakeryAPI.Services;
 using SharedLibrary.Model;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Windows;
 using System.Windows.Controls;
@@ -106,7 +107,8 @@ namespace LogiSyn.Views
                 catch (Exception apiEx)
                 {
                     // API failed; log and fall back to local auth
-                    Console.WriteLine($"[Login] API auth failed: {apiEx.Message}");
+                    var logger = App.ServiceProvider.GetService(typeof(Microsoft.Extensions.Logging.ILogger<LoginWindow>)) as Microsoft.Extensions.Logging.ILogger<LoginWindow>;
+                    logger?.LogWarning(apiEx, "API auth failed during login");
                     user = null;
                 }
 

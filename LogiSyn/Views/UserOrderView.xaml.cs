@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using SharedLibrary.Model;
 using AndersonsBakeryAPI.Services;
+using Microsoft.Extensions.Logging;
 
 namespace LogiSyn.Views
 {
@@ -51,13 +52,14 @@ namespace LogiSyn.Views
                 var rows = orders.Select(o => OrderRow.FromOrderScaled(o)).ToList();
                 OrderList.ItemsSource = rows;
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error loading user orders: {ex.Message}");
-                var localOrders = (await _orderService.GetOrdersAsync()).ToList();
-                var rows = localOrders.Select(o => OrderRow.FromOrderScaled(o)).ToList();
-                OrderList.ItemsSource = rows;
-            }
+                catch (Exception ex)
+                {
+                    var logger = App.ServiceProvider.GetService(typeof(Microsoft.Extensions.Logging.ILogger<UserOrdersView>)) as Microsoft.Extensions.Logging.ILogger<UserOrdersView>;
+                    logger?.LogWarning(ex, "Error loading user orders");
+                    var localOrders = (await _orderService.GetOrdersAsync()).ToList();
+                    var rows = localOrders.Select(o => OrderRow.FromOrderScaled(o)).ToList();
+                    OrderList.ItemsSource = rows;
+                }
         }
 
         //------------------------------------------------------------------------------------------------//

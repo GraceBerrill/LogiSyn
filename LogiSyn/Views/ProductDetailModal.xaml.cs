@@ -35,7 +35,7 @@ namespace LogiSyn.Views
 
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
-            ShellWindow.Current.CloseModal();
+            ShellWindow.Current?.CloseModal();
         }
 
         //save changes to product details

@@ -20,6 +20,7 @@ namespace AndersonsBakeryAPI.Repositories
 
         private readonly IMongoDatabase _database;
         private readonly IMongoCollection<OrderScaled> _ordersCollection;
+        private readonly Microsoft.Extensions.Logging.ILogger<MongoOrderRepository>? _logger;
 
         //------------------------------------------------------------------------------------------------//
 
@@ -52,8 +53,9 @@ namespace AndersonsBakeryAPI.Repositories
         //------------------------------------------------------------------------------------------------//
 
         // Constructor for the MongoOrderRepository class
-        public MongoOrderRepository(IMongoDatabase database)
+        public MongoOrderRepository(IMongoDatabase database, Microsoft.Extensions.Logging.ILogger<MongoOrderRepository>? logger = null)
         {
+            _logger = logger;
             _database = database ?? throw new ArgumentNullException(nameof(database));
             _ordersCollection = _database.GetCollection<OrderScaled>("Orders");
 
@@ -87,7 +89,7 @@ namespace AndersonsBakeryAPI.Repositories
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"Warning: Failed to create MongoDB indexes: {ex.Message}");
+                        _logger?.LogWarning(ex, "Failed to create MongoDB indexes");
                     }
                 }
             });
@@ -105,7 +107,7 @@ namespace AndersonsBakeryAPI.Repositories
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error retrieving orders from MongoDB: {ex.Message}");
+                _logger?.LogWarning(ex, "Error retrieving orders from MongoDB");
                 return new List<OrderScaled>();
             }
         }
@@ -122,7 +124,7 @@ namespace AndersonsBakeryAPI.Repositories
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error retrieving order {orderId} from MongoDB: {ex.Message}");
+                _logger?.LogWarning(ex, "Error retrieving order {OrderId} from MongoDB", orderId);
                 return null;
             }
         }
@@ -137,23 +139,21 @@ namespace AndersonsBakeryAPI.Repositories
 
             try
             {
-                Console.WriteLine($"[MONGO_REPO] Attempting to save order {order.OrderId}");
+                _logger?.LogDebug("Attempting to save order {OrderId} to MongoDB", order.OrderId);
 
                 var filter = Builders<OrderScaled>.Filter.Eq(o => o.OrderId, order.OrderId);
                 var options = new ReplaceOptions { IsUpsert = true };
 
                 var result = await _ordersCollection.ReplaceOneAsync(filter, order, options);
 
-                Console.WriteLine($"[MONGO_REPO] ReplaceOneAsync result: ModifiedCount={result.ModifiedCount}, UpsertedId={result.UpsertedId}");
-                Console.WriteLine($"[MONGO_REPO] ✓ Order {order.OrderId} saved successfully");
+                _logger?.LogDebug("ReplaceOneAsync result for {OrderId}: ModifiedCount={ModifiedCount}, UpsertedId={UpsertedId}", order.OrderId, result.ModifiedCount, result.UpsertedId);
+                _logger?.LogInformation("Order {OrderId} saved successfully to MongoDB", order.OrderId);
 
                 return order;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[MONGO_REPO] ✗ ERROR saving order {order.OrderId}: {ex.Message}");
-                Console.WriteLine($"[MONGO_REPO] Exception Type: {ex.GetType().Name}");
-                Console.WriteLine($"[MONGO_REPO] Stack Trace: {ex.StackTrace}");
+                _logger?.LogError(ex, "ERROR saving order {OrderId} to MongoDB", order.OrderId);
                 throw;
             }
         }
@@ -171,7 +171,7 @@ namespace AndersonsBakeryAPI.Repositories
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error deleting order {orderId} from MongoDB: {ex.Message}");
+                _logger?.LogWarning(ex, "Error deleting order {OrderId} from MongoDB", orderId);
                 return false;
             }
         }
@@ -191,7 +191,7 @@ namespace AndersonsBakeryAPI.Repositories
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error updating status for order {orderId} in MongoDB: {ex.Message}");
+                _logger?.LogWarning(ex, "Error updating status for order {OrderId} in MongoDB", orderId);
                 return false;
             }
         }
@@ -209,7 +209,7 @@ namespace AndersonsBakeryAPI.Repositories
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error retrieving completed orders from MongoDB: {ex.Message}");
+                _logger?.LogWarning(ex, "Error retrieving completed orders from MongoDB");
                 return new List<OrderScaled>();
             }
         }

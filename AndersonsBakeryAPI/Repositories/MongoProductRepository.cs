@@ -20,6 +20,7 @@ namespace AndersonsBakeryAPI.Repositories
         private static readonly object _indexLock = new();
 
         private readonly IMongoCollection<Product> _productsCollection;
+        private readonly Microsoft.Extensions.Logging.ILogger<MongoProductRepository>? _logger;
 
         static MongoProductRepository()
         {
@@ -43,15 +44,17 @@ namespace AndersonsBakeryAPI.Repositories
         }
 
         [Microsoft.Extensions.DependencyInjection.ActivatorUtilitiesConstructor]
-        public MongoProductRepository(IMongoDatabase database)
+        public MongoProductRepository(IMongoDatabase database, Microsoft.Extensions.Logging.ILogger<MongoProductRepository>? logger = null)
         {
             if (database == null) throw new ArgumentNullException(nameof(database));
+            _logger = logger;
             _productsCollection = database.GetCollection<Product>("Products");
             EnsureIndexes();
         }
 
-        public MongoProductRepository(string connectionString, string databaseName)
+        public MongoProductRepository(string connectionString, string databaseName, Microsoft.Extensions.Logging.ILogger<MongoProductRepository>? logger = null)
         {
+            _logger = logger;
             if (string.IsNullOrWhiteSpace(connectionString))
                 throw new ArgumentException("MongoDB connection string is required.", nameof(connectionString));
             if (string.IsNullOrWhiteSpace(databaseName))
@@ -82,7 +85,7 @@ namespace AndersonsBakeryAPI.Repositories
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"[MONGO] Warning: Failed to create Products index: {ex.Message}");
+                        _logger?.LogWarning(ex, "Failed to create Products index");
                     }
                 }
             });
@@ -231,10 +234,10 @@ namespace AndersonsBakeryAPI.Repositories
                     }
                 }
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"[MONGO] Error seeding products: {ex.Message}");
-            }
+                    catch (Exception ex)
+                    {
+                        _logger?.LogWarning(ex, "Error seeding products to MongoDB");
+                    }
         }
     }
 }

@@ -15,8 +15,12 @@ namespace LogiSyn
 		protected override void OnStartup(StartupEventArgs e)
 		{
 			var services = new ServiceCollection();
-			// Register ApiClient as a singleton for the WPF client to use
-			services.AddSingleton<ApiClient>();
+			// Add logging for WPF app views and services
+			services.AddLogging();
+			// Register ApiClient as a singleton for the WPF client to use.
+			// Prefer the local API URL for development so CreateProductAsync and GetProductsAsync
+			// call the local API when running alongside the backend.
+			services.AddSingleton<ApiClient>(sp => new ApiClient("https://localhost:7274"));
 
 			// Register common backend services so views can resolve them from DI
 			services.AddSingleton<AndersonsBakeryAPI.Services.ProductService>();

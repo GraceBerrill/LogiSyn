@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using SharedLibrary.Model;
+using Microsoft.Extensions.Logging;
 using System.Windows.Input;
 using SharedLibrary.Interface;
 using AndersonsBakeryAPI.Services;
@@ -100,24 +101,27 @@ namespace LogiSyn.Views
                 {
                     await _orderService.SaveOrderAsync(_currentOrder);
                 }
-                catch (Exception localEx)
-                {
-                    Console.WriteLine($"Local save failed: {localEx.Message}");
-                }
+                    catch (Exception localEx)
+                    {
+                        var logger = App.ServiceProvider.GetService(typeof(Microsoft.Extensions.Logging.ILogger<OrderSheetsView>)) as Microsoft.Extensions.Logging.ILogger<OrderSheetsView>;
+                        logger?.LogWarning(localEx, "Local save failed");
+                    }
 
                 try
                 {
                     await _apiClient.SaveOrderAsync(_currentOrder);
                 }
-                catch (Exception apiEx)
+                    catch (Exception apiEx)
+                    {
+                        var logger = App.ServiceProvider.GetService(typeof(Microsoft.Extensions.Logging.ILogger<OrderSheetsView>)) as Microsoft.Extensions.Logging.ILogger<OrderSheetsView>;
+                        logger?.LogWarning(apiEx, "API save skipped/failed");
+                    }
+            }
+                catch (Exception ex)
                 {
-                    Console.WriteLine($"API save skipped/failed: {apiEx.Message}");
+                    var logger = App.ServiceProvider.GetService(typeof(Microsoft.Extensions.Logging.ILogger<OrderSheetsView>)) as Microsoft.Extensions.Logging.ILogger<OrderSheetsView>;
+                    logger?.LogWarning(ex, "Error saving order");
                 }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error saving order: {ex.Message}");
-            }
         }
 
         private async void BtnBack_Click(object sender, RoutedEventArgs e)
@@ -246,10 +250,11 @@ namespace LogiSyn.Views
                         emailSent = true;
                     }
                 }
-                catch (Exception comEx)
-                {
-                    Console.WriteLine($"[Outlook COM] Direct Outlook launch unavailable: {comEx.Message}");
-                }
+                    catch (Exception comEx)
+                    {
+                        var logger = App.ServiceProvider.GetService(typeof(Microsoft.Extensions.Logging.ILogger<OrderSheetsView>)) as Microsoft.Extensions.Logging.ILogger<OrderSheetsView>;
+                        logger?.LogWarning(comEx, "Direct Outlook launch unavailable");
+                    }
 
                 if (!emailSent)
                 {

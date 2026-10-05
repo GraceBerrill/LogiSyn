@@ -595,7 +595,8 @@ namespace AndersonsBakeryAPI.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[ExcelOrderService] Import error: {ex.Message}");
+                // Excel import errors are non-fatal for the service; log if logger available
+                try { Microsoft.Extensions.Logging.Abstractions.NullLogger.Instance.LogWarning(ex, "Excel import error"); } catch { }
                 return false;
             }
         }

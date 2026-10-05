@@ -139,11 +139,11 @@ namespace LogiSyn.Views
 
             foreach (var row in IngredientsList)
             {
-                string name = row.Name?.Trim();
+                string name = row.Name?.Trim()!;
                 if (string.IsNullOrEmpty(name)) continue;
 
                 TryParseDecimal(row.Quantity, out decimal qty);
-                string unit = row.Unit?.Trim();
+                string unit = row.Unit?.Trim()!;
 
                 ingredients.Add(new IngredientRequirement
                 {

@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using SharedLibrary.Model;
 using AndersonsBakeryAPI.Services;
+using Microsoft.Extensions.Logging;
 
 namespace LogiSyn.Views
 {
@@ -77,10 +78,11 @@ namespace LogiSyn.Views
                     PopulateUI(_scaledOrder);
                 }
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"[UserOrderSheet] Error fetching order from API: {ex.Message}");
-            }
+                catch (Exception ex)
+                {
+                    var logger = App.ServiceProvider.GetService(typeof(Microsoft.Extensions.Logging.ILogger<UserOrderSheetView>)) as Microsoft.Extensions.Logging.ILogger<UserOrderSheetView>;
+                    logger?.LogWarning(ex, "Error fetching order from API");
+                }
         }
 
         private void PopulateUI(OrderScaled scaled)
@@ -177,11 +179,12 @@ namespace LogiSyn.Views
                 await _orderService.SaveOrderAsync(_scaledOrder);
             }
             catch (Exception ex)
-            {
-                Console.WriteLine($"[UserOrderSheet] Local save failed: {ex.Message}");
-                // fallback to synchronous save if async failed for some reason
-                try { _orderService.SaveOrder(_scaledOrder); } catch { }
-            }
+                {
+                    var logger = App.ServiceProvider.GetService(typeof(Microsoft.Extensions.Logging.ILogger<UserOrderSheetView>)) as Microsoft.Extensions.Logging.ILogger<UserOrderSheetView>;
+                    logger?.LogWarning(ex, "Local save failed");
+                    // fallback to synchronous save if async failed for some reason
+                    try { _orderService.SaveOrder(_scaledOrder); } catch { }
+                }
 
             // Asynchronously sync order and status with the backend REST API
             try
@@ -195,7 +198,8 @@ namespace LogiSyn.Views
             catch (Exception ex)
             {
                 // Catch and log API communication errors without interrupting the user workflow
-                Console.WriteLine($"[UserOrderSheet] Error syncing with API: {ex.Message}");
+                var logger = App.ServiceProvider.GetService(typeof(Microsoft.Extensions.Logging.ILogger<UserOrderSheetView>)) as Microsoft.Extensions.Logging.ILogger<UserOrderSheetView>;
+                logger?.LogWarning(ex, "Error syncing with API");
             }
         }
 
@@ -271,10 +275,11 @@ namespace LogiSyn.Views
                         emailSent = true;
                     }
                 }
-                catch (Exception comEx)
-                {
-                    Console.WriteLine($"[Outlook COM] Direct Outlook launch unavailable: {comEx.Message}");
-                }
+                    catch (Exception comEx)
+                    {
+                        var logger = App.ServiceProvider.GetService(typeof(Microsoft.Extensions.Logging.ILogger<UserOrderSheetView>)) as Microsoft.Extensions.Logging.ILogger<UserOrderSheetView>;
+                        logger?.LogWarning(comEx, "Direct Outlook launch unavailable");
+                    }
 
                 if (!emailSent)
                 {

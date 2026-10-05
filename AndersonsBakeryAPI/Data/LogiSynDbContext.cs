@@ -111,7 +111,9 @@ namespace AndersonsBakeryAPI.Data
                 entity.Property(p => p.SellBy);
                 entity.Property(p => p.BestBefore);
                 entity.Property(p => p.StorageLocation).HasMaxLength(50);
-                entity.Property(p => p.Method).HasMaxLength(500);
+                // Allow long method text and store as nvarchar(max) to avoid truncation when users paste long recipes
+                entity.Property(p => p.Method).HasColumnType("nvarchar(max)");
+
                 // Serialize Ingredients as JSON in SQL Server (resolves IngredientRequirement key error)
                 entity.Property(p => p.Ingredients)
                     .IsRequired(false)
@@ -120,7 +122,13 @@ namespace AndersonsBakeryAPI.Data
                         v => string.IsNullOrWhiteSpace(v)
                             ? new List<IngredientRequirement>()
                             : JsonSerializer.Deserialize<List<IngredientRequirement>>(v, (JsonSerializerOptions?)null) ?? new List<IngredientRequirement>()
-                    );
+                    )
+                    .Metadata
+                    .SetValueComparer(new ValueComparer<List<IngredientRequirement>>(
+                        (c1, c2) => JsonSerializer.Serialize(c1, (JsonSerializerOptions?)null) == JsonSerializer.Serialize(c2, (JsonSerializerOptions?)null),
+                        c => c == null ? 0 : JsonSerializer.Serialize(c, (JsonSerializerOptions?)null).GetHashCode(),
+                        c => JsonSerializer.Deserialize<List<IngredientRequirement>>(JsonSerializer.Serialize(c, (JsonSerializerOptions?)null), (JsonSerializerOptions?)null) ?? new List<IngredientRequirement>()
+                    ));
             });
             modelBuilder.Entity<UserRow>(entity =>
             {
@@ -133,7 +141,7 @@ namespace AndersonsBakeryAPI.Data
                 entity.Property(u => u.Name).HasColumnName("Username").IsRequired().HasMaxLength(50);
                 entity.HasIndex(u => u.Name).IsUnique();
                 entity.Property(u => u.Role).IsRequired().HasMaxLength(50);
-                entity.Property(u => u.Password).HasMaxLength(100);
+                entity.Property(u => u.Password).HasMaxLength(256);
                 entity.Property(u => u.Id).HasColumnName("MongoId").HasMaxLength(50).IsRequired(false);
                 entity.Property(u => u.DateAdded).HasMaxLength(50);
             });
