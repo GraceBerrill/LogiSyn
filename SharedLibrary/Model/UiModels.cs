@@ -132,6 +132,7 @@ namespace SharedLibrary.Model
 
     public class ProductRow
     {
+        public string? Id { get; set; }
         public int ProductId { get; set; }
         public string? Name { get; set; }
         public string? Price { get; set; }
@@ -567,7 +568,10 @@ namespace SharedLibrary.Model
 
     public class ProductDetail
     {
+        public string? Id { get; set; }
+        public int ProductId { get; set; }
         public string Name { get; set; } = string.Empty;
+        public string OriginalName { get; set; } = string.Empty;
         public string DateAdded { get; set; } = string.Empty;
         public List<IngredientLine> Ingredients { get; set; } = new();
         public string Method { get; set; } = string.Empty;

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using SharedLibrary.Model;
+using AndersonsBakeryAPI.Repositories;
 
 namespace AndersonsBakeryAPI.Services
 {
@@ -24,6 +25,8 @@ namespace AndersonsBakeryAPI.Services
     {
         private readonly MongoUserService? _mongo;
         private readonly UserService _sql;
+        private readonly MongoProductRepository? _mongoProducts;
+        private readonly ProductService _productService;
 
         public SyncService()
         {
@@ -40,15 +43,28 @@ namespace AndersonsBakeryAPI.Services
                     Console.WriteLine($"[MONGO] Could not initialize MongoUserService for sync: {ex.Message}");
                     _mongo = null;
                 }
+
+                try
+                {
+                    _mongoProducts = new MongoProductRepository(conn, MongoConfiguration.GetDatabaseName());
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"[MONGO] Could not initialize MongoProductRepository for sync: {ex.Message}");
+                    _mongoProducts = null;
+                }
             }
+            _productService = new ProductService(_mongoProducts);
         }
 
-        public bool IsMongoConfigured => _mongo != null;
+        public bool IsMongoConfigured => _mongo != null || _mongoProducts != null;
 
-        public SyncService(MongoUserService mongo, UserService sql)
+        public SyncService(MongoUserService? mongo, UserService sql, MongoProductRepository? mongoProducts = null, ProductService? productService = null)
         {
-            _mongo = mongo ?? throw new ArgumentNullException(nameof(mongo));
+            _mongo = mongo;
             _sql = sql ?? throw new ArgumentNullException(nameof(sql));
+            _mongoProducts = mongoProducts;
+            _productService = productService ?? new ProductService(mongoProducts);
         }
 
         public SyncResult SyncUsers()
@@ -111,6 +127,47 @@ namespace AndersonsBakeryAPI.Services
                 {
                     result.Failed++;
                     result.Messages.Add($"Failed '{s.Name}': {ex.Message}");
+                }
+            }
+
+            return result;
+        }
+
+        public SyncResult SyncProducts()
+        {
+            var result = new SyncResult();
+
+            if (_mongoProducts == null)
+            {
+                result.Failed = 1;
+                result.Messages.Add("MongoDB is not configured. Products are available locally.");
+                return result;
+            }
+
+            List<Product> products;
+            try
+            {
+                products = _productService.GetAllProducts();
+            }
+            catch (Exception ex)
+            {
+                result.Failed++;
+                result.Messages.Add("Could not read products: " + ex.Message);
+                return result;
+            }
+
+            foreach (var p in products)
+            {
+                try
+                {
+                    _mongoProducts.Upsert(p);
+                    result.SqlToMongo++;
+                    result.Messages.Add($"Synchronized product '{p.ProductName}' to Mongo.");
+                }
+                catch (Exception ex)
+                {
+                    result.Failed++;
+                    result.Messages.Add($"Failed '{p.ProductName}': {ex.Message}");
                 }
             }
 

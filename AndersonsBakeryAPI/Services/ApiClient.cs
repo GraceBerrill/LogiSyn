@@ -241,6 +241,12 @@ namespace AndersonsBakeryAPI.Services
             return null;
         }
 
+        // Fetch a single product by name
+        public async Task<Product?> GetProductByNameAsync(string name)
+        {
+            return await GetProductByIdAsync(name);
+        }
+
         // Create a new product via the API
         public async Task<bool> CreateProductAsync(Product product)
         {

@@ -26,6 +26,7 @@ var builder = WebApplication.CreateBuilder(args);
         builder.Services.AddScoped<MongoUserService>();
         builder.Services.AddScoped<MongoLoginService>();
         builder.Services.AddScoped<MongoOrderRepository>();
+        builder.Services.AddScoped<MongoProductRepository>(sp => new MongoProductRepository(sp.GetRequiredService<IMongoDatabase>()));
     }
     // --- SQL Server DbContext (EF Core) ---
     if (!string.IsNullOrWhiteSpace(sqlConnectionString))
@@ -46,8 +47,12 @@ var builder = WebApplication.CreateBuilder(args);
 
     // --- Orders & Product Services Registration ---
     builder.Services.AddScoped<SqlOrderRepository>();
-    builder.Services.AddScoped<IProductService, ProductService>();
-    builder.Services.AddScoped<ProductService>();
+    builder.Services.AddScoped<IProductService>(sp =>
+    {
+        var mongoRepo = sp.GetService<MongoProductRepository>();
+        return new ProductService(mongoRepo);
+    });
+    builder.Services.AddScoped<ProductService>(sp => (ProductService)sp.GetRequiredService<IProductService>());
     builder.Services.AddScoped<ITempRecipeService, TempRecipeService>();
     builder.Services.AddScoped<TempRecipeService>();
     builder.Services.AddScoped<UserService>();

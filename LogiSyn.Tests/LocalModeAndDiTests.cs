@@ -104,5 +104,50 @@ namespace LogiSyn.Tests
             // Assert
             Assert.NotNull(service);
         }
+
+        [Fact]
+        public void DiContainer_ValidatesMongoProductRepository_WithoutConstructorAmbiguity()
+        {
+            // Arrange
+            var services = new ServiceCollection();
+            var configuration = new ConfigurationBuilder()
+                .AddInMemoryCollection(new Dictionary<string, string?>
+                {
+                    ["MongoDatabase"] = "LogiSynDbTest"
+                })
+                .Build();
+
+            services.AddSingleton<IConfiguration>(configuration);
+            var mockClient = new MongoDB.Driver.MongoClient("mongodb://localhost:27017");
+            var mockDb = mockClient.GetDatabase("LogiSynDbTest");
+            services.AddSingleton<MongoDB.Driver.IMongoClient>(mockClient);
+            services.AddScoped<MongoDB.Driver.IMongoDatabase>(_ => mockDb);
+
+            // Register with direct type to test ActivatorUtilitiesConstructor
+            services.AddScoped<AndersonsBakeryAPI.Repositories.MongoProductRepository>();
+
+            services.AddScoped<IProductService>(sp =>
+            {
+                var mongoRepo = sp.GetService<AndersonsBakeryAPI.Repositories.MongoProductRepository>();
+                return new ProductService(mongoRepo);
+            });
+            services.AddScoped<ProductService>(sp => (ProductService)sp.GetRequiredService<IProductService>());
+
+            // Build with strict validation (ValidateOnBuild = true, ValidateScopes = true)
+            var options = new ServiceProviderOptions
+            {
+                ValidateOnBuild = true,
+                ValidateScopes = true
+            };
+
+            // Act & Assert - must not throw AggregateException with ambiguous constructors
+            var provider = services.BuildServiceProvider(options);
+            using var scope = provider.CreateScope();
+            var repo = scope.ServiceProvider.GetRequiredService<AndersonsBakeryAPI.Repositories.MongoProductRepository>();
+            var service = scope.ServiceProvider.GetRequiredService<IProductService>();
+
+            Assert.NotNull(repo);
+            Assert.NotNull(service);
+        }
     }
 }

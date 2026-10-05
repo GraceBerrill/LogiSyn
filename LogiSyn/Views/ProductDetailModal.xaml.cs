@@ -2,6 +2,7 @@ using System.Windows;
 using System.Windows.Controls;
 using SharedLibrary.Model;
 using AndersonsBakeryAPI.Services;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace LogiSyn.Views
 {
@@ -38,16 +39,18 @@ namespace LogiSyn.Views
         }
 
         //save changes to product details
-        private void SaveButton_Click(object sender, RoutedEventArgs e)
+        private async void SaveButton_Click(object sender, RoutedEventArgs e)
         {
             var detail = DataContext as ProductDetail;
-            if (detail == null) { ShellWindow.Current.CloseModal(); return; }
+            if (detail == null) { ShellWindow.Current?.CloseModal(); return; }
 
-            var svc = new ProductService();
-            var existing = svc.GetProductByName(detail.Name) ?? new Product();
+            var svc = App.ServiceProvider?.GetService<ProductService>() ?? new ProductService();
+            string lookupName = !string.IsNullOrWhiteSpace(detail.OriginalName) ? detail.OriginalName : detail.Name;
+            var existing = svc.GetProductByName(lookupName) ?? new Product();
             var prod = new Product
             {
-                ProductID = existing.ProductID,
+                Id = detail.Id ?? existing.Id,
+                ProductID = detail.ProductId > 0 ? detail.ProductId : existing.ProductID,
                 ProductName = detail.Name,
                 PricePerUnit = existing.PricePerUnit,
                 SellBy = existing.SellBy,
@@ -85,12 +88,25 @@ namespace LogiSyn.Views
 
             try
             {
-                svc.UpdateFromDetail(prod);
+                var api = App.ServiceProvider?.GetService<ApiClient>() ?? new ApiClient();
+                bool updated = await api.UpdateProductAsync(prod.ProductName, prod);
+                if (!updated)
+                {
+                    svc.UpdateFromDetail(prod);
+                }
                 Saved?.Invoke();
             }
-            catch { }
+            catch
+            {
+                try
+                {
+                    svc.UpdateFromDetail(prod);
+                    Saved?.Invoke();
+                }
+                catch { }
+            }
 
-            ShellWindow.Current.CloseModal();
+            ShellWindow.Current?.CloseModal();
         }
     }
 }

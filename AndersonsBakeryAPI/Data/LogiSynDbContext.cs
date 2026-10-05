@@ -103,6 +103,7 @@ namespace AndersonsBakeryAPI.Data
             {
                 entity.ToTable("Product");
                 entity.HasKey(p => p.ProductID);
+                entity.Ignore(p => p.Id);
                 entity.Property(p => p.ProductID).ValueGeneratedOnAdd();
                 entity.Property(p => p.ProductName).IsRequired().HasMaxLength(255);
                 entity.HasIndex(p => p.ProductName).IsUnique();

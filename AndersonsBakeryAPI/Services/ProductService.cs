@@ -4,13 +4,43 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using Microsoft.Data.SqlClient;
+using MongoDB.Driver;
 using SharedLibrary.Interface;
 using SharedLibrary.Model;
+using AndersonsBakeryAPI.Repositories;
 
 namespace AndersonsBakeryAPI.Services
 {
     public class ProductService : IProductService
     {
+        private readonly MongoProductRepository? _mongoRepository;
+
+        public ProductService() : this(CreateDefaultMongoRepository())
+        {
+        }
+
+        public ProductService(MongoProductRepository? mongoRepository)
+        {
+            _mongoRepository = mongoRepository;
+        }
+
+        private static MongoProductRepository? CreateDefaultMongoRepository()
+        {
+            try
+            {
+                string? conn = MongoConfiguration.TryGetConnectionString();
+                if (string.IsNullOrWhiteSpace(conn)) return null;
+
+                string dbName = MongoConfiguration.GetDatabaseName();
+                return new MongoProductRepository(conn, dbName);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[ProductService] Could not initialize Mongo repository: {ex.Message}");
+                return null;
+            }
+        }
+
         private string GetConnectionString()
         {
             var env = Environment.GetEnvironmentVariable("LOGISYN_CONNECTION");
@@ -28,6 +58,450 @@ namespace AndersonsBakeryAPI.Services
 
         // Get full Product models (with ingredients)
         public List<Product> GetAllProducts()
+        {
+            // 1. Try to load products from Mongo
+            if (_mongoRepository != null)
+            {
+                try
+                {
+                    var mongoProducts = _mongoRepository.GetAllProducts();
+                    if (mongoProducts != null && mongoProducts.Count > 0)
+                    {
+                        EnsureIngredientsFromCatalog(mongoProducts);
+                        return mongoProducts;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"[ProductService] Error loading products from Mongo: {ex.Message}");
+                }
+            }
+
+            // 2. Try to load products from SQL
+            var sqlProducts = LoadProductsFromSql();
+            if (sqlProducts != null && sqlProducts.Count > 0)
+            {
+                EnsureIngredientsFromCatalog(sqlProducts);
+                SeedMongoProductsIfEmpty(sqlProducts);
+                return sqlProducts;
+            }
+
+            // 3. Fallback to local JSON file
+            var file = ProductsFilePath();
+            if (File.Exists(file))
+            {
+                try
+                {
+                    var prodList = JsonSerializer.Deserialize<List<Product>>(File.ReadAllText(file));
+                    if (prodList != null && prodList.Count > 0)
+                    {
+                        EnsureIngredientsFromCatalog(prodList);
+                        SeedMongoProductsIfEmpty(prodList);
+                        return prodList;
+                    }
+                }
+                catch { }
+
+                try
+                {
+                    var rowList = JsonSerializer.Deserialize<List<ProductRow>>(File.ReadAllText(file));
+                    if (rowList != null && rowList.Count > 0)
+                    {
+                        var defaults = DefaultProductCatalog();
+                        var converted = rowList.ConvertAll(r =>
+                        {
+                            var match = defaults.FirstOrDefault(d => string.Equals(d.ProductName, r.Name, StringComparison.OrdinalIgnoreCase));
+                            return new Product
+                            {
+                                ProductID = r.ProductId,
+                                ProductName = r.Name ?? string.Empty,
+                                PricePerUnit = ParsePrice(r.Price ?? string.Empty),
+                                SellBy = ParseInt(r.SellBy ?? string.Empty),
+                                BestBefore = ParseInt(r.BestBefore ?? string.Empty),
+                                StorageLocation = r.Storage ?? string.Empty,
+                                Method = match?.Method ?? string.Empty,
+                                Ingredients = match?.Ingredients != null ? new List<IngredientRequirement>(match.Ingredients) : new List<IngredientRequirement>()
+                            };
+                        });
+                        SeedMongoProductsIfEmpty(converted);
+                        return converted;
+                    }
+                }
+                catch { }
+            }
+
+            // 4. Default fallback catalog
+            var fallbackCatalog = DefaultProductCatalog();
+            try
+            {
+                File.WriteAllText(file, JsonSerializer.Serialize(fallbackCatalog, new JsonSerializerOptions { WriteIndented = true }));
+            }
+            catch { }
+
+            SeedMongoProductsIfEmpty(fallbackCatalog);
+            return fallbackCatalog;
+        }
+
+        // Get product rows for UI: calls GetAllProducts() so Mongo/SQL/JSON consistency is maintained
+        public List<ProductRow> GetAll()
+        {
+            try
+            {
+                var products = GetAllProducts();
+                if (products != null && products.Count > 0)
+                {
+                    return products.ConvertAll(p => new ProductRow
+                    {
+                        Id = p.Id,
+                        ProductId = p.ProductID,
+                        Name = p.ProductName ?? string.Empty,
+                        Price = p.PricePerUnit > 0 ? ("R" + p.PricePerUnit.ToString("0.00")) : string.Empty,
+                        SellBy = p.SellBy.ToString(),
+                        BestBefore = p.BestBefore.ToString(),
+                        Storage = p.StorageLocation ?? string.Empty
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[ProductService] Error in GetAll: {ex.Message}");
+            }
+
+            return SampleDefaults();
+        }
+
+        // Add a full Product model to Mongo, SQL, and JSON
+        public void Add(Product product)
+        {
+            if (product == null) return;
+
+            // 1. Save to MongoDB
+            if (_mongoRepository != null)
+            {
+                try
+                {
+                    _mongoRepository.Upsert(product);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"[ProductService] Error adding product to Mongo: {ex.Message}");
+                }
+            }
+
+            // 2. Save to SQL
+            try
+            {
+                using var conn = new SqlConnection(GetConnectionString());
+                using var cmd = new SqlCommand(
+                    "INSERT INTO Product (ProductName, PricePerUnit, SellBy, BestBefore, StorageLocation, Method, Ingredients) " +
+                    "OUTPUT INSERTED.ProductID " +
+                    "VALUES (@ProductName, @PricePerUnit, @SellBy, @BestBefore, @StorageLocation, @Method, @Ingredients)", conn);
+                cmd.Parameters.AddWithValue("@ProductName", product.ProductName ?? string.Empty);
+                cmd.Parameters.AddWithValue("@PricePerUnit", product.PricePerUnit);
+                cmd.Parameters.AddWithValue("@SellBy", product.SellBy);
+                cmd.Parameters.AddWithValue("@BestBefore", product.BestBefore);
+                cmd.Parameters.AddWithValue("@StorageLocation", product.StorageLocation ?? string.Empty);
+                cmd.Parameters.AddWithValue("@Method", product.Method ?? string.Empty);
+                cmd.Parameters.AddWithValue("@Ingredients",
+                    product.Ingredients != null && product.Ingredients.Count > 0
+                        ? JsonSerializer.Serialize(product.Ingredients)
+                        : (object)DBNull.Value);
+                conn.Open();
+                var insertedId = cmd.ExecuteScalar();
+                if (insertedId != null && insertedId != DBNull.Value)
+                {
+                    product.ProductID = Convert.ToInt32(insertedId);
+                    // Update Mongo with the generated SQL ProductID
+                    if (_mongoRepository != null)
+                    {
+                        try { _mongoRepository.Update(product); }
+                        catch { }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[ProductService] Error adding product to SQL: {ex.Message}");
+            }
+
+            // 3. Always synchronize local JSON file
+            PersistProductToFile(product);
+        }
+
+        // Add using older ProductRow (keeps backward compatibility)
+        public void Add(ProductRow row)
+        {
+            if (row == null) return;
+
+            var newProd = new Product
+            {
+                ProductID = row.ProductId,
+                ProductName = row.Name ?? string.Empty,
+                PricePerUnit = ParsePrice(row.Price ?? string.Empty),
+                SellBy = ParseInt(row.SellBy ?? string.Empty),
+                BestBefore = ParseInt(row.BestBefore ?? string.Empty),
+                StorageLocation = row.Storage ?? string.Empty,
+                Method = string.Empty,
+                Ingredients = new List<IngredientRequirement>()
+            };
+
+            Add(newProd);
+        }
+
+        // Update existing product by name/id across Mongo, SQL, and JSON
+        public void UpdateFromDetail(Product product)
+        {
+            if (product == null || string.IsNullOrEmpty(product.ProductName)) return;
+
+            // 1. Update in MongoDB
+            if (_mongoRepository != null)
+            {
+                try
+                {
+                    _mongoRepository.Upsert(product);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"[ProductService] Error updating product in Mongo: {ex.Message}");
+                }
+            }
+
+            // 2. Update in SQL Server
+            try
+            {
+                using var conn = new SqlConnection(GetConnectionString());
+                using var cmd = new SqlCommand(
+                    "UPDATE Product SET PricePerUnit=@PricePerUnit, SellBy=@SellBy, BestBefore=@BestBefore, StorageLocation=@StorageLocation, Method=@Method, Ingredients=@Ingredients " +
+                    "WHERE (ProductID > 0 AND ProductID = @ProductID) OR ProductName = @ProductName", conn);
+                cmd.Parameters.AddWithValue("@ProductID", product.ProductID);
+                cmd.Parameters.AddWithValue("@ProductName", product.ProductName ?? string.Empty);
+                cmd.Parameters.AddWithValue("@PricePerUnit", product.PricePerUnit);
+                cmd.Parameters.AddWithValue("@SellBy", product.SellBy);
+                cmd.Parameters.AddWithValue("@BestBefore", product.BestBefore);
+                cmd.Parameters.AddWithValue("@StorageLocation", product.StorageLocation ?? string.Empty);
+                cmd.Parameters.AddWithValue("@Method", product.Method ?? string.Empty);
+                cmd.Parameters.AddWithValue("@Ingredients",
+                    product.Ingredients != null && product.Ingredients.Count > 0
+                        ? JsonSerializer.Serialize(product.Ingredients)
+                        : (object)DBNull.Value);
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[ProductService] Error updating product in SQL: {ex.Message}");
+            }
+
+            // 3. Update in local JSON file
+            try
+            {
+                var file = ProductsFilePath();
+                if (File.Exists(file))
+                {
+                    var list = JsonSerializer.Deserialize<List<Product>>(File.ReadAllText(file)) ?? new List<Product>();
+                    var idx = list.FindIndex(p => string.Equals(p.ProductName, product.ProductName, StringComparison.OrdinalIgnoreCase)
+                                               || (product.ProductID > 0 && p.ProductID == product.ProductID));
+                    if (idx >= 0)
+                    {
+                        if (product.ProductID <= 0) product.ProductID = list[idx].ProductID;
+                        list[idx] = product;
+                        File.WriteAllText(file, JsonSerializer.Serialize(list, new JsonSerializerOptions { WriteIndented = true }));
+                    }
+                    else
+                    {
+                        list.Add(product);
+                        File.WriteAllText(file, JsonSerializer.Serialize(list, new JsonSerializerOptions { WriteIndented = true }));
+                    }
+                }
+            }
+            catch { }
+        }
+
+        // Get single product by name or id
+        public Product? GetProductByName(string name)
+        {
+            if (string.IsNullOrEmpty(name)) return null;
+
+            // 1. Try MongoDB
+            if (_mongoRepository != null)
+            {
+                try
+                {
+                    var prod = _mongoRepository.GetByName(name);
+                    if (prod != null) return prod;
+
+                    if (int.TryParse(name, out int id) && id > 0)
+                    {
+                        prod = _mongoRepository.GetByProductId(id);
+                        if (prod != null) return prod;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"[ProductService] Error getting product from Mongo: {ex.Message}");
+                }
+            }
+
+            // 2. Try SQL
+            try
+            {
+                using var conn = new SqlConnection(GetConnectionString());
+                string sql = "SELECT ProductID, ProductName, PricePerUnit, SellBy, BestBefore, StorageLocation, Method, Ingredients FROM Product WHERE ProductName = @ProductName";
+                if (int.TryParse(name, out int parsedId) && parsedId > 0)
+                {
+                    sql = "SELECT ProductID, ProductName, PricePerUnit, SellBy, BestBefore, StorageLocation, Method, Ingredients FROM Product WHERE ProductName = @ProductName OR ProductID = @ProductID";
+                }
+
+                using var cmd = new SqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@ProductName", name);
+                if (int.TryParse(name, out parsedId) && parsedId > 0)
+                {
+                    cmd.Parameters.AddWithValue("@ProductID", parsedId);
+                }
+
+                conn.Open();
+                using var reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    string rawIngredients = reader["Ingredients"] as string ?? string.Empty;
+                    List<IngredientRequirement>? ingredients = null;
+                    if (!string.IsNullOrWhiteSpace(rawIngredients))
+                    {
+                        try { ingredients = JsonSerializer.Deserialize<List<IngredientRequirement>>(rawIngredients); }
+                        catch { }
+                    }
+
+                    return new Product
+                    {
+                        ProductID = reader["ProductID"] != DBNull.Value ? Convert.ToInt32(reader["ProductID"]) : 0,
+                        ProductName = reader["ProductName"] as string ?? string.Empty,
+                        PricePerUnit = reader["PricePerUnit"] != DBNull.Value ? Convert.ToDecimal(reader["PricePerUnit"]) : 0m,
+                        SellBy = reader["SellBy"] != DBNull.Value ? Convert.ToInt32(reader["SellBy"]) : 0,
+                        BestBefore = reader["BestBefore"] != DBNull.Value ? Convert.ToInt32(reader["BestBefore"]) : 0,
+                        StorageLocation = reader["StorageLocation"] as string ?? string.Empty,
+                        Method = reader["Method"] as string ?? string.Empty,
+                        Ingredients = ingredients ?? new List<IngredientRequirement>()
+                    };
+                }
+            }
+            catch { }
+
+            // 3. Try JSON file
+            var file = ProductsFilePath();
+            if (File.Exists(file))
+            {
+                try
+                {
+                    var json = File.ReadAllText(file);
+                    try
+                    {
+                        var list = JsonSerializer.Deserialize<List<Product>>(json) ?? new List<Product>();
+                        var prod = list.Find(p => string.Equals(p.ProductName, name, StringComparison.OrdinalIgnoreCase)
+                                               || (int.TryParse(name, out int pid) && p.ProductID == pid));
+                        if (prod != null) return prod;
+                    }
+                    catch { }
+
+                    try
+                    {
+                        var rows = JsonSerializer.Deserialize<List<ProductRow>>(json) ?? new List<ProductRow>();
+                        var row = rows.Find(r => string.Equals(r.Name, name, StringComparison.OrdinalIgnoreCase)
+                                              || (int.TryParse(name, out int rid) && r.ProductId == rid));
+                        if (row != null)
+                        {
+                            return new Product
+                            {
+                                ProductID = row.ProductId,
+                                ProductName = row.Name ?? string.Empty,
+                                PricePerUnit = ParsePrice(row.Price ?? string.Empty),
+                                SellBy = ParseInt(row.SellBy ?? string.Empty),
+                                BestBefore = ParseInt(row.BestBefore ?? string.Empty),
+                                StorageLocation = row.Storage ?? string.Empty
+                            };
+                        }
+                    }
+                    catch { }
+                }
+                catch { }
+            }
+
+            return null;
+        }
+
+        // Delete by name or id across Mongo, SQL, and JSON
+        public void DeleteByName(string name)
+        {
+            if (string.IsNullOrEmpty(name)) return;
+
+            // 1. Delete from MongoDB
+            if (_mongoRepository != null)
+            {
+                try
+                {
+                    _mongoRepository.DeleteByName(name);
+                    if (int.TryParse(name, out int parsedId) && parsedId > 0)
+                    {
+                        _mongoRepository.DeleteByProductId(parsedId);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"[ProductService] Error deleting product from Mongo: {ex.Message}");
+                }
+            }
+
+            // 2. Delete from SQL Server
+            try
+            {
+                using var conn = new SqlConnection(GetConnectionString());
+                string sql = "DELETE FROM Product WHERE ProductName = @ProductName";
+                if (int.TryParse(name, out int parsedId) && parsedId > 0)
+                {
+                    sql = "DELETE FROM Product WHERE ProductName = @ProductName OR ProductID = @ProductID";
+                }
+
+                using var cmd = new SqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@ProductName", name);
+                if (int.TryParse(name, out parsedId) && parsedId > 0)
+                {
+                    cmd.Parameters.AddWithValue("@ProductID", parsedId);
+                }
+
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[ProductService] Error deleting product from SQL: {ex.Message}");
+            }
+
+            // 3. Delete from local JSON file
+            var file = ProductsFilePath();
+            if (File.Exists(file))
+            {
+                try
+                {
+                    int.TryParse(name, out int parsedId);
+                    try
+                    {
+                        var list = JsonSerializer.Deserialize<List<Product>>(File.ReadAllText(file)) ?? new List<Product>();
+                        var filtered = list.Where(p => !string.Equals(p.ProductName, name, StringComparison.OrdinalIgnoreCase)
+                                                    && !(parsedId > 0 && p.ProductID == parsedId)).ToList();
+                        File.WriteAllText(file, JsonSerializer.Serialize(filtered, new JsonSerializerOptions { WriteIndented = true }));
+                        return;
+                    }
+                    catch { }
+
+                    var listRow = JsonSerializer.Deserialize<List<ProductRow>>(File.ReadAllText(file)) ?? new List<ProductRow>();
+                    var filteredRow = listRow.Where(p => !string.Equals(p.Name, name, StringComparison.OrdinalIgnoreCase)
+                                                      && !(parsedId > 0 && p.ProductId == parsedId)).ToList();
+                    File.WriteAllText(file, JsonSerializer.Serialize(filteredRow, new JsonSerializerOptions { WriteIndented = true }));
+                }
+                catch { }
+            }
+        }
+
+        private List<Product> LoadProductsFromSql()
         {
             try
             {
@@ -58,403 +532,45 @@ namespace AndersonsBakeryAPI.Services
                         Ingredients = ingredients ?? new List<IngredientRequirement>()
                     });
                 }
-
-                if (sqlProducts.Count > 0)
-                {
-                    // Ensure any products with empty ingredients are populated from default catalog
-                    var defaults = DefaultProductCatalog();
-                    foreach (var p in sqlProducts)
-                    {
-                        if (p.Ingredients == null || p.Ingredients.Count == 0)
-                        {
-                            var match = defaults.FirstOrDefault(d => string.Equals(d.ProductName, p.ProductName, StringComparison.OrdinalIgnoreCase));
-                            if (match != null && match.Ingredients.Count > 0)
-                            {
-                                p.Ingredients = new List<IngredientRequirement>(match.Ingredients);
-                                if (string.IsNullOrWhiteSpace(p.Method)) p.Method = match.Method;
-                            }
-                        }
-                    }
-                    return sqlProducts;
-                }
+                return sqlProducts;
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"[ProductService] Error loading products from SQL: {ex.Message}");
-            }
-
-            var file = ProductsFilePath();
-            if (File.Exists(file))
-            {
-                try
-                {
-                    var prodList = JsonSerializer.Deserialize<List<Product>>(File.ReadAllText(file));
-                    if (prodList != null && prodList.Count > 0)
-                    {
-                        var defaults = DefaultProductCatalog();
-                        foreach (var p in prodList)
-                        {
-                            if (p.Ingredients == null || p.Ingredients.Count == 0)
-                            {
-                                var match = defaults.FirstOrDefault(d => string.Equals(d.ProductName, p.ProductName, StringComparison.OrdinalIgnoreCase));
-                                if (match != null && match.Ingredients.Count > 0)
-                                {
-                                    p.Ingredients = new List<IngredientRequirement>(match.Ingredients);
-                                    if (string.IsNullOrWhiteSpace(p.Method)) p.Method = match.Method;
-                                }
-                            }
-                        }
-                        return prodList;
-                    }
-                }
-                catch { }
-
-                try
-                {
-                    var rowList = JsonSerializer.Deserialize<List<ProductRow>>(File.ReadAllText(file));
-                    if (rowList != null && rowList.Count > 0)
-                    {
-                        var defaults = DefaultProductCatalog();
-                        return rowList.ConvertAll(r =>
-                        {
-                            var match = defaults.FirstOrDefault(d => string.Equals(d.ProductName, r.Name, StringComparison.OrdinalIgnoreCase));
-                            return new Product
-                            {
-                                ProductName = r.Name,
-                                PricePerUnit = ParsePrice(r.Price),
-                                SellBy = ParseInt(r.SellBy),
-                                BestBefore = ParseInt(r.BestBefore),
-                                StorageLocation = r.Storage,
-                                Method = match?.Method ?? string.Empty,
-                                Ingredients = match?.Ingredients != null ? new List<IngredientRequirement>(match.Ingredients) : new List<IngredientRequirement>()
-                            };
-                        });
-                    }
-                }
-                catch { }
-            }
-
-            var fallbackCatalog = DefaultProductCatalog();
-            // Seed SQL and local JSON file with fallback catalog if empty
-            try
-            {
-                File.WriteAllText(file, JsonSerializer.Serialize(fallbackCatalog, new JsonSerializerOptions { WriteIndented = true }));
-            }
-            catch { }
-
-            return fallbackCatalog;
-        }
-
-        // Get product rows for UI: prefer SQL, fall back to JSON. JSON may be either List<Product> or legacy List<ProductRow>.
-        public List<ProductRow> GetAll()
-        {
-            try
-            {
-                using var conn = new SqlConnection(GetConnectionString());
-                using var cmd = new SqlCommand("SELECT ProductID, ProductName, PricePerUnit, SellBy, BestBefore, StorageLocation FROM Product", conn);
-                conn.Open();
-                using var reader = cmd.ExecuteReader();
-                var list = new List<ProductRow>();
-                while (reader.Read())
-                {
-                    decimal price = reader["PricePerUnit"] != DBNull.Value ? Convert.ToDecimal(reader["PricePerUnit"]) : 0m;
-                    list.Add(new ProductRow
-                    {
-                        Name = reader["ProductName"] as string ?? string.Empty,
-                        Price = price > 0 ? ("R" + price.ToString("0.00")) : string.Empty,
-                        SellBy = reader["SellBy"] != DBNull.Value ? reader["SellBy"].ToString() ?? string.Empty : string.Empty,
-                        BestBefore = reader["BestBefore"] != DBNull.Value ? reader["BestBefore"].ToString() ?? string.Empty : string.Empty,
-                        Storage = reader["StorageLocation"] as string ?? string.Empty
-                    });
-                }
-                if (list.Count > 0) return list;
-            }
-            catch { }
-
-            var file = ProductsFilePath();
-            if (!File.Exists(file))
-            {
-                var defaults = SampleDefaults();
-                File.WriteAllText(file, JsonSerializer.Serialize(defaults, new JsonSerializerOptions { WriteIndented = true }));
-                return defaults;
-            }
-
-            try
-            {
-                var json = File.ReadAllText(file);
-                try
-                {
-                    var prodList = JsonSerializer.Deserialize<List<Product>>(json);
-                    if (prodList != null)
-                    {
-                        return prodList.ConvertAll(p => new ProductRow
-                        {
-                            Name = p.ProductName ?? string.Empty,
-                            Price = p.PricePerUnit > 0 ? ("R" + p.PricePerUnit.ToString("0.00")) : string.Empty,
-                            SellBy = p.SellBy.ToString(),
-                            BestBefore = p.BestBefore.ToString(),
-                            Storage = p.StorageLocation ?? string.Empty
-                        });
-                    }
-                }
-                catch { }
-
-                var list = JsonSerializer.Deserialize<List<ProductRow>>(json);
-                return list ?? SampleDefaults();
-            }
-            catch
-            {
-                var defaults = SampleDefaults();
-                File.WriteAllText(file, JsonSerializer.Serialize(defaults, new JsonSerializerOptions { WriteIndented = true }));
-                return defaults;
+                return new List<Product>();
             }
         }
 
-        // Add a full Product model
-        public void Add(Product product)
+        private static void EnsureIngredientsFromCatalog(List<Product> products)
         {
-            if (product == null) return;
-            try
+            var defaults = DefaultProductCatalog();
+            foreach (var p in products)
             {
-                using var conn = new SqlConnection(GetConnectionString());
-                using var cmd = new SqlCommand(
-                    "INSERT INTO Product (ProductName, PricePerUnit, SellBy, BestBefore, StorageLocation, Method, Ingredients) " +
-                    "OUTPUT INSERTED.ProductID " +
-                    "VALUES (@ProductName, @PricePerUnit, @SellBy, @BestBefore, @StorageLocation, @Method, @Ingredients)", conn);
-                cmd.Parameters.AddWithValue("@ProductName", product.ProductName ?? string.Empty);
-                cmd.Parameters.AddWithValue("@PricePerUnit", product.PricePerUnit);
-                cmd.Parameters.AddWithValue("@SellBy", product.SellBy);
-                cmd.Parameters.AddWithValue("@BestBefore", product.BestBefore);
-                cmd.Parameters.AddWithValue("@StorageLocation", product.StorageLocation ?? string.Empty);
-                cmd.Parameters.AddWithValue("@Method", product.Method ?? string.Empty);
-                cmd.Parameters.AddWithValue("@Ingredients",
-                    product.Ingredients != null && product.Ingredients.Count > 0
-                        ? JsonSerializer.Serialize(product.Ingredients)
-                        : (object)DBNull.Value);
-                conn.Open();
-                var insertedId = cmd.ExecuteScalar();
-                if (insertedId != null && insertedId != DBNull.Value)
-                    product.ProductID = Convert.ToInt32(insertedId);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"[ProductService] Error adding product to SQL: {ex.Message}");
-            }
-
-            // Always synchronize local JSON file as well so offline storage stays updated
-            PersistProductToFile(product);
-        }
-
-        // Add using older ProductRow (keeps backward compatibility)
-        public void Add(ProductRow row)
-        {
-            if (row == null) return;
-            try
-            {
-                using var conn = new SqlConnection(GetConnectionString());
-                using var cmd = new SqlCommand(
-                    "INSERT INTO Product (ProductName, PricePerUnit, SellBy, BestBefore, StorageLocation) " +
-                    "VALUES (@ProductName, @PricePerUnit, @SellBy, @BestBefore, @StorageLocation)", conn);
-                cmd.Parameters.AddWithValue("@ProductName", row.Name ?? string.Empty);
-                cmd.Parameters.AddWithValue("@PricePerUnit", ParsePrice(row.Price));
-                cmd.Parameters.AddWithValue("@SellBy", ParseInt(row.SellBy));
-                cmd.Parameters.AddWithValue("@BestBefore", ParseInt(row.BestBefore));
-                cmd.Parameters.AddWithValue("@StorageLocation", row.Storage ?? string.Empty);
-                conn.Open();
-                cmd.ExecuteNonQuery();
-                return;
-            }
-            catch { }
-
-            var file = ProductsFilePath();
-            List<Product> prodList;
-            if (File.Exists(file))
-            {
-                try { prodList = JsonSerializer.Deserialize<List<Product>>(File.ReadAllText(file)) ?? new List<Product>(); }
-                catch
+                if (p.Ingredients == null || p.Ingredients.Count == 0)
                 {
-                    try
+                    var match = defaults.FirstOrDefault(d => string.Equals(d.ProductName, p.ProductName, StringComparison.OrdinalIgnoreCase));
+                    if (match != null && match.Ingredients.Count > 0)
                     {
-                        var rows = JsonSerializer.Deserialize<List<ProductRow>>(File.ReadAllText(file)) ?? new List<ProductRow>();
-                        prodList = rows.ConvertAll(r => new Product
-                        {
-                            ProductName = r.Name,
-                            PricePerUnit = ParsePrice(r.Price),
-                            SellBy = ParseInt(r.SellBy),
-                            BestBefore = ParseInt(r.BestBefore),
-                            StorageLocation = r.Storage
-                        });
-                    }
-                    catch { prodList = new List<Product>(); }
-                }
-            }
-            else prodList = new List<Product>();
-
-            var newProd = new Product
-            {
-                ProductID = prodList.Count > 0 ? prodList[^1].ProductID + 1 : 1,
-                ProductName = row.Name,
-                PricePerUnit = ParsePrice(row.Price),
-                SellBy = ParseInt(row.SellBy),
-                BestBefore = ParseInt(row.BestBefore),
-                StorageLocation = row.Storage,
-                Method = string.Empty,
-                Ingredients = new List<IngredientRequirement>()
-            };
-
-            prodList.Add(newProd);
-            File.WriteAllText(file, JsonSerializer.Serialize(prodList, new JsonSerializerOptions { WriteIndented = true }));
-        }
-
-        // Update existing product by name
-        public void UpdateFromDetail(Product product)
-        {
-            if (product == null || string.IsNullOrEmpty(product.ProductName)) return;
-            try
-            {
-                using var conn = new SqlConnection(GetConnectionString());
-                using var cmd = new SqlCommand(
-                    "UPDATE Product SET PricePerUnit=@PricePerUnit, SellBy=@SellBy, BestBefore=@BestBefore, StorageLocation=@StorageLocation, Method=@Method, Ingredients=@Ingredients " +
-                    "WHERE (ProductID > 0 AND ProductID = @ProductID) OR ProductName = @ProductName", conn);
-                cmd.Parameters.AddWithValue("@ProductID", product.ProductID);
-                cmd.Parameters.AddWithValue("@ProductName", product.ProductName ?? string.Empty);
-                cmd.Parameters.AddWithValue("@PricePerUnit", product.PricePerUnit);
-                cmd.Parameters.AddWithValue("@SellBy", product.SellBy);
-                cmd.Parameters.AddWithValue("@BestBefore", product.BestBefore);
-                cmd.Parameters.AddWithValue("@StorageLocation", product.StorageLocation ?? string.Empty);
-                cmd.Parameters.AddWithValue("@Method", product.Method ?? string.Empty);
-                cmd.Parameters.AddWithValue("@Ingredients",
-                    product.Ingredients != null && product.Ingredients.Count > 0
-                        ? JsonSerializer.Serialize(product.Ingredients)
-                        : (object)DBNull.Value);
-                conn.Open();
-                cmd.ExecuteNonQuery();
-                return;
-            }
-            catch { }
-
-            var file = ProductsFilePath();
-            if (!File.Exists(file)) return;
-            try
-            {
-                var list = JsonSerializer.Deserialize<List<Product>>(File.ReadAllText(file)) ?? new List<Product>();
-                var idx = list.FindIndex(p => string.Equals(p.ProductName, product.ProductName, StringComparison.OrdinalIgnoreCase));
-                if (idx >= 0)
-                {
-                    product.ProductID = list[idx].ProductID;
-                    list[idx] = product;
-                    File.WriteAllText(file, JsonSerializer.Serialize(list, new JsonSerializerOptions { WriteIndented = true }));
-                }
-            }
-            catch { }
-        }
-
-        // Get single product by name
-        public Product? GetProductByName(string name)
-        {
-            if (string.IsNullOrEmpty(name)) return null;
-            try
-            {
-                using var conn = new SqlConnection(GetConnectionString());
-                using var cmd = new SqlCommand(
-                    "SELECT ProductID, ProductName, PricePerUnit, SellBy, BestBefore, StorageLocation, Method, Ingredients " +
-                    "FROM Product WHERE ProductName = @ProductName", conn);
-                cmd.Parameters.AddWithValue("@ProductName", name);
-                conn.Open();
-                using var reader = cmd.ExecuteReader();
-                if (reader.Read())
-                {
-                    string rawIngredients = reader["Ingredients"] as string ?? string.Empty;
-                    List<IngredientRequirement>? ingredients = null;
-                    if (!string.IsNullOrWhiteSpace(rawIngredients))
-                    {
-                        try { ingredients = JsonSerializer.Deserialize<List<IngredientRequirement>>(rawIngredients); }
-                        catch { }
-                    }
-
-                    return new Product
-                    {
-                        ProductID = reader["ProductID"] != DBNull.Value ? Convert.ToInt32(reader["ProductID"]) : 0,
-                        ProductName = reader["ProductName"] as string ?? string.Empty,
-                        PricePerUnit = reader["PricePerUnit"] != DBNull.Value ? Convert.ToDecimal(reader["PricePerUnit"]) : 0m,
-                        SellBy = reader["SellBy"] != DBNull.Value ? Convert.ToInt32(reader["SellBy"]) : 0,
-                        BestBefore = reader["BestBefore"] != DBNull.Value ? Convert.ToInt32(reader["BestBefore"]) : 0,
-                        StorageLocation = reader["StorageLocation"] as string ?? string.Empty,
-                        Method = reader["Method"] as string ?? string.Empty,
-                        Ingredients = ingredients ?? new List<IngredientRequirement>()
-                    };
-                }
-            }
-            catch { }
-
-            var file = ProductsFilePath();
-            if (!File.Exists(file)) return null;
-            try
-            {
-                var json = File.ReadAllText(file);
-                try
-                {
-                    var list = JsonSerializer.Deserialize<List<Product>>(json) ?? new List<Product>();
-                    var prod = list.Find(p => string.Equals(p.ProductName, name, StringComparison.OrdinalIgnoreCase));
-                    if (prod != null) return prod;
-                }
-                catch { }
-
-                try
-                {
-                    var rows = JsonSerializer.Deserialize<List<ProductRow>>(json) ?? new List<ProductRow>();
-                    var row = rows.Find(r => string.Equals(r.Name, name, StringComparison.OrdinalIgnoreCase));
-                    if (row != null)
-                    {
-                        return new Product
-                        {
-                            ProductName = row.Name,
-                            PricePerUnit = ParsePrice(row.Price),
-                            SellBy = ParseInt(row.SellBy),
-                            BestBefore = ParseInt(row.BestBefore),
-                            StorageLocation = row.Storage
-                        };
+                        p.Ingredients = new List<IngredientRequirement>(match.Ingredients);
+                        if (string.IsNullOrWhiteSpace(p.Method)) p.Method = match.Method;
                     }
                 }
-                catch { }
             }
-            catch { }
-            return null;
         }
 
-        // Delete by name (works with Product JSON or legacy ProductRow JSON)
-        public void DeleteByName(string name)
+        private void SeedMongoProductsIfEmpty(IEnumerable<Product> products)
         {
-            if (string.IsNullOrEmpty(name)) return;
-            try
-            {
-                using var conn = new SqlConnection(GetConnectionString());
-                using var cmd = new SqlCommand("DELETE FROM Product WHERE ProductName = @ProductName", conn);
-                cmd.Parameters.AddWithValue("@ProductName", name);
-                conn.Open();
-                cmd.ExecuteNonQuery();
-                return;
-            }
-            catch { }
-
-            var file = ProductsFilePath();
-            if (!File.Exists(file)) return;
-            try
+            if (_mongoRepository != null)
             {
                 try
                 {
-                    var list = JsonSerializer.Deserialize<List<Product>>(File.ReadAllText(file)) ?? new List<Product>();
-                    var filtered = list.Where(p => !string.Equals(p.ProductName, name, StringComparison.OrdinalIgnoreCase)).ToList();
-                    File.WriteAllText(file, JsonSerializer.Serialize(filtered, new JsonSerializerOptions { WriteIndented = true }));
-                    return;
+                    _mongoRepository.SeedIfEmpty(products);
                 }
-                catch { }
-
-                var listRow = JsonSerializer.Deserialize<List<ProductRow>>(File.ReadAllText(file)) ?? new List<ProductRow>();
-                var filteredRow = listRow.Where(p => !string.Equals(p.Name, name, StringComparison.OrdinalIgnoreCase)).ToList();
-                File.WriteAllText(file, JsonSerializer.Serialize(filteredRow, new JsonSerializerOptions { WriteIndented = true }));
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"[ProductService] Error seeding products to Mongo: {ex.Message}");
+                }
             }
-            catch { }
         }
 
         private static decimal ParsePrice(string price)
@@ -496,11 +612,12 @@ namespace AndersonsBakeryAPI.Services
                             var rows = JsonSerializer.Deserialize<List<ProductRow>>(File.ReadAllText(file)) ?? new List<ProductRow>();
                             prodList = rows.ConvertAll(r => new Product
                             {
-                                ProductName = r.Name,
-                                PricePerUnit = ParsePrice(r.Price),
-                                SellBy = ParseInt(r.SellBy),
-                                BestBefore = ParseInt(r.BestBefore),
-                                StorageLocation = r.Storage
+                                ProductID = r.ProductId,
+                                ProductName = r.Name ?? string.Empty,
+                                PricePerUnit = ParsePrice(r.Price ?? string.Empty),
+                                SellBy = ParseInt(r.SellBy ?? string.Empty),
+                                BestBefore = ParseInt(r.BestBefore ?? string.Empty),
+                                StorageLocation = r.Storage ?? string.Empty
                             });
                         }
                         catch { prodList = new List<Product>(); }
@@ -508,7 +625,8 @@ namespace AndersonsBakeryAPI.Services
                 }
                 else prodList = new List<Product>();
 
-                var existingIdx = prodList.FindIndex(p => string.Equals(p.ProductName, product.ProductName, StringComparison.OrdinalIgnoreCase) || (product.ProductID > 0 && p.ProductID == product.ProductID));
+                var existingIdx = prodList.FindIndex(p => string.Equals(p.ProductName, product.ProductName, StringComparison.OrdinalIgnoreCase)
+                                                       || (product.ProductID > 0 && p.ProductID == product.ProductID));
                 if (existingIdx >= 0)
                 {
                     prodList[existingIdx] = product;
@@ -528,7 +646,7 @@ namespace AndersonsBakeryAPI.Services
             }
         }
 
-        private static List<Product> DefaultProductCatalog()
+        public static List<Product> DefaultProductCatalog()
         {
             return new List<Product>
             {
@@ -644,3 +762,4 @@ namespace AndersonsBakeryAPI.Services
         }
     }
 }
+
