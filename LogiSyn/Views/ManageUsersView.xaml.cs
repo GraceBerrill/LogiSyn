@@ -141,16 +141,14 @@ namespace LogiSyn.Views
             var row = ((FrameworkElement)sender).DataContext as UserRow;
             if (row == null) return;
 
-            if (string.IsNullOrEmpty(row.Id))
+            string identifier = !string.IsNullOrEmpty(row.Id) ? row.Id : row.SqlId;
+            if (string.IsNullOrEmpty(identifier))
             {
-                MessageBox.Show(
-                    "This user was created offline and hasn't been synced yet.\n" +
-                    "Please run Sync before editing.",
-                    "Not synced", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Unable to identify user record.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
-            var modal = new EditUserModal(row.Id, row.Name, row.Role);
+            var modal = new EditUserModal(identifier, row.Name, row.Role);
 
             var host = new Window
             {
@@ -175,12 +173,10 @@ namespace LogiSyn.Views
             var row = ((FrameworkElement)sender).DataContext as UserRow;
             if (row == null) return;
 
-            if (string.IsNullOrEmpty(row.Id))
+            string identifier = !string.IsNullOrEmpty(row.Id) ? row.Id : row.SqlId;
+            if (string.IsNullOrEmpty(identifier))
             {
-                MessageBox.Show(
-                    "This user was created offline and hasn't been synced yet.\n" +
-                    "Please run Sync before deleting.",
-                    "Not synced", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Unable to identify user record.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
@@ -190,7 +186,7 @@ namespace LogiSyn.Views
 
             try
             {
-                _userService.DeleteUser(row.Id);
+                _userService.DeleteUser(identifier);
                 _all.Remove(row);
                 Refresh();
             }

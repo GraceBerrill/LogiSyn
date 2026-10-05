@@ -45,19 +45,23 @@ namespace AndersonsBakeryAPI.Services
             return users;
         }
 
-        public bool UsernameExists(string username, string? excludedMongoId = null)
+        public bool UsernameExists(string username, string? excludedIdentifier = null)
         {
+            int.TryParse(excludedIdentifier, out int excludedId);
+
             const string query =
                 "SELECT COUNT(1) FROM [User] " +
                 "WHERE Username = @Username " +
-                "AND (@ExcludedMongoId IS NULL OR MongoId <> @ExcludedMongoId)";
+                "AND (@ExcludedIdentifier IS NULL OR @ExcludedIdentifier = '' OR MongoId <> @ExcludedIdentifier) " +
+                "AND (@ExcludedId <= 0 OR Id <> @ExcludedId)";
 
             using var conn = new SqlConnection(GetConnectionString());
             using var cmd = new SqlCommand(query, conn);
 
             cmd.Parameters.AddWithValue("@Username", username);
-            cmd.Parameters.AddWithValue("@ExcludedMongoId",
-                string.IsNullOrEmpty(excludedMongoId) ? DBNull.Value : excludedMongoId);
+            cmd.Parameters.AddWithValue("@ExcludedIdentifier",
+                string.IsNullOrEmpty(excludedIdentifier) ? DBNull.Value : excludedIdentifier);
+            cmd.Parameters.AddWithValue("@ExcludedId", excludedId > 0 ? excludedId : -1);
 
             conn.Open();
             return Convert.ToInt32(cmd.ExecuteScalar()) > 0;
@@ -83,22 +87,27 @@ namespace AndersonsBakeryAPI.Services
             return cmd.ExecuteScalar()?.ToString() ?? string.Empty;
         }
 
-        public void UpdateUser(string mongoId, string username, string role, string? newPasswordHash = null)
+        public void UpdateUser(string identifier, string username, string role, string? newPasswordHash = null)
         {
             const string withPassword =
                 "UPDATE [User] SET Username = @Username, Password = @Password, Role = @Role " +
-                "WHERE MongoId = @MongoId";
+                "WHERE (MongoId IS NOT NULL AND MongoId <> '' AND MongoId = @Identifier) " +
+                "   OR (Id = @ParsedId)";
 
             const string withoutPassword =
                 "UPDATE [User] SET Username = @Username, Role = @Role " +
-                "WHERE MongoId = @MongoId";
+                "WHERE (MongoId IS NOT NULL AND MongoId <> '' AND MongoId = @Identifier) " +
+                "   OR (Id = @ParsedId)";
 
             using var conn = new SqlConnection(GetConnectionString());
             using var cmd = new SqlCommand(
                 string.IsNullOrWhiteSpace(newPasswordHash) ? withoutPassword : withPassword,
                 conn);
 
-            cmd.Parameters.AddWithValue("@MongoId", mongoId);
+            int.TryParse(identifier, out int parsedId);
+
+            cmd.Parameters.AddWithValue("@Identifier", identifier ?? string.Empty);
+            cmd.Parameters.AddWithValue("@ParsedId", parsedId > 0 ? parsedId : -1);
             cmd.Parameters.AddWithValue("@Username", username);
             cmd.Parameters.AddWithValue("@Role", role);
             if (!string.IsNullOrWhiteSpace(newPasswordHash))
@@ -108,13 +117,56 @@ namespace AndersonsBakeryAPI.Services
             cmd.ExecuteNonQuery();
         }
 
-        public void DeleteUser(string mongoId)
+        public void UpdateUser(int id, string username, string role, string? newPasswordHash = null)
         {
-            const string query = "DELETE FROM [User] WHERE MongoId = @MongoId";
+            const string withPassword =
+                "UPDATE [User] SET Username = @Username, Password = @Password, Role = @Role " +
+                "WHERE Id = @Id";
+
+            const string withoutPassword =
+                "UPDATE [User] SET Username = @Username, Role = @Role " +
+                "WHERE Id = @Id";
+
+            using var conn = new SqlConnection(GetConnectionString());
+            using var cmd = new SqlCommand(
+                string.IsNullOrWhiteSpace(newPasswordHash) ? withoutPassword : withPassword,
+                conn);
+
+            cmd.Parameters.AddWithValue("@Id", id);
+            cmd.Parameters.AddWithValue("@Username", username);
+            cmd.Parameters.AddWithValue("@Role", role);
+            if (!string.IsNullOrWhiteSpace(newPasswordHash))
+                cmd.Parameters.AddWithValue("@Password", newPasswordHash);
+
+            conn.Open();
+            cmd.ExecuteNonQuery();
+        }
+
+        public void DeleteUser(string identifier)
+        {
+            const string query =
+                "DELETE FROM [User] " +
+                "WHERE (MongoId IS NOT NULL AND MongoId <> '' AND MongoId = @Identifier) " +
+                "   OR (Id = @ParsedId)";
+
+            int.TryParse(identifier, out int parsedId);
 
             using var conn = new SqlConnection(GetConnectionString());
             using var cmd = new SqlCommand(query, conn);
-            cmd.Parameters.AddWithValue("@MongoId", mongoId);
+            cmd.Parameters.AddWithValue("@Identifier", identifier ?? string.Empty);
+            cmd.Parameters.AddWithValue("@ParsedId", parsedId > 0 ? parsedId : -1);
+
+            conn.Open();
+            cmd.ExecuteNonQuery();
+        }
+
+        public void DeleteUser(int id)
+        {
+            const string query = "DELETE FROM [User] WHERE Id = @Id";
+
+            using var conn = new SqlConnection(GetConnectionString());
+            using var cmd = new SqlCommand(query, conn);
+            cmd.Parameters.AddWithValue("@Id", id);
 
             conn.Open();
             cmd.ExecuteNonQuery();

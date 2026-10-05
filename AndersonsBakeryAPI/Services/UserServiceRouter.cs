@@ -81,22 +81,16 @@ namespace AndersonsBakeryAPI.Services
 
         public void UpdateUser(string mongoId, string username, string role, string? newPlainPassword = null)
         {
-            if (_mongo == null)
+            if (_mongo != null && !string.IsNullOrWhiteSpace(mongoId) && mongoId.Length == 24 && !int.TryParse(mongoId, out _))
             {
-                _sql.UpdateUser(mongoId, username, role,
-                    string.IsNullOrWhiteSpace(newPlainPassword)
-                        ? null
-                        : PasswordHasher.HashPassword(newPlainPassword));
-                return;
-            }
-
-            try
-            {
-                _mongo.UpdateUser(mongoId, username, role, newPlainPassword);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Mongo update failed: " + ex.Message);
+                try
+                {
+                    _mongo.UpdateUser(mongoId, username, role, newPlainPassword);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Mongo update failed: " + ex.Message);
+                }
             }
 
             string? hash = string.IsNullOrWhiteSpace(newPlainPassword)
@@ -110,22 +104,26 @@ namespace AndersonsBakeryAPI.Services
             catch (Exception ex)
             {
                 Console.WriteLine("SQL update failed: " + ex.Message);
+                if (_mongo == null || string.IsNullOrWhiteSpace(mongoId) || int.TryParse(mongoId, out _))
+                    throw;
             }
         }
 
         public void DeleteUser(string mongoId)
         {
-            if (_mongo == null)
+            if (_mongo != null && !string.IsNullOrWhiteSpace(mongoId) && mongoId.Length == 24 && !int.TryParse(mongoId, out _))
             {
-                _sql.DeleteUser(mongoId);
-                return;
+                try { _mongo.DeleteUser(mongoId); }
+                catch (Exception ex) { Console.WriteLine("Mongo delete failed: " + ex.Message); }
             }
 
-            try { _mongo.DeleteUser(mongoId); }
-            catch (Exception ex) { Console.WriteLine("Mongo delete failed: " + ex.Message); }
-
             try { _sql.DeleteUser(mongoId); }
-            catch (Exception ex) { Console.WriteLine("SQL delete failed: " + ex.Message); }
+            catch (Exception ex)
+            {
+                Console.WriteLine("SQL delete failed: " + ex.Message);
+                if (_mongo == null || string.IsNullOrWhiteSpace(mongoId) || int.TryParse(mongoId, out _))
+                    throw;
+            }
         }
     }
 }

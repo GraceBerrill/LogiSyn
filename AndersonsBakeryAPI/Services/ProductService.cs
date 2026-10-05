@@ -28,6 +28,39 @@ namespace AndersonsBakeryAPI.Services
         // Get full Product models (with ingredients)
         public List<Product> GetAllProducts()
         {
+            try
+            {
+                using var conn = new SqlConnection(GetConnectionString());
+                using var cmd = new SqlCommand("SELECT ProductID, ProductName, PricePerUnit, SellBy, BestBefore, StorageLocation, Method, Ingredients FROM Product", conn);
+                conn.Open();
+                using var reader = cmd.ExecuteReader();
+                var sqlProducts = new List<Product>();
+                while (reader.Read())
+                {
+                    string rawIngredients = reader["Ingredients"] as string ?? string.Empty;
+                    List<IngredientRequirement>? ingredients = null;
+                    if (!string.IsNullOrWhiteSpace(rawIngredients))
+                    {
+                        try { ingredients = JsonSerializer.Deserialize<List<IngredientRequirement>>(rawIngredients); }
+                        catch { }
+                    }
+
+                    sqlProducts.Add(new Product
+                    {
+                        ProductID = reader["ProductID"] != DBNull.Value ? Convert.ToInt32(reader["ProductID"]) : 0,
+                        ProductName = reader["ProductName"] as string ?? string.Empty,
+                        PricePerUnit = reader["PricePerUnit"] != DBNull.Value ? Convert.ToDecimal(reader["PricePerUnit"]) : 0m,
+                        SellBy = reader["SellBy"] != DBNull.Value ? Convert.ToInt32(reader["SellBy"]) : 0,
+                        BestBefore = reader["BestBefore"] != DBNull.Value ? Convert.ToInt32(reader["BestBefore"]) : 0,
+                        StorageLocation = reader["StorageLocation"] as string ?? string.Empty,
+                        Method = reader["Method"] as string ?? string.Empty,
+                        Ingredients = ingredients ?? new List<IngredientRequirement>()
+                    });
+                }
+                if (sqlProducts.Count > 0) return sqlProducts;
+            }
+            catch { }
+
             var file = ProductsFilePath();
             if (File.Exists(file))
             {
@@ -73,19 +106,20 @@ namespace AndersonsBakeryAPI.Services
             try
             {
                 using var conn = new SqlConnection(GetConnectionString());
-                using var cmd = new SqlCommand("SELECT Name, Price, SellBy, BestBefore, Storage FROM Product", conn);
+                using var cmd = new SqlCommand("SELECT ProductID, ProductName, PricePerUnit, SellBy, BestBefore, StorageLocation FROM Product", conn);
                 conn.Open();
                 using var reader = cmd.ExecuteReader();
                 var list = new List<ProductRow>();
                 while (reader.Read())
                 {
+                    decimal price = reader["PricePerUnit"] != DBNull.Value ? Convert.ToDecimal(reader["PricePerUnit"]) : 0m;
                     list.Add(new ProductRow
                     {
-                        Name = reader["Name"] as string ?? string.Empty,
-                        Price = reader["Price"] as string ?? string.Empty,
-                        SellBy = reader["SellBy"] as string ?? string.Empty,
-                        BestBefore = reader["BestBefore"] as string ?? string.Empty,
-                        Storage = reader["Storage"] as string ?? string.Empty
+                        Name = reader["ProductName"] as string ?? string.Empty,
+                        Price = price > 0 ? ("R" + price.ToString("0.00")) : string.Empty,
+                        SellBy = reader["SellBy"] != DBNull.Value ? reader["SellBy"].ToString() ?? string.Empty : string.Empty,
+                        BestBefore = reader["BestBefore"] != DBNull.Value ? reader["BestBefore"].ToString() ?? string.Empty : string.Empty,
+                        Storage = reader["StorageLocation"] as string ?? string.Empty
                     });
                 }
                 if (list.Count > 0) return list;
@@ -138,14 +172,24 @@ namespace AndersonsBakeryAPI.Services
             try
             {
                 using var conn = new SqlConnection(GetConnectionString());
-                using var cmd = new SqlCommand("INSERT INTO Product (Name, Price, SellBy, BestBefore, Storage) VALUES (@Name,@Price,@SellBy,@BestBefore,@Storage)", conn);
-                cmd.Parameters.AddWithValue("@Name", product.ProductName ?? string.Empty);
-                cmd.Parameters.AddWithValue("@Price", product.PricePerUnit.ToString());
-                cmd.Parameters.AddWithValue("@SellBy", product.SellBy.ToString());
-                cmd.Parameters.AddWithValue("@BestBefore", product.BestBefore.ToString());
-                cmd.Parameters.AddWithValue("@Storage", product.StorageLocation ?? string.Empty);
+                using var cmd = new SqlCommand(
+                    "INSERT INTO Product (ProductName, PricePerUnit, SellBy, BestBefore, StorageLocation, Method, Ingredients) " +
+                    "OUTPUT INSERTED.ProductID " +
+                    "VALUES (@ProductName, @PricePerUnit, @SellBy, @BestBefore, @StorageLocation, @Method, @Ingredients)", conn);
+                cmd.Parameters.AddWithValue("@ProductName", product.ProductName ?? string.Empty);
+                cmd.Parameters.AddWithValue("@PricePerUnit", product.PricePerUnit);
+                cmd.Parameters.AddWithValue("@SellBy", product.SellBy);
+                cmd.Parameters.AddWithValue("@BestBefore", product.BestBefore);
+                cmd.Parameters.AddWithValue("@StorageLocation", product.StorageLocation ?? string.Empty);
+                cmd.Parameters.AddWithValue("@Method", product.Method ?? string.Empty);
+                cmd.Parameters.AddWithValue("@Ingredients",
+                    product.Ingredients != null && product.Ingredients.Count > 0
+                        ? JsonSerializer.Serialize(product.Ingredients)
+                        : (object)DBNull.Value);
                 conn.Open();
-                cmd.ExecuteNonQuery();
+                var insertedId = cmd.ExecuteScalar();
+                if (insertedId != null && insertedId != DBNull.Value)
+                    product.ProductID = Convert.ToInt32(insertedId);
                 return;
             }
             catch { }
@@ -186,12 +230,14 @@ namespace AndersonsBakeryAPI.Services
             try
             {
                 using var conn = new SqlConnection(GetConnectionString());
-                using var cmd = new SqlCommand("INSERT INTO Product (Name, Price, SellBy, BestBefore, Storage) VALUES (@Name,@Price,@SellBy,@BestBefore,@Storage)", conn);
-                cmd.Parameters.AddWithValue("@Name", row.Name ?? string.Empty);
-                cmd.Parameters.AddWithValue("@Price", row.Price ?? string.Empty);
-                cmd.Parameters.AddWithValue("@SellBy", row.SellBy ?? string.Empty);
-                cmd.Parameters.AddWithValue("@BestBefore", row.BestBefore ?? string.Empty);
-                cmd.Parameters.AddWithValue("@Storage", row.Storage ?? string.Empty);
+                using var cmd = new SqlCommand(
+                    "INSERT INTO Product (ProductName, PricePerUnit, SellBy, BestBefore, StorageLocation) " +
+                    "VALUES (@ProductName, @PricePerUnit, @SellBy, @BestBefore, @StorageLocation)", conn);
+                cmd.Parameters.AddWithValue("@ProductName", row.Name ?? string.Empty);
+                cmd.Parameters.AddWithValue("@PricePerUnit", ParsePrice(row.Price));
+                cmd.Parameters.AddWithValue("@SellBy", ParseInt(row.SellBy));
+                cmd.Parameters.AddWithValue("@BestBefore", ParseInt(row.BestBefore));
+                cmd.Parameters.AddWithValue("@StorageLocation", row.Storage ?? string.Empty);
                 conn.Open();
                 cmd.ExecuteNonQuery();
                 return;
@@ -245,12 +291,20 @@ namespace AndersonsBakeryAPI.Services
             try
             {
                 using var conn = new SqlConnection(GetConnectionString());
-                using var cmd = new SqlCommand("UPDATE Product SET Price=@Price, SellBy=@SellBy, BestBefore=@BestBefore, Storage=@Storage WHERE Name=@Name", conn);
-                cmd.Parameters.AddWithValue("@Name", product.ProductName ?? string.Empty);
-                cmd.Parameters.AddWithValue("@Price", product.PricePerUnit.ToString());
-                cmd.Parameters.AddWithValue("@SellBy", product.SellBy.ToString());
-                cmd.Parameters.AddWithValue("@BestBefore", product.BestBefore.ToString());
-                cmd.Parameters.AddWithValue("@Storage", product.StorageLocation ?? string.Empty);
+                using var cmd = new SqlCommand(
+                    "UPDATE Product SET PricePerUnit=@PricePerUnit, SellBy=@SellBy, BestBefore=@BestBefore, StorageLocation=@StorageLocation, Method=@Method, Ingredients=@Ingredients " +
+                    "WHERE (ProductID > 0 AND ProductID = @ProductID) OR ProductName = @ProductName", conn);
+                cmd.Parameters.AddWithValue("@ProductID", product.ProductID);
+                cmd.Parameters.AddWithValue("@ProductName", product.ProductName ?? string.Empty);
+                cmd.Parameters.AddWithValue("@PricePerUnit", product.PricePerUnit);
+                cmd.Parameters.AddWithValue("@SellBy", product.SellBy);
+                cmd.Parameters.AddWithValue("@BestBefore", product.BestBefore);
+                cmd.Parameters.AddWithValue("@StorageLocation", product.StorageLocation ?? string.Empty);
+                cmd.Parameters.AddWithValue("@Method", product.Method ?? string.Empty);
+                cmd.Parameters.AddWithValue("@Ingredients",
+                    product.Ingredients != null && product.Ingredients.Count > 0
+                        ? JsonSerializer.Serialize(product.Ingredients)
+                        : (object)DBNull.Value);
                 conn.Open();
                 cmd.ExecuteNonQuery();
                 return;
@@ -274,25 +328,38 @@ namespace AndersonsBakeryAPI.Services
         }
 
         // Get single product by name
-        public Product GetProductByName(string name)
+        public Product? GetProductByName(string name)
         {
             if (string.IsNullOrEmpty(name)) return null;
             try
             {
                 using var conn = new SqlConnection(GetConnectionString());
-                using var cmd = new SqlCommand("SELECT Name, Price, SellBy, BestBefore, Storage FROM Product WHERE Name = @Name", conn);
-                cmd.Parameters.AddWithValue("@Name", name);
+                using var cmd = new SqlCommand(
+                    "SELECT ProductID, ProductName, PricePerUnit, SellBy, BestBefore, StorageLocation, Method, Ingredients " +
+                    "FROM Product WHERE ProductName = @ProductName", conn);
+                cmd.Parameters.AddWithValue("@ProductName", name);
                 conn.Open();
                 using var reader = cmd.ExecuteReader();
                 if (reader.Read())
                 {
+                    string rawIngredients = reader["Ingredients"] as string ?? string.Empty;
+                    List<IngredientRequirement>? ingredients = null;
+                    if (!string.IsNullOrWhiteSpace(rawIngredients))
+                    {
+                        try { ingredients = JsonSerializer.Deserialize<List<IngredientRequirement>>(rawIngredients); }
+                        catch { }
+                    }
+
                     return new Product
                     {
-                        ProductName = reader["Name"] as string ?? string.Empty,
-                        PricePerUnit = ParsePrice(reader["Price"] as string ?? string.Empty),
-                        SellBy = ParseInt(reader["SellBy"] as string ?? string.Empty),
-                        BestBefore = ParseInt(reader["BestBefore"] as string ?? string.Empty),
-                        StorageLocation = reader["Storage"] as string ?? string.Empty
+                        ProductID = reader["ProductID"] != DBNull.Value ? Convert.ToInt32(reader["ProductID"]) : 0,
+                        ProductName = reader["ProductName"] as string ?? string.Empty,
+                        PricePerUnit = reader["PricePerUnit"] != DBNull.Value ? Convert.ToDecimal(reader["PricePerUnit"]) : 0m,
+                        SellBy = reader["SellBy"] != DBNull.Value ? Convert.ToInt32(reader["SellBy"]) : 0,
+                        BestBefore = reader["BestBefore"] != DBNull.Value ? Convert.ToInt32(reader["BestBefore"]) : 0,
+                        StorageLocation = reader["StorageLocation"] as string ?? string.Empty,
+                        Method = reader["Method"] as string ?? string.Empty,
+                        Ingredients = ingredients ?? new List<IngredientRequirement>()
                     };
                 }
             }
@@ -340,8 +407,8 @@ namespace AndersonsBakeryAPI.Services
             try
             {
                 using var conn = new SqlConnection(GetConnectionString());
-                using var cmd = new SqlCommand("DELETE FROM Product WHERE Name = @Name", conn);
-                cmd.Parameters.AddWithValue("@Name", name);
+                using var cmd = new SqlCommand("DELETE FROM Product WHERE ProductName = @ProductName", conn);
+                cmd.Parameters.AddWithValue("@ProductName", name);
                 conn.Open();
                 cmd.ExecuteNonQuery();
                 return;

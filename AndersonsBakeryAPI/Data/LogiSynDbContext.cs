@@ -20,8 +20,8 @@ namespace AndersonsBakeryAPI.Data
 
         //Orders DbSet
         public DbSet<OrderScaled> Orders { get; set; }
-        public DbSet<Product> products { get; set; }
-        public DbSet<UserRow> users { get; set; }
+        public DbSet<Product> Products { get; set; }
+        public DbSet<UserRow> Users { get; set; }
 
 
         //------------------------------------------------------------------------------------------------//
@@ -98,10 +98,13 @@ namespace AndersonsBakeryAPI.Data
                            ));
             modelBuilder.Entity<Product>(entity =>
             {
-                entity.ToTable("Products");
+                entity.ToTable("Product");
                 entity.HasKey(p => p.ProductID);
+                entity.Property(p => p.ProductID).ValueGeneratedOnAdd();
                 entity.Property(p => p.ProductName).IsRequired().HasMaxLength(255);
                 entity.Property(p => p.PricePerUnit).HasPrecision(18, 2);
+                entity.Property(p => p.SellBy);
+                entity.Property(p => p.BestBefore);
                 entity.Property(p => p.StorageLocation).HasMaxLength(50);
                 entity.Property(p => p.Method).HasMaxLength(500);
                 // Serialize Ingredients as JSON in SQL Server (resolves IngredientRequirement key error)
@@ -116,14 +119,17 @@ namespace AndersonsBakeryAPI.Data
             });
             modelBuilder.Entity<UserRow>(entity =>
             {
-                entity.ToTable("Users");
-                entity.HasKey(u => u.Id);
-                entity.Property(u => u.Id).HasMaxLength(50);
-                entity.Property(u => u.Name).IsRequired().HasMaxLength(100);
+                entity.ToTable("User");
+                entity.HasKey(u => u.SqlId);
+                entity.Property(u => u.SqlId)
+                    .HasColumnName("Id")
+                    .HasConversion(v => string.IsNullOrEmpty(v) ? 0 : int.Parse(v), v => v.ToString())
+                    .ValueGeneratedOnAdd();
+                entity.Property(u => u.Name).HasColumnName("Username").IsRequired().HasMaxLength(50);
                 entity.Property(u => u.Role).IsRequired().HasMaxLength(50);
-                entity.Property(u => u.Password).HasMaxLength(255);
+                entity.Property(u => u.Password).HasMaxLength(100);
+                entity.Property(u => u.Id).HasColumnName("MongoId").HasMaxLength(50).IsRequired(false);
                 entity.Property(u => u.DateAdded).HasMaxLength(50);
-                entity.Ignore(u => u.SqlId);
             });
         }
     }
