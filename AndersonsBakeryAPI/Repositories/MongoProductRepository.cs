@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
@@ -234,10 +233,10 @@ namespace AndersonsBakeryAPI.Repositories
                     }
                 }
             }
-                    catch (Exception ex)
-                    {
-                        _logger?.LogWarning(ex, "Error seeding products to MongoDB");
-                    }
+            catch (Exception ex)
+            {
+                _logger?.LogWarning(ex, "Error seeding products to MongoDB");
+            }
         }
     }
 }

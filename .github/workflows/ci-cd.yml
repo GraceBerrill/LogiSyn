@@ -2,10 +2,10 @@ name: LogiSyn CI/CD Pipeline
 
 on:
   push:
-    branches: [ main, Dev, Fix, fix ]
+    branches: [ main, Dev, fix ]
     tags: [ 'v*' ]
   pull_request:
-    branches: [ main, Dev, Fix, fix ]
+    branches: [ main, Dev, fix ]
 
 jobs:
   build-and-test:

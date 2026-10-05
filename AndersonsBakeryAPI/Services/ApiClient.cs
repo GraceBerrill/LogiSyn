@@ -275,7 +275,24 @@ namespace AndersonsBakeryAPI.Services
         // Fetch a single product by name
         public async Task<Product?> GetProductByNameAsync(string name)
         {
-            return await GetProductByIdAsync(name);
+            if (string.IsNullOrWhiteSpace(name)) return null;
+            foreach (var baseUrl in _baseUrls)
+            {
+                try
+                {
+                    string encodedName = Uri.EscapeDataString(name.Trim());
+                    var response = await _httpClient.GetAsync($"{baseUrl}/api/products/{encodedName}");
+                    if (!response.IsSuccessStatusCode) continue;
+                    var body = await response.Content.ReadAsStringAsync();
+                    if (string.IsNullOrWhiteSpace(body)) continue;
+                    return JsonSerializer.Deserialize<Product>(body, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                }
+                catch (Exception ex)
+                {
+                    _logger?.LogWarning(ex, "Error fetching product by name '{Name}' from {BaseUrl}", name, baseUrl);
+                }
+            }
+            return null;
         }
 
         // Create a new product via the API

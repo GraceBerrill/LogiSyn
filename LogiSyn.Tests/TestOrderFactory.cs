@@ -132,7 +132,9 @@ namespace LogiSyn.Tests
                     RawMaterials = new Dictionary<string, RawMaterialValue>(StringComparer.OrdinalIgnoreCase)
                     {
                         { "Bread Flour", new RawMaterialValue(25, "kg") },
-                        { "Water", new RawMaterialValue(18, "L") }
+                        { "Sourdough Starter", new RawMaterialValue(10, "kg") },
+                        { "Water", new RawMaterialValue(18, "L") },
+                        { "Sea Salt", new RawMaterialValue(0.5, "kg") }
                     }
                 }
             };

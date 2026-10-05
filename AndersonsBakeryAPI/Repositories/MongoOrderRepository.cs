@@ -33,7 +33,8 @@ namespace AndersonsBakeryAPI.Repositories
                 {
                     cm.AutoMap();
                     cm.MapIdProperty(c => c.OrderId);
-                    cm.UnmapProperty(c => c.productionItems);
+                    // productionItems is a [JsonIgnore] alias — AutoMap handles PascalCase ProductionItems correctly;
+                    // UnmapProperty removed to allow production items to persist to MongoDB.
                     cm.SetIgnoreExtraElements(true);
                 });
             }
@@ -44,7 +45,8 @@ namespace AndersonsBakeryAPI.Repositories
                 BsonClassMap.RegisterClassMap<ProductionItem>(cm =>
                 {
                     cm.AutoMap();
-                    cm.UnmapProperty(c => c.packaging);
+                    // packaging is a [JsonIgnore] alias — AutoMap handles PascalCase Packaging correctly;
+                    // UnmapProperty removed to allow packaging data to persist to MongoDB.
                     cm.SetIgnoreExtraElements(true);
                 });
             }

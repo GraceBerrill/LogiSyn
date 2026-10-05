@@ -2,7 +2,6 @@ using System;
 using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using AndersonsBakeryAPI.Services;
-using System;
 using SharedLibrary.Model;
 using LogiSyn.Views;
 
@@ -18,9 +17,8 @@ namespace LogiSyn
 			// Add logging for WPF app views and services
 			services.AddLogging();
 			// Register ApiClient as a singleton for the WPF client to use.
-			// Prefer the local API URL for development so CreateProductAsync and GetProductsAsync
-			// call the local API when running alongside the backend.
-			services.AddSingleton<ApiClient>(sp => new ApiClient("https://localhost:7274"));
+			// Uses the cloud API URL first; falls back to local API automatically via _baseUrls in ApiClient.
+			services.AddSingleton<ApiClient>(sp => new ApiClient("https://andersons-bakery-api.onrender.com"));
 
 			// Register common backend services so views can resolve them from DI
 			services.AddSingleton<AndersonsBakeryAPI.Services.ProductService>();
@@ -30,8 +28,9 @@ namespace LogiSyn
 
 			ServiceProvider = services.BuildServiceProvider();
 
-			base.OnStartup(e);
+			// Set ShutdownMode BEFORE base.OnStartup to prevent premature shutdown if a window closes during startup
 			ShutdownMode = ShutdownMode.OnExplicitShutdown;
+			base.OnStartup(e);
 
 			ShowLogin();
 		}

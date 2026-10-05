@@ -27,7 +27,7 @@ namespace AndersonsBakeryAPI.Services
         private readonly SqlOrderRepository? _sqlRepository;
         private readonly ITempRecipeService? _recipeService;
         private static readonly List<OrderScaled> _orders = new();
-        private static bool _localLoaded = false;
+        private static volatile bool _localLoaded = false;
         private readonly ILogger<OrderService>? _logger;
 
         //------------------------------------------------------------------------------------------------//
@@ -149,10 +149,9 @@ namespace AndersonsBakeryAPI.Services
         }
         //------------------------------------------------------------------------------------------------//
 
-        // Static constructor to load local orders when the class is first accessed
+        // Static constructor — intentionally empty; local orders are loaded on first instance creation
         static OrderService()
         {
-            LoadLocalOrders();
         }
 
         //------------------------------------------------------------------------------------------------//
@@ -205,7 +204,7 @@ namespace AndersonsBakeryAPI.Services
             // Determine the order ID to use, prioritizing the parsed ID but falling back to a default if necessary
             string rawOrderId = !string.IsNullOrWhiteSpace(parsedOrderId) ? parsedOrderId : fallbackOrderId;
 
-            // Itterate to ensure the order ID is unique within the current list of orders
+            // Iterate to ensure the order ID is unique within the current list of orders
             string uniqueOrderId = EnsureUniqueOrderId(rawOrderId);
 
             // Create the order object with extracted and default values
@@ -393,10 +392,10 @@ namespace AndersonsBakeryAPI.Services
             // Initialize a dictionary to hold the aggregated ingredient amounts and their units, using case-insensitive keys
             var aggregates = new Dictionary<string, (double Amount, string Unit)>(StringComparer.OrdinalIgnoreCase);
 
-            foreach (var item in order.productionItems)
+            foreach (var item in order.ProductionItems ?? order.productionItems ?? new List<ProductionItem>())
             {
                 // Iterate through each required ingredient in the production item
-                foreach (var ing in item.ReqIngredients)
+                foreach (var ing in item.ReqIngredients ?? new List<Ingredients>())
                 {
                     double totalRequired = ing.IngredientAmount + ing.AdditionsAmount;
 
@@ -822,15 +821,17 @@ namespace AndersonsBakeryAPI.Services
             sb.AppendLine("==========================================");
 
             // Loop through each production item and append its details to the email body
-            foreach (var item in order.productionItems)
+            var productionItems = order.ProductionItems ?? order.productionItems ?? new List<ProductionItem>();
+            foreach (var item in productionItems)
             {
                 sb.AppendLine($"• {item.ProductName}  [{item.ProductionLine}]");
 
-                var ingSummary = string.Join(", ", item.ReqIngredients.Select(i =>
+                var ingSummary = string.Join(", ", (item.ReqIngredients ?? new List<Ingredients>()).Select(i =>
                     $"{i.IngredientName}: {i.IngredientAmount + i.AdditionsAmount} {i.MeasuredIngredient}"));
 
                 sb.AppendLine($"  - Ingredients: {ingSummary}");
-                sb.AppendLine($"  - Packaging:   Pans: {item.packaging.Pans}, Trolleys: {item.packaging.Trolleys}");
+                var pkg = item.Packaging ?? item.packaging ?? new Packaging();
+                sb.AppendLine($"  - Packaging:   Pans: {pkg.Pans}, Trolleys: {pkg.Trolleys}");
                 sb.AppendLine();
             }
 
@@ -839,7 +840,7 @@ namespace AndersonsBakeryAPI.Services
             sb.AppendLine("RAW MATERIAL SCALING (TOTALS)");
             sb.AppendLine("==========================================");
 
-            foreach (var kvp in order.RawMaterials)
+            foreach (var kvp in order.RawMaterials ?? new Dictionary<string, RawMaterialValue>())
             {
                 sb.AppendLine($"• {kvp.Key}: {kvp.Value.Amount} {kvp.Value.Unit}");
             }

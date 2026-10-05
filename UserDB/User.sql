@@ -7,3 +7,6 @@ CREATE TABLE [dbo].[User]
     [MongoId]   NVARCHAR(24)  NULL,
     [DateAdded] DATETIME NOT NULL DEFAULT GETDATE()
 );
+
+-- Unique index on Username for login lookups and uniqueness enforcement
+CREATE UNIQUE INDEX [UX_User_Username] ON [dbo].[User] ([Username]);

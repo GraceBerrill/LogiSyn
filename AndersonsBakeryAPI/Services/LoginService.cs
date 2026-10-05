@@ -77,15 +77,15 @@ namespace AndersonsBakeryAPI.Services
                         conn);
 
                     updateCmd.Parameters.AddWithValue("@Password", upgradedHash);
-                    updateCmd.Parameters.AddWithValue("@Id", int.Parse(user.SqlId));
+                    updateCmd.Parameters.AddWithValue("@Id", int.TryParse(user.SqlId, out var sqlIdInt) ? sqlIdInt : 0);
                     updateCmd.ExecuteNonQuery();
                 }
 
                 return user;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw new Exception("Database connection error: " + ex.Message, ex);
+                throw;
             }
         }
     }

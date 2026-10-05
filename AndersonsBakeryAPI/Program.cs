@@ -45,8 +45,25 @@ var builder = WebApplication.CreateBuilder(args);
     }
 
     // --- User & Login Service Routers (resilient to missing Mongo) ---
-    builder.Services.AddScoped<UserServiceRouter>();
-    builder.Services.AddScoped<LoginServiceRouter>();
+    // Use explicit factories to avoid constructor ambiguity when both Mongo and SQL services are registered.
+    builder.Services.AddScoped<UserServiceRouter>(sp =>
+    {
+        var logger = sp.GetService<ILogger<UserServiceRouter>>();
+        var mongo  = sp.GetService<MongoUserService>();
+        var sql    = sp.GetRequiredService<UserService>();
+        return mongo != null
+            ? new UserServiceRouter(mongo, sql, logger)
+            : new UserServiceRouter(logger);
+    });
+    builder.Services.AddScoped<LoginServiceRouter>(sp =>
+    {
+        var logger = sp.GetService<ILogger<LoginServiceRouter>>();
+        var mongo  = sp.GetService<MongoLoginService>();
+        var sql    = sp.GetRequiredService<LoginService>();
+        return mongo != null
+            ? new LoginServiceRouter(mongo, sql)
+            : new LoginServiceRouter(logger);
+    });
     builder.Services.AddScoped<SyncService>();
 
     // --- Jwt Authentication (reads settings from configuration) ---

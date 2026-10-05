@@ -13,6 +13,7 @@ namespace AndersonsBakeryAPI.Services
         private readonly LoginService _sql;
         private readonly ILogger<LoginServiceRouter>? _logger;
 
+        [Microsoft.Extensions.DependencyInjection.ActivatorUtilitiesConstructor]
         public LoginServiceRouter(ILogger<LoginServiceRouter>? logger = null)
         {
             _logger = logger;

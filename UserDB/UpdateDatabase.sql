@@ -14,14 +14,8 @@ BEGIN
 	);
 END
 
--- If there is no [Users] object (table or view), create a view named [Users]
--- that selects from the canonical [User] table. This preserves compatibility
--- with code that still queries [Users].
 IF OBJECT_ID('dbo.[Users]', 'U') IS NULL AND OBJECT_ID('dbo.[Users]', 'V') IS NULL
 BEGIN
-	EXEC('CREATE VIEW [dbo].[Users] AS SELECT * FROM [dbo].[User]');
+	EXEC('CREATE VIEW [dbo].[Users] AS SELECT [Id], [Username], [Role], [MongoId], [DateAdded] FROM [dbo].[User]');
 END
 
--- Optional: you can verify by selecting top rows
--- SELECT TOP (10) * FROM [dbo].[User];
--- SELECT TOP (10) * FROM [dbo].[Users];

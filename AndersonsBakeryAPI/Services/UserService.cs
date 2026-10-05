@@ -23,25 +23,33 @@ namespace AndersonsBakeryAPI.Services
                 "SELECT Id, MongoId, Username, Password, Role, DateAdded " +
                 "FROM [User] ORDER BY Id";
 
-            using var conn = new SqlConnection(GetConnectionString());
-            using var cmd = new SqlCommand(query, conn);
-            conn.Open();
-
-            using var reader = cmd.ExecuteReader();
-            while (reader.Read())
+            try
             {
-                users.Add(new UserRow
+                using var conn = new SqlConnection(GetConnectionString());
+                using var cmd = new SqlCommand(query, conn);
+                conn.Open();
+
+                using var reader = cmd.ExecuteReader();
+                while (reader.Read())
                 {
-                    SqlId = ((int)reader["Id"]).ToString(),
-                    Id = reader["MongoId"] as string ?? string.Empty,
-                    Name = reader["Username"] as string ?? string.Empty,
-                    Password = string.Empty,
-                    Role = reader["Role"] as string ?? string.Empty,
-                    DateAdded = reader["DateAdded"] == DBNull.Value
-                        ? string.Empty
-                        : ((DateTime)reader["DateAdded"]).ToString("yyyy-MM-dd")
-                });
+                    users.Add(new UserRow
+                    {
+                        SqlId = ((int)reader["Id"]).ToString(),
+                        Id = reader["MongoId"] as string ?? string.Empty,
+                        Name = reader["Username"] as string ?? string.Empty,
+                        Password = string.Empty,
+                        Role = reader["Role"] as string ?? string.Empty,
+                        DateAdded = reader["DateAdded"] == DBNull.Value
+                            ? string.Empty
+                            : ((DateTime)reader["DateAdded"]).ToString("yyyy-MM-dd")
+                    });
+                }
             }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException("Failed to retrieve users from database.", ex);
+            }
+
             return users;
         }
 
@@ -177,7 +185,7 @@ namespace AndersonsBakeryAPI.Services
             const string query = "SELECT Password FROM [User] WHERE Id = @Id";
             using var conn = new SqlConnection(GetConnectionString());
             using var cmd = new SqlCommand(query, conn);
-            cmd.Parameters.AddWithValue("@Id", int.Parse(sqlId));
+            cmd.Parameters.AddWithValue("@Id", int.TryParse(sqlId, out var parsedSqlId) ? parsedSqlId : 0);
             conn.Open();
             return cmd.ExecuteScalar() as string;
         }
@@ -188,7 +196,7 @@ namespace AndersonsBakeryAPI.Services
             using var conn = new SqlConnection(GetConnectionString());
             using var cmd = new SqlCommand(query, conn);
             cmd.Parameters.AddWithValue("@MongoId", mongoId);
-            cmd.Parameters.AddWithValue("@Id", int.Parse(sqlId));
+            cmd.Parameters.AddWithValue("@Id", int.TryParse(sqlId, out var parsedMongoSqlId) ? parsedMongoSqlId : 0);
             conn.Open();
             cmd.ExecuteNonQuery();
         }

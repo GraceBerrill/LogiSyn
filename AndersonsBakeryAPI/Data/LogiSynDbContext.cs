@@ -15,6 +15,13 @@ namespace AndersonsBakeryAPI.Data
         {
         }
 
+        /// <summary>Safely converts a SqlId string to an int, returning 0 for null/empty/non-numeric values.</summary>
+        private static int ParseSqlId(string? v)
+        {
+            if (string.IsNullOrEmpty(v)) return 0;
+            return int.TryParse(v, out var n) ? n : 0;
+        }
+
         //------------------------------------------------------------------------------------------------//
 
         //Orders DbSet
@@ -136,7 +143,10 @@ namespace AndersonsBakeryAPI.Data
                 entity.HasKey(u => u.SqlId);
                 entity.Property(u => u.SqlId)
                     .HasColumnName("Id")
-                    .HasConversion(v => string.IsNullOrEmpty(v) ? 0 : int.Parse(v), v => v.ToString())
+                    .HasConversion(
+                        new Microsoft.EntityFrameworkCore.Storage.ValueConversion.ValueConverter<string, int>(
+                            v => ParseSqlId(v),
+                            v => v.ToString()))
                     .ValueGeneratedOnAdd();
                 entity.Property(u => u.Name).HasColumnName("Username").IsRequired().HasMaxLength(50);
                 entity.HasIndex(u => u.Name).IsUnique();
@@ -147,4 +157,6 @@ namespace AndersonsBakeryAPI.Data
             });
         }
     }
-}//--------------------------------------End of File----------------------------------------------------------//
+}
+
+//--------------------------------------End of File----------------------------------------------------------//

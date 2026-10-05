@@ -39,8 +39,8 @@ namespace AndersonsBakeryAPI.Controllers
         {
             _logger?.LogInformation("GET /api/orders called (refresh={Refresh})", refresh);
             var orders = await _orderService.GetOrdersAsync(refresh);
-            _logger?.LogInformation("Returning {Count} orders", orders.Count());
-            return Ok(orders);
+            _logger?.LogInformation("Returning {Count} orders", orders?.Count() ?? 0);
+            return Ok(orders ?? Enumerable.Empty<OrderScaled>());
         }
 
         //------------------------------------------------------------------------------------------------//
@@ -119,6 +119,8 @@ namespace AndersonsBakeryAPI.Controllers
         public async Task<ActionResult> UpdateOrderStatus(string id, [FromBody] string status)
         {
             _logger?.LogInformation("PUT /api/orders/{Id}/status called with {Status}", id, status);
+            if (string.IsNullOrWhiteSpace(status))
+                return BadRequest(new { message = "Status value is required." });
             var order = await _orderService.GetOrderByIdAsync(id);
             if (order == null) return NotFound();
 
@@ -129,8 +131,8 @@ namespace AndersonsBakeryAPI.Controllers
 
         //------------------------------------------------------------------------------------------------//
 
-        // GET endpoint for debugging purposes, returns a simple ping response with the current timestamp and order count
-        [AllowAnonymous]
+        // GET endpoint for debugging — restricted to Admin role only
+        [Authorize(Roles = "Admin")]
         [HttpGet("debug/ping")]
         public ActionResult<object> DebugPing()
         {
@@ -139,7 +141,7 @@ namespace AndersonsBakeryAPI.Controllers
             {
                 timestamp = DateTime.UtcNow,
                 message = "API is running",
-                orderCount = _orderService.GetOrders().Count()
+                orderCount = _orderService.GetOrders()?.Count() ?? 0
             });
         }
     }

@@ -10,6 +10,7 @@ namespace AndersonsBakeryAPI.Services
         private readonly MongoUserService? _mongo;
         private readonly UserService _sql;
         private readonly ILogger<UserServiceRouter>? _logger;
+        [Microsoft.Extensions.DependencyInjection.ActivatorUtilitiesConstructor]
         public UserServiceRouter(ILogger<UserServiceRouter>? logger = null)
         {
             _logger = logger;
