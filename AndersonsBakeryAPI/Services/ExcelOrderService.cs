@@ -233,7 +233,7 @@ namespace AndersonsBakeryAPI.Services
             ws.Cell(3, 7).Style.Font.Bold = true;
             ws.Cell(3, 8).Value = string.IsNullOrWhiteSpace(order.Status) ? "Pending" : order.Status;
 
-            // SECTION 1: PRODUCTS & PACKAGING
+            // PRODUCTS & PACKAGING
             int row = 5;
             ws.Cell(row, 1).Value = "1. PRODUCTS & PACKAGING";
             ws.Range(row, 1, row, 7).Merge();
@@ -282,7 +282,7 @@ namespace AndersonsBakeryAPI.Services
                 cellNotes.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
             }
 
-            // SECTION 2: INGREDIENTS & ACTUAL AMOUNTS
+            // INGREDIENTS & ACTUAL AMOUNTS
             row += 2;
             ws.Cell(row, 1).Value = "2. INGREDIENTS & ACTUAL AMOUNTS USED";
             ws.Range(row, 1, row, 7).Merge();
@@ -322,7 +322,7 @@ namespace AndersonsBakeryAPI.Services
                 }
             }
 
-            // SECTION 3: RAW MATERIAL TOTALS
+            // RAW MATERIAL TOTALS
             if (order.RawMaterials != null && order.RawMaterials.Count > 0)
             {
                 row += 2;
@@ -569,7 +569,7 @@ namespace AndersonsBakeryAPI.Services
                     }
                 }
 
-                // If Section 3 was missing or empty, calculate raw materials summary from production items
+                // If missing or empty, calculate raw materials summary from production items
                 if (targetOrder.RawMaterials == null || targetOrder.RawMaterials.Count == 0)
                 {
                     var aggregates = new Dictionary<string, (double Amount, string Unit)>(StringComparer.OrdinalIgnoreCase);

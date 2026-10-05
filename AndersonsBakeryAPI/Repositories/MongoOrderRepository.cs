@@ -137,6 +137,7 @@ namespace AndersonsBakeryAPI.Repositories
 
             try
             {
+                // Attempts order save
                 Console.WriteLine($"[MONGO_REPO] Attempting to save order {order.OrderId}");
 
                 var filter = Builders<OrderScaled>.Filter.Eq(o => o.OrderId, order.OrderId);

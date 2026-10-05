@@ -96,9 +96,10 @@ namespace LogiSyn.Views
                     {
                         order = await _apiClient.ParsePdfOrderAsync(_file);
                     }
-                    catch
+                    catch (Exception ex)
                     {
-                        // API parsing not available or failed; fallback to local parsing
+                        // API parsing offline or unreachable; log diagnostic and seamlessly fallback to local OrderService
+                        Debug.WriteLine($"[CreateOrder] Cloud API PDF parse failed ({ex.Message}). Engaging local offline parser.");
                     }
 
                     // Fall back to local parsing on background thread so the UI spinner animates smoothly
