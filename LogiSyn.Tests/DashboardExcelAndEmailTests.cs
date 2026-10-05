@@ -13,6 +13,7 @@ namespace LogiSyn.Tests
     public class DashboardExcelAndEmailTests
     {
         [Fact]
+        // test shows that smaple order contains details
         public void SampleOrdersScaled_ContainsRichDetailsForCheckersAndSpar()
         {
             var samples = SampleData.SampleOrdersScaled();
