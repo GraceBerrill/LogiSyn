@@ -1,10 +1,11 @@
 # Anderson's Bakery Management System
 by LogiSyn
 
-Grace Berrill
-Adriaan 
-Luc 
-Mathew
+[![Grace Berrill](https://img.shields.io/badge/Grace_Berrill-ST10440118-6E56CF?style=flat&logo=github&logoColor=white)](https://github.com/GraceBerrill)
+[![Adriaan Kock](https://img.shields.io/badge/Adriaan_Kock-ST10263443-6E56CF?style=flat&logo=github&logoColor=white)](https://github.com/AdriaanKock)
+[![Matthew Rosselli](https://img.shields.io/badge/Matthew_Rosselli-ST10258193-6E56CF?style=flat&logo=github&logoColor=white)](https://github.com/CharlsWint)
+[![Luc Naude](https://img.shields.io/badge/Luc_Naude-ST10443241-6E56CF?style=flat&logo=github&logoColor=white)](https://github.com/LucNaude)
+
 
 A desktop management system built for Anderson's Bakery. Written in C# / WPF (.NET 10). LogiSyn replaces manual, error prone production workbooks with a single application that turns an incoming customer order (as a PDF) into a scaled production sheet. Pans, trolleys and raw material quantities worked out automatically from each product's recipe, tracks that order through to completion and manages the bakery's users and product catalog behind role-based access control.
 
