@@ -52,6 +52,17 @@ namespace LogiSyn.Views
             int.TryParse(TxtProductAmount.Text.Trim(), out int qty);
             if (qty <= 0) qty = 100;
 
+            // If quantity was embedded in the product name (e.g. "50 Hamburger Rolls"), strip it out and set Amount explicitly
+            var qtyMatch = System.Text.RegularExpressions.Regex.Match(productTitle, @"^(\d+)\s+(.+)$");
+            if (qtyMatch.Success)
+            {
+                if (int.TryParse(qtyMatch.Groups[1].Value, out int extractedQty))
+                {
+                    qty = extractedQty;
+                }
+                productTitle = qtyMatch.Groups[2].Value.Trim();
+            }
+
             string productionLine = string.IsNullOrWhiteSpace(TxtProduction.Text)
                 ? "Production 1"
                 : TxtProduction.Text.Trim();

@@ -112,24 +112,40 @@ namespace LogiSyn.Views
                     Customer = _order.Customer,
                     OrderDate = _order.Date != default ? _order.Date : DateTime.Now,
                     Status = markAsCompleted ? "Completed" : "Pending",
-                    ProductionItems = sheetData.Products?.Select(p => new ProductionItem
+                    ProductionItems = sheetData.Products?.Select(p =>
                     {
-                        ProductName = $"{p.Amount} {p.Name}".Trim(),
-                        ProductionLine = p.Production ?? "Production 1",
-                        Notes = p.Notes ?? "",
-                        Packaging = new Packaging
+                        int parsedAmount = int.TryParse(p.Amount, out int a) ? a : 100;
+                        string cleanName = p.Name ?? string.Empty;
+                        var match = System.Text.RegularExpressions.Regex.Match(cleanName, @"^(\d+)\s+(.+)$");
+                        if (match.Success)
                         {
-                            // Safely parse pans and trolleys counts using invariant culture, with fallback defaults
-                            Pans = double.TryParse(p.Packaging?.FirstOrDefault(x => x.Name == "Pans")?.Amount, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out double pans) ? pans : 4,
-                            Trolleys = double.TryParse(p.Packaging?.FirstOrDefault(x => x.Name == "Trolleys")?.Amount, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out double tr) ? tr : 2
-                        },
-                        ReqIngredients = p.Ingredients?.Select(si => new Ingredients
+                            if (parsedAmount == 100 && int.TryParse(match.Groups[1].Value, out int embeddedAmt))
+                            {
+                                parsedAmount = embeddedAmt;
+                            }
+                            cleanName = match.Groups[2].Value.Trim();
+                        }
+
+                        return new ProductionItem
                         {
-                            IngredientName = si.Name,
-                            IngredientAmount = 10,
-                            AdditionsAmount = 1,
-                            MeasuredIngredient = "kg"
-                        }).ToList() ?? new()
+                            ProductName = cleanName,
+                            Amount = parsedAmount,
+                            ProductionLine = p.Production ?? "Production 1",
+                            Notes = p.Notes ?? "",
+                            Packaging = new Packaging
+                            {
+                                // Safely parse pans and trolleys counts using invariant culture, with fallback defaults
+                                Pans = double.TryParse(p.Packaging?.FirstOrDefault(x => x.Name == "Pans")?.Amount, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out double pans) ? pans : 4,
+                                Trolleys = double.TryParse(p.Packaging?.FirstOrDefault(x => x.Name == "Trolleys")?.Amount, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out double tr) ? tr : 2
+                            },
+                            ReqIngredients = p.Ingredients?.Select(si => new Ingredients
+                            {
+                                IngredientName = si.Name,
+                                IngredientAmount = 10,
+                                AdditionsAmount = 1,
+                                MeasuredIngredient = "kg"
+                            }).ToList() ?? new()
+                        };
                     }).ToList() ?? new()
                 };
             }

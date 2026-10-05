@@ -28,9 +28,19 @@ namespace AndersonsBakeryAPI.Services
         public SyncService()
         {
             _sql = new UserService();
-            _mongo = new MongoUserService(
-                MongoConfiguration.GetConnectionString(),
-                MongoConfiguration.GetDatabaseName());
+            var conn = MongoConfiguration.TryGetConnectionString();
+            if (!string.IsNullOrWhiteSpace(conn))
+            {
+                try
+                {
+                    _mongo = new MongoUserService(conn, MongoConfiguration.GetDatabaseName());
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"[MONGO] Could not initialize MongoUserService for sync: {ex.Message}");
+                    _mongo = null;
+                }
+            }
         }
 
         public bool IsMongoConfigured => _mongo != null;

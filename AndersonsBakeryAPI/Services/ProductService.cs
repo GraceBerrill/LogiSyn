@@ -4,11 +4,12 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using Microsoft.Data.SqlClient;
+using SharedLibrary.Interface;
 using SharedLibrary.Model;
 
 namespace AndersonsBakeryAPI.Services
 {
-    public class ProductService
+    public class ProductService : IProductService
     {
         private string GetConnectionString()
         {

@@ -25,9 +25,7 @@ var builder = WebApplication.CreateBuilder(args);
         });
         builder.Services.AddScoped<MongoUserService>();
         builder.Services.AddScoped<MongoLoginService>();
-        builder.Services.AddScoped<UserServiceRouter>();
-        builder.Services.AddScoped<LoginServiceRouter>();
-        builder.Services.AddScoped<SyncService>();
+        builder.Services.AddScoped<MongoOrderRepository>();
     }
     // --- SQL Server DbContext (EF Core) ---
     if (!string.IsNullOrWhiteSpace(sqlConnectionString))
@@ -40,9 +38,15 @@ var builder = WebApplication.CreateBuilder(args);
         builder.Services.AddDbContext<LogiSynDbContext>(options =>
             options.UseSqlServer(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=LogiSynDb;Integrated Security=True;TrustServerCertificate=True;"));
     }
+
+    // --- User & Login Service Routers (resilient to missing Mongo) ---
+    builder.Services.AddScoped<UserServiceRouter>();
+    builder.Services.AddScoped<LoginServiceRouter>();
+    builder.Services.AddScoped<SyncService>();
+
     // --- Orders & Product Services Registration ---
-    builder.Services.AddScoped<MongoOrderRepository>();
     builder.Services.AddScoped<SqlOrderRepository>();
+    builder.Services.AddScoped<IProductService, ProductService>();
     builder.Services.AddScoped<ProductService>();
     builder.Services.AddScoped<TempRecipeService>();
     builder.Services.AddScoped<UserService>();
@@ -50,7 +54,7 @@ var builder = WebApplication.CreateBuilder(args);
     builder.Services.AddScoped<OrderService>();
     builder.Services.AddScoped<IOrderService>(sp =>
     {
-        var productService = sp.GetRequiredService<ProductService>();
+        var productService = sp.GetRequiredService<IProductService>();
         var mongoRepo = sp.GetService<MongoOrderRepository>();
         var sqlRepo = sp.GetService<SqlOrderRepository>();
         return new OrderService(productService, mongoRepo, sqlRepo);

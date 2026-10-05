@@ -11,9 +11,19 @@ namespace AndersonsBakeryAPI.Services
 
         public UserServiceRouter()
         {
-            _mongo = new MongoUserService(
-                MongoConfiguration.GetConnectionString(),
-                MongoConfiguration.GetDatabaseName());
+            var conn = MongoConfiguration.TryGetConnectionString();
+            if (!string.IsNullOrWhiteSpace(conn))
+            {
+                try
+                {
+                    _mongo = new MongoUserService(conn, MongoConfiguration.GetDatabaseName());
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"[MONGO] Could not initialize MongoUserService: {ex.Message}");
+                    _mongo = null;
+                }
+            }
             _sql = new UserService();
         }
 

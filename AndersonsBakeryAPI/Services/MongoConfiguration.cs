@@ -16,11 +16,24 @@ namespace AndersonsBakeryAPI.Services
                 .Build();
         }
 
+        public static string? TryGetConnectionString()
+        {
+            try
+            {
+                var configuration = BuildConfiguration();
+                var conn = configuration.GetConnectionString("MongoConnection")
+                    ?? configuration["MongoConnection"];
+                return string.IsNullOrWhiteSpace(conn) ? null : conn;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
         public static string GetConnectionString()
         {
-            var configuration = BuildConfiguration();
-            var conn = configuration.GetConnectionString("MongoConnection")
-                ?? configuration["MongoConnection"];
+            var conn = TryGetConnectionString();
 
             if (string.IsNullOrWhiteSpace(conn))
             {
@@ -33,8 +46,15 @@ namespace AndersonsBakeryAPI.Services
 
         public static string GetDatabaseName()
         {
-            var configuration = BuildConfiguration();
-            return configuration["MongoDatabase"] ?? "LogiSynDb";
+            try
+            {
+                var configuration = BuildConfiguration();
+                return configuration["MongoDatabase"] ?? "LogiSynDb";
+            }
+            catch
+            {
+                return "LogiSynDb";
+            }
         }
     }
 }

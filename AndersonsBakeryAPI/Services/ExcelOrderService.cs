@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace AndersonsBakeryAPI.Services
 {
@@ -296,9 +297,22 @@ namespace AndersonsBakeryAPI.Services
                         } else
                         {
                             if (pItem == null) {
+                                string cleanProdName = prodName;
+                                int parsedAmount = 100;
+                                var match = Regex.Match(prodName, @"^(\d+)\s+(.+)$");
+                                if (match.Success)
+                                {
+                                    if (int.TryParse(match.Groups[1].Value, out int amt))
+                                    {
+                                        parsedAmount = amt;
+                                    }
+                                    cleanProdName = match.Groups[2].Value.Trim();
+                                }
+
                                 pItem = new ProductionItem
                                 {
-                                    ProductName = prodName,
+                                    ProductName = cleanProdName,
+                                    Amount = parsedAmount,
                                     ProductionLine = "Production line 1",
                                     packaging = new Packaging()
                                 };

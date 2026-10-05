@@ -20,7 +20,7 @@ namespace AndersonsBakeryAPI.Services
     public class OrderService : IOrderService
     {
         // Initialise lists and repositories for order processing
-        private readonly ProductService _productService;
+        private readonly IProductService _productService;
         private readonly MongoOrderRepository? _mongoRepository;
         private readonly SqlOrderRepository? _sqlRepository;
         private static readonly List<OrderScaled> _orders = new();
@@ -128,7 +128,9 @@ namespace AndersonsBakeryAPI.Services
         {
             try
             {
-                string conn = MongoConfiguration.GetConnectionString();
+                string? conn = MongoConfiguration.TryGetConnectionString();
+                if (string.IsNullOrWhiteSpace(conn)) return null;
+
                 string dbName = MongoConfiguration.GetDatabaseName();
                 var settings = MongoClientSettings.FromConnectionString(conn);
                 settings.ServerSelectionTimeout = TimeSpan.FromSeconds(2);
@@ -156,7 +158,7 @@ namespace AndersonsBakeryAPI.Services
         // constructors for OrderService, allowing for dependency injection of ProductService and repositories
         public OrderService() : this(new ProductService(), CreateDefaultMongoRepository(), CreateDefaultSqlRepository()) { }
 
-        public OrderService(ProductService productService) : this(productService, CreateDefaultMongoRepository(), CreateDefaultSqlRepository()) { }
+        public OrderService(IProductService productService) : this(productService, CreateDefaultMongoRepository(), CreateDefaultSqlRepository()) { }
 
         public OrderService(MongoOrderRepository? mongoRepository, SqlOrderRepository? sqlRepository)
             : this(new ProductService(), mongoRepository, sqlRepository) { }
@@ -164,7 +166,7 @@ namespace AndersonsBakeryAPI.Services
         //------------------------------------------------------------------------------------------------//
 
         // Constructor that initializes the OrderService with a ProductService and optional repositories for MongoDB and SQL Server
-        public OrderService(ProductService productService, MongoOrderRepository? mongoRepository, SqlOrderRepository? sqlRepository)
+        public OrderService(IProductService productService, MongoOrderRepository? mongoRepository, SqlOrderRepository? sqlRepository)
         {
             // Use the provided ProductService or create a new one if null
             _productService = productService ?? new ProductService();
@@ -237,10 +239,17 @@ namespace AndersonsBakeryAPI.Services
 
                     int quantity = ExtractQuantity(context);
 
+                    string cleanProdName = product.ProductName ?? string.Empty;
+                    var qtyMatch = Regex.Match(cleanProdName, @"^(\d+)\s+(.+)$");
+                    if (qtyMatch.Success)
+                    {
+                        cleanProdName = qtyMatch.Groups[2].Value.Trim();
+                    }
+
                     // Create a production item based on the product and calculated quantity
                     var item = new ProductionItem
                     {
-                        ProductName = product.ProductName,
+                        ProductName = cleanProdName,
                         Amount = quantity,
                         ProductionLine = !string.IsNullOrWhiteSpace(product.StorageLocation) ? product.StorageLocation : "Production 1",
                         packaging = new Packaging
@@ -565,6 +574,14 @@ namespace AndersonsBakeryAPI.Services
             await SaveOrderAsync(order);
         }
 
+        public async Task CompleteOrderAsync(string orderId, OrderScaled completedOrder)
+        {
+            if (completedOrder == null) throw new ArgumentNullException(nameof(completedOrder));
+            completedOrder.OrderId = orderId;
+            completedOrder.Status = "Completed";
+            await SaveOrderAsync(completedOrder);
+        }
+
         // Synchronous complete wrapper
         public void CompleteOrder(string orderId, Action<OrderScaled>? recordOrderData = null)
         {
@@ -574,6 +591,14 @@ namespace AndersonsBakeryAPI.Services
             recordOrderData?.Invoke(order);
             order.Status = "Completed";
             SaveOrder(order);
+        }
+
+        public void CompleteOrder(string orderId, OrderScaled completedOrder)
+        {
+            if (completedOrder == null) return;
+            completedOrder.OrderId = orderId;
+            completedOrder.Status = "Completed";
+            SaveOrder(completedOrder);
         }
 
 

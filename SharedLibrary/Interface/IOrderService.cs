@@ -17,6 +17,7 @@ namespace SharedLibrary.Interface
         OrderScaled? GetOrderById(string orderId);
         void SaveOrder(OrderScaled order);
         void CompleteOrder(string orderId, Action<OrderScaled>? recordOrderData = null);
+        void CompleteOrder(string orderId, OrderScaled completedOrder);
         EmailMessageModel BuildScalingSheetEmail(OrderScaled order);
 
         // Async methods
@@ -24,5 +25,6 @@ namespace SharedLibrary.Interface
         Task<OrderScaled?> GetOrderByIdAsync(string orderId);
         Task<OrderScaled> SaveOrderAsync(OrderScaled order);
         Task CompleteOrderAsync(string orderId, Action<OrderScaled>? recordOrderData = null);
+        Task CompleteOrderAsync(string orderId, OrderScaled completedOrder);
     }
 }

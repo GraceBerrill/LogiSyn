@@ -27,6 +27,52 @@ namespace SharedLibrary.Model
         public double Trolleys { get; set; }
         public double PansUsed { get; set; }
         public double TrolleysUsed { get; set; }
+
+        public Packaging() { }
+
+        public Packaging(double pans, double trolleys, double pansUsed = 0, double trolleysUsed = 0)
+        {
+            Pans = pans;
+            Trolleys = trolleys;
+            PansUsed = pansUsed;
+            TrolleysUsed = trolleysUsed;
+        }
+
+        public Packaging(int pans, int trolleys, int pansUsed = 0, int trolleysUsed = 0)
+        {
+            Pans = pans;
+            Trolleys = trolleys;
+            PansUsed = pansUsed;
+            TrolleysUsed = trolleysUsed;
+        }
+
+        [JsonIgnore]
+        public int IntPans
+        {
+            get => (int)Math.Round(Pans);
+            set => Pans = value;
+        }
+
+        [JsonIgnore]
+        public int IntTrolleys
+        {
+            get => (int)Math.Round(Trolleys);
+            set => Trolleys = value;
+        }
+
+        [JsonIgnore]
+        public int IntPansUsed
+        {
+            get => (int)Math.Round(PansUsed);
+            set => PansUsed = value;
+        }
+
+        [JsonIgnore]
+        public int IntTrolleysUsed
+        {
+            get => (int)Math.Round(TrolleysUsed);
+            set => TrolleysUsed = value;
+        }
     }
 
     //------------------------------------------------------------------------------------------------//
@@ -48,6 +94,13 @@ namespace SharedLibrary.Model
         {
             get => Packaging;
             set => Packaging = value;
+        }
+
+        [JsonIgnore]
+        public double DoubleAmount
+        {
+            get => Amount;
+            set => Amount = (int)Math.Round(value);
         }
     }
 
