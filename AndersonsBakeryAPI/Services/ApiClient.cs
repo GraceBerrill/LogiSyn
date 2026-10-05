@@ -41,39 +41,99 @@ namespace AndersonsBakeryAPI.Services
             };
         }
 
+        public static event Action<ApiConnectionState, string?>? OnStatusChanged;
+        public static ApiConnectionState CurrentState { get; private set; } = ApiConnectionState.Online;
+        public static string CurrentMessage { get; private set; } = "API Connected";
+
+        private static int _activeRequestCount = 0;
+
+        public static void NotifyStatus(ApiConnectionState state, string? message = null)
+        {
+            CurrentState = state;
+            CurrentMessage = message ?? (state switch
+            {
+                ApiConnectionState.CallingApi => "Calling API…",
+                ApiConnectionState.Online => "API Connected",
+                ApiConnectionState.FallbackLocal => "Local Storage (Fallback)",
+                _ => "Ready"
+            });
+
+            try
+            {
+                OnStatusChanged?.Invoke(state, CurrentMessage);
+            }
+            catch { }
+        }
+
+        private static void BeginRequest(string message = "Calling API…")
+        {
+            System.Threading.Interlocked.Increment(ref _activeRequestCount);
+            NotifyStatus(ApiConnectionState.CallingApi, message);
+        }
+
+        private static void EndRequest(bool success, string? successMessage = null, string? failureMessage = null)
+        {
+            int remaining = System.Threading.Interlocked.Decrement(ref _activeRequestCount);
+            if (remaining > 0)
+            {
+                return;
+            }
+
+            if (success)
+            {
+                NotifyStatus(ApiConnectionState.Online, successMessage ?? "API Connected");
+            }
+            else
+            {
+                NotifyStatus(ApiConnectionState.FallbackLocal, failureMessage ?? "Local Storage (Fallback)");
+            }
+        }
+
         //------------------------------------------------------------------------------------------------//
 
         // Fetches all orders from the API
         public async Task<List<OrderScaled>> GetOrdersAsync()
         {
-            foreach (var baseUrl in _baseUrls)
+            BeginRequest("Fetching orders from API…");
+            bool succeeded = false;
+            try
             {
-                try
+                foreach (var baseUrl in _baseUrls)
                 {
-                    // Attempt to fetch orders from the current base URL
-                    var response = await _httpClient.GetAsync($"{baseUrl}/api/orders");
-                    if (!response.IsSuccessStatusCode)
+                    try
+                    {
+                        // Attempt to fetch orders from the current base URL
+                        var response = await _httpClient.GetAsync($"{baseUrl}/api/orders");
+                        if (!response.IsSuccessStatusCode)
+                        {
+                            Console.WriteLine($"Failed to fetch orders from {baseUrl}. Trying next candidate URL.");
+                            continue;
+                        }
+
+                        // Read the response content and deserialize it into a list of OrderScaled objects
+                        var content = await response.Content.ReadAsStringAsync();
+                        var orders = JsonSerializer.Deserialize<List<OrderScaled>>(content, new JsonSerializerOptions 
+                        { 
+                            PropertyNameCaseInsensitive = true 
+                        });
+                        if (orders != null)
+                        {
+                            succeeded = true;
+                            return orders;
+                        }
+                    }
+                    catch
                     {
                         Console.WriteLine($"Failed to fetch orders from {baseUrl}. Trying next candidate URL.");
-                        continue;
                     }
+                }
 
-                    // Read the response content and deserialize it into a list of OrderScaled objects
-                    var content = await response.Content.ReadAsStringAsync();
-                    var orders = JsonSerializer.Deserialize<List<OrderScaled>>(content, new JsonSerializerOptions 
-                    { 
-                        PropertyNameCaseInsensitive = true 
-                    });
-                    if (orders != null)
-                        return orders;
-                }
-                catch
-                {
-                    Console.WriteLine($"Failed to fetch orders from {baseUrl}. Trying next candidate URL.");
-                }
+                return new List<OrderScaled>();
             }
-
-            return new List<OrderScaled>();
+            finally
+            {
+                EndRequest(succeeded, "API Connected", "Local Storage (Fallback)");
+            }
         }
 
         //------------------------------------------------------------------------------------------------//
@@ -81,32 +141,44 @@ namespace AndersonsBakeryAPI.Services
         // Fetches a specific order by ID from the API
         public async Task<OrderScaled?> GetOrderByIdAsync(string orderId)
         {
-            string safeId = Uri.EscapeDataString(orderId ?? string.Empty);
-            foreach (var baseUrl in _baseUrls)
+            BeginRequest("Loading order from API…");
+            bool succeeded = false;
+            try
             {
-                try
+                string safeId = Uri.EscapeDataString(orderId ?? string.Empty);
+                foreach (var baseUrl in _baseUrls)
                 {
-                    // Attempt to fetch the order by ID from the current base URL
-                    var response = await _httpClient.GetAsync($"{baseUrl}/api/orders/{safeId}");
-                    if (!response.IsSuccessStatusCode)
-                        continue;
+                    try
+                    {
+                        // Attempt to fetch the order by ID from the current base URL
+                        var response = await _httpClient.GetAsync($"{baseUrl}/api/orders/{safeId}");
+                        if (!response.IsSuccessStatusCode)
+                            continue;
 
-                    // Read the response content and deserialize it into an OrderScaled object
-                    var content = await response.Content.ReadAsStringAsync();
-                    var order = JsonSerializer.Deserialize<OrderScaled>(content, new JsonSerializerOptions 
-                    { 
-                        PropertyNameCaseInsensitive = true 
-                    });
-                    if (order != null)
-                        return order;
+                        // Read the response content and deserialize it into an OrderScaled object
+                        var content = await response.Content.ReadAsStringAsync();
+                        var order = JsonSerializer.Deserialize<OrderScaled>(content, new JsonSerializerOptions 
+                        { 
+                            PropertyNameCaseInsensitive = true 
+                        });
+                        if (order != null)
+                        {
+                            succeeded = true;
+                            return order;
+                        }
+                    }
+                    catch
+                    {
+                        Console.WriteLine($"Failed to fetch order {orderId} from {baseUrl}. Trying next candidate URL.");
+                    }
                 }
-                catch
-                {
-                    Console.WriteLine($"Failed to fetch order {orderId} from {baseUrl}. Trying next candidate URL.");
-                }
+
+                return null;
             }
-
-            return null;
+            finally
+            {
+                EndRequest(succeeded, "API Connected", "Local Storage (Fallback)");
+            }
         }
 
         //------------------------------------------------------------------------------------------------//
@@ -114,24 +186,36 @@ namespace AndersonsBakeryAPI.Services
         // Saves a new order to the API
         public async Task<bool> SaveOrderAsync(OrderScaled order)
         {
-            var json = JsonSerializer.Serialize(order);
-            foreach (var baseUrl in _baseUrls)
+            BeginRequest("Saving order to API…");
+            bool succeeded = false;
+            try
             {
-                try
+                var json = JsonSerializer.Serialize(order);
+                foreach (var baseUrl in _baseUrls)
                 {
-                    // Attempt to save the order to the current base URL
-                    var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
-                    var response = await _httpClient.PostAsync($"{baseUrl}/api/orders", content);
-                    if (response.IsSuccessStatusCode)
-                        return true;
+                    try
+                    {
+                        // Attempt to save the order to the current base URL
+                        var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+                        var response = await _httpClient.PostAsync($"{baseUrl}/api/orders", content);
+                        if (response.IsSuccessStatusCode)
+                        {
+                            succeeded = true;
+                            return true;
+                        }
+                    }
+                    catch
+                    {
+                        Console.WriteLine($"Failed to save order {order.OrderId} to {baseUrl}. Trying next candidate URL.");
+                    }
                 }
-                catch
-                {
-                    Console.WriteLine($"Failed to save order {order.OrderId} to {baseUrl}. Trying next candidate URL.");
-                }
-            }
 
-            return false;
+                return false;
+            }
+            finally
+            {
+                EndRequest(succeeded, "API Connected", "Local Storage (Fallback)");
+            }
         }
 
         //------------------------------------------------------------------------------------------------//
@@ -141,36 +225,48 @@ namespace AndersonsBakeryAPI.Services
         {
             if (!File.Exists(filePath)) return null;
 
-            foreach (var baseUrl in _baseUrls)
+            BeginRequest("Parsing PDF via API…");
+            bool succeeded = false;
+            try
             {
-                try
+                foreach (var baseUrl in _baseUrls)
                 {
-                    // Prepare the multipart form data content for the PDF file
-                    using var form = new MultipartFormDataContent();
-                    await using var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
-                    using var streamContent = new StreamContent(fileStream);
-                    streamContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/pdf");
-                    form.Add(streamContent, "file", Path.GetFileName(filePath));
-
-                    var response = await _httpClient.PostAsync($"{baseUrl}/api/orders/parse", form);
-                    if (!response.IsSuccessStatusCode)
-                        continue;
-
-                    var content = await response.Content.ReadAsStringAsync();
-                    var order = JsonSerializer.Deserialize<OrderScaled>(content, new JsonSerializerOptions
+                    try
                     {
-                        PropertyNameCaseInsensitive = true
-                    });
-                    if (order != null)
-                        return order;
-                }
-                catch
-                {
-                    Console.WriteLine($"Failed to parse PDF order from {baseUrl}. Trying next candidate URL.");
-                }
-            }
+                        // Prepare the multipart form data content for the PDF file
+                        using var form = new MultipartFormDataContent();
+                        await using var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+                        using var streamContent = new StreamContent(fileStream);
+                        streamContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/pdf");
+                        form.Add(streamContent, "file", Path.GetFileName(filePath));
 
-            return null;
+                        var response = await _httpClient.PostAsync($"{baseUrl}/api/orders/parse", form);
+                        if (!response.IsSuccessStatusCode)
+                            continue;
+
+                        var content = await response.Content.ReadAsStringAsync();
+                        var order = JsonSerializer.Deserialize<OrderScaled>(content, new JsonSerializerOptions
+                        {
+                            PropertyNameCaseInsensitive = true
+                        });
+                        if (order != null)
+                        {
+                            succeeded = true;
+                            return order;
+                        }
+                    }
+                    catch
+                    {
+                        Console.WriteLine($"Failed to parse PDF order from {baseUrl}. Trying next candidate URL.");
+                    }
+                }
+
+                return null;
+            }
+            finally
+            {
+                EndRequest(succeeded, "API Connected", "Local Storage (Fallback)");
+            }
         }
 
         //------------------------------------------------------------------------------------------------//
@@ -178,25 +274,37 @@ namespace AndersonsBakeryAPI.Services
         // Updates the status of an order via the API
         public async Task<bool> UpdateOrderStatusAsync(string orderId, string status)
         {
-            string safeId = Uri.EscapeDataString(orderId ?? string.Empty);
-            var json = JsonSerializer.Serialize(status);
-            foreach (var baseUrl in _baseUrls)
+            BeginRequest("Updating order status via API…");
+            bool succeeded = false;
+            try
             {
-                try
+                string safeId = Uri.EscapeDataString(orderId ?? string.Empty);
+                var json = JsonSerializer.Serialize(status);
+                foreach (var baseUrl in _baseUrls)
                 {
-                    // Attempt to update the order status at the current base URL
-                    var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
-                    var response = await _httpClient.PutAsync($"{baseUrl}/api/orders/{safeId}/status", content);
-                    if (response.IsSuccessStatusCode)
-                        return true;
+                    try
+                    {
+                        // Attempt to update the order status at the current base URL
+                        var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+                        var response = await _httpClient.PutAsync($"{baseUrl}/api/orders/{safeId}/status", content);
+                        if (response.IsSuccessStatusCode)
+                        {
+                            succeeded = true;
+                            return true;
+                        }
+                    }
+                    catch
+                    {
+                        Console.WriteLine($"Failed to update status for order {orderId} at {baseUrl}. Trying next candidate URL.");
+                    }
                 }
-                catch
-                {
-                    Console.WriteLine($"Failed to update status for order {orderId} at {baseUrl}. Trying next candidate URL.");
-                }
-            }
 
-            return false;
+                return false;
+            }
+            finally
+            {
+                EndRequest(succeeded, "API Connected", "Local Storage (Fallback)");
+            }
         }
 
         //------------------------------------------------------------------------------------------------//
@@ -265,22 +373,34 @@ namespace AndersonsBakeryAPI.Services
         // Checks if the API is available
         public async Task<bool> IsApiAvailableAsync()
         {
-            foreach (var baseUrl in _baseUrls)
+            BeginRequest("Checking API status…");
+            bool succeeded = false;
+            try
             {
-                try
+                foreach (var baseUrl in _baseUrls)
                 {
-                    // Attempt to ping the API at the current base URL
-                    var response = await _httpClient.GetAsync($"{baseUrl}/api/orders/debug/ping");
-                    if (response.IsSuccessStatusCode)
-                        return true;
+                    try
+                    {
+                        // Attempt to ping the API at the current base URL
+                        var response = await _httpClient.GetAsync($"{baseUrl}/api/orders/debug/ping");
+                        if (response.IsSuccessStatusCode)
+                        {
+                            succeeded = true;
+                            return true;
+                        }
+                    }
+                    catch
+                    {
+                        Console.WriteLine($"Failed to ping API at {baseUrl}. Trying next candidate URL.");
+                    }
                 }
-                catch
-                {
-                    Console.WriteLine($"Failed to ping API at {baseUrl}. Trying next candidate URL.");
-                }
-            }
 
-            return false;
+                return false;
+            }
+            finally
+            {
+                EndRequest(succeeded, "API Connected", "Local Storage (Fallback)");
+            }
         }
     }
 }

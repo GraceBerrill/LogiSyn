@@ -1,9 +1,11 @@
 using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
 using SharedLibrary.Model;
+using AndersonsBakeryAPI.Services;
 
 namespace LogiSyn.Views
 {
@@ -20,8 +22,27 @@ namespace LogiSyn.Views
             _role = role;
 
             Current = this;
-            _role = role;
             RoleText.Text = role.ToString();
+
+            // Subscribe to API status changes
+            ApiClient.OnStatusChanged += UpdateApiStatus;
+            UpdateApiStatus(ApiClient.CurrentState, ApiClient.CurrentMessage);
+
+            // Initial API check in background
+            Loaded += async (s, e) =>
+            {
+                try
+                {
+                    var client = new ApiClient();
+                    await client.IsApiAvailableAsync();
+                }
+                catch { }
+            };
+
+            Closed += (s, e) =>
+            {
+                ApiClient.OnStatusChanged -= UpdateApiStatus;
+            };
 
             ConfigureNavigation();
             Navigate("dashboard");
@@ -163,6 +184,59 @@ namespace LogiSyn.Views
                 _toastTimer.Stop();
             };
             _toastTimer.Start();
+        }
+
+        public void UpdateApiStatus(ApiConnectionState state, string? message = null)
+        {
+            if (!Dispatcher.CheckAccess())
+            {
+                Dispatcher.Invoke(() => UpdateApiStatus(state, message));
+                return;
+            }
+
+            if (ApiStatusDot == null || ApiStatusText == null || ApiStatusBadge == null) return;
+
+            switch (state)
+            {
+                case ApiConnectionState.CallingApi:
+                    ApiStatusDot.Fill = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#61AFEF")); // Blue
+                    ApiStatusText.Text = string.IsNullOrWhiteSpace(message) ? "Calling API…" : message;
+                    ApiStatusText.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#A8D1FF"));
+                    ApiStatusBadge.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#1D2D44"));
+                    ApiStatusBadge.ToolTip = "Connecting to Andersons Bakery API (in-flight request)...";
+                    break;
+
+                case ApiConnectionState.Online:
+                    ApiStatusDot.Fill = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#8DBE98")); // Green
+                    ApiStatusText.Text = string.IsNullOrWhiteSpace(message) ? "API Connected" : message;
+                    ApiStatusText.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#C5E8CC"));
+                    ApiStatusBadge.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#1E3029"));
+                    ApiStatusBadge.ToolTip = "Connected to Andersons Bakery API. Click to test connection.";
+                    break;
+
+                case ApiConnectionState.FallbackLocal:
+                    ApiStatusDot.Fill = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFA726")); // Amber / Warm Orange
+                    ApiStatusText.Text = string.IsNullOrWhiteSpace(message) ? "Local Storage (Fallback)" : message;
+                    ApiStatusText.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFD199"));
+                    ApiStatusBadge.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#362B1E"));
+                    ApiStatusBadge.ToolTip = "Could not reach API. Operating in Local Storage fallback mode. Click to retry.";
+                    break;
+            }
+        }
+
+        private async void ApiStatusBadge_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            ShowToast("Testing API connectivity…");
+            var client = new ApiClient();
+            bool isAvailable = await client.IsApiAvailableAsync();
+            if (isAvailable)
+            {
+                ShowToast("API connection active!");
+            }
+            else
+            {
+                ShowToast("API unreachable. Using Local Storage fallback.", isWarning: true);
+            }
         }
 
         private void UpdateActiveButton(string page)

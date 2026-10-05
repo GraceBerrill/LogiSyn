@@ -21,10 +21,10 @@ jobs:
           dotnet-version: '10.0.x'
 
       - name: Restore Dependencies
-        run: dotnet restore LogiSyn.sln
+        run: dotnet restore LogiSyn.slnx
 
       - name: Build Solution
-        run: dotnet build LogiSyn.sln --configuration Release --no-restore
+        run: dotnet build LogiSyn.slnx --configuration Release --no-restore
 
       - name: Run Unit Tests
         run: dotnet test LogiSyn.Tests/LogiSyn.Tests.csproj --configuration Release --no-build --verbosity normal

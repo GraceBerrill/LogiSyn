@@ -26,6 +26,13 @@ namespace SharedLibrary.Model
 
     public enum AppRole { Admin, Manager, User }
 
+    public enum ApiConnectionState
+    {
+        CallingApi,
+        Online,
+        FallbackLocal
+    }
+
     /// <summary>One item in the left sidebar.</summary>
     public class NavItem : INotifyPropertyChanged
     {
