@@ -13,16 +13,10 @@ using System.Windows.Shapes;
 
 namespace LogiSyn.Views
 {
-    /// <summary>
-    /// Interaction logic for AddMoreProducts.xaml
-    /// </summary>
     public partial class AddMoreProducts : Window
     {
         public ProductionItem? CreatedItem { get; private set; }
 
-        //------------------------------------------------------------------------------------------------//
-
-        // Constructor for the AddMoreProducts window
         public AddMoreProducts()
         {
             InitializeComponent();
@@ -37,8 +31,8 @@ namespace LogiSyn.Views
             };
         }
 
-        //------------------------------------------------------------------------------------------------//
-
+        /********************************************************************************************/
+        //buttons handdler for add button
         private void BtnAdd_Click(object sender, RoutedEventArgs e)
         {
             string productTitle = TxtProduct.Text.Trim();
@@ -48,18 +42,9 @@ namespace LogiSyn.Views
                 return;
             }
 
-            // Validate and parse Product Amount - must be a valid positive integer
-            string rawAmount = TxtProductAmount.Text.Trim();
-            if (string.IsNullOrWhiteSpace(rawAmount) || !int.TryParse(rawAmount, out int qty) || qty <= 0)
-            {
-                MessageBox.Show("Please enter a valid positive integer for the product amount (e.g. 50, 100).",
-                                "Validation Error", MessageBoxButton.OK, MessageBoxImage.Warning);
-                TxtProductAmount.Focus();
-                TxtProductAmount.SelectAll();
-                return;
-            }
+            int.TryParse(TxtProductAmount.Text.Trim(), out int qty);
+            if (qty <= 0) qty = 100;
 
-            // If quantity was embedded in the product name (e.g. "50 Hamburger Rolls"), strip it out and set Amount explicitly
             var qtyMatch = System.Text.RegularExpressions.Regex.Match(productTitle, @"^(\d+)\s+(.+)$");
             if (qtyMatch.Success)
             {
@@ -74,7 +59,7 @@ namespace LogiSyn.Views
                 ? "Production 1"
                 : TxtProduction.Text.Trim();
 
-            // Parse Ingredients
+            //parses the ingredients
             double.TryParse(TxtIngredientAmount.Text.Trim(), out double ingAmount);
             double.TryParse(TxtIngredientAdditional.Text.Trim(), out double ingAdditional);
             double.TryParse(TxtIngredientUsed.Text.Trim(), out double ingUsed);
@@ -82,11 +67,10 @@ namespace LogiSyn.Views
                 ? "Flour"
                 : TxtIngredientName.Text.Trim();
 
-            // Parse Packaging
             double.TryParse(TxtPackagingAmount.Text.Trim(), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out double pkgAmount);
             double.TryParse(TxtPackagingUsed.Text.Trim(), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out double pkgUsed);
 
-            // Construct new production line item
+            //creates new product
             CreatedItem = new ProductionItem
             {
                 ProductName = productTitle,
@@ -99,7 +83,8 @@ namespace LogiSyn.Views
                     PansUsed = pkgUsed,
                     TrolleysUsed = 0
                 },
-                // Set the required ingredients
+
+                //set ingredients
                 ReqIngredients = new List<Ingredients>
                 {
                     new Ingredients
@@ -113,12 +98,10 @@ namespace LogiSyn.Views
                 }
             };
 
-            // Close the dialog and return the created item
 
             DialogResult = true;
             Close();
         }
     }
 }
-
-//------------------------------------------------------------------------------------------------//
+/*********************************************MAR26EOF*******************************************/

@@ -30,7 +30,7 @@ namespace LogiSyn.Tests
             Assert.NotEmpty(spar.ProductionItems);
             Assert.NotEmpty(spar.RawMaterials);
 
-            // Spar order must have complete details (not just empty stub)
+            //Spar order must have complete details
             var sparItem = spar.ProductionItems[0];
             Assert.False(string.IsNullOrWhiteSpace(sparItem.ProductName));
             Assert.NotEmpty(sparItem.ReqIngredients);
@@ -172,4 +172,3 @@ namespace LogiSyn.Tests
         }
     }
 }
-

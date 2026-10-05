@@ -30,7 +30,7 @@ namespace LogiSyn.Views
 		}
 
 		/********************************************************************************************/
-		// this makes it so that the dashboard can be configured based on the role of the user
+		//this makes it so that the dashboard can be configured based on the role of the user
 		public void ConfigureRole(string role)
 		{
 			DateText.Text = DateTime.Now.ToString("dd/MM/yyyy");
@@ -124,11 +124,10 @@ namespace LogiSyn.Views
 				return sourceOrders;
 			}
 
-			// No orders available; return an empty list so the UI shows a true empty state instead of sample data.
+			//if thre are no order it shows that it is empty
 			return new List<OrderScaled>();
 		}
 
-		// Opens the Excel export modal allowing the user to select one or multiple orders with complete details
 		private void ExcelButton_Click(object sender, RoutedEventArgs e)
 		{
 			try
@@ -164,7 +163,8 @@ namespace LogiSyn.Views
 			}
 		}
 
-		// Opens the Email modal allowing the user to select one or multiple orders to email with full details and attachments
+		/********************************************************************************************/
+		//opens the email option where you can select which ones to email
 		private void EmailButton_Click(object sender, RoutedEventArgs e)
 		{
 			try
@@ -200,7 +200,6 @@ namespace LogiSyn.Views
 			}
 		}
 
-		// Clicking a recent order navigates to its detailed breakdown
 		private void RecentOrderRow_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)
 		{
 			if (sender is FrameworkElement elem && elem.DataContext is DashboardOrderItem item)

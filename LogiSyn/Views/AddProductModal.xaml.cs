@@ -118,7 +118,7 @@ namespace LogiSyn.Views
                     return;
                 }
 
-                // Fallback to local ProductService if API unavailable
+                //fall back to local ProductService if api unavailable
                 var service = App.ServiceProvider.GetService<ProductService>() ?? new ProductService();
                 service.Add(product);
                 Saved?.Invoke();
@@ -132,7 +132,7 @@ namespace LogiSyn.Views
         }
 
         /********************************************************************************************/
-        // List of ingredients for the product (parses dynamic list)
+        // List of ingredients for the product
         private List<IngredientRequirement> GetIngredientList()
         {
             var ingredients = new List<IngredientRequirement>();
@@ -163,7 +163,7 @@ namespace LogiSyn.Views
         }
 
         /********************************************************************************************/
-        // Makes decimals parseable
+        //makes the decimals parseable
         private static bool TryParseDecimal(string input, out decimal value)
         {
             value = 0m;

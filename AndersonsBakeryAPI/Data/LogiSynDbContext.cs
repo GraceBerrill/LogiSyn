@@ -1,4 +1,3 @@
-// Adriaan
 using System.Collections.Generic;
 using System.Text.Json;
 using SharedLibrary.Model;
@@ -124,7 +123,7 @@ namespace AndersonsBakeryAPI.Data
             });
             modelBuilder.Entity<UserRow>(entity =>
             {
-                entity.ToTable("User");
+                entity.ToTable("Users");
                 entity.HasKey(u => u.SqlId);
                 entity.Property(u => u.SqlId)
                     .HasColumnName("Id")

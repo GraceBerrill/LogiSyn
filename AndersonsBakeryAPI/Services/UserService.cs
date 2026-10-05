@@ -21,7 +21,7 @@ namespace AndersonsBakeryAPI.Services
 
             const string query =
                 "SELECT Id, MongoId, Username, Password, Role, DateAdded " +
-                "FROM [User] ORDER BY Id";
+                "FROM [Users] ORDER BY Id";
 
             using var conn = new SqlConnection(GetConnectionString());
             using var cmd = new SqlCommand(query, conn);
@@ -50,7 +50,7 @@ namespace AndersonsBakeryAPI.Services
             int.TryParse(excludedIdentifier, out int excludedId);
 
             const string query =
-                "SELECT COUNT(1) FROM [User] " +
+                "SELECT COUNT(1) FROM [Users] " +
                 "WHERE Username = @Username " +
                 "AND (@ExcludedIdentifier IS NULL OR @ExcludedIdentifier = '' OR MongoId <> @ExcludedIdentifier) " +
                 "AND (@ExcludedId <= 0 OR Id <> @ExcludedId)";
@@ -70,7 +70,7 @@ namespace AndersonsBakeryAPI.Services
         public string AddUser(string username, string passwordHash, string role, string mongoId)
         {
             const string query =
-                "INSERT INTO [User] (Username, Password, Role, MongoId) " +
+                "INSERT INTO [Users] (Username, Password, Role, MongoId) " +
                 "OUTPUT INSERTED.Id " +
                 "VALUES (@Username, @Password, @Role, @MongoId)";
 
@@ -90,12 +90,12 @@ namespace AndersonsBakeryAPI.Services
         public void UpdateUser(string identifier, string username, string role, string? newPasswordHash = null)
         {
             const string withPassword =
-                "UPDATE [User] SET Username = @Username, Password = @Password, Role = @Role " +
+                "UPDATE [Users] SET Username = @Username, Password = @Password, Role = @Role " +
                 "WHERE (MongoId IS NOT NULL AND MongoId <> '' AND MongoId = @Identifier) " +
                 "   OR (Id = @ParsedId)";
 
             const string withoutPassword =
-                "UPDATE [User] SET Username = @Username, Role = @Role " +
+                "UPDATE [Users] SET Username = @Username, Role = @Role " +
                 "WHERE (MongoId IS NOT NULL AND MongoId <> '' AND MongoId = @Identifier) " +
                 "   OR (Id = @ParsedId)";
 
@@ -120,11 +120,11 @@ namespace AndersonsBakeryAPI.Services
         public void UpdateUser(int id, string username, string role, string? newPasswordHash = null)
         {
             const string withPassword =
-                "UPDATE [User] SET Username = @Username, Password = @Password, Role = @Role " +
+                "UPDATE [Users] SET Username = @Username, Password = @Password, Role = @Role " +
                 "WHERE Id = @Id";
 
             const string withoutPassword =
-                "UPDATE [User] SET Username = @Username, Role = @Role " +
+                "UPDATE [Users] SET Username = @Username, Role = @Role " +
                 "WHERE Id = @Id";
 
             using var conn = new SqlConnection(GetConnectionString());
@@ -145,7 +145,7 @@ namespace AndersonsBakeryAPI.Services
         public void DeleteUser(string identifier)
         {
             const string query =
-                "DELETE FROM [User] " +
+                "DELETE FROM [Users] " +
                 "WHERE (MongoId IS NOT NULL AND MongoId <> '' AND MongoId = @Identifier) " +
                 "   OR (Id = @ParsedId)";
 
