@@ -24,22 +24,24 @@ A desktop management system built for Anderson's Bakery. Written in C# / WPF (.N
 
 #
 ## Background
-Anderson's Bakery is a local business here in Cape Town supplying all the major supermarkets such as checkers and spar with baked goods. Whilst most factories implement major masionary and technology into their factories, Anderson's Bakery does not. Their goal is to make as many jobs avalible posible to help with major unemployment rates in South Africa. Due to this many employees have very little to no education making it dificult for high end systems to be put in place. Thats where we come in. We have crated a system to keep track of all incoming and ongoing orders that is simple enough that everyone within the factory can understand how to use it.
+Anderson's Bakery is a local Cape Town business that supplies baked goods to major supermarkets such as Checkers and Spar. While most factories rely heavily on machinery and automation, Anderson's deliberately doesn't. Their goal is to create as many jobs as possible to help fight South Africa's high unemployment rate. Because of this, many employees have little or no formal education, which makes complex, high-end systems difficult to roll out.
 
-- **Problem:** Production sheets were being consolidated manually across separate workbooks which was slow and error-prone and led to double-working and theft.
-- **Goal:** One system that incorporates each product's recipe to automatically work out raw material usage, pans and trolleys needed per order, replacing the manual workbook process.
+That's where LogiSyn comes in. We built a system that keeps track of all incoming and ongoing orders, while staying simple enough for everyone in the factory to use.
+
+- **Problem:** Production sheets were consolidated manually across separate workbooks, which was slow, error-prone, and led to double-working and theft.
+- **Goal:** One system that uses each product's recipe to automatically work out raw material usage, pans and trolleys per order, replacing the manual workbook process.
 - **Product categories:** Chilled, Ambient, Frozen.
 
 #
 ## Table of Contents
 
 - [YouTube Video Link](#youtube-video-link)
-- [Running The System](#running-the-system)
+- [Running the System](#running-the-system)
+- [Default Login Credentials](#default-login-credentials)
+- [Roles & Permissions](#roles--permissions)
 - [Key Features](#key-features)
 - [Tech Stack](#tech-stack)
 - [System Architecture](#system-architecture)
-- [Default Login Credentials](#default-login-credentials)
-- [Roles & Permissions](#roles--permissions)
 - [Algorithms & Core Logic](#algorithms--core-logic)
 - [Project Structure](#project-structure)
 - [Known Limitations](#known-limitations)
@@ -48,6 +50,7 @@ Anderson's Bakery is a local business here in Cape Town supplying all the major 
 
 #
 ## YouTube Video Link
+
 **See LogiSyn in action:** a full walkthrough of the system, from login to completed order.
 
 <a href="https://www.youtube.com/watch?v=VIDEO_ID">
@@ -60,10 +63,10 @@ Anderson's Bakery is a local business here in Cape Town supplying all the major 
 ### Prerequisites
 
 - **.NET 10 SDK** (the project targets `net10.0-windows`)
-- **Windows**, with WPF support (this is a Windows desktop application)
-- **SQL Server Express LocalDB** (ships with Visual Studio, otherwise install the [SQL Server Express LocalDB](https://learn.microsoft.com/sql/database-engine/configure-windows/sql-server-express-localdb) package separately)
-- Visual Studio 2022+ (or VS Code with the C# Dev Kit) is recommended for opening `LogiSyn.slnx`
-- A MongoDB Atlas cluster is **optional**, the app runs fully offline against LocalDB if one isn't configured or reachable (see [Security Notes](#security-notes))
+- **Windows** with WPF support (this is a Windows desktop application)
+- **SQL Server Express LocalDB** (ships with Visual Studio, or install [SQL Server Express LocalDB](https://learn.microsoft.com/sql/database-engine/configure-windows/sql-server-express-localdb) separately)
+- **Visual Studio 2022+** (or VS Code with the C# Dev Kit) is recommended for opening `LogiSyn.slnx`
+- **MongoDB Atlas** is *optional*. The app runs fully offline on LocalDB if no cluster is configured or reachable (see [Security Notes](#security-notes))
 
 ### 1. Clone and open
 
@@ -81,8 +84,8 @@ dotnet build LogiSyn/LogiSyn.csproj -c Debug
 
 ### 2. Database setup
 
-LocalDB creates the `LogiSynDb` database automatically on first connection, but it does **not** come with the `[User]` table or any seed accounts — those have to be created once per machine. Run the following with `sqlcmd` (or paste it into SSMS / Visual Studio's SQL Server Object Explorer):
-
+LocalDB creates the `LogiSynDb` database automatically on first connection, but it does **not** include the `[User]` table or any seed accounts. Create those once per machine by running the following with `sqlcmd`, SSMS, or Visual Studio's SQL Server Object Explorer:
+ 
 ```sql
 CREATE TABLE [User] (
     Id INT IDENTITY(1,1) PRIMARY KEY,
@@ -98,34 +101,35 @@ INSERT INTO [User] (Username, Password, Role) VALUES ('manager', 'manager123', '
 INSERT INTO [User] (Username, Password, Role) VALUES ('user', 'user123', 'User');
 ```
 
-> Passwords are stored in plain text only until first login — the very first successful login for an account automatically upgrades it to a salted PBKDF2 hash (see [Algorithms & Core Logic](#algorithms--core-logic)).
-
-By default the app connects to `(localdb)\MSSQLLocalDB`, database `LogiSynDb`, with Windows integrated security — no further configuration needed. To point at a different SQL instance instead, set the `LOGISYN_CONNECTION` environment variable to a full connection string.
-
-### 3. (Optional) MongoDB configuration
-
-If you want the Users/Orders cloud sync to work, add your own MongoDB Atlas connection string via **.NET user secrets** (do not commit it to `appsettings.json` — see [Security Notes](#security-notes)):
-
+> Passwords are only stored in plain text until first login. The first successful login automatically upgrades each one to a salted PBKDF2 hash (see [Algorithms & Core Logic](#algorithms--core-logic)).
+ 
+By default the app connects to `(localdb)\MSSQLLocalDB`, database `LogiSynDb`, using Windows integrated security, so no further configuration is needed. To use a different SQL instance, set the `LOGISYN_CONNECTION` environment variable to a full connection string.
+ 
+### 3. MongoDB configuration (optional)
+ 
+To enable cloud sync for Users and Orders, add your own MongoDB Atlas connection string using **.NET user secrets**. Don't commit it to `appsettings.json` (see [Security Notes](#security-notes)).
+ 
 ```bash
 cd AndersonsBakeryAPI
 dotnet user-secrets set "ConnectionStrings:MongoConnection" "mongodb+srv://<user>:<password>@<cluster>.mongodb.net/?appName=Cluster0"
 ```
 
-Without this, Mongo calls fail fast and every screen transparently falls back to the local SQL database — the app is fully usable offline.
+Without this, Mongo calls fail fast and every screen falls back to the local SQL database, so the app is still fully usable offline.
 
 ### 4. Run
 
 ```bash
 dotnet run --project LogiSyn/LogiSyn.csproj
 ```
-
-Or press F5 in Visual Studio with `LogiSyn` set as the startup project.
-
+ 
+Or press **F5** in Visual Studio with `LogiSyn` set as the startup project.
+ 
 ---
 
+#
 ## Default Login Credentials
 
-Using the seed script above, three test accounts are available, one per role:
+The seed script above creates one test account per role:
 
 | Role | Username | Password |
 | --- | --- | --- |
@@ -135,9 +139,10 @@ Using the seed script above, three test accounts are available, one per role:
 
 These are local development seed accounts only — change or remove them before using LogiSyn with real data.
 
+#
 ## Roles & Permissions
 
-The sidebar (`ShellWindow`) is built dynamically based on the logged-in user's role:
+The sidebar (`ShellWindow`) is built dynamically from the logged-in user's role. Each role only sees the screens it needs, which keeps the app simple for factory-floor staff and stops anyone accidentally changing products, users or other people's orders.
 
 | Screen | Admin | Manager | User |
 | --- | --- | --- | --- |
@@ -150,179 +155,179 @@ The sidebar (`ShellWindow`) is built dynamically based on the logged-in user's r
 
 Order breakdown screens also differ by role: Admin/Manager open a production-sheet breakdown (Manager gets a fully editable sheet; other roles reaching it see a read-only summary), while a User fills in and submits their own editable order sheet, which is what moves an order's status to **Completed**.
 
----
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #
 ## Key Features
 
-- **Role-based login**: Admin, Manager and User accounts, each with a different sidebar and a different set of permitted actions.
-- **PDF order ingestion**: Drop or browse to a customer order PDF and LogiSyn parses the order number, customer, date and line items automatically.
-- **Automatic production scaling**: Every matched line item is converted into pans needed, trolleys needed and total raw materials required, based on the product's recipe.
-- **Order tracking**: A live Orders view (auto-refreshing), a History view of completed orders and per-order breakdown/production sheets.
-- **Product & recipe management**: Add, edit and delete products, each with its own ingredient list, method and storage location.
-- **User management**: Add, edit, delete and search users, with an offline-safe sync mechanism to MongoDB.
-- **Dashboard reporting**: Order summary cards and real Excel export / Outlook email of individual orders.
-- **Offline-first data layer**: The app keeps working even if MongoDB Atlas is unreachable, transparently falling back to a local SQL Server database.
+- **Role-based login:** Admin, Manager and User accounts, each with its own sidebar and permitted actions.
+- **PDF order ingestion:** Drop in or browse to a customer order PDF and LogiSyn reads the order number, customer, date and line items automatically.
+- **Automatic production scaling:** Every line item is converted into pans, trolleys and total raw materials based on the product's recipe.
+- **Order tracking:** A live, auto-refreshing Orders view, a History view of completed orders and per-order production sheets.
+- **Product & recipe management:** Add, edit and delete products, each with its own ingredients, method and storage location.
+- **User management:** Add, edit, delete and search users, with offline-safe sync to MongoDB.
+- **Dashboard reporting:** Order summary cards, plus Excel export and Outlook email for individual orders.
+- **Offline-first data layer:** The app keeps working when MongoDB Atlas is unreachable by falling back to a local SQL Server database.
 
 #
 ## Tech Stack
 
-| Layer | Technology |
-| --- | --- |
-| UI | WPF (.NET 10, `net10.0-windows`), XAML |
-| Backend services | C# class libraries, in-process (no network hop required) |
-| Optional web API | ASP.NET Core 10 Web API (`AndersonsBakeryAPI`), OpenAPI/Swagger |
-| Local database | SQL Server LocalDB, via `Microsoft.Data.SqlClient` 7.1.0 |
-| Cloud database | MongoDB Atlas, via `MongoDB.Driver` 3.12.0 |
-| ORM (API project) | Entity Framework Core 10.0.0 |
-| PDF parsing | `UglyToad.PdfPig` |
-| Excel export | `ClosedXML` |
-| Email | Outlook COM automation (late-bound), with a `mailto:` fallback |
-| Password hashing | PBKDF2-HMAC-SHA256 (custom implementation, no external library) |
-
+| Layer | Technology | Why we chose it |
+| --- | --- | --- |
+| UI | WPF (.NET 10), XAML | The bakery runs on Windows PCs. A native desktop app works offline, needs no browser or hosting, and fit the team's C# experience. |
+| Backend services | C# class libraries, called in-process | No separate server to install or keep running on the factory PC. The app is a single install. |
+| Optional web API | ASP.NET Core 10 Web API, OpenAPI/Swagger | Groundwork for a future multi-device setup. Swagger makes endpoints easy to test. |
+| Local database | SQL Server LocalDB (`Microsoft.Data.SqlClient` 7.1.0) | Free, ships with Visual Studio, needs no server setup, and keeps working without internet. |
+| Cloud database | MongoDB Atlas (`MongoDB.Driver` 3.12.0) | Off-site copy of users and orders, so data isn't lost if the factory PC fails. Free tier covers the bakery's size. |
+| ORM (API project) | Entity Framework Core 10.0.0 | Standard .NET data access for the API, with less hand-written SQL. |
+| PDF parsing | `UglyToad.PdfPig` | Supermarket orders arrive as PDFs. PdfPig is free, open source and pure .NET, so no Adobe install or cloud service is needed. |
+| Excel export | `ClosedXML` | The bakery already worked in Excel, so exports stay in a familiar format. ClosedXML doesn't need Excel installed. |
+| Email | Outlook COM automation, `mailto:` fallback | Uses the email client staff already have, and still works on PCs without Outlook. |
+| Password hashing | PBKDF2-HMAC-SHA256 | Industry-standard password hashing with no external library needed. |
+ 
 #
 ## System Architecture
 
-LogiSyn is a WPF desktop app (`LogiSyn`) that references its backend logic (`AndersonsBakeryAPI`) and shared models (`SharedLibrary`) **directly as .NET project references** — most screens call the C# service classes in-process. There is also a real, separately-runnable ASP.NET Core Web API (same `AndersonsBakeryAPI` project, run as a web host) that currently exposes **one** controller, for Orders — it's used opportunistically by a few views (with a 2-second timeout and an automatic fallback to the in-process services if it isn't running), and exists as scaffolding for a future hosted/multi-client deployment rather than something the desktop app depends on today.
+LogiSyn is a WPF desktop app (`LogiSyn`) that references its backend logic (`AndersonsBakeryAPI`) and shared models (`SharedLibrary`) **directly as .NET project references**, so most screens call the C# service classes in-process. We chose this so the app runs as a single install with no server to manage, which suits a factory without dedicated IT staff.
 
-Each kind of data is persisted differently:
+The same `AndersonsBakeryAPI` project can also run on its own as an ASP.NET Core Web API. It currently exposes **one** controller (Orders), which a few views use opportunistically with a 2-second timeout and an automatic fallback to the in-process services. It's scaffolding for a future hosted, multi-device setup rather than something the desktop app depends on today.
+ 
+Each kind of data is stored differently, depending on how important and how often-changed it is:
 
-| Entity | Where it lives | Sync strategy |
-| --- | --- | --- |
-| **Users** | SQL LocalDB **and** MongoDB Atlas | Login tries Mongo first, falls back to SQL. A manual **Sync** button on Manage Users pushes any SQL-only ("orphaned") user up to Mongo. |
-| **Orders** | Local `orders.json` **+** SQL **+** MongoDB | Saved instantly to memory/disk, then written to SQL and Mongo in the background — no manual sync needed. |
-| **Products** | Local `products.json` only | No SQL, no Mongo — the simplest of the three. |
+| Entity | Where it lives | Sync strategy | Why |
+| --- | --- | --- | --- |
+| **Users** | SQL LocalDB **+** MongoDB Atlas | Login tries Mongo first, falls back to SQL. A **Sync** button on Manage Users pushes SQL-only ("orphaned") users up to Mongo. | Staff must always be able to log in, even with no internet. |
+| **Orders** | `orders.json` **+** SQL **+** MongoDB | Saved instantly to memory/disk, then written to SQL and Mongo in the background. | Orders are the most important data, so they're kept in three places and saving never freezes the screen. |
+| **Products** | `products.json` only | No SQL or Mongo. | The catalogue rarely changes, so the simplest option was enough for now. |
 
 ```
-┌─────────────────────────┐
-│   LogiSyn (WPF, UI)      │
-│  Views + code-behind     │
-└─────────────┬────────────┘
+┌────────────────────────────┐
+│     LogiSyn (WPF, UI)      │
+│    Views + code-behind     │
+└─────────────┬──────────────┘
               │ in-process calls (ProjectReference)
-┌─────────────▼────────────┐        ┌──────────────────────────┐
-│  AndersonsBakeryAPI       │  HTTP  │  AndersonsBakeryAPI       │
-│  Service classes          │◄──────►│  (run standalone as a     │
-│  (Login/User/Order/       │ 2s to  │   web host) — OrderController│
-│   Product/Sync Services)  │  out   │   only, Swagger enabled   │
-└───────┬─────────┬─────────┘        └──────────────────────────┘
-        │         │
-        ▼         ▼
- SQL LocalDB   MongoDB Atlas
- (LogiSynDb)   (per appsettings.json)
+┌─────────────▼──────────────┐         ┌────────────────────────────┐
+│     AndersonsBakeryAPI     │  HTTP   │     AndersonsBakeryAPI     │
+│      Service classes       │◄───────►│   (standalone web host)    │
+│    Login / User / Order /  │  2s     │   OrderController only,    │
+│   Product / Sync Services  │ timeout │      Swagger enabled       │
+└───────┬────────────┬───────┘         └────────────────────────────┘
+        │            │
+        ▼            ▼
+   SQL LocalDB   MongoDB Atlas
+   (LogiSynDb)   (user secrets)
 ```
 
----
-
-
+#
 ## Algorithms & Core Logic
 
-This section documents the non-obvious logic behind the UI — the parts a screenshot doesn't explain.
+This section explains the logic behind the UI, the parts a screenshot doesn't show.
 
 ### Authentication & password security
 
-- `LoginServiceRouter.Authenticate` tries MongoDB first (`MongoLoginService`); any exception (network, auth, timeout) is caught and silently falls back to `LoginService`, which queries SQL LocalDB instead. The user never sees which path succeeded.
-- Passwords are hashed with **PBKDF2-HMAC-SHA256**, a random 16-byte salt per account, and **600,000 iterations** (`PasswordHasher.cs`) — deliberately expensive, to make a stolen hash table costly to brute-force.
-- Backward compatibility: if a stored password isn't already in the app's hash format, it's compared as plain text, and on a successful login it is immediately re-saved as a proper hash — an automatic, lazy migration path rather than a one-off script.
+- `LoginServiceRouter.Authenticate` tries MongoDB first (`MongoLoginService`). Any exception (network, auth, timeout) is caught and it silently falls back to `LoginService`, which queries SQL LocalDB. The user never sees which path succeeded.
+- Passwords are hashed with **PBKDF2-HMAC-SHA256**, a random 16-byte salt per account and **600,000 iterations** (`PasswordHasher.cs`). The high iteration count is deliberate: it makes a stolen password table very slow and costly to crack, and matches current OWASP guidance.
+- **Lazy migration:** if a stored password isn't hashed yet, it's compared as plain text, then immediately re-saved as a proper hash on successful login. This let us upgrade existing accounts without a separate migration script.
 
 ### Dual-database fallback pattern
 
-Both `LoginServiceRouter` and `UserServiceRouter` follow the same shape for every operation (read, add, update, delete): try the MongoDB-backed service, catch any exception, and either fall back to the SQL-backed service (reads) or attempt both and report what succeeded (writes). This means the app degrades gracefully instead of failing outright whenever Mongo is unreachable — at the cost of some operations silently taking the slower, retry-then-fallback path on every call.
+`LoginServiceRouter` and `UserServiceRouter` follow the same shape for every operation (read, add, update, delete): try the Mongo-backed service, catch any exception, then either fall back to SQL (reads) or attempt both and report what succeeded (writes).
+ 
+**Why:** internet at the factory can drop out, including during load-shedding. This pattern means the app slows down slightly instead of failing outright when Mongo is unreachable.
 
 ### User sync (orphan reconciliation)
 
-Because a new user can be created while Mongo is unreachable, that user is saved to SQL with an empty `MongoId` — an "orphan." `SyncService.SyncUsers()` scans SQL for orphan rows, pushes each one to Mongo, and writes the resulting Mongo `_id` back onto the SQL row. Until a user has been synced, Manage Users deliberately blocks editing or deleting them, to avoid editing a copy that's about to be overwritten.
-
+A user created while Mongo is unreachable is saved to SQL with an empty `MongoId`, making it an "orphan." `SyncService.SyncUsers()` finds orphan rows, pushes each one to Mongo, and writes the new Mongo `_id` back onto the SQL row.
+ 
+Until a user has been synced, Manage Users blocks editing or deleting them. This avoids editing a copy that's about to be overwritten.
+ 
 ### PDF order parsing
 
-`OrderService.ReadAndScaleOrder` turns an uploaded PDF into a scaled order, entirely locally (no cloud/AI call):
-
+`OrderService.ReadAndScaleOrder` turns an uploaded PDF into a scaled order:
+ 
 1. Extracts raw text per page using `PdfPig`.
-2. Regular expressions pull out the order number (`Order\s*(?:Number|#)?...`), customer name, and order date (supports both `12 Jan 2024` and `12/01/2024` style dates).
-3. For each line of extracted text, it checks whether the line contains a known product name (substring match against the product catalog), then scans that line plus the next two lines for a quantity — looking for patterns like `pkts` or `Qty: 40`, falling back to the last number found if nothing more specific matches.
-
-> Only PDF files are currently parsed — the file picker also lists `.xlsx`/`.csv` as accepted types, but non-PDF uploads won't extract anything meaningful yet.
-
+2. Uses regular expressions to pull out the order number, customer name and order date (supports both `12 Jan 2024` and `12/01/2024`).
+3. For each line, checks for a known product name (substring match against the catalogue), then scans that line and the next two for a quantity, looking for patterns like `pkts` or `Qty: 40` and falling back to the last number found.
+**Why parse locally instead of using an AI or cloud service:** customer order data stays on the bakery's own machine, it works offline, and there's no ongoing cost.
+ 
+> Only PDF files are currently parsed. The file picker also lists `.xlsx` / `.csv`, but those won't extract anything yet.
+ 
 ### Production scaling (pans, trolleys, ingredients)
 
 For every matched line item, once a quantity is known:
-
+ 
 ```
-Pans     = ceil(quantity / 50)
-Trolleys = ceil(quantity / 100)
-Ingredients = recipe quantity × order quantity, plus a 10% buffer:
-            ingredientTotal = baseQty × quantity × 1.1
+Pans            = ceil(quantity / 50)
+Trolleys        = ceil(quantity / 100)
+ingredientTotal = baseQty × quantity × 1.1   // recipe quantity + 10% buffer
 ```
-
-If a product has no defined recipe, a hardcoded flour/yeast fallback ratio is used instead so the order can still be processed. Ingredient totals across every line item in the order are then aggregated into the order's overall raw-material requirement (`RecalRawMaterials`).
-
+ 
+Pans and trolleys are always rounded **up**, since you can't use half a pan. The 10% ingredient buffer allows for waste and spillage so production doesn't run short mid-order.
+ 
+If a product has no recipe, a hardcoded flour/yeast ratio is used so the order can still be processed. Ingredient totals across all line items are then added up into the order's overall raw-material requirement (`RecalRawMaterials`).
+ 
 ### Unique order ID generation
 
-`EnsureUniqueOrderId` guarantees no two orders share an ID:
-
-- If the parsed order ID is purely numeric (optionally prefixed with `#`), it increments the number — preserving its original zero-padded width — until it finds one not already in use.
-- Otherwise, it appends `-1`, `-2`, `-3`, … to the ID until it's unique.
+`EnsureUniqueOrderId` guarantees no two orders share an ID, so the same PDF uploaded twice can't overwrite an existing order:
+ 
+- **Numeric IDs** (optionally prefixed with `#`) are incremented, keeping their original zero-padded width, until an unused one is found.
+- **Other IDs** get `-1`, `-2`, `-3`, … appended until unique.
 
 ### Order persistence (write-local-first)
-
-`OrderService.SaveOrder` writes synchronously to an in-memory list and a local `Data/orders.json` file first, so the UI never blocks on a network call — then fires off background writes to SQL and MongoDB. (Currently, if either background write fails, it's only logged to the console, not surfaced to the user.) `GetOrders` reads from memory first, then tries Mongo with a short timeout, then SQL, then the local JSON file as a last resort.
-
+ 
+`OrderService.SaveOrder` writes to an in-memory list and a local `Data/orders.json` file first, so the screen never freezes waiting on the network. It then writes to SQL and MongoDB in the background. Background failures are currently only logged to the console, not shown to the user.
+ 
+`GetOrders` reads in this order: **memory → Mongo (short timeout) → SQL → local JSON**, so there's always a copy to fall back on.
+ 
 ### Order status model
-
-Deliberately simple: an order is either **Pending** or **Completed** — there is no "in progress" state. A User submitting their filled-in order sheet is what transitions it to Completed.
-
+ 
+An order is either **Pending** or **Completed**, with no "in progress" state. We kept it this simple on purpose so floor staff only ever have one action to take: fill in and submit the sheet.
+ 
 ### Live auto-refresh
+ 
+The Orders screen (`AdminOrdersView`) polls for updates every 10 seconds using a `DispatcherTimer`. Admins and Managers always see current order status without having to remember to refresh.
 
-The Orders screen (`AdminOrdersView`) polls for updates automatically every 10 seconds via a `DispatcherTimer`, so Admin/Manager users always see current order status without manually refreshing.
-
----
-
+#
 ## Project Structure
 
 ```
 LogiSyn/
-├── LogiSyn/                   # WPF desktop application (UI)
-│   ├── Views/                 # Screens & modals (Login, Dashboard, Orders, Products, Users, …)
-│   ├── Styles/                # Shared XAML styles, theme colours, and the vector icon set
-│   └── Assets/                # Icons, images
-├── AndersonsBakeryAPI/        # Backend logic — service classes + the optional ASP.NET Core Web API
-│   ├── Services/               # Login/User/Order/Product/Sync services, dual-DB routers, PDF parsing,
-│   │                           #   password hashing, Excel export, email
-│   ├── Controllers/            # OrderController (the API's only controller today)
-│   └── Repositories/           # SQL/Mongo order repositories
-├── SharedLibrary/              # Shared models (UserRow, OrderScaled, ProductRow, …) used by both projects
-└── LogiSyn.slnx                # Solution file
+├── LogiSyn/                  # WPF desktop application (UI)
+│   ├── Views/                # Screens & modals (Login, Dashboard, Orders, Products, Users, …)
+│   ├── Styles/               # Shared XAML styles, theme colours, vector icon set
+│   └── Assets/               # Icons, images
+├── AndersonsBakeryAPI/       # Backend logic + optional ASP.NET Core Web API
+│   ├── Services/             # Login/User/Order/Product/Sync services, dual-DB routers,
+│   │                         #   PDF parsing, password hashing, Excel export, email
+│   ├── Controllers/          # OrderController (the API's only controller today)
+│   └── Repositories/         # SQL / Mongo order repositories
+├── SharedLibrary/            # Shared models (UserRow, OrderScaled, ProductRow, …)
+├── Images/                   # README images
+└── LogiSyn.slnx              # Solution file
 ```
 
----
+`SharedLibrary` exists so the UI and backend use the exact same model classes, which avoids the two drifting out of sync.
 
+#
 ## Known Limitations
 
-- **Dashboard summary cards show fixed demo data**, not real order counts — the live equivalent is the Orders and History screens.
-- **Only PDF uploads actually parse** today, despite the file picker also listing Excel/CSV as accepted types.
-- **Products are not synced** to SQL or MongoDB — they live only in a local `products.json` file, unlike Users and Orders.
-- **The Web API only covers Orders** — Users and Products have no HTTP endpoints, so it can't yet serve a non-WPF client on its own.
-- **Order status is binary** (Pending/Completed only) — there's no "in progress" or partially-fulfilled state.
-- The repository contains a second, unused set of views (`AdminWindow`, `ManagerWindow`, `UserWindow`, and related pages) left over from an earlier navigation design — the live app only ever opens `ShellWindow`.
-- The CI/CD workflow (`.github/workflows/ci-cd.yml`) currently installs .NET 8/9 SDKs, while the project targets .NET 10 — the pipeline needs updating to match.
+- **Dashboard summary cards show demo data**, not real order counts. Use the Orders and History screens for live figures.
+- **Only PDF uploads parse**, even though the file picker also lists Excel/CSV.
+- **Products aren't synced** to SQL or MongoDB. They live only in a local `products.json` file.
+- **The Web API only covers Orders.** Users and Products have no HTTP endpoints yet, so it can't serve a non-WPF client on its own.
+- **Order status is binary** (Pending / Completed), with no partially-fulfilled state.
+- **Leftover views** (`AdminWindow`, `ManagerWindow`, `UserWindow` and related pages) from an earlier navigation design are still in the repo but unused. The live app only opens `ShellWindow`.
+- **CI/CD is out of date.** `.github/workflows/ci-cd.yml` installs .NET 8/9 SDKs while the project targets .NET 10.
 
+#
 ## Security Notes
 
-- `AndersonsBakeryAPI/appsettings.json` ships with a MongoDB Atlas connection string checked into source control. **Before making this repository public (or if it already is), rotate that credential and move it to [.NET user secrets](https://learn.microsoft.com/aspnet/core/security/app-secrets) or an environment variable** — see the [MongoDB configuration](#3-optional-mongodb-configuration) step above. The project is already set up to read from user secrets (`UserSecretsId` is configured in `AndersonsBakeryAPI.csproj`); only the hardcoded fallback in `appsettings.json` needs to go.
-- Local SQL LocalDB access uses Windows Integrated Security by default — no credentials are stored for it.
-- Seed account passwords above are intentionally weak/demo-only; they auto-upgrade to salted PBKDF2 hashes on first login, but should still be changed before any real data is entered.
+- `AndersonsBakeryAPI/appsettings.json` contains a MongoDB Atlas connection string checked into source control. **Before making this repository public (or straight away if it already is), rotate that credential and move it to [.NET user secrets](https://learn.microsoft.com/aspnet/core/security/app-secrets) or an environment variable.** See [MongoDB configuration](#3-mongodb-configuration-optional). User secrets are already set up (`UserSecretsId` in `AndersonsBakeryAPI.csproj`), so only the hardcoded fallback needs removing.
+- SQL LocalDB uses Windows Integrated Security by default, so no SQL credentials are stored.
+- Seed account passwords are demo-only. They auto-upgrade to salted PBKDF2 hashes on first login, but should still be changed before real data is entered.
 
 #
 ## AI Declaration
+Our full declaration of how AI tools were used in this project is available below.
+
+<a href="Documents/AI-Declaration.pdf">
+  <img src="https://img.shields.io/badge/View_AI_Declaration-6E56CF?style=for-the-badge&logo=adobeacrobatreader&logoColor=white" alt="View AI Declaration (PDF)">
+</a>
