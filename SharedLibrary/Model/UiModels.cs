@@ -420,16 +420,6 @@ namespace SharedLibrary.Model
             return null;
         }
 
-        private static int? ParseInt(string? text)
-        {
-            if (string.IsNullOrWhiteSpace(text)) return null;
-            var match = Regex.Match(text, @"\b(\d+)\b");
-            if (match.Success && int.TryParse(match.Groups[1].Value, NumberStyles.Any, CultureInfo.InvariantCulture, out int val))
-            {
-                return val;
-            }
-            return null;
-        }
     }
 
     public class SummaryData

@@ -84,9 +84,47 @@
                 </Border>
 
                 <!-- rows -->
-                <ItemsControl x:Name="RecentList" VerticalAlignment="Top" Margin="23.6,144.4,22.4,0"
-                              Focusable="False">
-                    <ItemsControl.ItemTemplate>
+                <ListBox x:Name="RecentList" VerticalAlignment="Top" Margin="23.6,144.4,22.4,0"
+         Focusable="False"
+         Background="Transparent"
+         BorderThickness="0"
+         ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+         HorizontalContentAlignment="Stretch"
+         Padding="0">
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel/>
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="Padding" Value="0"/>
+                            <Setter Property="Margin" Value="0"/>
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Setter Property="BorderThickness" Value="0"/>
+                            <Setter Property="Focusable" Value="False"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="ListBoxItem">
+                                        <Border Background="{TemplateBinding Background}"
+                                Padding="{TemplateBinding Padding}">
+                                            <ContentPresenter HorizontalAlignment="Stretch"/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Background" Value="#08FFFFFF"/>
+                                            </Trigger>
+                                            <Trigger Property="IsSelected" Value="True">
+                                                <Setter Property="Background" Value="#14000000"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                    <ListBox.ItemTemplate>
                         <DataTemplate>
                             <Border Style="{StaticResource RowLine}" Height="62.3">
                                 <Grid Margin="5.4,0,0,0">
@@ -96,16 +134,16 @@
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
                                     <TextBlock Grid.Column="0" Text="{Binding Number}" FontSize="26.7"
-                                               VerticalAlignment="Center"/>
+                               VerticalAlignment="Center"/>
                                     <TextBlock Grid.Column="1" Text="{Binding Customer}" FontSize="26.7"
-                                               VerticalAlignment="Center"/>
+                               VerticalAlignment="Center"/>
                                     <TextBlock Grid.Column="2" Text="{Binding Status}" FontSize="26.7"
-                                               Foreground="{Binding DashStatusBrush}" VerticalAlignment="Center"/>
+                               Foreground="{Binding DashStatusBrush}" VerticalAlignment="Center"/>
                                 </Grid>
                             </Border>
                         </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
+                    </ListBox.ItemTemplate>
+                </ListBox>
             </Grid>
         </ContentControl>
     </Grid>

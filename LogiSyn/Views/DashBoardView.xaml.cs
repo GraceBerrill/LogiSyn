@@ -4,15 +4,22 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using AndersonsBakeryAPI.Services;
+using SharedLibrary.Model;
 
 namespace LogiSyn.Views
 {
 	public partial class DashboardView : UserControl
 	{
-		public DashboardView(SharedLibrary.Model.AppRole role)
+        private readonly AppRole _role;
+        private readonly OrderService _orderService = new OrderService();
+        private List<DashboardOrderItem> _orders = new();
+
+        public DashboardView(AppRole role)
 		{
 			InitializeComponent();
-			ConfigureRole(role.ToString());
+			_role = role;
+            ConfigureRole(role.ToString());
 		}
 
 		/********************************************************************************************/
@@ -43,30 +50,49 @@ namespace LogiSyn.Views
 			LoadDashboardData();
 		}
 
-		// Adriaan - Dashboard Orders Section
-		//placeholder for loading dashboard data
-		private void LoadDashboardData()
-		{
-			var orders = GetDashboardOrders();
+        // Adriaan - Dashboard Orders Section
+        private void LoadDashboardData()
+        {
+            try
+            {
+                _orders = GetDashboardOrders();
 
-			NewOrdersValue.Text = orders.Count(o => o.Status == "Pending").ToString();
-			CompletedValue.Text = orders.Count(o => o.Status == "Complete" || o.Status == "Completed").ToString();
+                NewOrdersValue.Text = _orders
+                    .Count(o => string.Equals(o.Status, "Pending", StringComparison.OrdinalIgnoreCase))
+                    .ToString();
 
-			RecentList.ItemsSource = orders;
-		}
+                CompletedValue.Text = _orders
+                    .Count(o => string.Equals(o.Status, "Complete", StringComparison.OrdinalIgnoreCase)
+                             || string.Equals(o.Status, "Completed", StringComparison.OrdinalIgnoreCase))
+                    .ToString();
 
-		//placeholder data
-		private List<DashboardOrderItem> GetDashboardOrders()
-		{
-			return new List<DashboardOrderItem>
-			{
-				new DashboardOrderItem { Number = "#001", Customer = "Checkers", Status = "Pending", DashStatusBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#C29D70")) },
-				new DashboardOrderItem { Number = "#002", Customer = "Spar", Status = "Complete", DashStatusBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#8DBE98")) }
-			};
-		}
+                RecentList.ItemsSource = _orders;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Failed to load dashboard data: {ex.Message}",
+                    "Dashboard Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
 
-		//this is to export the dashboard data to a csv file
-		private void ExcelButton_Click(object sender, RoutedEventArgs e)
+        private List<DashboardOrderItem> GetDashboardOrders()
+        {
+            var orders = _orderService.GetOrders() ?? Enumerable.Empty<OrderScaled>();
+
+            return orders
+                .OrderByDescending(o => o.OrderDate)
+                .Take(10)
+                .Select(o => new DashboardOrderItem
+                {
+                    Number = o.OrderId,
+                    Customer = o.Customer,
+                    Status = o.Status
+                })
+                .ToList();
+        }
+
+        //this is to export the dashboard data to a csv file
+        private void ExcelButton_Click(object sender, RoutedEventArgs e)
 		{
 			try
 			{
