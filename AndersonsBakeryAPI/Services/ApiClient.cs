@@ -69,6 +69,20 @@ namespace AndersonsBakeryAPI.Services
         public static ApiConnectionState CurrentState { get; private set; } = ApiConnectionState.Online;
         public static string CurrentMessage { get; private set; } = "API Connected";
 
+        // JWT token stored after successful login; attached as Bearer header to every request
+        private static string? _jwtToken;
+
+        /// <summary>Stores the JWT token and applies it to the HttpClient default headers.</summary>
+        public void SetAuthToken(string token)
+        {
+            _jwtToken = token;
+            _httpClient.DefaultRequestHeaders.Authorization =
+                new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+        }
+
+        /// <summary>Clears the stored JWT token (call on logout).</summary>
+        public static void ClearAuthToken() => _jwtToken = null;
+
         private static int _activeRequestCount = 0;
 
         public static void NotifyStatus(ApiConnectionState state, string? message = null)
@@ -525,7 +539,7 @@ namespace AndersonsBakeryAPI.Services
 
         //------------------------------------------------------------------------------------------------//
 
-        // Authenticates a user against the API
+        // Authenticates a user against the API and stores the JWT token for subsequent requests
         public async Task<UserRow?> AuthenticateAsync(string username, string password)
         {
             var payload = JsonSerializer.Serialize(new { username, password });
@@ -538,7 +552,24 @@ namespace AndersonsBakeryAPI.Services
                     if (response.IsSuccessStatusCode)
                     {
                         var body = await response.Content.ReadAsStringAsync();
-                        return JsonSerializer.Deserialize<UserRow>(body, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                        // Response shape: { "token": "...", "user": { "id", "sqlId", "name", "role" } }
+                        using var doc = System.Text.Json.JsonDocument.Parse(body);
+                        var root = doc.RootElement;
+
+                        string? token = root.TryGetProperty("token", out var tokenEl) ? tokenEl.GetString() : null;
+                        if (!string.IsNullOrWhiteSpace(token))
+                            SetAuthToken(token);
+
+                        if (root.TryGetProperty("user", out var userEl))
+                        {
+                            return new UserRow
+                            {
+                                Id     = userEl.TryGetProperty("id",    out var idEl)    ? idEl.GetString()    ?? string.Empty : string.Empty,
+                                SqlId  = userEl.TryGetProperty("sqlId", out var sqEl)    ? sqEl.GetString()    ?? string.Empty : string.Empty,
+                                Name   = userEl.TryGetProperty("name",  out var nameEl)  ? nameEl.GetString()  ?? string.Empty : string.Empty,
+                                Role   = userEl.TryGetProperty("role",  out var roleEl)  ? roleEl.GetString()  ?? string.Empty : string.Empty,
+                            };
+                        }
                     }
                 }
                 catch (Exception ex)
@@ -584,13 +615,23 @@ namespace AndersonsBakeryAPI.Services
                         var body = await response.Content.ReadAsStringAsync();
                         return JsonSerializer.Deserialize<List<UserRow>>(body, new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new List<UserRow>();
                     }
+                    // Throw on auth failure so the caller's catch can fall back to local data
+                    if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized ||
+                        response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+                    {
+                        throw new UnauthorizedAccessException($"API returned {(int)response.StatusCode} for /api/users.");
+                    }
+                }
+                catch (UnauthorizedAccessException)
+                {
+                    throw; // propagate auth errors to trigger local fallback
                 }
                 catch (Exception ex)
                 {
                     _logger?.LogWarning(ex, "Error fetching users from {BaseUrl}", baseUrl);
                 }
             }
-            return new List<UserRow>();
+            throw new InvalidOperationException("Could not reach any API endpoint for /api/users.");
         }
 
         //------------------------------------------------------------------------------------------------//
