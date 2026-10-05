@@ -1,14 +1,28 @@
+<div align="center">
+
 # Anderson's Bakery Management System
-by LogiSyn
+### Created By 
+# LogiSyn
 
 [![Grace Berrill](https://img.shields.io/badge/Grace_Berrill-ST10440118-6E56CF?style=flat&logo=github&logoColor=white)](https://github.com/GraceBerrill)
 [![Adriaan Kock](https://img.shields.io/badge/Adriaan_Kock-ST10263443-6E56CF?style=flat&logo=github&logoColor=white)](https://github.com/AdriaanKock)
 [![Matthew Rosselli](https://img.shields.io/badge/Matthew_Rosselli-ST10258193-6E56CF?style=flat&logo=github&logoColor=white)](https://github.com/CharlsWint)
 [![Luc Naude](https://img.shields.io/badge/Luc_Naude-ST10443241-6E56CF?style=flat&logo=github&logoColor=white)](https://github.com/LucNaude)
 
-
 A desktop management system built for Anderson's Bakery. Written in C# / WPF (.NET 10). LogiSyn replaces manual, error prone production workbooks with a single application that turns an incoming customer order (as a PDF) into a scaled production sheet. Pans, trolleys and raw material quantities worked out automatically from each product's recipe, tracks that order through to completion and manages the bakery's users and product catalog behind role-based access control.
 
+![.NET 10](https://img.shields.io/badge/.NET-10-512BD4?style=flat&logo=dotnet&logoColor=white)
+![C#](https://img.shields.io/badge/C%23-WPF-239120?style=flat&logo=csharp&logoColor=white)
+![SQL Server](https://img.shields.io/badge/SQL_Server-LocalDB-CC2927?style=flat&logo=microsoftsqlserver&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-47A248?style=flat&logo=mongodb&logoColor=white)
+![Windows](https://img.shields.io/badge/Platform-Windows-0078D6?style=flat&logo=windows&logoColor=white)
+ 
+*A desktop app that turns customer order PDFs into ready-to-bake production sheets.*
+ 
+
+</div>
+
+#
 ## Background
 
 The original brief behind this project was automation for Anderson's Bakery:
@@ -16,20 +30,30 @@ The original brief behind this project was automation for Anderson's Bakery:
 - **Problem:** Production sheets were being consolidated manually across separate workbooks which was slow and error-prone and led to double-working and theft.
 - **Goal:** One system that incorporates each product's recipe to automatically work out raw material usage, pans and trolleys needed per order, replacing the manual workbook process.
 - **Product categories:** Chilled, Ambient, Frozen.
+#
 
 ## Table of Contents
 
+- [YouTube Video Link](#youtube-video-link)
+- [Running The System](#running-the-system)
 - [Key Features](#key-features)
 - [Tech Stack](#tech-stack)
 - [System Architecture](#system-architecture)
-- [Running the System](#running-the-system)
 - [Default Login Credentials](#default-login-credentials)
 - [Roles & Permissions](#roles--permissions)
 - [Algorithms & Core Logic](#algorithms--core-logic)
 - [Project Structure](#project-structure)
 - [Known Limitations](#known-limitations)
 - [Security Notes](#security-notes)
+- [AI Declaration](#ai-declaration)
 
+#
+## YouTube Video Link
+
+#
+## Running The System
+
+#
 ## Key Features
 
 - **Role-based login**: Admin, Manager and User accounts, each with a different sidebar and a different set of permitted actions.
@@ -41,6 +65,7 @@ The original brief behind this project was automation for Anderson's Bakery:
 - **Dashboard reporting**: Order summary cards and real Excel export / Outlook email of individual orders.
 - **Offline-first data layer**: The app keeps working even if MongoDB Atlas is unreachable, transparently falling back to a local SQL Server database.
 
+#
 ## Tech Stack
 
 | Layer | Technology |
@@ -56,6 +81,7 @@ The original brief behind this project was automation for Anderson's Bakery:
 | Email | Outlook COM automation (late-bound), with a `mailto:` fallback |
 | Password hashing | PBKDF2-HMAC-SHA256 (custom implementation, no external library) |
 
+#
 ## System Architecture
 
 LogiSyn is a WPF desktop app (`LogiSyn`) that references its backend logic (`AndersonsBakeryAPI`) and shared models (`SharedLibrary`) **directly as .NET project references** — most screens call the C# service classes in-process. There is also a real, separately-runnable ASP.NET Core Web API (same `AndersonsBakeryAPI` project, run as a web host) that currently exposes **one** controller, for Orders — it's used opportunistically by a few views (with a 2-second timeout and an automatic fallback to the in-process services if it isn't running), and exists as scaffolding for a future hosted/multi-client deployment rather than something the desktop app depends on today.
@@ -88,6 +114,7 @@ Each kind of data is persisted differently:
 
 ---
 
+#
 ## Running the System
 
 ### Prerequisites
@@ -281,3 +308,6 @@ LogiSyn/
 - `AndersonsBakeryAPI/appsettings.json` ships with a MongoDB Atlas connection string checked into source control. **Before making this repository public (or if it already is), rotate that credential and move it to [.NET user secrets](https://learn.microsoft.com/aspnet/core/security/app-secrets) or an environment variable** — see the [MongoDB configuration](#3-optional-mongodb-configuration) step above. The project is already set up to read from user secrets (`UserSecretsId` is configured in `AndersonsBakeryAPI.csproj`); only the hardcoded fallback in `appsettings.json` needs to go.
 - Local SQL LocalDB access uses Windows Integrated Security by default — no credentials are stored for it.
 - Seed account passwords above are intentionally weak/demo-only; they auto-upgrade to salted PBKDF2 hashes on first login, but should still be changed before any real data is entered.
+
+#
+## AI Declaration
