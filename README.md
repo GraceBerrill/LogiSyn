@@ -1,25 +1,27 @@
-# LogiSyn
+# Anderson's Bakery Management System
+by LogiSyn
 
-A desktop order-management system built for **Anderson's Bakery**, written in C# / WPF (.NET 10). LogiSyn replaces manual, error-prone production workbooks with a single application that turns an incoming customer order (as a PDF) into a scaled production sheet — pans, trolleys, and raw-material quantities worked out automatically from each product's recipe — tracks that order through to completion, and manages the bakery's users and product catalog behind role-based access control.
+Grace Berrill
+Adriaan 
+Luc 
+Mathew
+
+A desktop management system built for Anderson's Bakery. Written in C# / WPF (.NET 10). LogiSyn replaces manual, error prone production workbooks with a single application that turns an incoming customer order (as a PDF) into a scaled production sheet. Pans, trolleys and raw material quantities worked out automatically from each product's recipe, tracks that order through to completion and manages the bakery's users and product catalog behind role-based access control.
 
 ## Background
 
-The original brief behind this project was workbook automation for Anderson's Bakery:
+The original brief behind this project was automation for Anderson's Bakery:
 
-- **Problem:** production sheets were being consolidated manually across separate workbooks (Shoprite + Frozen orders, Spar + small customers), which was slow and error-prone, and led to double-working.
-- **Goal:** one system that incorporates each product's recipe to automatically work out raw material usage, pans and trolleys needed per order, replacing the manual workbook process.
+- **Problem:** Production sheets were being consolidated manually across separate workbooks which was slow and error-prone and led to double-working and theft.
+- **Goal:** One system that incorporates each product's recipe to automatically work out raw material usage, pans and trolleys needed per order, replacing the manual workbook process.
 - **Product categories:** Chilled, Ambient, Frozen.
-
-LogiSyn is the resulting application: upload a customer's order as a PDF, and the system reads it, matches it against the product catalog, and produces a scaled production sheet — no manual transcription required.
-
----
 
 ## Table of Contents
 
 - [Key Features](#key-features)
 - [Tech Stack](#tech-stack)
 - [System Architecture](#system-architecture)
-- [Getting Started](#getting-started)
+- [Running the System](#running-the-system)
 - [Default Login Credentials](#default-login-credentials)
 - [Roles & Permissions](#roles--permissions)
 - [Algorithms & Core Logic](#algorithms--core-logic)
@@ -27,18 +29,16 @@ LogiSyn is the resulting application: upload a customer's order as a PDF, and th
 - [Known Limitations](#known-limitations)
 - [Security Notes](#security-notes)
 
----
-
 ## Key Features
 
-- **Role-based login** — Admin, Manager, and User accounts, each with a different sidebar and a different set of permitted actions.
-- **PDF order ingestion** — drop or browse to a customer order PDF, and LogiSyn parses the order number, customer, date and line items automatically.
-- **Automatic production scaling** — every matched line item is converted into pans needed, trolleys needed, and total raw materials required, based on the product's recipe.
-- **Order tracking** — a live Orders view (auto-refreshing), a History view of completed orders, and per-order breakdown/production sheets.
-- **Product & recipe management** — add, edit and delete products, each with its own ingredient list, method, and storage location.
-- **User management** — add, edit, delete and search users, with an offline-safe sync mechanism to MongoDB.
-- **Dashboard reporting** — order summary cards, and real Excel export / Outlook email of individual orders.
-- **Offline-first data layer** — the app keeps working even if MongoDB Atlas is unreachable, transparently falling back to a local SQL Server database.
+- **Role-based login**: Admin, Manager and User accounts, each with a different sidebar and a different set of permitted actions.
+- **PDF order ingestion**: Drop or browse to a customer order PDF and LogiSyn parses the order number, customer, date and line items automatically.
+- **Automatic production scaling**: Every matched line item is converted into pans needed, trolleys needed and total raw materials required, based on the product's recipe.
+- **Order tracking**: A live Orders view (auto-refreshing), a History view of completed orders and per-order breakdown/production sheets.
+- **Product & recipe management**: Add, edit and delete products, each with its own ingredient list, method and storage location.
+- **User management**: Add, edit, delete and search users, with an offline-safe sync mechanism to MongoDB.
+- **Dashboard reporting**: Order summary cards and real Excel export / Outlook email of individual orders.
+- **Offline-first data layer**: The app keeps working even if MongoDB Atlas is unreachable, transparently falling back to a local SQL Server database.
 
 ## Tech Stack
 
@@ -87,7 +87,7 @@ Each kind of data is persisted differently:
 
 ---
 
-## Getting Started
+## Running the System
 
 ### Prerequisites
 
