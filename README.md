@@ -105,13 +105,13 @@ INSERT INTO [User] (Username, Password, Role) VALUES ('user', 'user123', 'User')
  
 By default the app connects to `(localdb)\MSSQLLocalDB`, database `LogiSynDb`, using Windows integrated security, so no further configuration is needed. To use a different SQL instance, set the `LOGISYN_CONNECTION` environment variable to a full connection string.
  
-### 3. MongoDB configuration (optional)
+### 3. MongoDB configuration 
  
-To enable cloud sync for Users and Orders, add your own MongoDB Atlas connection string using **.NET user secrets**. Don't commit it to `appsettings.json` (see [Security Notes](#security-notes)).
+To enable cloud sync for Users and Orders.
  
 ```bash
 cd AndersonsBakeryAPI
-dotnet user-secrets set "ConnectionStrings:MongoConnection" "mongodb+srv://<user>:<password>@<cluster>.mongodb.net/?appName=Cluster0"
+dotnet user-secrets set "ConnectionStrings:MongoConnection" "mongodb+srv://reannaude1_db_user:MPaJYcEqumlJbf0j@cluster0.twltvce.mongodb.net/?appName=Cluster0"
 ```
 
 Without this, Mongo calls fail fast and every screen falls back to the local SQL database, so the app is still fully usable offline.
