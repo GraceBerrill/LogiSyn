@@ -28,10 +28,12 @@
             </Grid.ColumnDefinitions>
 
             <TextBox x:Name="SearchBox" Grid.Column="0" Style="{StaticResource SearchBox}"
-                     Tag="Search Products" TextChanged="SearchBox_TextChanged"/>
+                     Tag="Search Products" TextChanged="SearchBox_TextChanged"
+                     AutomationProperties.Name="Search products by name or storage location"/>
 
             <ComboBox x:Name="StorageFilter" Grid.Column="2" Style="{StaticResource FilterCombo}"
-                      SelectionChanged="StorageFilter_SelectionChanged">
+                      SelectionChanged="StorageFilter_SelectionChanged"
+                      AutomationProperties.Name="Filter products by storage location">
                 <ComboBoxItem Content="Storage"/>
                 <ComboBoxItem Content="Freezer"/>
                 <ComboBoxItem Content="Fridge"/>
@@ -41,8 +43,16 @@
             <!-- Added Add Product Button for Admin Role -->
             <Button x:Name="BtnAddProduct" Grid.Column="3" Style="{StaticResource PrimaryButton}"
                     Content="+ Add Product" Click="BtnAddProduct_Click" Grid.ColumnSpan="2" Margin="15,0,0,0"
-                    Height="72" VerticalAlignment="Center" FontSize="21.3"/>
+                    Height="72" VerticalAlignment="Center" FontSize="21.3"
+                    AutomationProperties.Name="Add a new product"/>
         </Grid>
+
+        <!-- Loading indicator shown while product data is being fetched -->
+        <TextBlock x:Name="LoadingText" Grid.Row="3"
+                   Text="Loading products…"
+                   Style="{StaticResource HeadText}"
+                   HorizontalAlignment="Center" VerticalAlignment="Center"
+                   Visibility="Collapsed"/>
 
         <!-- Product Table Container -->
         <ContentControl Grid.Row="3" Style="{StaticResource Card28}">

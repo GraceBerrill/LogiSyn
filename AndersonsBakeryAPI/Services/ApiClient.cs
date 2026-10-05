@@ -647,8 +647,8 @@ namespace AndersonsBakeryAPI.Services
                 {
                     try
                     {
-                        // Attempt to ping the API at the current base URL
-                        var response = await _httpClient.GetAsync($"{baseUrl}/api/orders/debug/ping");
+                        // Ping /health — unauthenticated, safe to call before login
+                        var response = await _httpClient.GetAsync($"{baseUrl}/health");
                         if (response.IsSuccessStatusCode)
                         {
                             succeeded = true;

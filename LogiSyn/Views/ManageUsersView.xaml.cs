@@ -29,6 +29,8 @@ namespace LogiSyn.Views
 
         private async System.Threading.Tasks.Task LoadUsersAsync()
         {
+            LoadingText.Visibility = System.Windows.Visibility.Visible;
+
             try
             {
                 // Try API first, fall back to local router
@@ -47,6 +49,10 @@ namespace LogiSyn.Views
                 MessageBox.Show("Failed to load users: " + ex.Message,
                                 "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 _all = new List<UserRow>();
+            }
+            finally
+            {
+                LoadingText.Visibility = System.Windows.Visibility.Collapsed;
             }
 
             Refresh();

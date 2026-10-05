@@ -29,6 +29,8 @@ namespace LogiSyn.Views
 
         private async System.Threading.Tasks.Task LoadProductsAsync()
         {
+            LoadingText.Visibility = System.Windows.Visibility.Visible;
+
             try
             {
                 var products = await _apiClient.GetProductsAsync();
@@ -54,6 +56,10 @@ namespace LogiSyn.Views
             {
                 try { _all = _service.GetAll(); }
                 catch { _all = new List<ProductRow>(); }
+            }
+            finally
+            {
+                LoadingText.Visibility = System.Windows.Visibility.Collapsed;
             }
 
             StorageFilter.SelectedIndex = 0;

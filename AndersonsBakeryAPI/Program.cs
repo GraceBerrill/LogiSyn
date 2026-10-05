@@ -127,16 +127,53 @@ using (var scope = app.Services.CreateScope())
 {
     var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
     var db = scope.ServiceProvider.GetRequiredService<LogiSynDbContext>();
-    // Prefer migrations to ensure schema correctness. Fail fast if migrations cannot be applied.
+
     try
     {
+        var conn = db.Database.GetDbConnection();
+        conn.Open();
+
+        using var checkCmd = conn.CreateCommand();
+
+        // Check if the database already has our tables (schema existed before EF migrations were introduced)
+        checkCmd.CommandText = @"
+            SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES
+            WHERE TABLE_NAME IN ('Orders', 'Product', 'User') AND TABLE_SCHEMA = 'dbo'";
+        int existingTableCount = (int)(checkCmd.ExecuteScalar() ?? 0);
+
+        if (existingTableCount > 0)
+        {
+            // Schema already exists — ensure the EF migrations history table exists and
+            // mark InitialCreate as applied so Migrate() doesn't try to recreate the tables.
+            using var historyCmd = conn.CreateCommand();
+            historyCmd.CommandText = @"
+                IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = '__EFMigrationsHistory')
+                BEGIN
+                    CREATE TABLE [__EFMigrationsHistory] (
+                        [MigrationId]    NVARCHAR(150) NOT NULL,
+                        [ProductVersion] NVARCHAR(32)  NOT NULL,
+                        CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY ([MigrationId])
+                    );
+                END
+
+                IF NOT EXISTS (SELECT 1 FROM [__EFMigrationsHistory] WHERE [MigrationId] = '20261005191617_InitialCreate')
+                BEGIN
+                    INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+                    VALUES ('20261005191617_InitialCreate', '10.0.12');
+                END";
+            historyCmd.ExecuteNonQuery();
+            logger.LogInformation("Pre-existing schema detected; InitialCreate migration marked as applied.");
+        }
+
+        conn.Close();
+
+        // Now safe to call Migrate() — it will apply any future migrations only
         db.Database.Migrate();
         logger.LogInformation("SQL database migrations applied successfully.");
     }
     catch (Exception ex)
     {
         logger.LogCritical(ex, "Failed to apply EF Core migrations. Startup cannot continue.");
-        // Rethrow to stop application startup so deployment can detect and correct schema issues.
         throw;
     }
 }
