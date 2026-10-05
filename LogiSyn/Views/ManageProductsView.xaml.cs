@@ -7,7 +7,6 @@ using System.Windows.Media;
 using SharedLibrary.Model;
 using AndersonsBakeryAPI.Services;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace LogiSyn.Views
 {
@@ -22,7 +21,7 @@ namespace LogiSyn.Views
         {
             InitializeComponent();
 
-            DateText.Text = SampleData.Today();
+            DateText.Text = DateTime.Now.ToString("yyyy-MM-dd");
             _service = App.ServiceProvider.GetService<ProductService>() ?? new ProductService();
 
             Loaded += async (s, e) => await LoadProductsAsync();
@@ -137,7 +136,15 @@ namespace LogiSyn.Views
                 }
                 else
                 {
-                    detail = SampleData.DetailFor(row);
+                    // Fallback: construct a minimal ProductDetail from the product row when sample data is not available
+                    detail = new SharedLibrary.Model.ProductDetail
+                    {
+                        Name = row.Name,
+                        DateAdded = string.Empty,
+                        Ingredients = new System.Collections.Generic.List<SharedLibrary.Model.IngredientLine>(),
+                        Method = string.Empty,
+                        Storage = row.Storage
+                    };
                 }
 
                 var modal = new ProductDetailModal(detail, editable);
@@ -156,7 +163,16 @@ namespace LogiSyn.Views
             }
             catch
             {
-                var fallbackModal = new ProductDetailModal(SampleData.DetailFor(row), editable);
+                // If an exception occurs, attempt to show a minimal detail modal constructed from the row
+                var fallbackDetail = new SharedLibrary.Model.ProductDetail
+                {
+                    Name = row?.Name ?? string.Empty,
+                    DateAdded = string.Empty,
+                    Ingredients = new System.Collections.Generic.List<SharedLibrary.Model.IngredientLine>(),
+                    Method = string.Empty,
+                    Storage = row?.Storage ?? string.Empty
+                };
+                var fallbackModal = new ProductDetailModal(fallbackDetail, editable);
                 fallbackModal.Saved += () =>
                 {
                     try
