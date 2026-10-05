@@ -19,9 +19,8 @@ A desktop management system built for Anderson's Bakery. Written in C# / WPF (.N
  
 *A desktop app that turns customer order PDFs into ready-to-bake production sheets.*
  
- ![Dashboard screenshot](Images/Group34.png)
- ![Dashboard screenshot](Images/image002.jpg)
-
+<img src="Images/AndersonBakery.png" alt="Anderson's Silwood Bakery logo" width="200">
+<img src="Images/Logisyn.png" alt="LogiSyn logo" width="150">
 
 </div>
 
@@ -52,6 +51,11 @@ The original brief behind this project was automation for Anderson's Bakery:
 
 #
 ## YouTube Video Link
+**See LogiSyn in action:** a full walkthrough of the system, from login to completed order.
+
+<a href="https://www.youtube.com/watch?v=VIDEO_ID">
+  <img src="https://img.shields.io/badge/Watch_the_Demo-FF0000?style=for-the-badge&logo=youtube&logoColor=white" alt="Click here to watch on YouTube">
+</a>
 
 #
 ## Running The System
