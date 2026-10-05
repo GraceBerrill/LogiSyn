@@ -18,7 +18,7 @@ namespace AndersonsBakeryAPI.Services
         {
             const string query =
                 "SELECT Id, MongoId, Username, Password, Role, DateAdded " +
-                "FROM [User] " +
+                "FROM [Users] " +
                 "WHERE Username = @Username";
 
             using var conn = new SqlConnection(GetConnectionString());
@@ -63,7 +63,7 @@ namespace AndersonsBakeryAPI.Services
                     string upgradedHash = PasswordHasher.HashPassword(password);
 
                     using var updateCmd = new SqlCommand(
-                        "UPDATE [User] SET Password = @Password WHERE Id = @Id",
+                    "UPDATE [Users] SET Password = @Password WHERE Id = @Id",
                         conn);
 
                     updateCmd.Parameters.AddWithValue("@Password", upgradedHash);
