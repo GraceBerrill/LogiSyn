@@ -118,7 +118,7 @@ namespace AndersonsBakeryAPI.Data
             });
             modelBuilder.Entity<UserRow>(entity =>
             {
-                entity.ToTable("Users");
+                entity.ToTable("User");
                 entity.HasKey(u => u.SqlId);
                 entity.Property(u => u.SqlId)
                     .HasColumnName("Id")
