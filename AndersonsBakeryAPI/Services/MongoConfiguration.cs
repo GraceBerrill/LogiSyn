@@ -19,10 +19,16 @@ namespace AndersonsBakeryAPI.Services
         public static string GetConnectionString()
         {
             var configuration = BuildConfiguration();
-            return configuration.GetConnectionString("MongoConnection")
-                ?? configuration["MongoConnection"]
-                ?? throw new InvalidOperationException(
+            var conn = configuration.GetConnectionString("MongoConnection")
+                ?? configuration["MongoConnection"];
+
+            if (string.IsNullOrWhiteSpace(conn))
+            {
+                throw new InvalidOperationException(
                     "MongoDB connection string was not found. Configure ConnectionStrings:MongoConnection in User Secrets.");
+            }
+
+            return conn;
         }
 
         public static string GetDatabaseName()
