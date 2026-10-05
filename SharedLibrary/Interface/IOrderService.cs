@@ -1,4 +1,4 @@
-﻿using SharedLibrary.Model;
+using SharedLibrary.Model;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -26,5 +26,6 @@ namespace SharedLibrary.Interface
         Task<OrderScaled> SaveOrderAsync(OrderScaled order);
         Task CompleteOrderAsync(string orderId, Action<OrderScaled>? recordOrderData = null);
         Task CompleteOrderAsync(string orderId, OrderScaled completedOrder);
+        void InvalidateCache();
     }
 }

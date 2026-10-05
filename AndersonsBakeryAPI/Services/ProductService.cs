@@ -58,9 +58,30 @@ namespace AndersonsBakeryAPI.Services
                         Ingredients = ingredients ?? new List<IngredientRequirement>()
                     });
                 }
-                if (sqlProducts.Count > 0) return sqlProducts;
+
+                if (sqlProducts.Count > 0)
+                {
+                    // Ensure any products with empty ingredients are populated from default catalog
+                    var defaults = DefaultProductCatalog();
+                    foreach (var p in sqlProducts)
+                    {
+                        if (p.Ingredients == null || p.Ingredients.Count == 0)
+                        {
+                            var match = defaults.FirstOrDefault(d => string.Equals(d.ProductName, p.ProductName, StringComparison.OrdinalIgnoreCase));
+                            if (match != null && match.Ingredients.Count > 0)
+                            {
+                                p.Ingredients = new List<IngredientRequirement>(match.Ingredients);
+                                if (string.IsNullOrWhiteSpace(p.Method)) p.Method = match.Method;
+                            }
+                        }
+                    }
+                    return sqlProducts;
+                }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[ProductService] Error loading products from SQL: {ex.Message}");
+            }
 
             var file = ProductsFilePath();
             if (File.Exists(file))
@@ -69,7 +90,22 @@ namespace AndersonsBakeryAPI.Services
                 {
                     var prodList = JsonSerializer.Deserialize<List<Product>>(File.ReadAllText(file));
                     if (prodList != null && prodList.Count > 0)
+                    {
+                        var defaults = DefaultProductCatalog();
+                        foreach (var p in prodList)
+                        {
+                            if (p.Ingredients == null || p.Ingredients.Count == 0)
+                            {
+                                var match = defaults.FirstOrDefault(d => string.Equals(d.ProductName, p.ProductName, StringComparison.OrdinalIgnoreCase));
+                                if (match != null && match.Ingredients.Count > 0)
+                                {
+                                    p.Ingredients = new List<IngredientRequirement>(match.Ingredients);
+                                    if (string.IsNullOrWhiteSpace(p.Method)) p.Method = match.Method;
+                                }
+                            }
+                        }
                         return prodList;
+                    }
                 }
                 catch { }
 
@@ -78,27 +114,35 @@ namespace AndersonsBakeryAPI.Services
                     var rowList = JsonSerializer.Deserialize<List<ProductRow>>(File.ReadAllText(file));
                     if (rowList != null && rowList.Count > 0)
                     {
-                        return rowList.ConvertAll(r => new Product
+                        var defaults = DefaultProductCatalog();
+                        return rowList.ConvertAll(r =>
                         {
-                            ProductName = r.Name,
-                            PricePerUnit = ParsePrice(r.Price),
-                            SellBy = ParseInt(r.SellBy),
-                            BestBefore = ParseInt(r.BestBefore),
-                            StorageLocation = r.Storage
+                            var match = defaults.FirstOrDefault(d => string.Equals(d.ProductName, r.Name, StringComparison.OrdinalIgnoreCase));
+                            return new Product
+                            {
+                                ProductName = r.Name,
+                                PricePerUnit = ParsePrice(r.Price),
+                                SellBy = ParseInt(r.SellBy),
+                                BestBefore = ParseInt(r.BestBefore),
+                                StorageLocation = r.Storage,
+                                Method = match?.Method ?? string.Empty,
+                                Ingredients = match?.Ingredients != null ? new List<IngredientRequirement>(match.Ingredients) : new List<IngredientRequirement>()
+                            };
                         });
                     }
                 }
                 catch { }
             }
 
-            return GetAll().ConvertAll(r => new Product
+            var fallbackCatalog = DefaultProductCatalog();
+            // Seed SQL and local JSON file with fallback catalog if empty
+            try
             {
-                ProductName = r.Name,
-                PricePerUnit = ParsePrice(r.Price),
-                SellBy = ParseInt(r.SellBy),
-                BestBefore = ParseInt(r.BestBefore),
-                StorageLocation = r.Storage
-            });
+                File.WriteAllText(file, JsonSerializer.Serialize(fallbackCatalog, new JsonSerializerOptions { WriteIndented = true }));
+            }
+            catch { }
+
+            return fallbackCatalog;
         }
 
         // Get product rows for UI: prefer SQL, fall back to JSON. JSON may be either List<Product> or legacy List<ProductRow>.
@@ -191,37 +235,14 @@ namespace AndersonsBakeryAPI.Services
                 var insertedId = cmd.ExecuteScalar();
                 if (insertedId != null && insertedId != DBNull.Value)
                     product.ProductID = Convert.ToInt32(insertedId);
-                return;
             }
-            catch { }
-
-            var file = ProductsFilePath();
-            List<Product> prodList;
-            if (File.Exists(file))
+            catch (Exception ex)
             {
-                try { prodList = JsonSerializer.Deserialize<List<Product>>(File.ReadAllText(file)) ?? new List<Product>(); }
-                catch
-                {
-                    try
-                    {
-                        var rows = JsonSerializer.Deserialize<List<ProductRow>>(File.ReadAllText(file)) ?? new List<ProductRow>();
-                        prodList = rows.ConvertAll(r => new Product
-                        {
-                            ProductName = r.Name,
-                            PricePerUnit = ParsePrice(r.Price),
-                            SellBy = ParseInt(r.SellBy),
-                            BestBefore = ParseInt(r.BestBefore),
-                            StorageLocation = r.Storage
-                        });
-                    }
-                    catch { prodList = new List<Product>(); }
-                }
+                Console.WriteLine($"[ProductService] Error adding product to SQL: {ex.Message}");
             }
-            else prodList = new List<Product>();
 
-            product.ProductID = prodList.Count > 0 ? prodList[^1].ProductID + 1 : 1;
-            prodList.Add(product);
-            File.WriteAllText(file, JsonSerializer.Serialize(prodList, new JsonSerializerOptions { WriteIndented = true }));
+            // Always synchronize local JSON file as well so offline storage stays updated
+            PersistProductToFile(product);
         }
 
         // Add using older ProductRow (keeps backward compatibility)
@@ -456,6 +477,169 @@ namespace AndersonsBakeryAPI.Services
             {
                 new ProductRow { Name = "Hamburger Rolls", Price = "R24.99", SellBy = "5", BestBefore = "5", Storage = "Freezer" },
                 new ProductRow { Name = "Hotdog Rolls", Price = "R24.99", SellBy = "6", BestBefore = "6", Storage = "Freezer" }
+            };
+        }
+
+        private void PersistProductToFile(Product product)
+        {
+            try
+            {
+                var file = ProductsFilePath();
+                List<Product> prodList;
+                if (File.Exists(file))
+                {
+                    try { prodList = JsonSerializer.Deserialize<List<Product>>(File.ReadAllText(file)) ?? new List<Product>(); }
+                    catch
+                    {
+                        try
+                        {
+                            var rows = JsonSerializer.Deserialize<List<ProductRow>>(File.ReadAllText(file)) ?? new List<ProductRow>();
+                            prodList = rows.ConvertAll(r => new Product
+                            {
+                                ProductName = r.Name,
+                                PricePerUnit = ParsePrice(r.Price),
+                                SellBy = ParseInt(r.SellBy),
+                                BestBefore = ParseInt(r.BestBefore),
+                                StorageLocation = r.Storage
+                            });
+                        }
+                        catch { prodList = new List<Product>(); }
+                    }
+                }
+                else prodList = new List<Product>();
+
+                var existingIdx = prodList.FindIndex(p => string.Equals(p.ProductName, product.ProductName, StringComparison.OrdinalIgnoreCase) || (product.ProductID > 0 && p.ProductID == product.ProductID));
+                if (existingIdx >= 0)
+                {
+                    prodList[existingIdx] = product;
+                }
+                else
+                {
+                    if (product.ProductID <= 0)
+                        product.ProductID = prodList.Count > 0 ? prodList[^1].ProductID + 1 : 1;
+                    prodList.Add(product);
+                }
+
+                File.WriteAllText(file, JsonSerializer.Serialize(prodList, new JsonSerializerOptions { WriteIndented = true }));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[ProductService] Error saving product to file: {ex.Message}");
+            }
+        }
+
+        private static List<Product> DefaultProductCatalog()
+        {
+            return new List<Product>
+            {
+                new Product
+                {
+                    ProductID = 1,
+                    ProductName = "Hamburger Rolls",
+                    PricePerUnit = 24.99m,
+                    SellBy = 5,
+                    BestBefore = 5,
+                    StorageLocation = "Freezer",
+                    Method = "Mix dough for 10 minutes. Shape into rolls. Prove at 35C for 45 minutes. Bake at 200C for 15 minutes.",
+                    Ingredients = new List<IngredientRequirement>
+                    {
+                        new IngredientRequirement { IngredientName = "Flour", Quantity = 0.020m, Unit = "bags" },
+                        new IngredientRequirement { IngredientName = "Eggs", Quantity = 0.080m, Unit = "dozen" },
+                        new IngredientRequirement { IngredientName = "Salt", Quantity = 0.016m, Unit = "bags" },
+                        new IngredientRequirement { IngredientName = "Butter", Quantity = 0.016m, Unit = "bags" }
+                    }
+                },
+                new Product
+                {
+                    ProductID = 2,
+                    ProductName = "Hotdog Rolls",
+                    PricePerUnit = 24.99m,
+                    SellBy = 6,
+                    BestBefore = 6,
+                    StorageLocation = "Freezer",
+                    Method = "Mix ingredients until smooth. Proof for 40 minutes. Bake at 190C for 18 minutes.",
+                    Ingredients = new List<IngredientRequirement>
+                    {
+                        new IngredientRequirement { IngredientName = "Flour", Quantity = 0.060m, Unit = "bags" },
+                        new IngredientRequirement { IngredientName = "Eggs", Quantity = 0.270m, Unit = "dozen" },
+                        new IngredientRequirement { IngredientName = "Salt", Quantity = 0.030m, Unit = "bags" }
+                    }
+                },
+                new Product
+                {
+                    ProductID = 3,
+                    ProductName = "Croissants",
+                    PricePerUnit = 32.50m,
+                    SellBy = 4,
+                    BestBefore = 4,
+                    StorageLocation = "Ambient",
+                    Method = "Laminate butter into dough. Rest overnight. Shape and bake at 210C for 20 minutes.",
+                    Ingredients = new List<IngredientRequirement>
+                    {
+                        new IngredientRequirement { IngredientName = "Flour", Quantity = 0.045m, Unit = "bags" },
+                        new IngredientRequirement { IngredientName = "Eggs", Quantity = 0.181m, Unit = "dozen" },
+                        new IngredientRequirement { IngredientName = "Salt", Quantity = 0.036m, Unit = "bags" }
+                    }
+                },
+                new Product
+                {
+                    ProductID = 4,
+                    ProductName = "White Panini",
+                    PricePerUnit = 28.00m,
+                    SellBy = 5,
+                    BestBefore = 5,
+                    StorageLocation = "Ambient",
+                    Method = "Knead dough, ferment for 2 hours, shape into paninis, grill or bake lightly.",
+                    Ingredients = new List<IngredientRequirement>
+                    {
+                        new IngredientRequirement { IngredientName = "Flour", Quantity = 0.022m, Unit = "bags" },
+                        new IngredientRequirement { IngredientName = "Salt", Quantity = 0.010m, Unit = "bags" }
+                    }
+                },
+                new Product
+                {
+                    ProductID = 5,
+                    ProductName = "Chelsea Bun",
+                    PricePerUnit = 19.99m,
+                    SellBy = 3,
+                    BestBefore = 3,
+                    StorageLocation = "Ambient",
+                    Method = "Roll dough with currants and cinnamon sugar. Cut into slices, proof, and bake at 180C.",
+                    Ingredients = new List<IngredientRequirement>
+                    {
+                        new IngredientRequirement { IngredientName = "Flour", Quantity = 0.035m, Unit = "bags" },
+                        new IngredientRequirement { IngredientName = "Butter", Quantity = 0.020m, Unit = "bags" }
+                    }
+                },
+                new Product
+                {
+                    ProductID = 6,
+                    ProductName = "Bread",
+                    PricePerUnit = 18.50m,
+                    SellBy = 4,
+                    BestBefore = 4,
+                    StorageLocation = "Ambient",
+                    Method = "Knead flour, water, yeast, salt. Bulk ferment, shape loaves, final proof, bake at 220C.",
+                    Ingredients = new List<IngredientRequirement>
+                    {
+                        new IngredientRequirement { IngredientName = "Flour", Quantity = 0.050m, Unit = "bags" },
+                        new IngredientRequirement { IngredientName = "Salt", Quantity = 0.015m, Unit = "bags" }
+                    }
+                },
+                new Product
+                {
+                    ProductID = 7,
+                    ProductName = "Apple Juice",
+                    PricePerUnit = 22.00m,
+                    SellBy = 14,
+                    BestBefore = 30,
+                    StorageLocation = "Chilled",
+                    Method = "Press fresh apples, filter, blend and pasteurize before cold bottling.",
+                    Ingredients = new List<IngredientRequirement>
+                    {
+                        new IngredientRequirement { IngredientName = "Apple Concentrate", Quantity = 1.0m, Unit = "kg" }
+                    }
+                }
             };
         }
     }

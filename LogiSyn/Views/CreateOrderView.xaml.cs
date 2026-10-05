@@ -12,6 +12,7 @@ namespace LogiSyn.Views
     public partial class CreateOrderView : UserControl
     {
         private readonly OrderService _orderService = new OrderService();
+        private readonly ExcelOrderService _excelService = new ExcelOrderService();
         private readonly ApiClient _apiClient = new ApiClient();
         private string? _file;
 
@@ -82,21 +83,35 @@ namespace LogiSyn.Views
             try
             {
                 OrderScaled? order = null;
+                string ext = Path.GetExtension(_file).ToLowerInvariant();
 
-                // Attempt to parse the order using the API client first
-                try
+                if (ext == ".xlsx" || ext == ".xls" || ext == ".csv")
                 {
-                    order = await _apiClient.ParsePdfOrderAsync(_file);
+                    order = await Task.Run(() => _excelService.ReadOrderFromExcel(_file));
                 }
-                catch
+                else if (ext == ".pdf")
                 {
-                    // API parsing not available or failed; fallback to local parsing
-                }
+                    // Attempt to parse the order using the API client first
+                    try
+                    {
+                        order = await _apiClient.ParsePdfOrderAsync(_file);
+                    }
+                    catch
+                    {
+                        // API parsing not available or failed; fallback to local parsing
+                    }
 
-                // Fall back to local parsing on background thread so the UI spinner animates smoothly
-                if (order == null)
+                    // Fall back to local parsing on background thread so the UI spinner animates smoothly
+                    if (order == null)
+                    {
+                        order = await Task.Run(() => _orderService.ReadAndScaleOrder(_file));
+                    }
+                }
+                else
                 {
-                    order = await Task.Run(() => _orderService.ReadAndScaleOrder(_file));
+                    MessageBox.Show("Unsupported file type. Please select an Excel (.xlsx, .xls, .csv) or PDF (.pdf) file.",
+                                    "Invalid File", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
                 }
 
                 if (order != null)
@@ -105,7 +120,7 @@ namespace LogiSyn.Views
                 }
                 else
                 {
-                    MessageBox.Show("Unable to parse the order file. Please verify that the selected file is a valid order PDF.",
+                    MessageBox.Show("Unable to parse the order file. Please verify that the selected file is a valid order file.",
                                     "Parse Error", MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
             }

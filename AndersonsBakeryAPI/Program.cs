@@ -48,6 +48,7 @@ var builder = WebApplication.CreateBuilder(args);
     builder.Services.AddScoped<SqlOrderRepository>();
     builder.Services.AddScoped<IProductService, ProductService>();
     builder.Services.AddScoped<ProductService>();
+    builder.Services.AddScoped<ITempRecipeService, TempRecipeService>();
     builder.Services.AddScoped<TempRecipeService>();
     builder.Services.AddScoped<UserService>();
     builder.Services.AddScoped<LoginService>();
@@ -57,7 +58,8 @@ var builder = WebApplication.CreateBuilder(args);
         var productService = sp.GetRequiredService<IProductService>();
         var mongoRepo = sp.GetService<MongoOrderRepository>();
         var sqlRepo = sp.GetService<SqlOrderRepository>();
-        return new OrderService(productService, mongoRepo, sqlRepo);
+        var recipeService = sp.GetService<ITempRecipeService>();
+        return new OrderService(productService, mongoRepo, sqlRepo, recipeService);
     });
 
     builder.Services.AddControllers();

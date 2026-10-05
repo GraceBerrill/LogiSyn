@@ -216,7 +216,7 @@ namespace AndersonsBakeryAPI.Services
             // Read the Excel file and update the targetOrder with actual used quantities and notes
             try
             {
-                using var workbook = new XLWorkbook(filePath);
+                using var workbook = LoadWorkbook(filePath);
                 var ws = workbook.Worksheets.FirstOrDefault();
                 if (ws == null) return false;
 
@@ -271,77 +271,168 @@ namespace AndersonsBakeryAPI.Services
                     {
                         // parsed product row information
                         string prodName = firstCell;
+                        if (prodName.Equals("Product Name", StringComparison.OrdinalIgnoreCase))
+                            continue;
+
+                        string lineName = ws.Cell(r, 2).GetString().Trim();
+                        string pansReqStr = ws.Cell(r, 3).GetString().Trim();
+                        string pansUsedStr = ws.Cell(r, 4).GetString().Trim();
+                        string trolleysReqStr = ws.Cell(r, 5).GetString().Trim();
+                        string trolleysUsedStr = ws.Cell(r, 6).GetString().Trim();
+                        string notes = ws.Cell(r, 7).GetString().Trim();
+
+                        TryParseDouble(pansReqStr, out double pansReq);
+                        TryParseDouble(pansUsedStr, out double pansUsed);
+                        TryParseDouble(trolleysReqStr, out double trolleysReq);
+                        TryParseDouble(trolleysUsedStr, out double trolleysUsed);
+
                         var pItem = targetOrder.productionItems?.FirstOrDefault(p =>
                             p.ProductName.Trim().Equals(prodName, StringComparison.OrdinalIgnoreCase) ||
-                            prodName.Contains(p.ProductName, StringComparison.OrdinalIgnoreCase));
+                            prodName.Contains(p.ProductName, StringComparison.OrdinalIgnoreCase) ||
+                            p.ProductName.Contains(prodName, StringComparison.OrdinalIgnoreCase));
 
                         if (pItem != null)
                         {
-                            string pansUsedStr = ws.Cell(r, 4).GetString().Trim();
-                            if (TryParseDouble(pansUsedStr, out double pansUsed))
-                            {
-                                pItem.packaging.PansUsed = pansUsed;
-                            }
-
-                            string trolleysUsedStr = ws.Cell(r, 6).GetString().Trim();
-                            if (TryParseDouble(trolleysUsedStr, out double trolleysUsed))
-                            {
-                                pItem.packaging.TrolleysUsed = trolleysUsed;
-                            }
-
-                            string notes = ws.Cell(r, 7).GetString().Trim();
-                            if (!string.IsNullOrEmpty(notes))
-                            {
-                                pItem.Notes = notes;
-                            }
-                        } else
+                            if (pansReq > 0) pItem.packaging.Pans = pansReq;
+                            if (pansUsed > 0) pItem.packaging.PansUsed = pansUsed;
+                            if (trolleysReq > 0) pItem.packaging.Trolleys = trolleysReq;
+                            if (trolleysUsed > 0) pItem.packaging.TrolleysUsed = trolleysUsed;
+                            if (!string.IsNullOrWhiteSpace(lineName) && string.IsNullOrWhiteSpace(pItem.ProductionLine))
+                                pItem.ProductionLine = lineName;
+                            if (!string.IsNullOrEmpty(notes)) pItem.Notes = notes;
+                        }
+                        else
                         {
-                            if (pItem == null) {
-                                string cleanProdName = prodName;
-                                int parsedAmount = 100;
-                                var match = Regex.Match(prodName, @"^(\d+)\s+(.+)$");
-                                if (match.Success)
+                            string cleanProdName = prodName;
+                            int parsedAmount = 100;
+                            var match = Regex.Match(prodName, @"^(\d+)\s+(.+)$");
+                            if (match.Success)
+                            {
+                                if (int.TryParse(match.Groups[1].Value, out int amt))
                                 {
-                                    if (int.TryParse(match.Groups[1].Value, out int amt))
-                                    {
-                                        parsedAmount = amt;
-                                    }
-                                    cleanProdName = match.Groups[2].Value.Trim();
+                                    parsedAmount = amt;
                                 }
-
-                                pItem = new ProductionItem
-                                {
-                                    ProductName = cleanProdName,
-                                    Amount = parsedAmount,
-                                    ProductionLine = "Production line 1",
-                                    packaging = new Packaging()
-                                };
-                                targetOrder.ProductionItems.Add(pItem);
+                                cleanProdName = match.Groups[2].Value.Trim();
                             }
+                            else if (pansReq > 0)
+                            {
+                                parsedAmount = (int)(pansReq * 50);
+                            }
+
+                            pItem = new ProductionItem
+                            {
+                                ProductName = cleanProdName,
+                                Amount = parsedAmount,
+                                ProductionLine = !string.IsNullOrWhiteSpace(lineName) ? lineName : "Production 1",
+                                packaging = new Packaging
+                                {
+                                    Pans = pansReq,
+                                    PansUsed = pansUsed,
+                                    Trolleys = trolleysReq,
+                                    TrolleysUsed = trolleysUsed
+                                },
+                                Notes = notes
+                            };
+                            targetOrder.ProductionItems.Add(pItem);
                         }
                     }
                     else if (currentSection == 2)
                     {
                         // parsed ingredient row information
                         string prodName = firstCell;
+                        if (prodName.Equals("Product Name", StringComparison.OrdinalIgnoreCase))
+                            continue;
+
                         string ingName = ws.Cell(r, 2).GetString().Trim();
+                        string reqStr = ws.Cell(r, 3).GetString().Trim();
+                        string addStr = ws.Cell(r, 4).GetString().Trim();
+                        string unitStr = ws.Cell(r, 5).GetString().Trim();
                         string usedStr = ws.Cell(r, 7).GetString().Trim();
 
                         var pItem = targetOrder.productionItems?.FirstOrDefault(p =>
                             p.ProductName.Trim().Equals(prodName, StringComparison.OrdinalIgnoreCase) ||
-                            prodName.Contains(p.ProductName, StringComparison.OrdinalIgnoreCase));
+                            prodName.Contains(p.ProductName, StringComparison.OrdinalIgnoreCase) ||
+                            p.ProductName.Contains(prodName, StringComparison.OrdinalIgnoreCase));
 
-                        if (pItem != null && pItem.ReqIngredients != null)
+                        if (pItem != null && !string.IsNullOrWhiteSpace(ingName))
                         {
+                            if (pItem.ReqIngredients == null)
+                            {
+                                pItem.ReqIngredients = new List<Ingredients>();
+                            }
+
                             var ing = pItem.ReqIngredients.FirstOrDefault(i =>
                                 i.IngredientName.Trim().Equals(ingName, StringComparison.OrdinalIgnoreCase));
 
-                            if (ing != null && TryParseDouble(usedStr, out double usedVal))
+                            TryParseDouble(reqStr, out double reqVal);
+                            TryParseDouble(addStr, out double addVal);
+                            TryParseDouble(usedStr, out double usedVal);
+
+                            if (ing == null)
                             {
-                                ing.AmountUsed = usedVal;
+                                ing = new Ingredients
+                                {
+                                    IngredientName = ingName,
+                                    IngredientAmount = reqVal,
+                                    AdditionsAmount = addVal,
+                                    MeasuredIngredient = !string.IsNullOrWhiteSpace(unitStr) ? unitStr : "kg",
+                                    AmountUsed = usedVal
+                                };
+                                pItem.ReqIngredients.Add(ing);
+                            }
+                            else
+                            {
+                                if (reqVal > 0) ing.IngredientAmount = reqVal;
+                                if (addVal > 0) ing.AdditionsAmount = addVal;
+                                if (!string.IsNullOrWhiteSpace(unitStr)) ing.MeasuredIngredient = unitStr;
+                                if (usedVal > 0) ing.AmountUsed = usedVal;
                             }
                         }
                     }
+                    else if (currentSection == 3)
+                    {
+                        string materialName = firstCell;
+                        if (materialName.Equals("Material", StringComparison.OrdinalIgnoreCase))
+                            continue;
+
+                        string amountStr = ws.Cell(r, 2).GetString().Trim();
+                        string unitStr = ws.Cell(r, 3).GetString().Trim();
+
+                        if (!string.IsNullOrWhiteSpace(materialName))
+                        {
+                            targetOrder.RawMaterials ??= new Dictionary<string, RawMaterialValue>(StringComparer.OrdinalIgnoreCase);
+
+                            if (TryParseDouble(amountStr, out double totalAmt))
+                            {
+                                targetOrder.RawMaterials[materialName] = new RawMaterialValue(
+                                    totalAmt,
+                                    !string.IsNullOrWhiteSpace(unitStr) ? unitStr : "kg"
+                                );
+                            }
+                        }
+                    }
+                }
+
+                // If Section 3 was missing or empty, calculate raw materials summary from production items
+                if (targetOrder.RawMaterials == null || targetOrder.RawMaterials.Count == 0)
+                {
+                    var aggregates = new Dictionary<string, (double Amount, string Unit)>(StringComparer.OrdinalIgnoreCase);
+                    foreach (var item in targetOrder.productionItems ?? new List<ProductionItem>())
+                    {
+                        foreach (var ing in item.ReqIngredients ?? new List<Ingredients>())
+                        {
+                            if (string.IsNullOrWhiteSpace(ing.IngredientName)) continue;
+                            string key = ing.IngredientName.Trim();
+                            double total = ing.IngredientAmount + ing.AdditionsAmount;
+                            string unit = !string.IsNullOrWhiteSpace(ing.MeasuredIngredient) ? ing.MeasuredIngredient : "kg";
+
+                            if (aggregates.ContainsKey(key))
+                                aggregates[key] = (aggregates[key].Amount + total, aggregates[key].Unit);
+                            else
+                                aggregates[key] = (total, unit);
+                        }
+                    }
+                    targetOrder.RawMaterials = aggregates.ToDictionary(kvp => kvp.Key, kvp => new RawMaterialValue(kvp.Value.Amount, kvp.Value.Unit));
                 }
 
                 return true;
@@ -363,7 +454,7 @@ namespace AndersonsBakeryAPI.Services
 
             try
             {
-                using var workbook = new XLWorkbook(filePath);
+                using var workbook = LoadWorkbook(filePath);
                 var ws = workbook.Worksheets.FirstOrDefault();
                 if (ws == null) return null;
 
@@ -413,6 +504,27 @@ namespace AndersonsBakeryAPI.Services
             if (string.IsNullOrWhiteSpace(text)) return false;
             string clean = text.Trim().Replace(',', '.');
             return double.TryParse(clean, NumberStyles.Any, CultureInfo.InvariantCulture, out value);
+        }
+
+        // Loads workbook from Excel (.xlsx/.xls) or converts CSV into in-memory XLWorkbook
+        private static XLWorkbook LoadWorkbook(string filePath)
+        {
+            if (filePath.EndsWith(".csv", StringComparison.OrdinalIgnoreCase))
+            {
+                var wb = new XLWorkbook();
+                var ws = wb.Worksheets.Add("Production Sheet");
+                var lines = File.ReadAllLines(filePath);
+                for (int r = 0; r < lines.Length; r++)
+                {
+                    var cols = lines[r].Split(new[] { ',', ';' });
+                    for (int c = 0; c < cols.Length; c++)
+                    {
+                        ws.Cell(r + 1, c + 1).Value = cols[c].Trim(' ', '"');
+                    }
+                }
+                return wb;
+            }
+            return new XLWorkbook(filePath);
         }
     }
 }

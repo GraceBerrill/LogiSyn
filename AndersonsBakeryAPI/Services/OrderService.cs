@@ -23,6 +23,7 @@ namespace AndersonsBakeryAPI.Services
         private readonly IProductService _productService;
         private readonly MongoOrderRepository? _mongoRepository;
         private readonly SqlOrderRepository? _sqlRepository;
+        private readonly ITempRecipeService? _recipeService;
         private static readonly List<OrderScaled> _orders = new();
         private static bool _localLoaded = false;
 
@@ -155,23 +156,25 @@ namespace AndersonsBakeryAPI.Services
 
         //------------------------------------------------------------------------------------------------//
 
-        // constructors for OrderService, allowing for dependency injection of ProductService and repositories
-        public OrderService() : this(new ProductService(), CreateDefaultMongoRepository(), CreateDefaultSqlRepository()) { }
+        // constructors for OrderService, allowing for dependency injection of ProductService, recipes, and repositories
+        public OrderService() : this(new ProductService(), CreateDefaultMongoRepository(), CreateDefaultSqlRepository(), new TempRecipeService()) { }
 
-        public OrderService(IProductService productService) : this(productService, CreateDefaultMongoRepository(), CreateDefaultSqlRepository()) { }
+        public OrderService(IProductService productService) : this(productService, CreateDefaultMongoRepository(), CreateDefaultSqlRepository(), new TempRecipeService()) { }
 
         public OrderService(MongoOrderRepository? mongoRepository, SqlOrderRepository? sqlRepository)
-            : this(new ProductService(), mongoRepository, sqlRepository) { }
+            : this(new ProductService(), mongoRepository, sqlRepository, new TempRecipeService()) { }
 
-        //------------------------------------------------------------------------------------------------//
-
-        // Constructor that initializes the OrderService with a ProductService and optional repositories for MongoDB and SQL Server
         public OrderService(IProductService productService, MongoOrderRepository? mongoRepository, SqlOrderRepository? sqlRepository)
+            : this(productService, mongoRepository, sqlRepository, new TempRecipeService()) { }
+
+        // Constructor that initializes the OrderService with ProductService, repositories, and TempRecipeService
+        public OrderService(IProductService productService, MongoOrderRepository? mongoRepository, SqlOrderRepository? sqlRepository, ITempRecipeService? recipeService)
         {
             // Use the provided ProductService or create a new one if null
             _productService = productService ?? new ProductService();
             _mongoRepository = mongoRepository;
             _sqlRepository = sqlRepository;
+            _recipeService = recipeService ?? new TempRecipeService();
 
             if (!_localLoaded)
             {
@@ -246,23 +249,51 @@ namespace AndersonsBakeryAPI.Services
                         cleanProdName = qtyMatch.Groups[2].Value.Trim();
                     }
 
+                    // Look up recipe from dynamic recipe service
+                    var recipe = _recipeService?.FindRecipeByProductName(cleanProdName)
+                                 ?? _recipeService?.FindRecipeByProductName(product.ProductName ?? string.Empty);
+
+                    int unitsPerPan = recipe != null && recipe.UnitsPerPan > 0 ? recipe.UnitsPerPan : 50;
+                    int pansPerTrolley = recipe != null && recipe.PansPerTrolley > 0 ? recipe.PansPerTrolley : 2;
+
+                    int pans = (int)Math.Ceiling((double)quantity / unitsPerPan);
+                    int trolleys = (int)Math.Ceiling((double)pans / pansPerTrolley);
+
+                    string prodArea = !string.IsNullOrWhiteSpace(recipe?.ProductionArea)
+                        ? recipe.ProductionArea
+                        : (!string.IsNullOrWhiteSpace(product.StorageLocation) ? product.StorageLocation : "Production 1");
+
                     // Create a production item based on the product and calculated quantity
                     var item = new ProductionItem
                     {
                         ProductName = cleanProdName,
                         Amount = quantity,
-                        ProductionLine = !string.IsNullOrWhiteSpace(product.StorageLocation) ? product.StorageLocation : "Production 1",
+                        ProductionLine = prodArea,
                         packaging = new Packaging
                         {
-                            Pans = (int)Math.Ceiling((double)quantity / 50),
-                            Trolleys = (int)Math.Ceiling((double)quantity / 100),
+                            Pans = pans,
+                            Trolleys = trolleys,
                             PansUsed = 0,
                             TrolleysUsed = 0
                         }
                     };
 
                     // Scale and add the required ingredients for this production item
-                    if (product.Ingredients != null && product.Ingredients.Count > 0)
+                    if (recipe != null && recipe.Ingredients != null && recipe.Ingredients.Count > 0)
+                    {
+                        foreach (var ing in recipe.Ingredients)
+                        {
+                            item.ReqIngredients.Add(new Ingredients
+                            {
+                                IngredientName = ing.Name,
+                                IngredientAmount = Math.Round(ing.AmountPerUnit * quantity, 3),
+                                AdditionsAmount = Math.Round(ing.AdditionalRatio * quantity, 3),
+                                MeasuredIngredient = ing.Unit ?? "bags",
+                                AmountUsed = 0
+                            });
+                        }
+                    }
+                    else if (product.Ingredients != null && product.Ingredients.Count > 0)
                     {
                         foreach (var ing in product.Ingredients)
                         {
@@ -270,8 +301,8 @@ namespace AndersonsBakeryAPI.Services
                             item.ReqIngredients.Add(new Ingredients
                             {
                                 IngredientName = ing.IngredientName,
-                                IngredientAmount = Math.Round(baseQty * quantity, 1),
-                                AdditionsAmount = Math.Round(baseQty * 0.1 * quantity, 1),
+                                IngredientAmount = Math.Round(baseQty * quantity, 3),
+                                AdditionsAmount = Math.Round(baseQty * 0.1 * quantity, 3),
                                 MeasuredIngredient = ing.Unit ?? "kg",
                                 AmountUsed = 0
                             });
@@ -282,16 +313,16 @@ namespace AndersonsBakeryAPI.Services
                         item.ReqIngredients.Add(new Ingredients
                         {
                             IngredientName = "Flour",
-                            IngredientAmount = Math.Round(0.04 * quantity, 1),
-                            AdditionsAmount = Math.Round(0.005 * quantity, 1),
+                            IngredientAmount = Math.Round(0.04 * quantity, 3),
+                            AdditionsAmount = Math.Round(0.005 * quantity, 3),
                             MeasuredIngredient = "kg",
                             AmountUsed = 0
                         });
                         item.ReqIngredients.Add(new Ingredients
                         {
                             IngredientName = "Yeast",
-                            IngredientAmount = Math.Round(0.01 * quantity, 1),
-                            AdditionsAmount = Math.Round(0.001 * quantity, 1),
+                            IngredientAmount = Math.Round(0.01 * quantity, 3),
+                            AdditionsAmount = Math.Round(0.001 * quantity, 3),
                             MeasuredIngredient = "kg",
                             AmountUsed = 0
                         });
@@ -403,20 +434,27 @@ namespace AndersonsBakeryAPI.Services
             }
         }
 
+        // Invalidate in-memory cache to force a fresh pull on subsequent fetches
+        public static void InvalidateCache()
+        {
+            lock (_orders)
+            {
+                _orders.Clear();
+                _localLoaded = false;
+            }
+        }
+
+        void IOrderService.InvalidateCache() => InvalidateCache();
+
         // Asynchronously fetches orders from MongoDB, falling back to SQL Server, then local memory
         public async Task<IEnumerable<OrderScaled>> GetOrdersAsync(bool forceRefresh = false)
         {
-            // If cache is populated and fresh fetch is not forced, return immediate in-memory copy
-            if (!forceRefresh)
+            if (forceRefresh)
             {
-                lock (_orders)
-                {
-                    if (_orders.Count > 0)
-                        return _orders.ToList();
-                }
+                InvalidateCache();
             }
 
-            // 1. Attempt fetch from MongoDB
+            // 1. Attempt fetch from MongoDB to synchronize and update cache
             if (_mongoRepository != null)
             {
                 try
@@ -426,7 +464,7 @@ namespace AndersonsBakeryAPI.Services
                     {
                         MergeOrders(mongoOrders);
                         SaveLocalOrders();
-                        return mongoOrders;
+                        lock (_orders) { return _orders.ToList(); }
                     }
                 }
                 catch (Exception ex)
@@ -435,7 +473,7 @@ namespace AndersonsBakeryAPI.Services
                 }
             }
 
-            // 2. Fallback: Attempt fetch from SQL Server
+            // 2. Fallback: Attempt fetch from SQL Server to synchronize and update cache
             if (_sqlRepository != null)
             {
                 try
@@ -445,7 +483,7 @@ namespace AndersonsBakeryAPI.Services
                     {
                         MergeOrders(sqlOrders);
                         SaveLocalOrders();
-                        return sqlOrders;
+                        lock (_orders) { return _orders.ToList(); }
                     }
                 }
                 catch (Exception ex)
@@ -457,6 +495,11 @@ namespace AndersonsBakeryAPI.Services
             // 3. Fallback: Return in-memory list (includes orders from Data/orders.json)
             lock (_orders)
             {
+                if (_orders.Count == 0 && !_localLoaded)
+                {
+                    LoadLocalOrders();
+                    _localLoaded = true;
+                }
                 return _orders.ToList();
             }
         }
@@ -464,12 +507,6 @@ namespace AndersonsBakeryAPI.Services
         // Synchronous wrapper
         public IEnumerable<OrderScaled> GetOrders()
         {
-            lock (_orders)
-            {
-                if (_orders.Count > 0)
-                    return _orders.ToList();
-            }
-
             try
             {
                 return Task.Run(async () => await GetOrdersAsync(forceRefresh: false)).GetAwaiter().GetResult();
@@ -703,22 +740,43 @@ namespace AndersonsBakeryAPI.Services
 
         //------------------------------------------------------------------------------------------------//
 
-        // Helper method to extract quantity from a line of text, with fallback to the last number found
+        // Helper method to extract quantity from a line of text, ignoring dates, years, and prices
         private int ExtractQuantity(string text)
         {
-            // Matches "pkts 250", "pkts | 110", or "pkts: 45"
-            var pktMatch = Regex.Match(text, @"(?:pkts\s*\|?\s*|Quantity\s*\|?\s*)(\d{1,4})\b", RegexOptions.IgnoreCase);
-            if (pktMatch.Success && int.TryParse(pktMatch.Groups[1].Value, out int pktQty))
+            if (string.IsNullOrWhiteSpace(text)) return 100;
+
+            // 1. Remove date expressions to avoid picking up day, month number, or 4-digit years (e.g. 2024, 2025, 2026)
+            string cleaned = Regex.Replace(text, @"\b\d{1,2}[\/\-\.]\d{1,2}[\/\-\.]\d{2,4}\b", " ");
+            cleaned = Regex.Replace(cleaned, @"\b\d{4}[\/\-\.]\d{1,2}[\/\-\.]\d{1,2}\b", " ");
+            cleaned = Regex.Replace(cleaned, @"\b\d{1,2}\s+(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\s+\d{4}\b", " ", RegexOptions.IgnoreCase);
+
+            // 2. Remove price contexts (e.g. R24.99, $15.00, @ 12.50, Price: 30)
+            cleaned = Regex.Replace(cleaned, @"(?:[R\$€£]|@)\s*\d+(?:\.\d+)?", " ");
+            cleaned = Regex.Replace(cleaned, @"\b(?:Price|UnitPrice|Cost|Total)\s*[:=]?\s*\d+(?:\.\d+)?", " ", RegexOptions.IgnoreCase);
+
+            // 3. Matches explicit quantity patterns like "pkts 250", "pkts | 110", "pkts: 45", "Qty: 100", "Quantity: 50", "Count: 30"
+            var explicitMatch = Regex.Match(cleaned, @"(?:pkts\s*[:\|\-]?\s*|Quantity\s*[:\|\-]?\s*|Qty\s*[:\|\-]?\s*|Units?\s*[:\|\-]?\s*)(\d{1,4})\b", RegexOptions.IgnoreCase);
+            if (explicitMatch.Success && int.TryParse(explicitMatch.Groups[1].Value, out int explicitQty) && explicitQty > 0)
             {
-                return pktQty;
+                if (explicitQty < 1990 || explicitQty > 2099)
+                    return explicitQty;
             }
 
-            // 2. Matches "Qty: 100", "Qty | 200", or "Qty 300"
-            var allNumbers = Regex.Matches(text, @"\b(\d{2,4})\b");
-            if (allNumbers.Count > 0)
+            // 4. Fallback: match standalone numbers, filtering out 4-digit calendar years (1990-2099) and 0
+            var allNumbers = Regex.Matches(cleaned, @"\b(\d{1,4})\b");
+            var validNumbers = new List<int>();
+            foreach (Match m in allNumbers)
             {
-                if (int.TryParse(allNumbers[allNumbers.Count - 1].Value, out int fallbackQty))
-                    return fallbackQty;
+                if (int.TryParse(m.Groups[1].Value, out int num))
+                {
+                    if (num >= 1990 && num <= 2099) continue; // Ignore calendar years
+                    if (num > 0) validNumbers.Add(num);
+                }
+            }
+
+            if (validNumbers.Count > 0)
+            {
+                return validNumbers[validNumbers.Count - 1];
             }
 
             return 100;
