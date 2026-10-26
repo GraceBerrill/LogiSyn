@@ -122,100 +122,107 @@ var builder = WebApplication.CreateBuilder(args);
 
     var app = builder.Build();
 
-// --- Adriaan: Ensure local SQL Server database schema exists ---
-using (var scope = app.Services.CreateScope())
+// --- Ensure SQL Server database schema exists (skip on Linux if LocalDB configured) ---
+var sqlConn = builder.Configuration.GetConnectionString("SqlServer") ?? string.Empty;
+bool isLocalDb = sqlConn.Contains("(localdb)", StringComparison.OrdinalIgnoreCase);
+
+if (!OperatingSystem.IsWindows() && (isLocalDb || string.IsNullOrWhiteSpace(sqlConn)))
 {
-    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
-    var db = scope.ServiceProvider.GetRequiredService<LogiSynDbContext>();
-
-    try
-    {
-        var conn = db.Database.GetDbConnection();
-        conn.Open();
-
-        using var checkCmd = conn.CreateCommand();
-
-        // Check if the database already has our tables (schema existed before EF migrations were introduced)
-        checkCmd.CommandText = @"
-            SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES
-            WHERE TABLE_NAME IN ('Orders', 'Product', 'User') AND TABLE_SCHEMA = 'dbo'";
-        int existingTableCount = (int)(checkCmd.ExecuteScalar() ?? 0);
-
-        if (existingTableCount > 0)
-        {
-            // Schema already exists — ensure the EF migrations history table exists and
-            // mark InitialCreate as applied so Migrate() doesn't try to recreate the tables.
-            using var historyCmd = conn.CreateCommand();
-            historyCmd.CommandText = @"
-                IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = '__EFMigrationsHistory')
-                BEGIN
-                    CREATE TABLE [__EFMigrationsHistory] (
-                        [MigrationId]    NVARCHAR(150) NOT NULL,
-                        [ProductVersion] NVARCHAR(32)  NOT NULL,
-                        CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY ([MigrationId])
-                    );
-                END
-
-                IF NOT EXISTS (SELECT 1 FROM [__EFMigrationsHistory] WHERE [MigrationId] = '20261005191617_InitialCreate')
-                BEGIN
-                    INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-                    VALUES ('20261005191617_InitialCreate', '10.0.12');
-                END";
-            historyCmd.ExecuteNonQuery();
-            logger.LogInformation("Pre-existing schema detected; InitialCreate migration marked as applied.");
-        }
-
-        conn.Close();
-
-        // Now safe to call Migrate() — it will apply any future migrations only
-        db.Database.Migrate();
-        logger.LogInformation("SQL database migrations applied successfully.");
-    }
-    catch (Exception ex)
-    {
-        logger.LogCritical(ex, "Failed to apply EF Core migrations. Startup cannot continue.");
-        throw;
-    }
+    var startupLogger = app.Services.GetRequiredService<ILogger<Program>>();
+    startupLogger.LogInformation("Running in a Linux container with LocalDB configured. Skipping local SQL migrations; cloud API operating via MongoDB Atlas.");
 }
-
-// Ensure Product table columns are sized to accept long text created by the model
-using (var scope = app.Services.CreateScope())
+else
 {
-    try
+    using (var scope = app.Services.CreateScope())
     {
         var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
         var db = scope.ServiceProvider.GetRequiredService<LogiSynDbContext>();
-        var conn = db.Database.GetDbConnection();
+
         try
         {
+            var conn = db.Database.GetDbConnection();
             conn.Open();
-            using var cmd = conn.CreateCommand();
-            // If Method or Ingredients columns are not nvarchar(max), alter them to nvarchar(max)
-            cmd.CommandText = @"IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='Product' AND COLUMN_NAME='Method' AND (CHARACTER_MAXIMUM_LENGTH IS NOT NULL AND CHARACTER_MAXIMUM_LENGTH <> -1))
-                                BEGIN
-                                    ALTER TABLE [Product] ALTER COLUMN [Method] NVARCHAR(MAX) NULL;
-                                END
-                                IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='Product' AND COLUMN_NAME='Ingredients' AND (CHARACTER_MAXIMUM_LENGTH IS NOT NULL AND CHARACTER_MAXIMUM_LENGTH <> -1))
-                                BEGIN
-                                    ALTER TABLE [Product] ALTER COLUMN [Ingredients] NVARCHAR(MAX) NULL;
-                                END";
-            cmd.CommandType = System.Data.CommandType.Text;
-            cmd.ExecuteNonQuery();
+
+            using var checkCmd = conn.CreateCommand();
+            checkCmd.CommandText = @"
+                SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES
+                WHERE TABLE_NAME IN ('Orders', 'Product', 'User') AND TABLE_SCHEMA = 'dbo'";
+            int existingTableCount = (int)(checkCmd.ExecuteScalar() ?? 0);
+
+            if (existingTableCount > 0)
+            {
+                using var historyCmd = conn.CreateCommand();
+                historyCmd.CommandText = @"
+                    IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = '__EFMigrationsHistory')
+                    BEGIN
+                        CREATE TABLE [__EFMigrationsHistory] (
+                            [MigrationId]    NVARCHAR(150) NOT NULL,
+                            [ProductVersion] NVARCHAR(32)  NOT NULL,
+                            CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY ([MigrationId])
+                        );
+                    END
+
+                    IF NOT EXISTS (SELECT 1 FROM [__EFMigrationsHistory] WHERE [MigrationId] = '20261005191617_InitialCreate')
+                    BEGIN
+                        INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+                        VALUES ('20261005191617_InitialCreate', '10.0.12');
+                    END";
+                historyCmd.ExecuteNonQuery();
+                logger.LogInformation("Pre-existing schema detected; InitialCreate migration marked as applied.");
+            }
+
+            conn.Close();
+
+            db.Database.Migrate();
+            logger.LogInformation("SQL database migrations applied successfully.");
+        }
+        catch (PlatformNotSupportedException pex)
+        {
+            logger.LogWarning("LocalDB is not supported on this platform. Skipping SQL migrations: {Message}", pex.Message);
         }
         catch (Exception ex)
         {
-            var logger2 = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
-            logger2.LogWarning(ex, "Could not alter Product columns to nvarchar(max). Continuing startup, but schema should be reviewed.");
-        }
-        finally
-        {
-            try { conn.Close(); } catch { }
+            logger.LogWarning("Could not apply SQL migrations or connect to SQL Server: {Message}. Cloud API will operate using MongoDB Atlas.", ex.Message);
         }
     }
-    catch (Exception ex)
+
+    // Ensure Product table columns are sized to accept long text
+    using (var scope = app.Services.CreateScope())
     {
-        var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
-        logger.LogWarning(ex, "Ensure Product column sizing step failed.");
+        try
+        {
+            var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+            var db = scope.ServiceProvider.GetRequiredService<LogiSynDbContext>();
+            var conn = db.Database.GetDbConnection();
+            try
+            {
+                conn.Open();
+                using var cmd = conn.CreateCommand();
+                cmd.CommandText = @"IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='Product' AND COLUMN_NAME='Method' AND (CHARACTER_MAXIMUM_LENGTH IS NOT NULL AND CHARACTER_MAXIMUM_LENGTH <> -1))
+                                    BEGIN
+                                        ALTER TABLE [Product] ALTER COLUMN [Method] NVARCHAR(MAX) NULL;
+                                    END
+                                    IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='Product' AND COLUMN_NAME='Ingredients' AND (CHARACTER_MAXIMUM_LENGTH IS NOT NULL AND CHARACTER_MAXIMUM_LENGTH <> -1))
+                                    BEGIN
+                                        ALTER TABLE [Product] ALTER COLUMN [Ingredients] NVARCHAR(MAX) NULL;
+                                    END";
+                cmd.CommandType = System.Data.CommandType.Text;
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                logger.LogWarning("Could not alter Product columns. Continuing startup: {Message}", ex.Message);
+            }
+            finally
+            {
+                try { conn.Close(); } catch { }
+            }
+        }
+        catch (Exception ex)
+        {
+            var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+            logger.LogWarning("Ensure Product column sizing step skipped: {Message}", ex.Message);
+        }
     }
 }
 
