@@ -78,10 +78,10 @@ var builder = WebApplication.CreateBuilder(args);
                 {
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
-                    ValidateIssuer = !string.IsNullOrWhiteSpace(jwtSection["Issuer"]),
-                    ValidIssuer = jwtSection["Issuer"],
-                    ValidateAudience = !string.IsNullOrWhiteSpace(jwtSection["Audience"]),
-                    ValidAudience = jwtSection["Audience"],
+                                        ValidateIssuer = true,
+                    ValidIssuer = !string.IsNullOrWhiteSpace(jwtSection["Issuer"]) ? jwtSection["Issuer"] : "LogiSyn",
+                    ValidateAudience = true,
+                    ValidAudience = !string.IsNullOrWhiteSpace(jwtSection["Audience"]) ? jwtSection["Audience"] : "LogiSynClients",
                     ValidateLifetime = true,
                     ClockSkew = TimeSpan.FromMinutes(2)
                 };
@@ -226,7 +226,7 @@ if (app.Environment.IsDevelopment())
 }
 
 // Root discovery endpoint for health check and API documentation
-app.MapGet("/", () => Results.Ok(new
+app.MapGet("/api/status", () => Results.Ok(new
 {
     service = "Anderson's Bakery Operations API",
     version = "1.0.0",
@@ -238,9 +238,13 @@ app.MapGet("/", () => Results.Ok(new
 // Expose a simple health check endpoint for monitoring and keep-alive probes
 app.MapHealthChecks("/health");
 
+app.UseDefaultFiles();
+app.UseStaticFiles();
+
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+app.MapFallbackToFile("index.html");
 
 app.Run();

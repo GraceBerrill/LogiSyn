@@ -111,7 +111,7 @@ To enable cloud sync for Users and Orders.
  
 ```bash
 cd AndersonsBakeryAPI
-dotnet user-secrets set "ConnectionStrings:MongoConnection" "mongodb+srv://reannaude1_db_user:MPaJYcEqumlJbf0j@cluster0.twltvce.mongodb.net/?appName=Cluster0"
+dotnet user-secrets set "ConnectionStrings:MongoConnection" "mongodb+srv://<username>:<password>@<cluster>.mongodb.net/?appName=Cluster0"
 ```
 
 Without this, Mongo calls fail fast and every screen falls back to the local SQL database, so the app is still fully usable offline.
@@ -216,16 +216,31 @@ Each kind of data is stored differently, depending on how important and how ofte
    (LogiSynDb)   (user secrets)
 ```
 
-### Hosted API (Render)
- 
-The Web API is containerised with Docker and deployed on Render at `https://andersons-bakery-api.onrender.com`. Docker keeps the .NET 10 runtime identical on our machines and on the server.
- 
-Render's free tier puts the container to sleep after 15 minutes of inactivity, and waking it takes 30–50 seconds. `ApiClient` handles this by trying each option in turn:
- 
-1. The Render endpoint
-2. A local development host (`https://localhost:7274` / `http://localhost:5109`), used during development only
-3. The in-process services, backed by LocalDB
-The UI shows a status badge while it waits instead of freezing.
+### Hosted API & Cloud Deployment (Render)
+
+The Web API is containerised with Docker and deployed on Render at `https://andersons-bakery-api.onrender.com`. 
+
+#### Migration Rationale: Why Render Instead of Azure
+During Task 1, an Azure App Service + Azure SQL architecture was initially outlined. The team transitioned to containerized Render hosting paired with MongoDB Atlas for three decisive operational reasons:
+1. **Cost & Sustainability:** Azure App Service tiers suitable for custom container/DB setups incur ongoing monthly hosting costs or rely on expiring student subscriptions. Anderson's Bakery is an independent local business requiring a sustainable, zero-maintenance operational cost model. Render's managed container platform provides zero-cost hosting that strictly adheres to the client's financial constraints.
+2. **Container Parity:** Packaging the API into an official Microsoft .NET 10 Docker image (`mcr.microsoft.com/dotnet/aspnet:10.0`) guarantees strict environment parity across local development (Windows/macOS/Linux) and production cloud hosting without platform-specific Azure configuration drift.
+3. **High-Availability Hybrid Design:** By pairing cloud Render hosting with in-process LocalDB fallback and an automated keep-alive ping, the factory floor experiences zero downtime even during cloud network interruptions.
+
+#### 24/7 Keep-Alive & Health Monitoring
+Render's free tier puts inactive containers to sleep after 15 minutes. To eliminate cold-start delays (30–50 second wake-up times), an automated keep-alive pinger calls `/api/orders/debug/ping` and `/health` every 10 minutes. This ensures the live API and health probes remain responsive 24/7. In addition, the WPF desktop app's `ApiClient` provides resilient multi-tier failover:
+1. Primary: The live Render cloud endpoint
+2. Secondary: Local development host (`https://localhost:7274` / `http://localhost:5109`)
+3. Tertiary: In-process services backed by local SQL LocalDB
+An amber connection status badge on the desktop dashboard immediately informs users if the app falls back to local mode.
+
+### Mobile Web Companion (Browser Version)
+To satisfy the mobile bakery floor access requirement planned in Task 1 without forcing factory staff to install unmanaged native APK files on personal phones, the API serves a responsive **Mobile Web Companion** directly from `https://andersons-bakery-api.onrender.com/`. 
+
+Floor supervisors and bakers can open the URL in any mobile browser to:
+- View live incoming and ongoing orders in real time.
+- Filter orders by status (**Pending**, **In Production**, **Completed**).
+- Inspect recipe-scaled ingredient weights, pan counts, and trolley allocations per batch.
+- Update order statuses on the fly directly from the factory floor.
 
 #
 ## Design Decisions
@@ -346,7 +361,7 @@ LogiSyn/
 | `Dev` | Integration branch for finished features |
 | `Fix` | Bug fixes, refactoring and security fixes |
  
-A GitHub Actions workflow (`.github/workflows/ci-cd.yml`) runs on every push and pull request. It restores NuGet packages, builds `LogiSyn.slnx` in Release mode, runs all 19 unit tests, and uploads the zipped build as a downloadable artifact. A pull request is only merged once the build and tests pass.
+A GitHub Actions workflow (`.github/workflows/ci-cd.yml`) runs on every push and pull request. It restores NuGet packages, builds `LogiSyn.slnx` in Release mode, runs all 26 unit tests, and uploads the zipped build as a downloadable artifact. A pull request is only merged once the build and tests pass.
 
 #
 ## AI Declaration

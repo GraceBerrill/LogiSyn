@@ -1,0 +1,22 @@
+name: 24/7 Hosting Keep-Alive & Health Ping
+
+on:
+  schedule:
+    # Run every 10 minutes to prevent Render free-tier spin down
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+
+jobs:
+  ping:
+    name: Ping Cloud API & Health Probes
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Keep-Alive Ping
+        run: |
+          echo "Pinging Anderson's Bakery Live Cloud API..."
+          response=$(curl -s -w "\nHTTP_STATUS:%{http_code}" --max-time 60 https://andersons-bakery-api.onrender.com/api/orders/debug/ping)
+          echo "$response"
+          
+          echo "Pinging /health endpoint..."
+          health_response=$(curl -s -w "\nHTTP_STATUS:%{http_code}" --max-time 30 https://andersons-bakery-api.onrender.com/health)
+          echo "$health_response"

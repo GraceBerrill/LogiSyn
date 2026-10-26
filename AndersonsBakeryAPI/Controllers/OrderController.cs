@@ -96,6 +96,9 @@ namespace AndersonsBakeryAPI.Controllers
 
         //------------------------------------------------------------------------------------------------//
 
+        // Allowed valid order statuses to ensure data integrity
+        private static readonly string[] AllowedStatuses = new[] { "Pending", "In Production", "Completed" };
+
         // POST endpoint to save a scaled order to the database
         [HttpPost]
         public async Task<ActionResult<OrderScaled>> SaveOrder([FromBody] OrderScaled order)
@@ -103,6 +106,16 @@ namespace AndersonsBakeryAPI.Controllers
             // Log the request and validate the order payload
             _logger?.LogInformation("POST /api/orders called with SaveOrder");
             if (order == null) return BadRequest("Invalid order payload.");
+
+            // Enforce valid order status
+            if (string.IsNullOrWhiteSpace(order.Status))
+            {
+                order.Status = "Pending";
+            }
+            else if (!AllowedStatuses.Contains(order.Status.Trim(), StringComparer.OrdinalIgnoreCase))
+            {
+                return BadRequest(new { message = $"Invalid status '{order.Status}'. Allowed values are: {string.Join(", ", AllowedStatuses)}." });
+            }
 
             // Log the order details and call the order service to save the order
             _logger?.LogInformation("Saving order: ID={OrderId}, Customer={Customer}, Status={Status}", order.OrderId, order.Customer, order.Status);
@@ -120,10 +133,17 @@ namespace AndersonsBakeryAPI.Controllers
             _logger?.LogInformation("PUT /api/orders/{Id}/status called with {Status}", id, status);
             if (string.IsNullOrWhiteSpace(status))
                 return BadRequest(new { message = "Status value is required." });
+
+            var trimmedStatus = status.Trim();
+            if (!AllowedStatuses.Contains(trimmedStatus, StringComparer.OrdinalIgnoreCase))
+            {
+                return BadRequest(new { message = $"Invalid status '{status}'. Allowed values are: {string.Join(", ", AllowedStatuses)}." });
+            }
+
             var order = await _orderService.GetOrderByIdAsync(id);
             if (order == null) return NotFound();
 
-            order.Status = status;
+            order.Status = trimmedStatus;
             await _orderService.SaveOrderAsync(order);
             return NoContent();
         }
