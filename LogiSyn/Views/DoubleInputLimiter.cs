@@ -8,10 +8,8 @@ using System.Windows.Input;
 
 namespace LogiSyn.Views
 {
-    /// <summary>
-    /// Attached property and behavior that restricts a TextBox to only accept valid double numeric values.
-    /// Prevents non-numeric characters, letters, symbols, spaces, multiple decimal points, and invalid pasted text.
-    /// </summary>
+    // Attached property and behavior that restricts a TextBox to only accept valid double numeric values.
+    // Prevents non-numeric characters, letters, symbols, spaces, multiple decimal points, and invalid pasted text.
     public static class DoubleInputLimiter
     {
         public static readonly DependencyProperty IsEnabledProperty =

@@ -5,10 +5,8 @@ using System.Windows.Input;
 
 namespace LogiSyn.Views
 {
-    /// <summary>
-    /// Attached property and behavior that restricts a TextBox to only accept valid integer digits (0-9).
-    /// Prevents non-numeric characters, letters, symbols, spaces, decimals, and invalid pasted text.
-    /// </summary>
+    // Attached property and behavior that restricts a TextBox to only accept valid integer digits (0-9).
+    // Prevents non-numeric characters, letters, symbols, spaces, decimals, and invalid pasted text.
     public static class IntegerInputLimiter
     {
         public static readonly DependencyProperty IsEnabledProperty =
@@ -82,4 +80,4 @@ namespace LogiSyn.Views
         }
     }
 }
-
+/*********************************************EOF*******************************************/

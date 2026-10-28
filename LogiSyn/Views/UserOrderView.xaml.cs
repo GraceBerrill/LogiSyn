@@ -1,70 +1,37 @@
-// Adriaan
 using System;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using LogiSyn.ViewModels;
 using SharedLibrary.Model;
-using AndersonsBakeryAPI.Services;
-using Microsoft.Extensions.Logging;
 
 namespace LogiSyn.Views
 {
+    // Interaction logic for UserOrderView.xaml.
+    // Order loading and Excel import processing are managed by UserOrdersViewModel.
     public partial class UserOrdersView : UserControl
     {
-        private readonly ApiClient _apiClient = new ApiClient();
-        private readonly OrderService _orderService = new OrderService();
-        private readonly ExcelOrderService _excelService = new ExcelOrderService();
+        public UserOrdersViewModel ViewModel { get; }
 
-        //------------------------------------------------------------------------------------------------//
-
-        // Constructor for the UserOrdersView class
         public UserOrdersView()
         {
             InitializeComponent();
 
-            DateText.Text = DateTime.Now.ToString("dd MMMM yyyy");
+            ViewModel = new UserOrdersViewModel();
+            DataContext = ViewModel;
 
-            LoadOrdersAsync();
-        }
+            DateText.Text = ViewModel.DateText;
 
-        //------------------------------------------------------------------------------------------------//
-
-        // Method to load user orders asynchronously
-        private async void LoadOrdersAsync()
-        {
-            // Load admin orders sent to users from the API or local OrderService
-            try
+            ViewModel.PropertyChanged += (s, e) =>
             {
-                var orders = await _apiClient.GetOrdersAsync();
-                if (orders == null || orders.Count == 0)
+                if (e.PropertyName == nameof(UserOrdersViewModel.Orders))
                 {
-                    try
-                    {
-                        var localOrders = await _orderService.GetOrdersAsync();
-                        orders = localOrders?.ToList() ?? new System.Collections.Generic.List<OrderScaled>();
-                    }
-                    catch
-                    {
-                        orders = new System.Collections.Generic.List<OrderScaled>();
-                    }
+                    OrderList.ItemsSource = ViewModel.Orders;
                 }
+            };
 
-                var rows = orders.Select(o => OrderRow.FromOrderScaled(o)).ToList();
-                OrderList.ItemsSource = rows;
-            }
-                catch (Exception ex)
-                {
-                    var logger = App.ServiceProvider.GetService(typeof(Microsoft.Extensions.Logging.ILogger<UserOrdersView>)) as Microsoft.Extensions.Logging.ILogger<UserOrdersView>;
-                    logger?.LogWarning(ex, "Error loading user orders");
-                    var localOrders = (await _orderService.GetOrdersAsync()).ToList();
-                    var rows = localOrders.Select(o => OrderRow.FromOrderScaled(o)).ToList();
-                    OrderList.ItemsSource = rows;
-                }
+            _ = ViewModel.LoadOrdersAsync();
         }
 
-        //------------------------------------------------------------------------------------------------//
-
-        // Adriaan - Upload baker Excel spreadsheet with notes and used quantities
         private async void BtnUploadExcel_Click(object sender, RoutedEventArgs e)
         {
             var dialog = new Microsoft.Win32.OpenFileDialog
@@ -77,61 +44,38 @@ namespace LogiSyn.Views
             {
                 try
                 {
-                    var parsed = _excelService.ReadOrderFromExcel(dialog.FileName);
+                    var parsed = await ViewModel.ProcessUploadedExcelAsync(dialog.FileName);
                     if (parsed == null)
                     {
-                        MessageBox.Show("Could not read valid production order data from the selected Excel file.", "Import Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        MessageBox.Show("Could not read valid production order data from the selected Excel file.",
+                                        "Import Error", MessageBoxButton.OK, MessageBoxImage.Warning);
                         return;
                     }
 
-                    var existing = _orderService.GetOrderById(parsed.OrderId);
-                    OrderScaled orderToUse;
-                    if (existing != null)
-                    {
-                        _excelService.ImportOrderFromExcel(dialog.FileName, existing);
-                        orderToUse = existing;
-                    }
-                    else
-                    {
-                        orderToUse = parsed;
-                    }
-
                     var res = MessageBox.Show(
-                        $"Excel sheet for Order {orderToUse.OrderId} imported successfully!\nUsed quantities and notes have been populated.\n\nDo you want to mark this order as Completed now?",
+                        $"Excel sheet for Order {parsed.OrderId} imported successfully!\nUsed quantities and notes have been populated.\n\nDo you want to mark this order as Completed now?",
                         "Excel Imported",
                         MessageBoxButton.YesNoCancel,
                         MessageBoxImage.Question);
 
                     if (res == MessageBoxResult.Yes)
                     {
-                        orderToUse.Status = "Completed";
+                        parsed.Status = "Completed";
+                        var client = new AndersonsBakeryAPI.Services.ApiClient();
+                        var ordService = new AndersonsBakeryAPI.Services.OrderService();
+                        try { await client.SaveOrderAsync(parsed); } catch { await ordService.SaveOrderAsync(parsed); }
 
-                        // Save to API first if it cant it falls back to Local save
-                        try
-                        {
-                        await _apiClient.SaveOrderAsync(orderToUse);
-                        }
-                        catch 
-                        {
-                            await _orderService.SaveOrderAsync(orderToUse);
-                        }
-
-                        LoadOrdersAsync();
-                        MessageBox.Show($"Order {orderToUse.OrderId} marked as Completed!", "Completed", MessageBoxButton.OK, MessageBoxImage.Information);
+                        await ViewModel.LoadOrdersAsync();
+                        MessageBox.Show($"Order {parsed.OrderId} marked as Completed!", "Completed", MessageBoxButton.OK, MessageBoxImage.Information);
                     }
                     else if (res == MessageBoxResult.No)
                     {
-                        try
-                        {
-                            await _apiClient.SaveOrderAsync(orderToUse);
-                        }
-                        catch
-                        {
-                            await _orderService.SaveOrderAsync(orderToUse);
-                        }
+                        var client = new AndersonsBakeryAPI.Services.ApiClient();
+                        var ordService = new AndersonsBakeryAPI.Services.OrderService();
+                        try { await client.SaveOrderAsync(parsed); } catch { await ordService.SaveOrderAsync(parsed); }
 
-                        LoadOrdersAsync();
-                        ShellWindow.Current?.Navigate("usersheet", OrderRow.FromOrderScaled(orderToUse));
+                        await ViewModel.LoadOrdersAsync();
+                        ShellWindow.Current?.Navigate("usersheet", OrderRow.FromOrderScaled(parsed));
                     }
                 }
                 catch (Exception ex)
@@ -141,15 +85,12 @@ namespace LogiSyn.Views
             }
         }
 
-        //------------------------------------------------------------------------------------------------//
-
-        // Event handler for when an order row is clicked
         private void OrderRow_Click(object sender, RoutedEventArgs e)
         {
-            var order = ((FrameworkElement)sender).DataContext as OrderRow;
-            ShellWindow.Current?.Navigate("usersheet", order);
+            if (((FrameworkElement)sender).DataContext is OrderRow order)
+            {
+                ShellWindow.Current?.Navigate("usersheet", order);
+            }
         }
     }
 }
-
-//--------------------------------------End of File----------------------------------------------------------//

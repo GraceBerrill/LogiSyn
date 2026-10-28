@@ -1,74 +1,54 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using LogiSyn.ViewModels;
 using SharedLibrary.Model;
-using AndersonsBakeryAPI.Services;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace LogiSyn.Views
 {
+    // Interaction logic for ManageProductsView.xaml.
+    // Catalog retrieval, search, storage filtering, and deletion are managed by ManageProductsViewModel.
     public partial class ManageProductsView : UserControl
     {
-        private List<ProductRow> _all = new();
-        private readonly ProductService _service;
-        private readonly AndersonsBakeryAPI.Services.ApiClient _apiClient = App.ServiceProvider.GetService<AndersonsBakeryAPI.Services.ApiClient>() ?? new AndersonsBakeryAPI.Services.ApiClient();
+        public ManageProductsViewModel ViewModel { get; }
+
         private bool _ready;
 
         public ManageProductsView()
         {
             InitializeComponent();
 
-            DateText.Text = DateTime.Now.ToString("yyyy-MM-dd");
-            _service = App.ServiceProvider.GetService<ProductService>() ?? new ProductService();
+            ViewModel = new ManageProductsViewModel();
+            DataContext = ViewModel;
 
-            Loaded += async (s, e) => await LoadProductsAsync();
-        }
+            DateText.Text = ViewModel.DateText;
 
-        private async System.Threading.Tasks.Task LoadProductsAsync()
-        {
-            LoadingText.Visibility = System.Windows.Visibility.Visible;
-
-            try
+            ViewModel.PropertyChanged += (s, e) =>
             {
-                var products = await _apiClient.GetProductsAsync();
-                if (products != null && products.Count > 0)
+                if (e.PropertyName == nameof(ManageProductsViewModel.FilteredProducts))
                 {
-                    _all = products.Select(p => new ProductRow
+                    ProductList.ItemsSource = ViewModel.FilteredProducts;
+                    if (EmptyProductsStatePanel != null)
                     {
-                        Id = p.Id,
-                        ProductId = p.ProductID,
-                        Name = p.ProductName,
-                        Price = p.PricePerUnit > 0 ? ("R" + p.PricePerUnit.ToString("0.00")) : string.Empty,
-                        SellBy = p.SellBy.ToString(),
-                        BestBefore = p.BestBefore.ToString(),
-                        Storage = p.StorageLocation
-                    }).ToList();
+                        EmptyProductsStatePanel.Visibility = ViewModel.FilteredProducts.Count == 0
+                            ? Visibility.Visible
+                            : Visibility.Collapsed;
+                    }
                 }
-                else
+                if (e.PropertyName == nameof(ManageProductsViewModel.IsLoading))
                 {
-                    _all = _service.GetAll();
+                    LoadingText.Visibility = ViewModel.IsLoading ? Visibility.Visible : Visibility.Collapsed;
                 }
-            }
-            catch
-            {
-                try { _all = _service.GetAll(); }
-                catch { _all = new List<ProductRow>(); }
-            }
-            finally
-            {
-                LoadingText.Visibility = System.Windows.Visibility.Collapsed;
-            }
+            };
 
             StorageFilter.SelectedIndex = 0;
             _ready = true;
-            Refresh();
+
+            Loaded += async (s, e) => await ViewModel.LoadProductsAsync();
         }
 
-        /********************************************************************************************/
-        //refreshes the product list based on search or filters
         private void Refresh()
         {
             if (!_ready) return;
@@ -77,35 +57,19 @@ namespace LogiSyn.Views
             var selected = StorageFilter.SelectedItem as ComboBoxItem;
             string storage = selected == null ? "Storage" : (string)selected.Content;
 
-            var filtered = _all.Where(p =>
-                (q.Length == 0 || (p.Name != null && p.Name.IndexOf(q, StringComparison.OrdinalIgnoreCase) >= 0))
-                && (storage == "Storage" || (p.Storage != null && p.Storage.Equals(storage, StringComparison.OrdinalIgnoreCase)))).ToList();
-
-            ProductList.ItemsSource = filtered;
-
-            if (EmptyProductsStatePanel != null)
-            {
-                EmptyProductsStatePanel.Visibility = filtered.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
-            }
+            ViewModel.SearchQuery = q;
+            ViewModel.SelectedStorageFilter = storage;
         }
 
-        private void SearchBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            Refresh();
-        }
+        private void SearchBox_TextChanged(object sender, TextChangedEventArgs e) => Refresh();
 
-        private void StorageFilter_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            Refresh();
-        }
+        private void StorageFilter_SelectionChanged(object sender, SelectionChangedEventArgs e) => Refresh();
 
         private static ProductRow? RowOf(object sender)
         {
             return ((FrameworkElement)sender).DataContext as ProductRow;
         }
 
-        /********************************************************************************************/
-        //shows the product detail
         private async void ShowDetail(ProductRow? row, bool editable)
         {
             if (row == null) return;
@@ -120,120 +84,11 @@ namespace LogiSyn.Views
                 overlayScrim = new SolidColorBrush(Color.FromArgb(120, 0, 0, 0));
             }
 
-            try
-            {
-                Product? prod = null;
-                try
-                {
-                    if (!string.IsNullOrWhiteSpace(row.Name))
-                        prod = await _apiClient.GetProductByIdAsync(row.Name);
-                }
-                catch { }
+            var detail = await ViewModel.GetProductDetailAsync(row);
+            var modal = new ProductDetailModal(detail, editable);
+            modal.Saved += async () => await ViewModel.LoadProductsAsync();
 
-                if (prod == null && !string.IsNullOrWhiteSpace(row.Name))
-                {
-                    prod = _service.GetProductByName(row.Name);
-                }
-
-                SharedLibrary.Model.ProductDetail detail;
-                if (prod != null)
-                {
-                    var ingredients = new System.Collections.Generic.List<SharedLibrary.Model.IngredientLine>();
-                    if (prod.Ingredients != null)
-                    {
-                        foreach (var ing in prod.Ingredients)
-                        {
-                            var qtyText = string.Empty;
-                            try
-                            {
-                                if (ing.Quantity > 0) qtyText = ing.Quantity.ToString();
-                            }
-                            catch { /* ignore if Quantity not numeric or missing */ }
-                            if (!string.IsNullOrEmpty(ing.Unit))
-                            {
-                                qtyText = string.IsNullOrEmpty(qtyText) ? ing.Unit : qtyText + " " + ing.Unit;
-                            }
-
-                            ingredients.Add(new SharedLibrary.Model.IngredientLine { Name = ing.IngredientName, Quantity = qtyText });
-                        }
-                    }
-
-                    detail = new SharedLibrary.Model.ProductDetail
-                    {
-                        Id = prod.Id,
-                        ProductId = prod.ProductID,
-                        Name = prod.ProductName,
-                        OriginalName = prod.ProductName,
-                        DateAdded = "",
-                        Ingredients = ingredients,
-                        Method = prod.Method,
-                        Storage = prod.StorageLocation
-                    };
-                }
-                else
-                {
-                    // Fallback: construct a minimal ProductDetail from the product row when sample data is not available
-                    detail = new SharedLibrary.Model.ProductDetail
-                    {
-                        Id = row.Id,
-                        ProductId = row.ProductId,
-                        Name = row.Name ?? string.Empty,
-                        OriginalName = row.Name ?? string.Empty,
-                        DateAdded = string.Empty,
-                        Ingredients = new System.Collections.Generic.List<SharedLibrary.Model.IngredientLine>(),
-                        Method = string.Empty,
-                        Storage = row.Storage ?? string.Empty
-                    };
-                }
-
-                var modal = new ProductDetailModal(detail, editable);
-                modal.Saved += async () =>
-                {
-                    try
-                    {
-                        await LoadProductsAsync();
-                    }
-                    catch
-                    {
-                        var updated = _service.GetAll();
-                        _all.Clear();
-                        _all.AddRange(updated);
-                        Refresh();
-                    }
-                };
-                ShellWindow.Current?.ShowModal(modal, overlayScrim);
-            }
-            catch
-            {
-                // If an exception occurs, attempt to show a minimal detail modal constructed from the row
-                var fallbackDetail = new SharedLibrary.Model.ProductDetail
-                {
-                    Id = row.Id,
-                    ProductId = row.ProductId,
-                    Name = row.Name ?? string.Empty,
-                    OriginalName = row.Name ?? string.Empty,
-                    DateAdded = string.Empty,
-                    Ingredients = new System.Collections.Generic.List<SharedLibrary.Model.IngredientLine>(),
-                    Method = string.Empty,
-                    Storage = row.Storage ?? string.Empty
-                };
-                var fallbackModal = new ProductDetailModal(fallbackDetail, editable);
-                fallbackModal.Saved += async () =>
-                {
-                    try
-                    {
-                        await LoadProductsAsync();
-                    }
-                    catch
-                    {
-                        var updated = _service.GetAll();
-                        _all.Clear();
-                        _all.AddRange(updated);
-                        Refresh();
-                    }
-                };
-                ShellWindow.Current?.ShowModal(fallbackModal, overlayScrim);
-            }
+            ShellWindow.Current?.ShowModal(modal, overlayScrim);
         }
 
         private void ViewButton_Click(object sender, RoutedEventArgs e)
@@ -246,8 +101,6 @@ namespace LogiSyn.Views
             ShowDetail(RowOf(sender), true);
         }
 
-        /********************************************************************************************/
-        //deletes a product from the list after confirmation
         private async void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
             var row = RowOf(sender);
@@ -257,34 +110,16 @@ namespace LogiSyn.Views
                                          MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (answer != MessageBoxResult.Yes) return;
 
-            // Try API delete by name or id, fallback to local delete
             try
             {
-                bool deleted = false;
-                try
-                {
-                    string target = !string.IsNullOrWhiteSpace(row.Name) ? row.Name : row.ProductId.ToString();
-                    deleted = await _apiClient.DeleteProductAsync(target);
-                }
-                catch { }
-
-                if (!deleted && !string.IsNullOrWhiteSpace(row.Name))
-                {
-                    _service.DeleteByName(row.Name);
-                }
-
-                _all.Remove(row);
-                Refresh();
+                await ViewModel.DeleteProductAsync(row);
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Delete failed: " + ex.Message,
-                                "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Delete failed: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
-        /********************************************************************************************/
-        //adds a new product to the list
         private void BtnAddProduct_Click(object sender, RoutedEventArgs e)
         {
             Brush overlayScrim;
@@ -298,22 +133,8 @@ namespace LogiSyn.Views
             }
 
             var modal = new AddProductModal();
-            modal.Saved += async () =>
-            {
-                try
-                {
-                    await LoadProductsAsync();
-                }
-                catch
-                {
-                    var updated = _service.GetAll();
-                    _all.Clear();
-                    _all.AddRange(updated);
-                    Refresh();
-                }
-            };
+            modal.Saved += async () => await ViewModel.LoadProductsAsync();
             ShellWindow.Current?.ShowModal(modal, overlayScrim);
         }
     }
 }
-/*********************************************MAR26EOF*******************************************/

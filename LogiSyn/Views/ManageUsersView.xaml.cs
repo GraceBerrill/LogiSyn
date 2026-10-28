@@ -1,125 +1,67 @@
-using SharedLibrary.Model;
-using AndersonsBakeryAPI.Services;
-using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using LogiSyn.ViewModels;
+using SharedLibrary.Model;
 
 namespace LogiSyn.Views
 {
+    // Interaction logic for ManageUsersView.xaml.
+    // User account operations, searching, and cloud sync are handled by ManageUsersViewModel.
     public partial class ManageUsersView : UserControl
     {
-        private readonly UserServiceRouter _userService = App.ServiceProvider.GetService<UserServiceRouter>() ?? new UserServiceRouter();
-        private readonly AndersonsBakeryAPI.Services.ApiClient _apiClient = App.ServiceProvider.GetService<AndersonsBakeryAPI.Services.ApiClient>() ?? new AndersonsBakeryAPI.Services.ApiClient();
-        private readonly SyncService _syncService = new SyncService();
-        private List<UserRow> _all = new();
-        private bool _ready;
-        private bool _syncing;
+        public ManageUsersViewModel ViewModel { get; }
 
         public ManageUsersView()
         {
             InitializeComponent();
-            _ready = true;
 
-            Loaded += async (s, e) => await LoadUsersAsync();
-        }
+            ViewModel = new ManageUsersViewModel();
+            DataContext = ViewModel;
 
-        private async System.Threading.Tasks.Task LoadUsersAsync()
-        {
-            LoadingText.Visibility = System.Windows.Visibility.Visible;
-
-            try
+            ViewModel.PropertyChanged += (s, e) =>
             {
-                // Try API first, fall back to local router
-                try
+                if (e.PropertyName == nameof(ManageUsersViewModel.FilteredUsers))
                 {
-                    var users = await _apiClient.GetUsersAsync();
-                    _all = users;
+                    UserList.ItemsSource = ViewModel.FilteredUsers;
                 }
-                catch
+                if (e.PropertyName == nameof(ManageUsersViewModel.IsLoading))
                 {
-                    _all = _userService.GetAllUsers();
+                    LoadingText.Visibility = ViewModel.IsLoading ? Visibility.Visible : Visibility.Collapsed;
                 }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Failed to load users: " + ex.Message,
-                                "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                _all = new List<UserRow>();
-            }
-            finally
-            {
-                LoadingText.Visibility = System.Windows.Visibility.Collapsed;
-            }
+                if (e.PropertyName == nameof(ManageUsersViewModel.IsSyncing))
+                {
+                    SetSyncUiBusy(ViewModel.IsSyncing);
+                }
+            };
 
-            Refresh();
+            Loaded += async (s, e) => await ViewModel.LoadUsersAsync();
         }
 
-        private void Refresh()
+        private void SearchBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (!_ready) return;
-
-            string q = SearchBox.Text.Trim();
-            UserList.ItemsSource = _all.Where(u =>
-                q.Length == 0
-                || (u.Id ?? "").IndexOf(q, StringComparison.OrdinalIgnoreCase) >= 0
-                || (u.Name ?? "").IndexOf(q, StringComparison.OrdinalIgnoreCase) >= 0
-                || (u.Role ?? "").IndexOf(q, StringComparison.OrdinalIgnoreCase) >= 0
-            ).ToList();
+            ViewModel.SearchQuery = SearchBox.Text.Trim();
         }
-
-        private void SearchBox_TextChanged(object sender, TextChangedEventArgs e) => Refresh();
-
 
         private async void SyncButton_Click(object sender, RoutedEventArgs e)
         {
-            await RunSyncAsync(silentWhenNothingToDo: false);
-        }
-
-        private async Task RunSyncAsync(bool silentWhenNothingToDo)
-        {
-            if (_syncing) return;
-            _syncing = true;
-
-            SetSyncUiBusy(true);
-
             try
             {
-                var result = await Task.Run(() => _syncService.SyncUsers());
-
+                var result = await ViewModel.RunSyncAsync();
                 if (result.SqlToMongo == 0 && result.Skipped == 0 && result.Failed == 0)
                 {
-                    if (!silentWhenNothingToDo)
-                    {
-                        MessageBox.Show("Everything is already in sync.",
-                                        "Sync", MessageBoxButton.OK,
-                                        MessageBoxImage.Information);
-                    }
+                    MessageBox.Show("Everything is already in sync.", "Sync", MessageBoxButton.OK, MessageBoxImage.Information);
                     return;
                 }
 
-                var icon = result.Failed > 0 ? MessageBoxImage.Warning
-                         : MessageBoxImage.Information;
-
-                MessageBox.Show(result.ToString(),
-                                result.Failed > 0 ? "Sync completed with errors" : "Sync complete",
+                var icon = result.Failed > 0 ? MessageBoxImage.Warning : MessageBoxImage.Information;
+                MessageBox.Show(result.ToString(), result.Failed > 0 ? "Sync completed with errors" : "Sync complete",
                                 MessageBoxButton.OK, icon);
-
-                if (result.SqlToMongo > 0)
-                    await LoadUsersAsync();
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Sync failed:\n" + ex.Message,
-                                "Sync error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-            finally
-            {
-                SetSyncUiBusy(false);
-                _syncing = false;
+                MessageBox.Show("Sync failed:\n" + ex.Message, "Sync error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -129,7 +71,6 @@ namespace LogiSyn.Views
             AddUserButton.IsEnabled = !busy;
             SyncButtonText.Text = busy ? "Syncing…" : "Sync";
         }
-
 
         private async void AddUserButton_Click(object sender, RoutedEventArgs e)
         {
@@ -150,13 +91,12 @@ namespace LogiSyn.Views
             modal.Cancelled += () => { host.DialogResult = false; host.Close(); };
 
             if (host.ShowDialog() == true)
-                await LoadUsersAsync();
+                await ViewModel.LoadUsersAsync();
         }
 
         private async void EditButton_Click(object sender, RoutedEventArgs e)
         {
-            var row = ((FrameworkElement)sender).DataContext as UserRow;
-            if (row == null) return;
+            if (((FrameworkElement)sender).DataContext is not UserRow row) return;
 
             string identifier = !string.IsNullOrEmpty(row.Id) ? row.Id : row.SqlId;
             if (string.IsNullOrEmpty(identifier))
@@ -182,13 +122,12 @@ namespace LogiSyn.Views
             modal.Cancelled += () => { host.DialogResult = false; host.Close(); };
 
             if (host.ShowDialog() == true)
-                await LoadUsersAsync();
+                await ViewModel.LoadUsersAsync();
         }
 
         private async void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
-            var row = ((FrameworkElement)sender).DataContext as UserRow;
-            if (row == null) return;
+            if (((FrameworkElement)sender).DataContext is not UserRow row) return;
 
             string identifier = !string.IsNullOrEmpty(row.Id) ? row.Id : row.SqlId;
             if (string.IsNullOrEmpty(identifier))
@@ -203,26 +142,25 @@ namespace LogiSyn.Views
 
             try
             {
-                // Try remote API delete first, fallback to local delete
+                var client = new AndersonsBakeryAPI.Services.ApiClient();
                 var deleted = false;
                 try
                 {
-                    deleted = await _apiClient.DeleteUserAsync(identifier);
+                    deleted = await client.DeleteUserAsync(identifier);
                 }
                 catch { }
 
                 if (!deleted)
                 {
-                    _userService.DeleteUser(identifier);
+                    var localRouter = new AndersonsBakeryAPI.Services.UserServiceRouter();
+                    localRouter.DeleteUser(identifier);
                 }
 
-                _all.Remove(row);
-                Refresh();
+                await ViewModel.LoadUsersAsync();
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Delete failed: " + ex.Message,
-                                "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Delete failed: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }
