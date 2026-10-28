@@ -30,5 +30,4 @@ namespace LogiSyn.Services
     public class ExcelOrderService : AndersonsBakeryAPI.Services.ExcelOrderService { }
     public class SyncService : AndersonsBakeryAPI.Services.SyncService { }
 }
-
-
+/*********************************************MAR26EOF*******************************************/
