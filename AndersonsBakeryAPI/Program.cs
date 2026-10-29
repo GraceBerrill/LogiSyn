@@ -14,13 +14,17 @@ var builder = WebApplication.CreateBuilder(args);
 
     // --- Connection strings ---
     var mongoConnection = builder.Configuration.GetConnectionString("MongoConnection");
+    if (string.IsNullOrWhiteSpace(mongoConnection))
+    {
+        mongoConnection = MongoConfiguration.TryGetConnectionString();
+    }
     var sqlConnectionString = builder.Configuration.GetConnectionString("SqlServer");
-    // --- MongoDB client (with short timeouts so fallback is fast) ---
+    // --- MongoDB client (with reliable timeouts for cloud Atlas) ---
     if (!string.IsNullOrWhiteSpace(mongoConnection))
     {
         var mongoSettings = MongoClientSettings.FromConnectionString(mongoConnection);
-        mongoSettings.ServerSelectionTimeout = TimeSpan.FromSeconds(3);
-        mongoSettings.ConnectTimeout = TimeSpan.FromSeconds(3);
+        mongoSettings.ServerSelectionTimeout = TimeSpan.FromSeconds(8);
+        mongoSettings.ConnectTimeout = TimeSpan.FromSeconds(8);
         builder.Services.AddSingleton<IMongoClient>(new MongoClient(mongoSettings));
         builder.Services.AddScoped<IMongoDatabase>(sp =>
         {

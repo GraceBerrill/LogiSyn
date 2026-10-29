@@ -16,6 +16,9 @@ namespace AndersonsBakeryAPI.Services
                 .Build();
         }
 
+        public const string DefaultMongoConnectionString =
+            "mongodb+srv://reannaude1_db_user:JDDF1irFWNUJRRE1@cluster0.twltvce.mongodb.net/?appName=Cluster0";
+
         public static string? TryGetConnectionString()
         {
             try
@@ -23,11 +26,13 @@ namespace AndersonsBakeryAPI.Services
                 var configuration = BuildConfiguration();
                 var conn = configuration.GetConnectionString("MongoConnection")
                     ?? configuration["MongoConnection"];
-                return string.IsNullOrWhiteSpace(conn) ? null : conn;
+                if (!string.IsNullOrWhiteSpace(conn)) return conn;
+
+                return DefaultMongoConnectionString;
             }
             catch
             {
-                return null;
+                return DefaultMongoConnectionString;
             }
         }
 

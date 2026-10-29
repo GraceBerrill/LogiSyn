@@ -49,6 +49,23 @@ namespace LogiSyn.Tests
         }
 
         [Fact]
+        public async Task MongoAtlas_OrdersCollection_ConnectsAndFetchesOrders()
+        {
+            var conn = MongoConfiguration.TryGetConnectionString();
+            Assert.False(string.IsNullOrWhiteSpace(conn), "MongoDB connection string should not be null or empty.");
+
+            var settings = MongoClientSettings.FromConnectionString(conn);
+            settings.ServerSelectionTimeout = TimeSpan.FromSeconds(8);
+            settings.ConnectTimeout = TimeSpan.FromSeconds(8);
+            var client = new MongoClient(settings);
+            var db = client.GetDatabase("LogiSynDb");
+            var repo = new MongoOrderRepository(db);
+
+            var orders = await repo.GetAllOrdersAsync();
+            Assert.NotNull(orders);
+        }
+
+        [Fact]
         public void ProductService_FallbackLocalMode_OperatesWithoutCrashing()
         {
             // Arrange - ProductService with null Mongo repository explicitly simulates pure offline/local mode

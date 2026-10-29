@@ -38,8 +38,8 @@ namespace AndersonsBakeryAPI.Services
 
                 string dbName = MongoConfiguration.GetDatabaseName();
                 var settings = MongoClientSettings.FromConnectionString(conn);
-                settings.ServerSelectionTimeout = TimeSpan.FromSeconds(2);
-                settings.ConnectTimeout = TimeSpan.FromSeconds(2);
+                settings.ServerSelectionTimeout = TimeSpan.FromSeconds(8);
+                settings.ConnectTimeout = TimeSpan.FromSeconds(8);
                 var client = new MongoClient(settings);
                 var db = client.GetDatabase(dbName);
                 return new MongoOrderRepository(db);
