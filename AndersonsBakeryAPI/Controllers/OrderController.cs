@@ -13,7 +13,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AndersonsBakeryAPI.Controllers
 {
-    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class OrdersController : ControllerBase

@@ -28,13 +28,16 @@ namespace AndersonsBakeryAPI.Services
         public ApiClient(HttpClient httpClient, IConfiguration configuration, ILogger<ApiClient> logger)
         {
             _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
-            _httpClient.Timeout = TimeSpan.FromSeconds(60);
+            _httpClient.Timeout = TimeSpan.FromSeconds(15);
             _logger = logger;
 
             var configured = configuration?.GetSection("ApiClient:BaseUrls").Get<string[]>();
             if (configured != null && configured.Length > 0)
             {
-                _baseUrls = configured.Select(u => u?.TrimEnd('/') ?? string.Empty).Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
+                var list = configured.Select(u => u?.TrimEnd('/') ?? string.Empty).Where(s => !string.IsNullOrWhiteSpace(s)).ToList();
+                if (!list.Contains("https://localhost:7274")) list.Add("https://localhost:7274");
+                if (!list.Contains("http://localhost:5109")) list.Add("http://localhost:5109");
+                _baseUrls = list.ToArray();
             }
             else
             {
@@ -45,21 +48,32 @@ namespace AndersonsBakeryAPI.Services
                     "http://localhost:5109"
                 };
             }
+            ApplyStoredAuthToken();
         }
 
         // Legacy / convenience constructor: parameterless for desktop client usage
         public ApiClient()
         {
-            _httpClient = new HttpClient { Timeout = TimeSpan.FromSeconds(60) };
-            _baseUrls = new[] { "https://andersons-bakery-api.onrender.com" };
+            _httpClient = new HttpClient { Timeout = TimeSpan.FromSeconds(15) };
+            _baseUrls = new[]
+            {
+                "https://andersons-bakery-api.onrender.com",
+                "https://localhost:7274",
+                "http://localhost:5109"
+            };
+            ApplyStoredAuthToken();
         }
 
         // Legacy / convenience constructor: allow creating with a single base URL (used by WPF startup)
         public ApiClient(string baseUrl)
         {
             if (string.IsNullOrWhiteSpace(baseUrl)) baseUrl = "https://andersons-bakery-api.onrender.com";
-            _httpClient = new HttpClient { Timeout = TimeSpan.FromSeconds(60) };
-            _baseUrls = new[] { baseUrl.TrimEnd('/') };
+            _httpClient = new HttpClient { Timeout = TimeSpan.FromSeconds(15) };
+            var list = new List<string> { baseUrl.TrimEnd('/') };
+            if (!list.Contains("https://localhost:7274")) list.Add("https://localhost:7274");
+            if (!list.Contains("http://localhost:5109")) list.Add("http://localhost:5109");
+            _baseUrls = list.ToArray();
+            ApplyStoredAuthToken();
         }
 
         public static event Action<ApiConnectionState, string?>? OnStatusChanged;
@@ -69,12 +83,28 @@ namespace AndersonsBakeryAPI.Services
         // JWT token stored after successful login; attached as Bearer header to every request
         private static string? _jwtToken;
 
+        private void ApplyStoredAuthToken()
+        {
+            if (!string.IsNullOrWhiteSpace(_jwtToken))
+            {
+                _httpClient.DefaultRequestHeaders.Authorization =
+                    new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _jwtToken);
+            }
+        }
+
         /// <summary>Stores the JWT token and applies it to the HttpClient default headers.</summary>
         public void SetAuthToken(string token)
         {
             _jwtToken = token;
-            _httpClient.DefaultRequestHeaders.Authorization =
-                new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+            if (!string.IsNullOrWhiteSpace(token))
+            {
+                _httpClient.DefaultRequestHeaders.Authorization =
+                    new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+            }
+            else
+            {
+                _httpClient.DefaultRequestHeaders.Authorization = null;
+            }
         }
 
         /// <summary>Clears the stored JWT token (call on logout).</summary>
@@ -644,8 +674,12 @@ namespace AndersonsBakeryAPI.Services
                 {
                     try
                     {
-                        // Ping /health — unauthenticated, safe to call before login
-                        var response = await _httpClient.GetAsync($"{baseUrl}/health");
+                        // Check /api/status first for full API readiness; fall back to /health
+                        var response = await _httpClient.GetAsync($"{baseUrl}/api/status");
+                        if (!response.IsSuccessStatusCode)
+                        {
+                            response = await _httpClient.GetAsync($"{baseUrl}/health");
+                        }
                         if (response.IsSuccessStatusCode)
                         {
                             succeeded = true;

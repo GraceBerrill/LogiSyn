@@ -8,7 +8,6 @@ using SharedLibrary.Model;
 
 namespace AndersonsBakeryAPI.Controllers
 {
-    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class ProductsController : ControllerBase

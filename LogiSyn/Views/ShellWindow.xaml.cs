@@ -6,6 +6,7 @@ using System.Windows.Media;
 using System.Windows.Threading;
 using SharedLibrary.Model;
 using AndersonsBakeryAPI.Services;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace LogiSyn.Views
 {
@@ -33,7 +34,7 @@ namespace LogiSyn.Views
             {
                 try
                 {
-                    var client = new ApiClient();
+                    var client = App.ServiceProvider?.GetService<ApiClient>() ?? new ApiClient();
                     await client.IsApiAvailableAsync();
                 }
                 catch { }
@@ -227,7 +228,7 @@ namespace LogiSyn.Views
         private async void ApiStatusBadge_MouseDown(object sender, MouseButtonEventArgs e)
         {
             ShowToast("Testing API connectivity…");
-            var client = new ApiClient();
+            var client = App.ServiceProvider?.GetService<ApiClient>() ?? new ApiClient();
             bool isAvailable = await client.IsApiAvailableAsync();
             if (isAvailable)
             {
