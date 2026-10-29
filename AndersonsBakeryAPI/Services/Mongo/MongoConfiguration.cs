@@ -26,7 +26,13 @@ namespace AndersonsBakeryAPI.Services
                 var configuration = BuildConfiguration();
                 var conn = configuration.GetConnectionString("MongoConnection")
                     ?? configuration["MongoConnection"];
-                if (!string.IsNullOrWhiteSpace(conn)) return conn;
+                if (!string.IsNullOrWhiteSpace(conn) &&
+                    !conn.Contains("<username>", StringComparison.OrdinalIgnoreCase) &&
+                    !conn.Contains("<password>", StringComparison.OrdinalIgnoreCase) &&
+                    !conn.Contains("<cluster>", StringComparison.OrdinalIgnoreCase))
+                {
+                    return conn;
+                }
 
                 return DefaultMongoConnectionString;
             }
