@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -971,9 +971,12 @@
     <header class="app-header">
       <div class="status-bar-row">
         <span>9:41</span>
-        <div class="status-badge" onclick="testDatabaseConnection()">
-          <span class="status-dot" id="dash-status-dot"></span>
-          <span id="dash-connection-status">● Live Database</span>
+        <div style="display: flex; gap: 8px; align-items: center;">
+          <div class="status-badge" onclick="testDatabaseConnection()">
+            <span class="status-dot" id="dash-status-dot"></span>
+            <span id="dash-connection-status">● Live Database</span>
+          </div>
+          <span style="font-size: 0.72rem; color: #fca5a5; cursor: pointer; padding: 2px 8px; background: rgba(255,255,255,0.1); border-radius: 4px; font-weight:600;" onclick="handleLogout()" title="Log Out">Log Out</span>
         </div>
       </div>
       <h1 class="header-main-title">Dashboard</h1>
@@ -1343,10 +1346,11 @@
   let allProducts = [];
   let currentOrder = null;
   let stagedNewOrder = null;
-  let currentUserRole = 'admin';
-  let activeTab = 'dashboard';
+  let currentUserRole = localStorage.getItem('logisyn_user_role') || 'admin';
+  let currentUsername = localStorage.getItem('logisyn_username') || '';
+  let activeTab = localStorage.getItem('logisyn_active_tab') || 'dashboard';
   let previousView = 'dashboard';
-  let jwtToken = sessionStorage.getItem('logisyn_token') || '';
+  let jwtToken = localStorage.getItem('logisyn_token') || sessionStorage.getItem('logisyn_token') || '';
   let selectedUploadFile = null;
 
   // Set today's date formatted matching mockup (DD/MM/YYYY)
@@ -1362,6 +1366,27 @@
   function fillRole(u, p) {
     document.getElementById('login-username').value = u;
     document.getElementById('login-password').value = p;
+  }
+
+  // Helper to apply authenticated UI state
+  function applyLoggedInState() {
+    document.getElementById('view-login').style.display = 'none';
+    document.getElementById('bottom-navigation').style.display = 'flex';
+    const targetTab = localStorage.getItem('logisyn_active_tab') || 'dashboard';
+    switchTab(targetTab);
+    fetchOrders();
+    fetchProducts();
+  }
+
+  // Restore existing session across browser refreshes
+  function initSession() {
+    const savedToken = localStorage.getItem('logisyn_token') || sessionStorage.getItem('logisyn_token');
+    if (savedToken) {
+      jwtToken = savedToken;
+      currentUserRole = localStorage.getItem('logisyn_user_role') || 'admin';
+      currentUsername = localStorage.getItem('logisyn_username') || '';
+      applyLoggedInState();
+    }
   }
 
   // Authentication connecting to database
@@ -1381,26 +1406,42 @@
       if (res.ok) {
         const data = await res.json();
         jwtToken = data.token || '';
-        sessionStorage.setItem('logisyn_token', jwtToken);
         currentUserRole = (data.user?.role || 'admin').toLowerCase();
+        currentUsername = data.user?.name || username;
+        localStorage.setItem('logisyn_token', jwtToken);
+        localStorage.setItem('logisyn_user_role', currentUserRole);
+        localStorage.setItem('logisyn_username', currentUsername);
+        sessionStorage.setItem('logisyn_token', jwtToken);
       } else {
         // Fallback for local sandbox if API is offline
         currentUserRole = username.toLowerCase().includes('admin') ? 'admin' : (username.toLowerCase().includes('manager') ? 'manager' : 'user');
+        currentUsername = username || 'admin';
+        jwtToken = 'local_fallback_session';
+        localStorage.setItem('logisyn_token', jwtToken);
+        localStorage.setItem('logisyn_user_role', currentUserRole);
+        localStorage.setItem('logisyn_username', currentUsername);
       }
     } catch (e) {
       console.warn('API login offline fallback in effect:', e);
       currentUserRole = username.toLowerCase().includes('admin') ? 'admin' : (username.toLowerCase().includes('manager') ? 'manager' : 'user');
+      currentUsername = username || 'admin';
+      jwtToken = 'local_fallback_session';
+      localStorage.setItem('logisyn_token', jwtToken);
+      localStorage.setItem('logisyn_user_role', currentUserRole);
+      localStorage.setItem('logisyn_username', currentUsername);
     }
 
-    document.getElementById('view-login').style.display = 'none';
-    document.getElementById('bottom-navigation').style.display = 'flex';
-    switchTab('dashboard');
-    fetchOrders();
-    fetchProducts();
+    applyLoggedInState();
   }
 
   function handleLogout() {
     jwtToken = '';
+    currentUserRole = 'admin';
+    currentUsername = '';
+    localStorage.removeItem('logisyn_token');
+    localStorage.removeItem('logisyn_user_role');
+    localStorage.removeItem('logisyn_username');
+    localStorage.removeItem('logisyn_active_tab');
     sessionStorage.removeItem('logisyn_token');
     document.getElementById('view-dashboard').style.display = 'none';
     document.getElementById('view-orders').style.display = 'none';
@@ -1416,8 +1457,10 @@
   // Switch between the 4 main bottom tabs
   function switchTab(tab) {
     activeTab = tab;
+    localStorage.setItem('logisyn_active_tab', tab);
     ['dashboard', 'orders', 'history', 'products'].forEach(t => {
-      document.getElementById(`tab-${t}`).classList.toggle('active', t === tab);
+      const tabEl = document.getElementById(`tab-${t}`);
+      if (tabEl) tabEl.classList.toggle('active', t === tab);
       const view = document.getElementById(`view-${t}`);
       if (view) view.style.display = t === tab ? 'block' : 'none';
     });
@@ -2170,6 +2213,13 @@
     const body = encodeURIComponent(`Attached please find the scaled production order and raw materials sheet.\n\nAnderson's Bakery Management`);
     window.location.href = `mailto:orders@andersonsbakery.co.za?subject=${subject}&body=${body}`;
     closeOrderCompleteModal();
+  }
+
+  // Automatic session restoration on initial page load / browser refresh
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initSession);
+  } else {
+    initSession();
   }
 </script>
 
