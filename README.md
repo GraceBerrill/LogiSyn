@@ -22,6 +22,144 @@ A desktop management system built for Anderson's Bakery. Written in C# / WPF (.N
 
 </div>
 
+# Problems Addressed for Part 3
+
+## 1. Hosted API Reachability vs. Native Desktop Architecture
+
+* **Marker Feedback:**
+> *"Hosted API could not be reached, URL deemed dead"* (Awarded 1/20 for Deployment & Connectivity).
+
+
+* **Already Documented in Part 2 README (Pre-Oct 5):**
+Under the section **"Hosted API (Render)"**, the Part 2 README explicitly documented:
+> *"Render's free tier puts the container to sleep after 15 minutes of inactivity, and waking it takes 30–50 seconds. ApiClient handles this by trying each option in turn: 1. The Render endpoint, 2. A local development host, 3. The in-process services, backed by LocalDB."*
+
+
+* **Architecture Clarification:**
+LogiSyn is an offline-first Windows WPF native desktop application (.NET 10) engineered for factory terminals at Anderson's Bakery. It is not a browser-rendered single-page website. Even if the auxiliary cloud synchronization API is asleep or offline, the WPF application seamlessly falls back to local in-process execution and LocalDB without throwing an unhandled exception, freezing, or blocking bakery staff.
+* **Final Part 3 Enhancement:**
+To eliminate cold starts during marking, a 24/7 automated continuous workflow (`.github/workflows/keep-alive.yml`) was configured on a 10-minute cron schedule (`*/10 * * * *`). It dispatches an automated `GET` probe to `[https://andersons-bakery-api.onrender.com/health](https://andersons-bakery-api.onrender.com/health)` and `/api/orders/debug/ping`, guaranteeing the container remains warm with immediate response times.
+
+---
+
+## 2. Cloud Architecture Rationale: Transition from Azure to Render
+
+* **Marker Feedback:**
+> *"As a next step, deploy to a reachable host and explain why you left the Azure plan"* (Awarded 3/15 for Stability & Rationale).
+
+
+* **Already Documented in Part 2 README (Pre-Oct 5):**
+The transition from Azure to a containerized Render environment was documented in the architecture notes.
+* **Context & Business Justification:**
+1. **Discontinuation of Subsidized Azure Credits:** The institutional student Azure sponsorship previously available expired and was discontinued. Continuing with paid cloud hosting would require spending out-of-pocket personal funds, which is not feasible for this academic project.
+2. **Client Alignment (Anderson's Bakery):** As an independent regional SME bakery, Anderson's Bakery cannot sustain unbudgeted recurring cloud infrastructure overhead.
+3. **Runtime Parity:** Render provides a standard Linux container running official Microsoft .NET 10 runtime images with zero overhead, achieving complete architectural parity with an Azure App Service Linux container without recurring costs.
+
+
+* **Final Part 3 Enhancement:**
+Expanded **Section 4.1 (Cloud Architecture & Hosting Rationale)** with a trade-off analysis comparing Azure App Service vs. Render Container Services, covering long-term hosting efficiency, container parity, and SLA considerations.
+
+---
+
+## 3. Mobile Responsiveness vs. Client Environment & The Mobile Web Companion
+
+* **Marker Feedback:**
+> *"However, the browser version Task 1 planned for mobile use was not built..."* (Awarded 5/15 on Front End Responsiveness).
+
+
+* **Client Brief & Operational Reality:**
+During client requirements gathering, Anderson's Bakery management explicitly indicated that they did not want a mobile version of the application. The business relies on desktop computers for daily management and email workflows, operating around five desktop terminals across the facility, making a mobile deployment unsuitable for their physical workstation setup.
+* **Final Part 3 Resolution (Exceeding the Requirement):**
+To satisfy the marker's expectation for mobile browser access, the team engineered and deployed a responsive Mobile Web Companion served directly by the cloud API root:
+* 🌐 **Live Mobile Web Companion URL:** `[https://andersons-bakery-api.onrender.com](https://andersons-bakery-api.onrender.com)`
+* **Key Mobile Features:**
+* Fully responsive across smartphone and tablet viewports.
+* Live order dashboard with real-time status filtering (Pending, In Production, Completed).
+* Detailed recipe batch scaling (baking pans, trolley distribution, ingredient weights).
+* One-tap status updates for bakery floor supervisors on mobile devices.
+
+---
+
+## 4. Branch Management & Gitflow Visibility
+
+* **Marker Feedback:**
+> *"Only a main branch remains, so keep develop and feature branches to show the workflow"* (Awarded 0/15 on Branching).
+
+
+* **Context of Misunderstanding:**
+Following the completion of pull requests for Part 2, standard local repository hygiene was performed by deleting merged feature branches. While the complete commit history, pull request logs, and merge commits remained permanently preserved inside the `main` branch git graph, the separate branch pointers were no longer visible on GitHub.
+* **Final Part 3 Resolution:**
+* Restored and pushed the primary integration branches (`origin/Dev`, `origin/Fix`) to the remote repository.
+* Restored all 18 individual feature branches (including `Feature/desktop-admin-create-order`, `Feature/desktop-admin-dashboard`, `Feature/desktop-login`, etc.) to provide complete, transparent visibility into the team's Gitflow development lifecycle.
+
+---
+
+## 5. API Data Integrity: Enforced Order Status Whitelist
+
+* **Marker Feedback:**
+> *"Focus on limiting status to set values; the API saves any text."*
+
+
+* **Final Part 3 Enhancement:**
+* In `OrderController.cs`, replaced open-ended string inputs with a strict domain whitelist:
+```csharp
+private static readonly string[] AllowedStatuses = ["Pending", "In Production", "Completed"];
+
+```
+
+
+* Both `POST /api/orders` and `PUT /api/orders/{id}/status` validate inbound status strings against this whitelist.
+* Any unapproved status value is immediately rejected with an RFC 7807 compliant `400 Bad Request` payload detailing the valid accepted values.
+
+---
+
+## 6. Architecture Refactoring: MVVM Decoupling & Modular Services
+
+* **Marker Feedback:**
+> *"Move desktop logic out of code-behind into view models, and split the two largest services."*
+
+
+* **Final Part 3 Enhancement:**
+* **Strict MVVM Pattern:** Decoupled the WPF presentation layer using an observable `ViewModelBase` (implementing `INotifyPropertyChanged`) and `RelayCommand` (`ICommand`).
+* **8 Domain ViewModels:** Refactored UI logic into dedicated domain models:
+* `DashboardViewModel`
+* `CreateOrderViewModel`
+* `AdminOrdersViewModel`
+* `ManageUsersViewModel`
+* `ManageProductsViewModel`
+* `OrderSheetsViewModel`
+* `HistoryViewModel`
+* `UserOrdersViewModel`
+
+
+* **Modular Backend Services:** Monolithic service files were decomposed into distinct domain namespaces (`Authentication`, `Orders`, `Products`, `Users`, `Reporting`), keeping individual class responsibilities focused and maintainable (<250 lines each).
+
+---
+
+## 7. Security Hardening: Mandatory JWT & Sanitized Secrets
+
+* **Marker Feedback:**
+> *"The JWT issuer and audience checks are optional; make them mandatory... moving the MongoDB Atlas credentials out of the README into secrets."*
+
+
+* **Final Part 3 Enhancement:**
+* **Strict JWT Token Validation:** In `Program.cs`, updated the authentication middleware to enforce:
+```csharp
+options.TokenValidationParameters = new TokenValidationParameters
+{
+    ValidateIssuer = true,
+    ValidateAudience = true,
+    ValidIssuer = "LogiSyn",
+    ValidAudience = "LogiSynClients",
+    ValidateLifetime = true,
+    ValidateIssuerSigningKey = true
+};
+
+```
+
+
+* **Credential Sanitization:** Scrubbed all plaintext connection strings, API tokens, and database passwords from the repository and README. Secrets are managed exclusively through .NET User Secrets (`dotnet user-secrets`) during local development and encrypted environment variables on the Render cloud container.
+
 #
 ## Background
 Anderson's Bakery is a local Cape Town business that supplies baked goods to major supermarkets such as Checkers and Spar. While most factories rely heavily on machinery and automation, Anderson's deliberately doesn't. Their goal is to create as many jobs as possible to help fight South Africa's high unemployment rate. Because of this, many employees have little or no formal education, which makes complex, high-end systems difficult to roll out.
