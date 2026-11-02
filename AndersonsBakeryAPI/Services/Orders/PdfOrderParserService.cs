@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using SharedLibrary.Interface;
 using SharedLibrary.Model;
 using UglyToad.PdfPig;
+using UglyToad.PdfPig.Content;
 
 namespace AndersonsBakeryAPI.Services
 {
@@ -27,7 +28,7 @@ namespace AndersonsBakeryAPI.Services
             var extractedLines = ReadPdfLines(pdfPath).ToList();
 
             // Extract metadata from header
-            string parsedOrderId = ExtractField(extractedLines, @"Order\s*(?:Number|#)?[:\s]*([#A-Za-z0-9\-]+)");
+            string parsedOrderId = ExtractField(extractedLines, @"Order\s*(?:Number|No\.?|#)\s*[:\-\s]*([#A-Za-z0-9\-]+)");
             string parsedCustomer = ExtractCustomer(extractedLines);
             DateTime? parsedDate = ExtractOrderDate(extractedLines);
 
@@ -45,35 +46,57 @@ namespace AndersonsBakeryAPI.Services
 
             var availableProducts = productService.GetAllProducts();
 
+            // Track which products have already been added to avoid duplicates
+            var addedProducts = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
             for (int i = 0; i < extractedLines.Count; i++)
             {
                 string line = extractedLines[i];
 
                 if (IsDividerLine(line)) continue;
 
-                var product = availableProducts
-                    .FirstOrDefault(p => !string.IsNullOrWhiteSpace(p.ProductName) &&
-                                         line.IndexOf(p.ProductName, StringComparison.OrdinalIgnoreCase) >= 0);
+                // Find ALL products mentioned in this line, not just the first one
+                // Sort by longest name first so "Hotdog Rolls" matches before "Bread" in overlapping cases
+                var matchedProducts = availableProducts
+                    .Where(p => !string.IsNullOrWhiteSpace(p.ProductName) &&
+                                line.IndexOf(p.ProductName, StringComparison.OrdinalIgnoreCase) >= 0)
+                    .OrderByDescending(p => p.ProductName!.Length)
+                    .ToList();
 
-                if (product != null)
+                foreach (var product in matchedProducts)
                 {
-                    string context = line;
-                    for (int offset = 1; offset <= 2 && (i + offset) < extractedLines.Count; offset++)
-                    {
-                        if (!IsDividerLine(extractedLines[i + offset]))
-                        {
-                            context += " " + extractedLines[i + offset];
-                        }
-                    }
-
-                    int quantity = ExtractQuantity(context);
-
                     string cleanProdName = product.ProductName ?? string.Empty;
                     var qtyMatch = Regex.Match(cleanProdName, @"^(\d+)\s+(.+)$");
                     if (qtyMatch.Success)
                     {
                         cleanProdName = qtyMatch.Groups[2].Value.Trim();
                     }
+
+                    // Skip if this product was already added from a previous line
+                    if (addedProducts.Contains(cleanProdName)) continue;
+
+                    // Build a context window: extract the segment of text near this product name
+                    int nameIndex = line.IndexOf(product.ProductName!, StringComparison.OrdinalIgnoreCase);
+                    string context;
+                    if (matchedProducts.Count > 1)
+                    {
+                        // Multiple products on this line — extract a local segment around this product
+                        context = ExtractProductSegment(line, product.ProductName!, availableProducts);
+                    }
+                    else
+                    {
+                        // Single product on this line — use the whole line plus lookahead
+                        context = line;
+                        for (int offset = 1; offset <= 2 && (i + offset) < extractedLines.Count; offset++)
+                        {
+                            if (!IsDividerLine(extractedLines[i + offset]))
+                            {
+                                context += " " + extractedLines[i + offset];
+                            }
+                        }
+                    }
+
+                    int quantity = ExtractQuantity(context);
 
                     var recipe = recipeService?.FindRecipeByProductName(cleanProdName)
                                  ?? recipeService?.FindRecipeByProductName(product.ProductName ?? string.Empty);
@@ -152,6 +175,7 @@ namespace AndersonsBakeryAPI.Services
                     }
 
                     order.productionItems.Add(item);
+                    addedProducts.Add(cleanProdName);
                 }
             }
 
@@ -159,7 +183,32 @@ namespace AndersonsBakeryAPI.Services
             return order;
         }
 
-        // Helper method to read all lines of text from a PDF file using PdfPig
+        // Extracts the text segment belonging to a specific product when multiple products share a line.
+        // Finds the text between this product's name and the next product's name (or end of line).
+        private string ExtractProductSegment(string line, string productName, List<Product> allProducts)
+        {
+            int start = line.IndexOf(productName, StringComparison.OrdinalIgnoreCase);
+            if (start < 0) return line;
+
+            // Find the nearest subsequent product name after this one
+            int segmentEnd = line.Length;
+            foreach (var other in allProducts)
+            {
+                if (string.IsNullOrWhiteSpace(other.ProductName)) continue;
+                if (string.Equals(other.ProductName, productName, StringComparison.OrdinalIgnoreCase)) continue;
+
+                int otherPos = line.IndexOf(other.ProductName, start + productName.Length, StringComparison.OrdinalIgnoreCase);
+                if (otherPos >= 0 && otherPos < segmentEnd)
+                {
+                    segmentEnd = otherPos;
+                }
+            }
+
+            return line.Substring(start, segmentEnd - start);
+        }
+
+        // Helper method to read all lines of text from a PDF file using PdfPig.
+        // Falls back to word-level Y-coordinate grouping when the raw text has no newlines.
         public IEnumerable<string> ReadPdfLines(string pdfPath)
         {
             var lines = new List<string>();
@@ -167,16 +216,71 @@ namespace AndersonsBakeryAPI.Services
             using var doc = PdfDocument.Open(pdfPath);
             foreach (var page in doc.GetPages())
             {
+                // First try: use PdfPig's raw text with standard newline splitting
                 var text = page.Text;
                 if (string.IsNullOrWhiteSpace(text)) continue;
 
                 var pageLines = text.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
-                foreach (var l in pageLines)
+
+                // If the split produced real multi-line output, use it
+                if (pageLines.Length > 1 || (pageLines.Length == 1 && pageLines[0].Length < 200))
                 {
-                    var trimmed = l.Trim();
-                    if (!string.IsNullOrWhiteSpace(trimmed))
+                    foreach (var l in pageLines)
                     {
-                        lines.Add(trimmed);
+                        var trimmed = l.Trim();
+                        if (!string.IsNullOrWhiteSpace(trimmed))
+                        {
+                            lines.Add(trimmed);
+                        }
+                    }
+                }
+                else
+                {
+                    // Fallback: PdfPig returned everything as one giant string.
+                    // Reconstruct lines by grouping words by their Y-coordinate.
+                    var words = page.GetWords().ToList();
+                    if (words.Count == 0)
+                    {
+                        // No words extracted — add the raw text as a single line
+                        lines.Add(text.Trim());
+                        continue;
+                    }
+
+                    // Group words by their vertical position (bottom of bounding box).
+                    // Words within 3 points of each other vertically are on the same line.
+                    const double yTolerance = 3.0;
+                    var sortedWords = words.OrderByDescending(w => w.BoundingBox.Bottom)
+                                           .ThenBy(w => w.BoundingBox.Left)
+                                           .ToList();
+
+                    var currentLineWords = new List<Word> { sortedWords[0] };
+                    double currentY = sortedWords[0].BoundingBox.Bottom;
+
+                    for (int w = 1; w < sortedWords.Count; w++)
+                    {
+                        double wordY = sortedWords[w].BoundingBox.Bottom;
+                        if (Math.Abs(wordY - currentY) <= yTolerance)
+                        {
+                            currentLineWords.Add(sortedWords[w]);
+                        }
+                        else
+                        {
+                            // Emit the completed line
+                            var lineText = string.Join(" ", currentLineWords.OrderBy(x => x.BoundingBox.Left).Select(x => x.Text));
+                            if (!string.IsNullOrWhiteSpace(lineText))
+                                lines.Add(lineText.Trim());
+
+                            currentLineWords = new List<Word> { sortedWords[w] };
+                            currentY = wordY;
+                        }
+                    }
+
+                    // Emit the last line
+                    if (currentLineWords.Count > 0)
+                    {
+                        var lineText = string.Join(" ", currentLineWords.OrderBy(x => x.BoundingBox.Left).Select(x => x.Text));
+                        if (!string.IsNullOrWhiteSpace(lineText))
+                            lines.Add(lineText.Trim());
                     }
                 }
             }
@@ -289,3 +393,4 @@ namespace AndersonsBakeryAPI.Services
         }
     }
 }
+/*********************************************EOF*******************************************/
