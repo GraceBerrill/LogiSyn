@@ -1,0 +1,105 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842]
+   /Resources <<
+     /Font <<
+       /F1 4 0 R
+       /F2 5 0 R
+     >>
+   >>
+   /Contents 6 0 R
+>>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+6 0 obj
+<< /Length 3759 >>
+stream
+0.12 0.16 0.23 rg
+30 740 535 75 re f
+0.92 0.70 0.03 rg
+30 735 535 5 re f
+BT /F2 20 Tf 1 1 1 rg 45 785 Td (ANDERSON'S BAKERY\n) Tj ET
+BT /F1 10 Tf 0.85 0.85 0.85 rg 45 765 Td (WHOLESALE BAKERY PRODUCTION SPECIFICATION\n) Tj ET
+BT /F1 9 Tf 0.7 0.7 0.7 rg 45 748 Td (Silwood Centre, Rondebosch, Cape Town | info@andersonsbakery.co.za\n) Tj ET
+BT /F2 16 Tf 0.92 0.70 0.03 rg 400 785 Td (PURCHASE INVOICE\n) Tj ET
+0.96 0.97 0.98 rg 30 635 535 85 re f
+0.80 0.83 0.88 RG 1 w 30 635 535 85 re s
+BT /F2 11 Tf 0.12 0.16 0.23 rg 45 695 Td (Order Number: #ORD-2026-1042\n) Tj ET
+BT /F2 11 Tf 0.12 0.16 0.23 rg 45 670 Td (Customer: Checkers Rondebosch\n) Tj ET
+BT /F1 10 Tf 0.2 0.2 0.2 rg 45 648 Td (Order Date: 29 October 2026\n) Tj ET
+BT /F1 10 Tf 0.2 0.2 0.2 rg 320 695 Td (Delivery Date: 30 October 2026\n) Tj ET
+BT /F1 10 Tf 0.2 0.2 0.2 rg 320 670 Td (Account Terms: 30 Days From Statement\n) Tj ET
+BT /F2 10 Tf 0.1 0.5 0.2 rg 320 648 Td (Production Status: In Production\n) Tj ET
+0.18 0.24 0.32 rg 30 595 535 25 re f
+BT /F2 10 Tf 1 1 1 rg 45 603 Td (ITEM #) Tj 100 603 Td (PRODUCT NAME) Tj 310 603 Td (QUANTITY) Tj 390 603 Td (UNIT PRICE) Tj 480 603 Td (TOTAL (ZAR)\n) Tj ET
+0.88 0.88 0.90 RG 0.5 w 30 564 m 565 564 l s
+BT /F1 10 Tf 0.3 0.3 0.3 rg 45 570 Td (01) Tj ET
+BT /F2 10 Tf 0.1 0.1 0.1 rg 100 570 Td (Hamburger Rolls) Tj ET
+BT /F2 10 Tf 0.1 0.45 0.2 rg 310 570 Td (Qty: 250) Tj ET
+BT /F1 10 Tf 0.25 0.25 0.25 rg 390 570 Td (R24.99) Tj ET
+BT /F2 10 Tf 0.1 0.1 0.1 rg 480 570 Td (R6247.50\n) Tj ET
+0.97 0.97 0.99 rg 30 539 535 24 re f
+0.88 0.88 0.90 RG 0.5 w 30 539 m 565 539 l s
+BT /F1 10 Tf 0.3 0.3 0.3 rg 45 545 Td (02) Tj ET
+BT /F2 10 Tf 0.1 0.1 0.1 rg 100 545 Td (Hotdog Rolls) Tj ET
+BT /F2 10 Tf 0.1 0.45 0.2 rg 310 545 Td (Qty: 150) Tj ET
+BT /F1 10 Tf 0.25 0.25 0.25 rg 390 545 Td (R24.99) Tj ET
+BT /F2 10 Tf 0.1 0.1 0.1 rg 480 545 Td (R3748.50\n) Tj ET
+0.88 0.88 0.90 RG 0.5 w 30 514 m 565 514 l s
+BT /F1 10 Tf 0.3 0.3 0.3 rg 45 520 Td (03) Tj ET
+BT /F2 10 Tf 0.1 0.1 0.1 rg 100 520 Td (Croissants) Tj ET
+BT /F2 10 Tf 0.1 0.45 0.2 rg 310 520 Td (Qty: 110) Tj ET
+BT /F1 10 Tf 0.25 0.25 0.25 rg 390 520 Td (R32.50) Tj ET
+BT /F2 10 Tf 0.1 0.1 0.1 rg 480 520 Td (R3575.00\n) Tj ET
+0.97 0.97 0.99 rg 30 489 535 24 re f
+0.88 0.88 0.90 RG 0.5 w 30 489 m 565 489 l s
+BT /F1 10 Tf 0.3 0.3 0.3 rg 45 495 Td (04) Tj ET
+BT /F2 10 Tf 0.1 0.1 0.1 rg 100 495 Td (White Panini) Tj ET
+BT /F2 10 Tf 0.1 0.45 0.2 rg 310 495 Td (Qty: 90) Tj ET
+BT /F1 10 Tf 0.25 0.25 0.25 rg 390 495 Td (R28.00) Tj ET
+BT /F2 10 Tf 0.1 0.1 0.1 rg 480 495 Td (R2520.00\n) Tj ET
+0.88 0.88 0.90 RG 0.5 w 30 464 m 565 464 l s
+BT /F1 10 Tf 0.3 0.3 0.3 rg 45 470 Td (05) Tj ET
+BT /F2 10 Tf 0.1 0.1 0.1 rg 100 470 Td (Chelsea Bun) Tj ET
+BT /F2 10 Tf 0.1 0.45 0.2 rg 310 470 Td (Qty: 60) Tj ET
+BT /F1 10 Tf 0.25 0.25 0.25 rg 390 470 Td (R19.99) Tj ET
+BT /F2 10 Tf 0.1 0.1 0.1 rg 480 470 Td (R1199.40\n) Tj ET
+0.80 0.83 0.88 RG 1 w 30 464 535 150 re s
+0.93 0.95 0.98 rg 330 422 235 32 re f
+0.75 0.80 0.88 RG 1 w 330 422 235 32 re s
+BT /F2 11 Tf 0.12 0.16 0.23 rg 345 433 Td (TOTAL AMOUNT DUE:) Tj ET
+BT /F2 12 Tf 0.1 0.55 0.2 rg 475 433 Td (R17,265.40\n) Tj ET
+0.98 0.98 0.99 rg 30 335 535 60 re f
+0.85 0.88 0.92 RG 0.5 w 30 335 535 60 re s
+BT /F2 10 Tf 0.2 0.25 0.3 rg 45 378 Td (Production & Receiving Notes:\n) Tj ET
+BT /F1 9 Tf 0.35 0.35 0.35 rg 45 362 Td (1. Ambient finished goods pack into standard bakery crates with delivery slips.\n) Tj ET
+BT /F1 9 Tf 0.35 0.35 0.35 rg 45 348 Td (2. Freezer and chilled stock must be blast cooled before dispatched loading at Bay 2.\n) Tj ET
+0.85 0.85 0.88 RG 0.5 w 30 45 m 565 45 l s
+BT /F1 8 Tf 0.5 0.5 0.5 rg 45 32 Td (LogiSyn Bakery Management Suite - Wholesale Production Engine\n) Tj ET
+endstream
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000010 00000 n 
+0000000062 00000 n 
+0000000122 00000 n 
+0000000302 00000 n 
+0000000375 00000 n 
+0000000453 00000 n 
+trailer
+<< /Size 7 /Root 1 0 R >>
+startxref
+4268
+%%EOF

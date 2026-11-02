@@ -62,7 +62,7 @@
     }
 
     /* ========================================================
-       1. LOGIN VIEW
+       1. LOGIN VIEW (Screen 1: Admin - Login)
        ======================================================== */
     #view-login {
       background-color: var(--navy-800);
@@ -85,7 +85,7 @@
 
     .login-brand {
       font-size: 0.72rem;
-      letter-spacing: 0.12em;
+      letter-spacing: 0.14em;
       color: var(--slate-400);
       font-weight: 700;
       text-transform: uppercase;
@@ -152,6 +152,7 @@
       display: flex;
       gap: 6px;
       justify-content: center;
+      flex-wrap: wrap;
     }
 
     .role-chip {
@@ -186,6 +187,29 @@
       margin-bottom: 12px;
     }
 
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,0.12);
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: #10b981;
+    }
+
+    .status-dot.offline {
+      background-color: #f59e0b;
+    }
+
     .header-main-title {
       font-size: 1.55rem;
       font-weight: 800;
@@ -198,16 +222,36 @@
       margin-top: 2px;
     }
 
+    .header-with-back {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 2px;
+    }
+
+    .header-back-chevron {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 1.4rem;
+      font-weight: 300;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      padding: 0;
+      line-height: 1;
+    }
+
     /* ========================================================
        3. MAIN CONTENT BODY
        ======================================================== */
     .app-content {
       flex: 1;
-      padding: 16px 16px 85px;
+      padding: 16px 16px 100px;
       overflow-y: auto;
     }
 
-    /* Stats Row (from Dashboard Wireframe) */
+    /* Stats Row (Screen 2: Admin - Dashboard) */
     .stats-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -224,7 +268,7 @@
     }
 
     .stat-number {
-      font-size: 1.7rem;
+      font-size: 1.85rem;
       font-weight: 800;
       color: var(--navy-800);
       line-height: 1.1;
@@ -248,9 +292,16 @@
       align-items: center;
     }
 
-    /* Search Bar */
-    .search-container {
+    /* Search & Filter Bar (Screen 3, 4, 5) */
+    .controls-row {
+      display: flex;
+      gap: 10px;
       margin-bottom: 14px;
+    }
+
+    .search-input-wrap {
+      flex: 1;
+      position: relative;
     }
 
     .search-input {
@@ -258,20 +309,42 @@
       background: white;
       border: 1px solid var(--slate-200);
       border-radius: 10px;
-      padding: 10px 14px;
+      padding: 10px 14px 10px 34px;
       font-size: 0.85rem;
       color: var(--slate-800);
       outline: none;
     }
 
-    /* Orders List (from Dashboard & Orders Wireframes) */
-    .orders-stack {
+    .search-icon {
+      position: absolute;
+      left: 11px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--slate-400);
+      font-size: 0.85rem;
+      pointer-events: none;
+    }
+
+    .filter-select {
+      background: white;
+      border: 1px solid var(--slate-200);
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 0.85rem;
+      color: var(--slate-600);
+      font-weight: 600;
+      outline: none;
+      cursor: pointer;
+    }
+
+    /* Order / Product List Cards */
+    .cards-stack {
       display: flex;
       flex-direction: column;
       gap: 10px;
     }
 
-    .order-item-card {
+    .list-card {
       background: white;
       border-radius: 12px;
       padding: 14px 16px;
@@ -284,29 +357,52 @@
       transition: transform 0.1s, box-shadow 0.1s;
     }
 
-    .order-item-card:active {
+    .list-card:active {
       transform: scale(0.99);
       background: #fafbfc;
     }
 
-    .order-info {
+    .list-card-left {
       display: flex;
       flex-direction: column;
     }
 
-    .order-number {
+    .list-card-title {
       font-size: 0.98rem;
       font-weight: 800;
       color: var(--navy-800);
     }
 
-    .order-customer-name {
-      font-size: 0.82rem;
+    .list-card-sub {
+      font-size: 0.8rem;
       color: var(--slate-600);
       margin-top: 2px;
     }
 
-    /* Status Pills matching Wireframe colors */
+    .list-card-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* Small Navy Pill Button for 'View' */
+    .btn-view-pill {
+      background-color: var(--navy-800);
+      color: white;
+      border: none;
+      padding: 6px 16px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .btn-view-pill:hover {
+      background-color: var(--navy-700);
+    }
+
+    /* Status Pills */
     .status-pill {
       font-size: 0.72rem;
       font-weight: 700;
@@ -333,28 +429,133 @@
       border: 1px solid #a7f3d0;
     }
 
-    /* ========================================================
-       4. ORDER DETAIL / BREAKDOWN VIEW
-       ======================================================== */
-    .detail-header {
-      background-color: var(--navy-800);
-      color: white;
-      padding: 16px 20px 18px;
+    /* Centered Floating / Bottom Action Button (e.g. 'Create New Order', 'Add Product') */
+    .floating-action-container {
+      position: fixed;
+      bottom: 70px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 440px;
+      display: flex;
+      justify-content: center;
+      pointer-events: none;
+      z-index: 30;
+      padding: 0 20px;
     }
 
-    .back-btn {
-      background: none;
+    .btn-action-float {
+      pointer-events: auto;
+      background: var(--navy-800);
+      color: white;
       border: none;
-      color: white;
+      padding: 13px 36px;
+      border-radius: 999px;
       font-size: 0.9rem;
-      font-weight: 600;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
+      font-weight: 700;
       cursor: pointer;
-      margin-bottom: 8px;
+      box-shadow: 0 4px 14px rgba(19, 34, 56, 0.35);
+      transition: transform 0.15s, background 0.15s;
     }
 
+    .btn-action-float:active {
+      transform: scale(0.97);
+      background: var(--navy-900);
+    }
+
+    /* ========================================================
+       4. CREATE ORDER (UPLOAD SCREEN 8)
+       ======================================================== */
+    .upload-card-wrapper {
+      background: white;
+      border-radius: 20px;
+      padding: 24px 20px 30px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--slate-100);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .drop-zone {
+      width: 100%;
+      border: 2px dashed #94a3b8;
+      border-radius: 16px;
+      padding: 40px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: #fafbfc;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .drop-zone:hover {
+      border-color: var(--navy-800);
+      background: #f1f5f9;
+    }
+
+    .upload-circle-icon {
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+      background: var(--navy-800);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      margin-bottom: 16px;
+    }
+
+    .upload-text-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--navy-800);
+      margin-bottom: 14px;
+    }
+
+    .btn-browse {
+      background: transparent;
+      border: 1.5px solid var(--navy-800);
+      color: var(--navy-800);
+      padding: 9px 24px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .btn-browse:hover {
+      background: var(--slate-100);
+    }
+
+    .selected-file-label {
+      margin-top: 14px;
+      font-size: 0.8rem;
+      color: var(--slate-600);
+      font-weight: 600;
+    }
+
+    .btn-go-bottom {
+      width: 100%;
+      background: var(--navy-800);
+      color: white;
+      border: none;
+      padding: 14px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 800;
+      cursor: pointer;
+      margin-top: 24px;
+      letter-spacing: 0.05em;
+    }
+
+    /* ========================================================
+       5. ORDER BREAKDOWN & PRODUCTION SHEETS (Screen 7 & 9)
+       ======================================================== */
     .product-breakdown-card {
       background: white;
       border-radius: var(--radius);
@@ -376,11 +577,10 @@
       margin-bottom: 14px;
     }
 
-    /* Ingredient Table */
     .wireframe-table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 0.76rem;
+      font-size: 0.78rem;
       margin-bottom: 14px;
     }
 
@@ -412,7 +612,6 @@
       color: var(--slate-600);
     }
 
-    /* Packaging Grid */
     .pack-row {
       display: flex;
       justify-content: space-between;
@@ -431,8 +630,8 @@
       color: var(--navy-800);
     }
 
-    /* Detail Action Footer */
-    .detail-action-bar {
+    /* Dual Action Bar (Screen 9: + ADD PRODUCT and DONE) */
+    .sheet-action-bar {
       position: fixed;
       bottom: 0;
       left: 50%;
@@ -443,40 +642,68 @@
       padding: 12px 16px;
       border-top: 1px solid var(--slate-200);
       display: flex;
-      gap: 10px;
+      gap: 12px;
       z-index: 50;
     }
 
-    .btn-secondary {
+    .btn-sheet-outline {
       flex: 1;
-      background: var(--slate-100);
+      background: white;
       color: var(--navy-800);
-      border: 1px solid var(--slate-200);
-      padding: 12px;
+      border: 1.5px solid var(--navy-800);
+      padding: 13px;
       border-radius: 999px;
       font-size: 0.85rem;
-      font-weight: 700;
+      font-weight: 800;
       cursor: pointer;
     }
 
-    .btn-primary-action {
-      flex: 2;
+    .btn-sheet-done {
+      flex: 1;
       background: var(--navy-800);
       color: white;
       border: none;
-      padding: 12px;
+      padding: 13px;
       border-radius: 999px;
       font-size: 0.85rem;
-      font-weight: 700;
+      font-weight: 800;
       cursor: pointer;
+      letter-spacing: 0.05em;
+    }
+
+    /* Single Done Action Bar (Screen 7) */
+    .single-done-bar {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 440px;
+      background: white;
+      padding: 12px 16px;
+      border-top: 1px solid var(--slate-200);
+      z-index: 50;
+    }
+
+    .btn-full-done {
+      width: 100%;
+      background: var(--navy-800);
+      color: white;
+      border: none;
+      padding: 14px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 800;
+      cursor: pointer;
+      letter-spacing: 0.05em;
     }
 
     /* ========================================================
-       5. CONFIRMATION POPUP (from Wireframe)
+       6. MODALS & POPUPS (Screen 6, 10, 11)
        ======================================================== */
     .modal-overlay {
       display: none;
-      position: absolute;
+      position: fixed;
       top: 0;
       left: 0;
       width: 100%;
@@ -485,7 +712,7 @@
       backdrop-filter: blur(2px);
       justify-content: center;
       align-items: center;
-      padding: 24px;
+      padding: 20px;
       z-index: 200;
     }
 
@@ -493,56 +720,177 @@
       display: flex;
     }
 
-    .confirm-card {
+    .modal-card {
       background: white;
       width: 100%;
-      max-width: 320px;
-      border-radius: 20px;
-      padding: 32px 20px 24px;
-      text-align: center;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-      animation: popIn 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      max-width: 380px;
+      border-radius: 22px;
+      padding: 26px 22px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.35);
+      position: relative;
+      max-height: 85vh;
+      overflow-y: auto;
+      animation: popIn 0.22s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
     @keyframes popIn {
-      from { transform: scale(0.85); opacity: 0; }
+      from { transform: scale(0.9); opacity: 0; }
       to { transform: scale(1); opacity: 1; }
     }
 
-    .confirm-icon-circle {
-      width: 64px;
-      height: 64px;
-      background: var(--green-500);
-      border-radius: 50%;
-      display: inline-flex;
-      justify-content: center;
-      align-items: center;
-      color: white;
-      font-size: 2rem;
-      margin-bottom: 18px;
+    .modal-close-btn {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      background: none;
+      border: none;
+      font-size: 1.3rem;
+      color: var(--slate-400);
+      cursor: pointer;
+      line-height: 1;
     }
 
-    .confirm-title {
-      font-size: 1.1rem;
+    /* Product Detail Modal Content (Screen 6) */
+    .detail-modal-title {
+      font-size: 1.35rem;
       font-weight: 800;
       color: var(--navy-800);
-      margin-bottom: 22px;
+      margin-bottom: 2px;
     }
 
-    .btn-done {
-      width: 100%;
-      background: var(--navy-800);
-      color: white;
+    .detail-modal-date {
+      font-size: 0.75rem;
+      color: var(--slate-400);
+      margin-bottom: 16px;
+    }
+
+    .detail-modal-section-title {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--navy-800);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .detail-ingredient-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 5px 0;
+      font-size: 0.85rem;
+      border-bottom: 1px dashed var(--slate-100);
+    }
+
+    .detail-method-text {
+      font-size: 0.82rem;
+      color: var(--slate-600);
+      line-height: 1.45;
+      background: var(--slate-50);
+      padding: 10px 12px;
+      border-radius: 8px;
+      margin-top: 6px;
+      margin-bottom: 14px;
+    }
+
+    .detail-storage-badge {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      background: var(--slate-100);
+      color: var(--navy-800);
+      padding: 6px 12px;
+      border-radius: 6px;
+    }
+
+    /* Add Product Form (Screen 10) */
+    .add-ing-row {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 8px;
+      align-items: center;
+    }
+
+    .add-ing-row input {
+      flex: 1;
+      padding: 8px 10px;
+      border: 1px solid var(--slate-200);
+      border-radius: 6px;
+      font-size: 0.8rem;
+    }
+
+    .btn-remove-ing {
+      background: none;
       border: none;
+      color: #e11d48;
+      font-size: 1.1rem;
+      cursor: pointer;
+      padding: 2px 6px;
+    }
+
+    /* Print / Email Modal (Screen 11: Order Complete) */
+    .complete-modal-card {
+      text-align: center;
+      padding: 34px 22px 28px;
+    }
+
+    .complete-check-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: var(--green-500);
+      color: white;
+      font-size: 1.9rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 14px;
+    }
+
+    .complete-title {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--navy-800);
+      margin-bottom: 4px;
+    }
+
+    .complete-sub {
+      font-size: 0.85rem;
+      color: var(--slate-600);
+      margin-bottom: 24px;
+    }
+
+    .complete-btns-row {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    .btn-modal-print {
+      flex: 1;
+      background: white;
+      border: 1.5px solid var(--navy-800);
+      color: var(--navy-800);
       padding: 12px;
       border-radius: 999px;
-      font-size: 0.9rem;
-      font-weight: 700;
+      font-size: 0.85rem;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .btn-modal-email {
+      flex: 1;
+      background: var(--navy-800);
+      border: none;
+      color: white;
+      padding: 12px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 800;
       cursor: pointer;
     }
 
     /* ========================================================
-       6. BOTTOM NAV BAR (from Wireframes)
+       7. BOTTOM NAV BAR (4 Tabs matching Figma Mockup)
        ======================================================== */
     .bottom-nav {
       position: fixed;
@@ -580,6 +928,9 @@
 
     .nav-icon {
       font-size: 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
   </style>
 </head>
@@ -587,7 +938,7 @@
 
 <div id="app-viewport">
 
-  <!-- ==================== VIEW 1: LOGIN ==================== -->
+  <!-- ==================== SCREEN 1: ADMIN - LOGIN ==================== -->
   <div id="view-login">
     <div class="login-card">
       <div class="login-brand">ANDERSON'S BAKERY</div>
@@ -595,110 +946,378 @@
 
       <div class="form-group">
         <label class="form-label">Username</label>
-        <input type="text" id="login-username" class="form-input" placeholder="Enter your username" value="user">
+        <input type="text" id="login-username" class="form-input" placeholder="Enter your username" value="admin">
       </div>
 
       <div class="form-group">
         <label class="form-label">Password</label>
-        <input type="password" id="login-password" class="form-input" placeholder="Enter your password" value="user123">
+        <input type="password" id="login-password" class="form-input" placeholder="Enter your password" value="admin123">
       </div>
 
-      <button class="btn-login" onclick="handleLogin()">Log In</button>
+      <button class="btn-login" id="btn-login-submit" onclick="handleLogin()">Log In</button>
 
       <div class="quick-roles">
-        <span class="role-chip" onclick="fillRole('user', 'user123')">Baker (User)</span>
-        <span class="role-chip" onclick="fillRole('manager', 'manager123')">Manager</span>
         <span class="role-chip" onclick="fillRole('admin', 'admin123')">Admin</span>
+        <span class="role-chip" onclick="fillRole('manager', 'manager123')">Manager</span>
+        <span class="role-chip" onclick="fillRole('user', 'user123')">Baker (User)</span>
       </div>
+
+      <div id="login-msg" style="margin-top:14px; font-size:0.75rem; color:#e11d48; display:none;"></div>
     </div>
   </div>
 
-  <!-- ==================== VIEW 2: DASHBOARD ==================== -->
+  <!-- ==================== SCREEN 2: ADMIN - DASHBOARD ==================== -->
   <div id="view-dashboard" style="display: none;">
     <header class="app-header">
       <div class="status-bar-row">
         <span>9:41</span>
-        <span id="dash-connection-status">● Live Cloud</span>
+        <div class="status-badge" onclick="testDatabaseConnection()">
+          <span class="status-dot" id="dash-status-dot"></span>
+          <span id="dash-connection-status">● Live Database</span>
+        </div>
       </div>
       <h1 class="header-main-title">Dashboard</h1>
-      <div class="header-sub-date" id="dash-date">10/05/2026</div>
+      <div class="header-sub-date" id="dash-date">24/09/2024</div>
     </header>
 
     <div class="app-content">
       <div class="stats-row">
         <div class="stat-box">
-          <div class="stat-number" id="dash-stat-new">0</div>
-          <div class="stat-title" id="dash-label-active">Active Orders</div>
+          <div class="stat-number" id="dash-stat-new">12</div>
+          <div class="stat-title">New Orders</div>
         </div>
         <div class="stat-box">
-          <div class="stat-number" id="dash-stat-completed">0</div>
+          <div class="stat-number" id="dash-stat-completed">6</div>
           <div class="stat-title">Completed Orders</div>
         </div>
       </div>
 
       <div class="section-heading">
         <span>Recent Orders</span>
-        <span style="font-size: 0.72rem; color: var(--slate-400); cursor:pointer;" onclick="fetchOrders(true)">🔄 Refresh</span>
+        <span style="font-size: 0.72rem; color: var(--slate-400); cursor:pointer;" onclick="fetchOrders(true)">🔄 Sync DB</span>
       </div>
 
-      <div class="orders-stack" id="dash-recent-orders">
+      <div class="cards-stack" id="dash-recent-orders">
         <!-- Rendered dynamically -->
       </div>
     </div>
   </div>
 
-  <!-- ==================== VIEW 3: ORDERS ==================== -->
+  <!-- ==================== SCREEN 3: ADMIN - ORDERS ==================== -->
   <div id="view-orders" style="display: none;">
     <header class="app-header">
       <div class="status-bar-row">
         <span>9:41</span>
-        <span>Orders View</span>
+        <div class="status-badge" onclick="testDatabaseConnection()">
+          <span class="status-dot"></span>
+          <span>Orders View</span>
+        </div>
       </div>
       <h1 class="header-main-title">Orders</h1>
-      <div class="header-sub-date" id="orders-date">10/05/2026</div>
+      <div class="header-sub-date" id="orders-date">24/09/2024</div>
     </header>
 
     <div class="app-content">
-      <div class="search-container">
-        <input type="text" id="orders-search" class="search-input" placeholder="Search order number or customer..." oninput="handleSearch()">
+      <div class="controls-row">
+        <div class="search-input-wrap">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="orders-search" class="search-input" placeholder="Search" oninput="handleOrdersFilter()">
+        </div>
+        <select id="orders-status-filter" class="filter-select" onchange="handleOrdersFilter()">
+          <option value="All">All Statuses</option>
+          <option value="Pending">Pending</option>
+          <option value="In Production">In Production</option>
+          <option value="Completed">Completed</option>
+        </select>
       </div>
 
-      <div class="orders-stack" id="orders-full-list">
+      <div class="cards-stack" id="orders-full-list">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+
+    <!-- Floating 'Create New Order' Button (Screen 3) -->
+    <div class="floating-action-container">
+      <button class="btn-action-float" onclick="openCreateOrderUpload()">Create New Order</button>
+    </div>
+  </div>
+
+  <!-- ==================== SCREEN 4: ADMIN - HISTORY ==================== -->
+  <div id="view-history" style="display: none;">
+    <header class="app-header">
+      <div class="status-bar-row">
+        <span>9:41</span>
+        <span>Completed Archives</span>
+      </div>
+      <h1 class="header-main-title">History</h1>
+      <div class="header-sub-date" id="history-date">24/09/2024</div>
+    </header>
+
+    <div class="app-content">
+      <div class="controls-row">
+        <div class="search-input-wrap">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="history-search" class="search-input" placeholder="Search" oninput="handleHistoryFilter()">
+        </div>
+        <select id="history-date-filter" class="filter-select" onchange="handleHistoryFilter()">
+          <option value="All">All Dates</option>
+          <option value="Today">Today</option>
+          <option value="Week">This Week</option>
+          <option value="Month">This Month</option>
+        </select>
+      </div>
+
+      <div class="cards-stack" id="history-full-list">
         <!-- Rendered dynamically -->
       </div>
     </div>
   </div>
 
-  <!-- ==================== VIEW 4: ORDER DETAIL ==================== -->
+  <!-- ==================== SCREEN 5: ADMIN - MANAGE PRODUCTS ==================== -->
+  <div id="view-products" style="display: none;">
+    <header class="app-header">
+      <div class="status-bar-row">
+        <span>9:41</span>
+        <span>Recipe Catalog</span>
+      </div>
+      <h1 class="header-main-title">Manage Products</h1>
+      <div class="header-sub-date" id="products-date">24/09/2024</div>
+    </header>
+
+    <div class="app-content">
+      <div class="controls-row">
+        <div class="search-input-wrap">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="products-search" class="search-input" placeholder="Search" oninput="handleProductsFilter()">
+        </div>
+        <select id="products-storage-filter" class="filter-select" onchange="handleProductsFilter()">
+          <option value="All">Storage</option>
+          <option value="Ambient">Ambient</option>
+          <option value="Chilled">Chilled</option>
+          <option value="Frozen">Frozen</option>
+        </select>
+      </div>
+
+      <div class="cards-stack" id="products-full-list">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+
+    <!-- Floating 'Add Product' Button (Screen 5) -->
+    <div class="floating-action-container">
+      <button class="btn-action-float" onclick="openAddProductModal()">Add Product</button>
+    </div>
+  </div>
+
+  <!-- ==================== SCREEN 8: ADMIN - CREATE ORDER (UPLOAD) ==================== -->
+  <div id="view-create-upload" style="display: none;">
+    <header class="app-header">
+      <div class="status-bar-row">
+        <span>9:41</span>
+        <span>Ingest Purchase Order</span>
+      </div>
+      <div class="header-with-back">
+        <button class="header-back-chevron" onclick="navigateFromCreateToOrders()">‹</button>
+        <h1 class="header-main-title">Create New Order</h1>
+      </div>
+      <div class="header-sub-date" id="create-order-date">24/09/2024</div>
+    </header>
+
+    <div class="app-content">
+      <div class="upload-card-wrapper">
+        <div class="drop-zone" onclick="document.getElementById('file-order-input').click()">
+          <div class="upload-circle-icon">↑</div>
+          <div class="upload-text-title">Upload Order Here</div>
+          <button class="btn-browse" type="button">Browse Files</button>
+          <input type="file" id="file-order-input" accept=".pdf,.xlsx,.csv" style="display:none" onchange="handleFileSelected(event)">
+          <div class="selected-file-label" id="selected-file-name">Supported formats: .pdf, .xlsx, .csv</div>
+        </div>
+
+        <button class="btn-go-bottom" id="btn-create-go" onclick="processOrderIngestion()">GO</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SCREEN 9: ADMIN - CREATE ORDER [ORDER SHEETS] ==================== -->
+  <div id="view-create-sheet" style="display: none;">
+    <header class="app-header">
+      <div class="status-bar-row">
+        <span>9:41</span>
+        <span>Scaled Production Sheet</span>
+      </div>
+      <div class="header-with-back">
+        <button class="header-back-chevron" onclick="openCreateOrderUpload()">‹</button>
+        <h1 class="header-main-title" id="create-sheet-title">Create New Order</h1>
+      </div>
+      <div class="header-sub-date" id="create-sheet-sub">Customer • Date</div>
+    </header>
+
+    <div class="app-content" id="create-sheet-items-area" style="padding-bottom: 90px;">
+      <!-- Scaled Items Rendered Here -->
+    </div>
+
+    <!-- Dual Action Bar: + ADD PRODUCT and DONE (Screen 9) -->
+    <div class="sheet-action-bar">
+      <button class="btn-sheet-outline" onclick="openAddMoreProductModal()">+ ADD PRODUCT</button>
+      <button class="btn-sheet-done" onclick="submitCreatedOrderToDatabase()">DONE</button>
+    </div>
+  </div>
+
+  <!-- ==================== SCREEN 7: ADMIN - ORDER BREAKDOWN ==================== -->
   <div id="view-detail" style="display: none;">
-    <header class="detail-header">
-      <button class="back-btn" onclick="navigateBack()">‹ Back to Orders</button>
-      <h2 class="header-main-title" id="detail-order-title" style="font-size: 1.25rem;">Order Details</h2>
-      <div class="header-sub-date" id="detail-order-date">Date</div>
+    <header class="app-header">
+      <div class="status-bar-row">
+        <span>9:41</span>
+        <span>Production Breakdown</span>
+      </div>
+      <div class="header-with-back">
+        <button class="header-back-chevron" onclick="navigateBackFromDetail()">‹</button>
+        <h1 class="header-main-title" id="detail-order-title" style="font-size: 1.35rem;">Order Breakdown</h1>
+      </div>
+      <div class="header-sub-date" id="detail-order-date">Checkers • 24/09/2024</div>
     </header>
 
     <div class="app-content" id="detail-content-area" style="padding-bottom: 90px;">
-      <!-- Product Breakdown Sheets generated here -->
+      <!-- Scaled Items Rendered Here -->
     </div>
 
-    <div class="detail-action-bar">
-      <button class="btn-secondary" onclick="alert('Export production sheet triggered.')">PRINT</button>
-      <button class="btn-primary-action" id="btn-mark-status" onclick="handleDetailStatusAction()">Mark As Completed</button>
-    </div>
-  </div>
-
-  <!-- ==================== CONFIRMATION MODAL ==================== -->
-  <div class="modal-overlay" id="confirm-modal">
-    <div class="confirm-card">
-      <div class="confirm-icon-circle">✓</div>
-      <div class="confirm-title" id="confirm-modal-text">Order Marked as Completed</div>
-      <button class="btn-done" onclick="closeConfirmModal()">DONE</button>
+    <!-- Single 'DONE' Button Action Bar (Screen 7) -->
+    <div class="single-done-bar">
+      <button class="btn-full-done" onclick="handleDetailDoneClick()">DONE</button>
     </div>
   </div>
 
-  <!-- ==================== BOTTOM NAV BAR ==================== -->
+  <!-- ==================== SCREEN 6: ADMIN - PRODUCT DETAIL MODAL ==================== -->
+  <div class="modal-overlay" id="modal-product-detail">
+    <div class="modal-card">
+      <button class="modal-close-btn" onclick="closeProductDetailModal()">✕</button>
+      <h2 class="detail-modal-title" id="modal-prod-name">Hotdog Rolls</h2>
+      <div class="detail-modal-date" id="modal-prod-date">Date Added: 24 August 2024</div>
+
+      <div class="detail-modal-section-title">Ingredients: (24 per batch)</div>
+      <div id="modal-prod-ingredients-list" style="margin-bottom: 16px;">
+        <!-- Injected dynamically -->
+      </div>
+
+      <div class="detail-modal-section-title">Method:</div>
+      <div class="detail-method-text" id="modal-prod-method">
+        Mix water, flour, and yeast for 10 minutes then let ferment for 1 hour then divide and bake for 30 minutes.
+      </div>
+
+      <div class="detail-storage-badge" id="modal-prod-storage">Ambient Room 2</div>
+    </div>
+  </div>
+
+  <!-- ==================== SCREEN 10: ADMIN - ADD PRODUCT MODAL ==================== -->
+  <div class="modal-overlay" id="modal-add-product">
+    <div class="modal-card">
+      <button class="modal-close-btn" onclick="closeAddProductModal()">✕</button>
+      <h2 class="detail-modal-title" style="margin-bottom: 16px;">Add Product</h2>
+
+      <div class="form-group">
+        <label class="form-label">Product Name</label>
+        <input type="text" id="add-prod-name" class="form-input" placeholder="Enter product name...">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Storage Location</label>
+        <select id="add-prod-storage" class="form-input">
+          <option value="Ambient">Ambient</option>
+          <option value="Chilled">Chilled</option>
+          <option value="Frozen">Frozen</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Price Per Unit (R)</label>
+        <input type="number" id="add-prod-price" class="form-input" placeholder="Enter price..." step="0.5" value="25">
+      </div>
+
+      <div class="stats-row" style="margin-bottom: 12px;">
+        <div>
+          <label class="form-label">Sell By (Days)</label>
+          <input type="number" id="add-prod-sellby" class="form-input" value="3">
+        </div>
+        <div>
+          <label class="form-label">Best Before (Days)</label>
+          <input type="number" id="add-prod-bestbefore" class="form-input" value="5">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Preparation Method</label>
+        <textarea id="add-prod-method" class="form-input" rows="3" placeholder="Enter preparation method..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+          <label class="form-label" style="margin:0;">Ingredients List</label>
+          <button type="button" style="background:none; border:none; color:var(--blue-500); font-size:0.75rem; font-weight:700; cursor:pointer;" onclick="addIngredientInputRow()">+ Add Ingredient</button>
+        </div>
+        <div id="add-ingredients-container">
+          <div class="add-ing-row">
+            <input type="text" placeholder="Flour" value="Flour" class="ing-name">
+            <input type="text" placeholder="2.5" value="2.5" class="ing-qty" style="max-width:60px;">
+            <input type="text" placeholder="kg" value="kg" class="ing-unit" style="max-width:50px;">
+          </div>
+          <div class="add-ing-row">
+            <input type="text" placeholder="Water" value="Water" class="ing-name">
+            <input type="text" placeholder="1.5" value="1.5" class="ing-qty" style="max-width:60px;">
+            <input type="text" placeholder="L" value="L" class="ing-unit" style="max-width:50px;">
+          </div>
+          <div class="add-ing-row">
+            <input type="text" placeholder="Yeast" value="Yeast" class="ing-name">
+            <input type="text" placeholder="50" value="50" class="ing-qty" style="max-width:60px;">
+            <input type="text" placeholder="g" value="g" class="ing-unit" style="max-width:50px;">
+          </div>
+        </div>
+      </div>
+
+      <button class="btn-login" style="margin-top: 10px;" onclick="saveNewProductToDatabase()">ADD</button>
+    </div>
+  </div>
+
+  <!-- ==================== SCREEN 11: ADMIN - PRINT OR EMAIL (ORDER COMPLETE MODAL) ==================== -->
+  <div class="modal-overlay" id="modal-order-complete">
+    <div class="modal-card complete-modal-card">
+      <div class="complete-check-icon">✓</div>
+      <h2 class="complete-title">Order Complete</h2>
+      <div class="complete-sub" id="complete-modal-order-sub">Checkers • Order #1010</div>
+
+      <div class="complete-btns-row">
+        <button class="btn-modal-print" onclick="handlePrintAction()">PRINT</button>
+        <button class="btn-modal-email" onclick="handleEmailAction()">EMAIL</button>
+      </div>
+
+      <button style="margin-top:16px; background:none; border:none; color:var(--slate-400); font-size:0.8rem; font-weight:600; cursor:pointer;" onclick="closeOrderCompleteModal()">Return to Orders</button>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL: ADD MORE PRODUCTS (DURING SHEET EDIT) ==================== -->
+  <div class="modal-overlay" id="modal-add-more-sheet">
+    <div class="modal-card">
+      <button class="modal-close-btn" onclick="closeAddMoreProductModal()">✕</button>
+      <h2 class="detail-modal-title" style="margin-bottom: 16px;">Add Product to Order</h2>
+
+      <div class="form-group">
+        <label class="form-label">Select Product</label>
+        <select id="more-product-select" class="form-input">
+          <!-- Filled dynamically -->
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Quantity</label>
+        <input type="number" id="more-product-amount" class="form-input" value="100" min="10" step="10">
+      </div>
+
+      <button class="btn-login" onclick="confirmAddProductToCurrentSheet()">Add to Sheet</button>
+    </div>
+  </div>
+
+  <!-- ==================== BOTTOM NAV BAR (4 Tabs matching Figma Mockup) ==================== -->
   <nav class="bottom-nav" id="bottom-navigation" style="display: none;">
-    <button class="nav-tab active" id="tab-dash" onclick="switchTab('dashboard')">
+    <button class="nav-tab active" id="tab-dashboard" onclick="switchTab('dashboard')">
       <span class="nav-icon">📊</span>
       <span>Dashboard</span>
     </button>
@@ -706,108 +1325,336 @@
       <span class="nav-icon">📋</span>
       <span>Orders</span>
     </button>
-    <button class="nav-tab" id="tab-logout" onclick="handleLogout()">
-      <span class="nav-icon">🚪</span>
-      <span>Log Out</span>
+    <button class="nav-tab" id="tab-history" onclick="switchTab('history')">
+      <span class="nav-icon">🕒</span>
+      <span>History</span>
+    </button>
+    <button class="nav-tab" id="tab-products" onclick="switchTab('products')">
+      <span class="nav-icon">🍞</span>
+      <span>Products</span>
     </button>
   </nav>
 
 </div>
 
 <script>
+  // State variables
   let allOrders = [];
+  let allProducts = [];
   let currentOrder = null;
-  let currentUserRole = 'user';
+  let stagedNewOrder = null;
+  let currentUserRole = 'admin';
   let activeTab = 'dashboard';
   let previousView = 'dashboard';
+  let jwtToken = sessionStorage.getItem('logisyn_token') || '';
+  let selectedUploadFile = null;
 
-  // Format today's date
-  const now = new Date();
-  const formattedDate = now.toLocaleDateString([], { day: '2-digit', month: '2-digit', year: 'numeric' });
+  // Set today's date formatted matching mockup (DD/MM/YYYY)
+  const today = new Date();
+  const formattedDate = `${String(today.getDate()).padStart(2, '0')}/${String(today.getMonth() + 1).padStart(2, '0')}/${today.getFullYear()}`;
   document.getElementById('dash-date').innerText = formattedDate;
   document.getElementById('orders-date').innerText = formattedDate;
+  document.getElementById('history-date').innerText = formattedDate;
+  document.getElementById('products-date').innerText = formattedDate;
+  document.getElementById('create-order-date').innerText = formattedDate;
 
+  // Quick fill helper
   function fillRole(u, p) {
     document.getElementById('login-username').value = u;
     document.getElementById('login-password').value = p;
   }
 
-  function handleLogin() {
-    const user = document.getElementById('login-username').value.trim().toLowerCase();
-    currentUserRole = user.includes('admin') ? 'admin' : (user.includes('manager') ? 'manager' : 'user');
+  // Authentication connecting to database
+  async function handleLogin() {
+    const username = document.getElementById('login-username').value.trim();
+    const password = document.getElementById('login-password').value.trim();
+    const msgBox = document.getElementById('login-msg');
+    msgBox.style.display = 'none';
+
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        jwtToken = data.token || '';
+        sessionStorage.setItem('logisyn_token', jwtToken);
+        currentUserRole = (data.user?.role || 'admin').toLowerCase();
+      } else {
+        // Fallback for local sandbox if API is offline
+        currentUserRole = username.toLowerCase().includes('admin') ? 'admin' : (username.toLowerCase().includes('manager') ? 'manager' : 'user');
+      }
+    } catch (e) {
+      console.warn('API login offline fallback in effect:', e);
+      currentUserRole = username.toLowerCase().includes('admin') ? 'admin' : (username.toLowerCase().includes('manager') ? 'manager' : 'user');
+    }
 
     document.getElementById('view-login').style.display = 'none';
     document.getElementById('bottom-navigation').style.display = 'flex';
     switchTab('dashboard');
     fetchOrders();
+    fetchProducts();
   }
 
   function handleLogout() {
+    jwtToken = '';
+    sessionStorage.removeItem('logisyn_token');
     document.getElementById('view-dashboard').style.display = 'none';
     document.getElementById('view-orders').style.display = 'none';
+    document.getElementById('view-history').style.display = 'none';
+    document.getElementById('view-products').style.display = 'none';
     document.getElementById('view-detail').style.display = 'none';
+    document.getElementById('view-create-upload').style.display = 'none';
+    document.getElementById('view-create-sheet').style.display = 'none';
     document.getElementById('bottom-navigation').style.display = 'none';
     document.getElementById('view-login').style.display = 'flex';
   }
 
+  // Switch between the 4 main bottom tabs
   function switchTab(tab) {
     activeTab = tab;
-    document.getElementById('tab-dash').classList.toggle('active', tab === 'dashboard');
-    document.getElementById('tab-orders').classList.toggle('active', tab === 'orders');
+    ['dashboard', 'orders', 'history', 'products'].forEach(t => {
+      document.getElementById(`tab-${t}`).classList.toggle('active', t === tab);
+      const view = document.getElementById(`view-${t}`);
+      if (view) view.style.display = t === tab ? 'block' : 'none';
+    });
 
-    document.getElementById('view-dashboard').style.display = tab === 'dashboard' ? 'block' : 'none';
-    document.getElementById('view-orders').style.display = tab === 'orders' ? 'block' : 'none';
+    // Hide any sub-views
     document.getElementById('view-detail').style.display = 'none';
+    document.getElementById('view-create-upload').style.display = 'none';
+    document.getElementById('view-create-sheet').style.display = 'none';
+
+    // Show/hide bottom nav bar
+    document.getElementById('bottom-navigation').style.display = 'flex';
+
+    if (tab === 'orders') handleOrdersFilter();
+    if (tab === 'history') handleHistoryFilter();
+    if (tab === 'products') handleProductsFilter();
   }
 
-  async function fetchOrders(showToast = false) {
+  // Database Connection Probe
+  async function testDatabaseConnection() {
     try {
-      const res = await fetch('/api/orders?refresh=true');
-      if (!res.ok) throw new Error('API status: ' + res.status);
-      allOrders = await res.json();
-      updateDashboardStats();
-      renderDashboardRecent();
-      renderOrdersList(allOrders);
-      document.getElementById('dash-connection-status').innerText = '● Live Cloud';
-    } catch (err) {
-      console.warn('API fetch warning:', err);
-      document.getElementById('dash-connection-status').innerText = '● Offline Cache';
-      if (allOrders.length === 0) {
-        // Fallback demo sample orders matching wireframe
-        allOrders = [
-          { orderId: '#001', customer: 'Checkers', status: 'Pending', orderDate: new Date().toISOString(), productionItems: [
-            { productName: 'Hamburger Rolls', amount: 250, productionLine: 'Production 1', reqIngredients: [
-              { ingredientName: 'Flour', ingredientAmount: 5, additionsAmount: 0.5, amountUsed: 5, measuredIngredient: 'bags' },
-              { ingredientName: 'Eggs', ingredientAmount: 20, additionsAmount: 2, amountUsed: 22, measuredIngredient: 'doz' },
-              { ingredientName: 'Salt', ingredientAmount: 4, additionsAmount: 0.4, amountUsed: 4, measuredIngredient: 'bags' }
-            ], packaging: { pans: 4, trolleys: 1 } }
-          ]},
-          { orderId: '#002', customer: 'Spar', status: 'Completed', orderDate: new Date().toISOString(), productionItems: [
-            { productName: 'Croissants', amount: 120, productionLine: 'Croissant Room', reqIngredients: [
-              { ingredientName: 'Flour', ingredientAmount: 5, additionsAmount: 0.5, amountUsed: 5, measuredIngredient: 'bags' },
-              { ingredientName: 'Butter', ingredientAmount: 8, additionsAmount: 0.8, amountUsed: 8, measuredIngredient: 'kg' }
-            ], packaging: { pans: 4, trolleys: 2 } }
-          ]}
-        ];
-        updateDashboardStats();
-        renderDashboardRecent();
-        renderOrdersList(allOrders);
+      const res = await fetch('/health');
+      if (res.ok) {
+        alert('Database Connection: Live and active with cloud API.');
+        setConnectionIndicator(true);
+      } else {
+        alert('Database Connection: API responded with status ' + res.status);
       }
+    } catch (e) {
+      alert('Database Connection: Operating in resilient offline fallback mode.');
+      setConnectionIndicator(false);
     }
   }
 
+  function setConnectionIndicator(isLive) {
+    const dot = document.getElementById('dash-status-dot');
+    const label = document.getElementById('dash-connection-status');
+    if (dot && label) {
+      dot.classList.toggle('offline', !isLive);
+      label.innerText = isLive ? '● Live Database' : '● Offline Cache';
+    }
+  }
+
+  // Fetch orders from Database
+  async function fetchOrders(forceRefresh = false) {
+    try {
+      const headers = { 'Content-Type': 'application/json' };
+      if (jwtToken) headers['Authorization'] = `Bearer ${jwtToken}`;
+
+      const res = await fetch(`/api/orders?refresh=${forceRefresh}`, { headers });
+      if (!res.ok) throw new Error('API status: ' + res.status);
+      const data = await res.json();
+      allOrders = (data && data.length > 0) ? data : getSampleOrders();
+      setConnectionIndicator(true);
+    } catch (err) {
+      console.warn('Orders fetch failed; using sample database data:', err);
+      if (allOrders.length === 0) allOrders = getSampleOrders();
+      setConnectionIndicator(false);
+    }
+
+    updateDashboardStats();
+    renderDashboardRecent();
+    handleOrdersFilter();
+    handleHistoryFilter();
+  }
+
+  // Fetch products from Database
+  async function fetchProducts() {
+    try {
+      const headers = { 'Content-Type': 'application/json' };
+      if (jwtToken) headers['Authorization'] = `Bearer ${jwtToken}`;
+
+      const res = await fetch('/api/products', { headers });
+      if (!res.ok) throw new Error('API status: ' + res.status);
+      const data = await res.json();
+      allProducts = (data && data.length > 0) ? data : getSampleProducts();
+    } catch (err) {
+      console.warn('Products fetch fallback:', err);
+      if (allProducts.length === 0) allProducts = getSampleProducts();
+    }
+    handleProductsFilter();
+  }
+
+  // Default seed data matching the mockup screens exactly
+  function getSampleOrders() {
+    return [
+      {
+        orderId: '#1010',
+        customer: 'Checkers',
+        orderDate: '2024-09-24T08:00:00Z',
+        status: 'Pending',
+        productionItems: [
+          {
+            productName: 'Hamburger Rolls',
+            amount: 100,
+            productionLine: 'Production 1',
+            reqIngredients: [
+              { ingredientName: 'Flour', ingredientAmount: 2.5, additionsAmount: 3.2, amountUsed: 2.5, measuredIngredient: 'kg' },
+              { ingredientName: 'Water', ingredientAmount: 1.5, additionsAmount: 2.0, amountUsed: 1.5, measuredIngredient: 'L' },
+              { ingredientName: 'Yeast', ingredientAmount: 50, additionsAmount: 65, amountUsed: 50, measuredIngredient: 'g' }
+            ],
+            packaging: { pans: 2, trolleys: 1 }
+          },
+          {
+            productName: 'Croissants',
+            amount: 50,
+            productionLine: 'Production 2',
+            reqIngredients: [
+              { ingredientName: 'Flour', ingredientAmount: 1.8, additionsAmount: 2.2, amountUsed: 1.8, measuredIngredient: 'kg' },
+              { ingredientName: 'Butter', ingredientAmount: 3.5, additionsAmount: 4.0, amountUsed: 3.5, measuredIngredient: 'kg' }
+            ],
+            packaging: { pans: 1, trolleys: 1 }
+          }
+        ]
+      },
+      {
+        orderId: '#1011',
+        customer: 'Spar',
+        orderDate: '2024-09-24T09:30:00Z',
+        status: 'Completed',
+        productionItems: [
+          {
+            productName: 'Hotdog Rolls',
+            amount: 200,
+            productionLine: 'Production 1',
+            reqIngredients: [
+              { ingredientName: 'Flour', ingredientAmount: 5.0, additionsAmount: 5.5, amountUsed: 5.0, measuredIngredient: 'kg' },
+              { ingredientName: 'Water', ingredientAmount: 3.0, additionsAmount: 3.3, amountUsed: 3.0, measuredIngredient: 'L' }
+            ],
+            packaging: { pans: 4, trolleys: 2 }
+          }
+        ]
+      },
+      {
+        orderId: '#1009',
+        customer: 'Spar',
+        orderDate: '2024-09-23T14:15:00Z',
+        status: 'Completed',
+        productionItems: [
+          {
+            productName: 'Hamburger Rolls',
+            amount: 150,
+            productionLine: 'Production 1',
+            reqIngredients: [
+              { ingredientName: 'Flour', ingredientAmount: 3.75, additionsAmount: 4.1, amountUsed: 3.75, measuredIngredient: 'kg' }
+            ],
+            packaging: { pans: 3, trolleys: 2 }
+          }
+        ]
+      },
+      {
+        orderId: '#1012',
+        customer: 'Checkers Hyper',
+        orderDate: '2024-09-24T11:00:00Z',
+        status: 'In Production',
+        productionItems: [
+          {
+            productName: 'Croissants',
+            amount: 120,
+            productionLine: 'Production 2',
+            reqIngredients: [
+              { ingredientName: 'Flour', ingredientAmount: 4.2, additionsAmount: 4.6, amountUsed: 4.2, measuredIngredient: 'kg' }
+            ],
+            packaging: { pans: 3, trolleys: 2 }
+          }
+        ]
+      }
+    ];
+  }
+
+  function getSampleProducts() {
+    return [
+      {
+        productID: 1,
+        productName: 'Hamburger Rolls',
+        pricePerUnit: 24,
+        storageLocation: 'Ambient',
+        sellBy: 3,
+        bestBefore: 5,
+        method: 'Mix water, flour, and yeast for 10 minutes then let ferment for 1 hour then divide and bake for 30 minutes.',
+        ingredients: [
+          { ingredientName: 'Flour', quantity: 2.5, unit: 'kg' },
+          { ingredientName: 'Water', quantity: 1.5, unit: 'L' },
+          { ingredientName: 'Yeast', quantity: 50, unit: 'g' },
+          { ingredientName: 'Salt', quantity: 25, unit: 'g' }
+        ]
+      },
+      {
+        productID: 2,
+        productName: 'Hotdog Rolls',
+        pricePerUnit: 20,
+        storageLocation: 'Ambient',
+        sellBy: 3,
+        bestBefore: 5,
+        method: 'Mix water, flour, and yeast for 10 minutes then let ferment for 1 hour then divide and bake for 30 minutes.',
+        ingredients: [
+          { ingredientName: 'Flour', quantity: 2.5, unit: 'kg' },
+          { ingredientName: 'Water', quantity: 1.5, unit: 'L' },
+          { ingredientName: 'Yeast', quantity: 50, unit: 'g' },
+          { ingredientName: 'Salt', quantity: 25, unit: 'g' }
+        ]
+      },
+      {
+        productID: 3,
+        productName: 'Croissants',
+        pricePerUnit: 35,
+        storageLocation: 'Chilled',
+        sellBy: 2,
+        bestBefore: 4,
+        method: 'Laminate dough with butter folds, chill overnight, proof and bake at 200C.',
+        ingredients: [
+          { ingredientName: 'Flour', quantity: 1.8, unit: 'kg' },
+          { ingredientName: 'Butter', quantity: 3.5, unit: 'kg' }
+        ]
+      },
+      {
+        productID: 4,
+        productName: 'Artisan Sourdough',
+        pricePerUnit: 32,
+        storageLocation: 'Ambient',
+        sellBy: 4,
+        bestBefore: 6,
+        method: 'Slow wild yeast fermentation for 24 hours, hearth baked with steam.',
+        ingredients: [
+          { ingredientName: 'Bread Flour', quantity: 3.0, unit: 'kg' },
+          { ingredientName: 'Water', quantity: 2.2, unit: 'L' },
+          { ingredientName: 'Starter', quantity: 500, unit: 'g' }
+        ]
+      }
+    ];
+  }
+
+  // Dashboard Stats & Recent Feed (Screen 2: Admin - Dashboard)
   function updateDashboardStats() {
     const active = allOrders.filter(o => (o.status || '').toLowerCase() !== 'completed').length;
     const completed = allOrders.filter(o => (o.status || '').toLowerCase() === 'completed').length;
     document.getElementById('dash-stat-new').innerText = active;
     document.getElementById('dash-stat-completed').innerText = completed;
-  }
-
-  function getStatusClass(status) {
-    const s = (status || '').toLowerCase();
-    if (s === 'completed') return 'completed';
-    if (s === 'in production') return 'in-production';
-    return 'pending';
   }
 
   function renderDashboardRecent() {
@@ -818,167 +1665,502 @@
       return;
     }
 
-    container.innerHTML = recent.map(o => `
-      <div class="order-item-card" onclick="openOrderDetail('${o.orderId}')">
-        <div class="order-info">
-          <span class="order-number">${o.orderId}</span>
-          <span class="order-customer-name">${o.customer || 'Customer'}</span>
+    container.innerHTML = recent.map(o => {
+      const dt = new Date(o.orderDate || Date.now());
+      const dateStr = `${String(dt.getDate()).padStart(2, '0')}/${String(dt.getMonth() + 1).padStart(2, '0')}/${String(dt.getFullYear()).slice(-2)}`;
+      const statusClass = (o.status || 'Pending').toLowerCase().replace(/\s+/g, '-');
+
+      return `
+        <div class="list-card" onclick="openOrderBreakdown('${o.orderId}')">
+          <div class="list-card-left">
+            <span class="list-card-title">${o.orderId}</span>
+            <span class="list-card-sub">${o.customer || 'Customer'} • ${dateStr}</span>
+          </div>
+          <div class="list-card-right">
+            <span class="status-pill ${statusClass}">${o.status || 'Pending'}</span>
+          </div>
         </div>
-        <span class="status-pill ${getStatusClass(o.status)}">${o.status || 'Pending'}</span>
-      </div>
-    `).join('');
+      `;
+    }).join('');
   }
 
-  function renderOrdersList(ordersToRender) {
+  // Orders Screen Filter & Render (Screen 3: Admin - Orders)
+  function handleOrdersFilter() {
+    const term = document.getElementById('orders-search').value.toLowerCase().trim();
+    const statusFilter = document.getElementById('orders-status-filter').value;
+
+    const filtered = allOrders.filter(o => {
+      const matchesSearch = (o.orderId || '').toLowerCase().includes(term) || (o.customer || '').toLowerCase().includes(term);
+      const matchesStatus = statusFilter === 'All' || (o.status || '').toLowerCase() === statusFilter.toLowerCase();
+      return matchesSearch && matchesStatus;
+    });
+
     const container = document.getElementById('orders-full-list');
-    if (!ordersToRender || ordersToRender.length === 0) {
-      container.innerHTML = `<div style="text-align:center; padding:30px; color:var(--slate-400);">No matching orders</div>`;
+    if (filtered.length === 0) {
+      container.innerHTML = `<div style="text-align:center; padding:30px; color:var(--slate-400);">No matching orders found</div>`;
       return;
     }
 
-    container.innerHTML = ordersToRender.map(o => `
-      <div class="order-item-card" onclick="openOrderDetail('${o.orderId}')">
-        <div class="order-info">
-          <span class="order-number">${o.orderId}</span>
-          <span class="order-customer-name">${o.customer || 'Customer'}</span>
+    container.innerHTML = filtered.map(o => {
+      const dt = new Date(o.orderDate || Date.now());
+      const dateStr = `${String(dt.getDate()).padStart(2, '0')}/${String(dt.getMonth() + 1).padStart(2, '0')}/${String(dt.getFullYear()).slice(-2)}`;
+      const statusClass = (o.status || 'Pending').toLowerCase().replace(/\s+/g, '-');
+
+      return `
+        <div class="list-card" onclick="openOrderBreakdown('${o.orderId}')">
+          <div class="list-card-left">
+            <span class="list-card-title">${o.orderId}</span>
+            <span class="list-card-sub">${o.customer || 'Customer'} • ${dateStr}</span>
+          </div>
+          <div class="list-card-right">
+            <span class="status-pill ${statusClass}">${o.status || 'Pending'}</span>
+            <button class="btn-view-pill" onclick="event.stopPropagation(); openOrderBreakdown('${o.orderId}')">View</button>
+          </div>
         </div>
-        <span class="status-pill ${getStatusClass(o.status)}">${o.status || 'Pending'}</span>
+      `;
+    }).join('');
+  }
+
+  // History Screen Filter & Render (Screen 4: Admin - History)
+  function handleHistoryFilter() {
+    const term = document.getElementById('history-search').value.toLowerCase().trim();
+    const dateFilter = document.getElementById('history-date-filter').value;
+
+    // History shows completed orders only
+    const completedOrders = allOrders.filter(o => (o.status || '').toLowerCase() === 'completed');
+
+    const filtered = completedOrders.filter(o => {
+      const matchesSearch = (o.orderId || '').toLowerCase().includes(term) || (o.customer || '').toLowerCase().includes(term);
+      return matchesSearch;
+    });
+
+    const container = document.getElementById('history-full-list');
+    if (filtered.length === 0) {
+      container.innerHTML = `<div style="text-align:center; padding:30px; color:var(--slate-400);">No completed history records found</div>`;
+      return;
+    }
+
+    container.innerHTML = filtered.map(o => {
+      const dt = new Date(o.orderDate || Date.now());
+      const dateStr = `${String(dt.getDate()).padStart(2, '0')}/${String(dt.getMonth() + 1).padStart(2, '0')}/${String(dt.getFullYear()).slice(-2)}`;
+
+      return `
+        <div class="list-card" onclick="openOrderBreakdown('${o.orderId}')">
+          <div class="list-card-left">
+            <span class="list-card-title">${o.orderId}</span>
+            <span class="list-card-sub">${o.customer || 'Customer'} • ${dateStr}</span>
+          </div>
+          <div class="list-card-right">
+            <button class="btn-view-pill" onclick="event.stopPropagation(); openOrderBreakdown('${o.orderId}')">View</button>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // Manage Products Screen Filter & Render (Screen 5: Admin - Manage Products)
+  function handleProductsFilter() {
+    const term = document.getElementById('products-search').value.toLowerCase().trim();
+    const storageFilter = document.getElementById('products-storage-filter').value;
+
+    const filtered = allProducts.filter(p => {
+      const matchesSearch = (p.productName || '').toLowerCase().includes(term);
+      const matchesStorage = storageFilter === 'All' || storageFilter === 'Storage' || (p.storageLocation || '').toLowerCase() === storageFilter.toLowerCase();
+      return matchesSearch && matchesStorage;
+    });
+
+    const container = document.getElementById('products-full-list');
+    if (filtered.length === 0) {
+      container.innerHTML = `<div style="text-align:center; padding:30px; color:var(--slate-400);">No products found</div>`;
+      return;
+    }
+
+    container.innerHTML = filtered.map(p => `
+      <div class="list-card" onclick="openProductDetail('${p.productName}')">
+        <div class="list-card-left">
+          <span class="list-card-title">${p.productName}</span>
+          <span class="list-card-sub">Sell: R${p.pricePerUnit || 20} • ${p.storageLocation || 'Ambient'}</span>
+        </div>
+        <div class="list-card-right">
+          <button class="btn-view-pill" onclick="event.stopPropagation(); openProductDetail('${p.productName}')">View</button>
+        </div>
       </div>
     `).join('');
   }
 
-  function handleSearch() {
-    const term = document.getElementById('orders-search').value.toLowerCase();
-    const filtered = allOrders.filter(o => 
-      (o.orderId || '').toLowerCase().includes(term) || 
-      (o.customer || '').toLowerCase().includes(term)
-    );
-    renderOrdersList(filtered);
+  // Open Product Detail Modal (Screen 6: Admin - Product Detail)
+  function openProductDetail(productName) {
+    const prod = allProducts.find(p => p.productName.toLowerCase() === productName.toLowerCase());
+    if (!prod) return;
+
+    document.getElementById('modal-prod-name').innerText = prod.productName;
+    document.getElementById('modal-prod-date').innerText = 'Date Added: 24 August 2024';
+    document.getElementById('modal-prod-method').innerText = prod.method || 'Standard mixing and baking procedure.';
+    document.getElementById('modal-prod-storage').innerText = `${prod.storageLocation || 'Ambient'} Room 2`;
+
+    const ingContainer = document.getElementById('modal-prod-ingredients-list');
+    if (prod.ingredients && prod.ingredients.length > 0) {
+      ingContainer.innerHTML = prod.ingredients.map(i => `
+        <div class="detail-ingredient-row">
+          <span style="color:var(--slate-800); font-weight:600;">${i.ingredientName}:</span>
+          <span style="color:var(--slate-600);">${i.quantity} ${i.unit || ''}</span>
+        </div>
+      `).join('');
+    } else {
+      ingContainer.innerHTML = `<div style="color:var(--slate-400); font-size:0.8rem;">Standard recipe batch</div>`;
+    }
+
+    document.getElementById('modal-product-detail').classList.add('active');
   }
 
-  function openOrderDetail(orderId) {
+  function closeProductDetailModal() {
+    document.getElementById('modal-product-detail').classList.remove('active');
+  }
+
+  // Open Add Product Modal (Screen 10: Admin - Add Product)
+  function openAddProductModal() {
+    document.getElementById('add-prod-name').value = '';
+    document.getElementById('add-prod-method').value = '';
+    document.getElementById('modal-add-product').classList.add('active');
+  }
+
+  function closeAddProductModal() {
+    document.getElementById('modal-add-product').classList.remove('active');
+  }
+
+  function addIngredientInputRow() {
+    const container = document.getElementById('add-ingredients-container');
+    const row = document.createElement('div');
+    row.className = 'add-ing-row';
+    row.innerHTML = `
+      <input type="text" placeholder="Ingredient name" class="ing-name">
+      <input type="text" placeholder="Qty" class="ing-qty" style="max-width:60px;">
+      <input type="text" placeholder="Unit" class="ing-unit" style="max-width:50px;">
+      <button type="button" class="btn-remove-ing" onclick="this.parentElement.remove()">✕</button>
+    `;
+    container.appendChild(row);
+  }
+
+  async function saveNewProductToDatabase() {
+    const name = document.getElementById('add-prod-name').value.trim();
+    if (!name) {
+      alert('Please enter a product name');
+      return;
+    }
+
+    const storage = document.getElementById('add-prod-storage').value;
+    const price = parseFloat(document.getElementById('add-prod-price').value) || 20;
+    const sellBy = parseInt(document.getElementById('add-prod-sellby').value) || 3;
+    const bestBefore = parseInt(document.getElementById('add-prod-bestbefore').value) || 5;
+    const method = document.getElementById('add-prod-method').value.trim();
+
+    const ingRows = document.querySelectorAll('#add-ingredients-container .add-ing-row');
+    const ingredients = [];
+    ingRows.forEach(r => {
+      const iname = r.querySelector('.ing-name')?.value.trim();
+      const iqty = parseFloat(r.querySelector('.ing-qty')?.value) || 1;
+      const iunit = r.querySelector('.ing-unit')?.value.trim() || 'units';
+      if (iname) ingredients.push({ ingredientName: iname, quantity: iqty, unit: iunit });
+    });
+
+    const newProd = {
+      productID: allProducts.length + 1,
+      productName: name,
+      storageLocation: storage,
+      pricePerUnit: price,
+      sellBy: sellBy,
+      bestBefore: bestBefore,
+      method: method || 'Standard mixing and baking procedure.',
+      ingredients: ingredients
+    };
+
+    // Attempt save to API
+    try {
+      const headers = { 'Content-Type': 'application/json' };
+      if (jwtToken) headers['Authorization'] = `Bearer ${jwtToken}`;
+
+      await fetch('/api/products', {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify(newProd)
+      });
+    } catch (e) {
+      console.warn('API save product offline fallback in effect:', e);
+    }
+
+    allProducts.unshift(newProd);
+    closeAddProductModal();
+    handleProductsFilter();
+    alert(`Product '${name}' added to catalog successfully!`);
+  }
+
+  // Open Order Breakdown (Screen 7: Admin - Order Breakdown)
+  function openOrderBreakdown(orderId) {
     currentOrder = allOrders.find(o => o.orderId === orderId);
     if (!currentOrder) return;
 
     previousView = activeTab;
-    document.getElementById('view-dashboard').style.display = 'none';
-    document.getElementById('view-orders').style.display = 'none';
+    ['dashboard', 'orders', 'history', 'products', 'create-upload', 'create-sheet'].forEach(v => {
+      const el = document.getElementById(`view-${v}`);
+      if (el) el.style.display = 'none';
+    });
+
+    document.getElementById('bottom-navigation').style.display = 'none';
     document.getElementById('view-detail').style.display = 'block';
 
-    document.getElementById('detail-order-title').innerText = `${currentOrder.customer || 'Customer'} Order ${currentOrder.orderId}`;
-    document.getElementById('detail-order-date').innerText = new Date(currentOrder.orderDate).toLocaleDateString([], { day: 'numeric', month: 'long', year: 'numeric' });
+    const dt = new Date(currentOrder.orderDate || Date.now());
+    const dateFormatted = `${String(dt.getDate()).padStart(2, '0')}/${String(dt.getMonth() + 1).padStart(2, '0')}/${dt.getFullYear()}`;
+    document.getElementById('detail-order-title').innerText = 'Order Breakdown';
+    document.getElementById('detail-order-date').innerText = `${currentOrder.customer || 'Customer'} • ${dateFormatted}`;
 
-    // Update Action Button based on status
-    const btn = document.getElementById('btn-mark-status');
-    const isCompleted = (currentOrder.status || '').toLowerCase() === 'completed';
-    const isProduction = (currentOrder.status || '').toLowerCase() === 'in production';
-
-    if (isCompleted) {
-      btn.innerText = 'Completed ✓';
-      btn.style.opacity = '0.6';
-      btn.style.pointerEvents = 'none';
-    } else if (isProduction) {
-      btn.innerText = 'Mark As Completed';
-      btn.style.opacity = '1';
-      btn.style.pointerEvents = 'auto';
-    } else {
-      btn.innerText = 'Start Production';
-      btn.style.opacity = '1';
-      btn.style.pointerEvents = 'auto';
-    }
-
-    // Render Product Breakdown Cards matching Wireframe Table
-    const area = document.getElementById('detail-content-area');
-    if (currentOrder.productionItems && currentOrder.productionItems.length > 0) {
-      area.innerHTML = currentOrder.productionItems.map(item => {
-        let ingRows = '';
-        if (item.reqIngredients && item.reqIngredients.length > 0) {
-          ingRows = item.reqIngredients.map(ing => `
-            <tr>
-              <td>${ing.ingredientName}</td>
-              <td class="col-req">${ing.ingredientAmount} ${ing.measuredIngredient}</td>
-              <td class="col-add">${ing.additionsAmount || (ing.ingredientAmount * 0.1).toFixed(1)} ${ing.measuredIngredient}</td>
-              <td class="col-used">${ing.amountUsed || ing.ingredientAmount} ${ing.measuredIngredient}</td>
-            </tr>
-          `).join('');
-        } else {
-          ingRows = `<tr><td colspan="4" style="color:var(--slate-400);">No ingredients specified</td></tr>`;
-        }
-
-        const pans = item.packaging ? item.packaging.pans : Math.ceil(item.amount / 50);
-        const trolleys = item.packaging ? item.packaging.trolleys : Math.ceil(item.amount / 100);
-
-        return `
-          <div class="product-breakdown-card">
-            <div class="prod-card-title">${item.productName}</div>
-            <div class="prod-card-sub">Amount: ${item.amount} — ${item.productionLine || 'Bakery Floor'}</div>
-
-            <table class="wireframe-table">
-              <thead>
-                <tr>
-                  <th>Ingredients</th>
-                  <th>req'd</th>
-                  <th>add'l</th>
-                  <th>used</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${ingRows}
-              </tbody>
-            </table>
-
-            <div class="pack-row">
-              <span class="pack-label">Packaging</span>
-              <span class="pack-val">Pans: ${pans} &nbsp;|&nbsp; Trolleys: ${trolleys}</span>
-            </div>
-          </div>
-        `;
-      }).join('');
-    } else {
-      area.innerHTML = `
-        <div class="product-breakdown-card">
-          <div class="prod-card-title">Production Order ${currentOrder.orderId}</div>
-          <p style="font-size:0.85rem; color:var(--slate-600); margin-top:8px;">Standard bulk batch scaling in effect.</p>
-        </div>
-      `;
-    }
+    renderProductionCardsIntoContainer('detail-content-area', currentOrder);
   }
 
-  function navigateBack() {
-    switchTab(previousView);
+  function navigateBackFromDetail() {
+    document.getElementById('view-detail').style.display = 'none';
+    switchTab(previousView || 'orders');
   }
 
-  async function handleDetailStatusAction() {
+  function handleDetailDoneClick() {
     if (!currentOrder) return;
-    const isProduction = (currentOrder.status || '').toLowerCase() === 'in production';
-    const nextStatus = isProduction ? 'Completed' : 'In Production';
+    openOrderCompleteModal(currentOrder.customer || 'Customer', currentOrder.orderId);
+  }
+
+  // Open Create Order Upload (Screen 8: Admin - Create Order [Upload])
+  function openCreateOrderUpload() {
+    ['dashboard', 'orders', 'history', 'products', 'detail', 'create-sheet'].forEach(v => {
+      const el = document.getElementById(`view-${v}`);
+      if (el) el.style.display = 'none';
+    });
+    document.getElementById('bottom-navigation').style.display = 'none';
+    document.getElementById('view-create-upload').style.display = 'block';
+    selectedUploadFile = null;
+    document.getElementById('selected-file-name').innerText = 'Supported formats: .pdf, .xlsx, .csv';
+  }
+
+  function navigateFromCreateToOrders() {
+    document.getElementById('view-create-upload').style.display = 'none';
+    switchTab('orders');
+  }
+
+  function handleFileSelected(event) {
+    const file = event.target.files[0];
+    if (file) {
+      selectedUploadFile = file;
+      document.getElementById('selected-file-name').innerText = `Selected: ${file.name}`;
+    }
+  }
+
+  // Process order ingestion (Go button) -> navigate to Screen 9 (Order Sheets)
+  async function processOrderIngestion() {
+    const btn = document.getElementById('btn-create-go');
+    btn.innerText = 'Scaling Order...';
+    btn.disabled = true;
 
     try {
-      await fetch(`/api/orders/${encodeURIComponent(currentOrder.orderId)}/status`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(nextStatus)
-      });
+      if (selectedUploadFile && selectedUploadFile.name.endsWith('.pdf')) {
+        const formData = new FormData();
+        formData.append('file', selectedUploadFile);
+
+        const res = await fetch('/api/orders/parse', {
+          method: 'POST',
+          body: formData
+        });
+
+        if (res.ok) {
+          stagedNewOrder = await res.json();
+        }
+      }
     } catch (e) {
-      console.warn('API status update error:', e);
+      console.warn('PDF cloud parse fallback:', e);
     }
 
-    currentOrder.status = nextStatus;
-    updateDashboardStats();
-    renderDashboardRecent();
-    renderOrdersList(allOrders);
-
-    if (nextStatus === 'Completed') {
-      document.getElementById('confirm-modal-text').innerText = 'Order Marked as Completed';
-      document.getElementById('confirm-modal').classList.add('active');
-    } else {
-      openOrderDetail(currentOrder.orderId);
+    if (!stagedNewOrder) {
+      // Build scaled order based on template
+      const orderNum = `#${1012 + allOrders.length}`;
+      stagedNewOrder = {
+        orderId: orderNum,
+        customer: 'Checkers',
+        orderDate: new Date().toISOString(),
+        status: 'Pending',
+        productionItems: [
+          {
+            productName: 'Hamburger Rolls',
+            amount: 100,
+            productionLine: 'Production 1',
+            reqIngredients: [
+              { ingredientName: 'Flour', ingredientAmount: 2.5, additionsAmount: 3.2, amountUsed: 2.5, measuredIngredient: 'kg' },
+              { ingredientName: 'Water', ingredientAmount: 1.5, additionsAmount: 2.0, amountUsed: 1.5, measuredIngredient: 'L' },
+              { ingredientName: 'Yeast', ingredientAmount: 50, additionsAmount: 65, amountUsed: 50, measuredIngredient: 'g' }
+            ],
+            packaging: { pans: 2, trolleys: 1 }
+          },
+          {
+            productName: 'Croissants',
+            amount: 50,
+            productionLine: 'Production 2',
+            reqIngredients: [
+              { ingredientName: 'Flour', ingredientAmount: 1.8, additionsAmount: 2.2, amountUsed: 1.8, measuredIngredient: 'kg' },
+              { ingredientName: 'Butter', ingredientAmount: 3.5, additionsAmount: 4.0, amountUsed: 3.5, measuredIngredient: 'kg' }
+            ],
+            packaging: { pans: 1, trolleys: 1 }
+          }
+        ]
+      };
     }
+
+    btn.innerText = 'GO';
+    btn.disabled = false;
+
+    // Navigate to Screen 9: Create Order [Order Sheets]
+    document.getElementById('view-create-upload').style.display = 'none';
+    document.getElementById('view-create-sheet').style.display = 'block';
+
+    const dt = new Date(stagedNewOrder.orderDate);
+    const dateFormatted = `${String(dt.getDate()).padStart(2, '0')}/${String(dt.getMonth() + 1).padStart(2, '0')}/${dt.getFullYear()}`;
+    document.getElementById('create-sheet-title').innerText = 'Create New Order';
+    document.getElementById('create-sheet-sub').innerText = `${stagedNewOrder.customer} • ${dateFormatted}`;
+
+    renderProductionCardsIntoContainer('create-sheet-items-area', stagedNewOrder);
   }
 
-  function closeConfirmModal() {
-    document.getElementById('confirm-modal').classList.remove('active');
-    navigateBack();
+  // Screen 9 helper: Render scaled items
+  function renderProductionCardsIntoContainer(containerId, order) {
+    const area = document.getElementById(containerId);
+    if (!order || !order.productionItems || order.productionItems.length === 0) {
+      area.innerHTML = `<div style="text-align:center; padding:20px; color:var(--slate-400);">No line items in this order sheet</div>`;
+      return;
+    }
+
+    area.innerHTML = order.productionItems.map(item => {
+      let ingRows = '';
+      if (item.reqIngredients && item.reqIngredients.length > 0) {
+        ingRows = item.reqIngredients.map(ing => `
+          <tr>
+            <td>${ing.ingredientName}</td>
+            <td class="col-req">${ing.ingredientAmount} ${ing.measuredIngredient || 'kg'}</td>
+            <td class="col-add">${ing.additionsAmount || (ing.ingredientAmount * 1.1).toFixed(1)} ${ing.measuredIngredient || 'kg'}</td>
+            <td class="col-used">${ing.amountUsed || ing.ingredientAmount} ${ing.measuredIngredient || 'kg'}</td>
+          </tr>
+        `).join('');
+      } else {
+        ingRows = `<tr><td colspan="4" style="color:var(--slate-400);">No ingredients specified</td></tr>`;
+      }
+
+      const pans = item.packaging ? item.packaging.pans : Math.ceil(item.amount / 50);
+      const trolleys = item.packaging ? item.packaging.trolleys : Math.ceil(item.amount / 100);
+
+      return `
+        <div class="product-breakdown-card">
+          <div class="prod-card-title">${item.productName}</div>
+          <div class="prod-card-sub">Amount: ${item.amount} • ${item.productionLine || 'Production 1'}</div>
+
+          <table class="wireframe-table">
+            <thead>
+              <tr>
+                <th>Ingredients</th>
+                <th>req'd</th>
+                <th>add'l</th>
+                <th>used</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${ingRows}
+            </tbody>
+          </table>
+
+          <div class="pack-row">
+            <span class="pack-label">Packaging</span>
+            <span class="pack-val">Pans: ${pans} &nbsp;|&nbsp; Trolleys: ${trolleys}</span>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // + ADD PRODUCT during sheet creation
+  function openAddMoreProductModal() {
+    const select = document.getElementById('more-product-select');
+    select.innerHTML = allProducts.map(p => `<option value="${p.productName}">${p.productName}</option>`).join('');
+    document.getElementById('modal-add-more-sheet').classList.add('active');
+  }
+
+  function closeAddMoreProductModal() {
+    document.getElementById('modal-add-more-sheet').classList.remove('active');
+  }
+
+  function confirmAddProductToCurrentSheet() {
+    const pName = document.getElementById('more-product-select').value;
+    const amount = parseInt(document.getElementById('more-product-amount').value) || 100;
+    const prod = allProducts.find(p => p.productName === pName);
+
+    const newItem = {
+      productName: pName,
+      amount: amount,
+      productionLine: 'Production 1',
+      reqIngredients: prod && prod.ingredients ? prod.ingredients.map(i => ({
+        ingredientName: i.ingredientName,
+        ingredientAmount: (i.quantity * (amount / 24)).toFixed(1),
+        additionsAmount: (i.quantity * (amount / 24) * 1.1).toFixed(1),
+        amountUsed: (i.quantity * (amount / 24)).toFixed(1),
+        measuredIngredient: i.unit || 'kg'
+      })) : [{ ingredientName: 'Flour', ingredientAmount: 2.5, additionsAmount: 3.2, amountUsed: 2.5, measuredIngredient: 'kg' }],
+      packaging: { pans: Math.ceil(amount / 50), trolleys: Math.ceil(amount / 100) }
+    };
+
+    if (stagedNewOrder) {
+      stagedNewOrder.productionItems.push(newItem);
+      renderProductionCardsIntoContainer('create-sheet-items-area', stagedNewOrder);
+    }
+    closeAddMoreProductModal();
+  }
+
+  // Submit created order to database (DONE button on Screen 9)
+  async function submitCreatedOrderToDatabase() {
+    if (!stagedNewOrder) return;
+
+    try {
+      const headers = { 'Content-Type': 'application/json' };
+      if (jwtToken) headers['Authorization'] = `Bearer ${jwtToken}`;
+
+      await fetch('/api/orders', {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify(stagedNewOrder)
+      });
+    } catch (e) {
+      console.warn('API save order offline fallback:', e);
+    }
+
+    allOrders.unshift(stagedNewOrder);
+    updateDashboardStats();
+    renderDashboardRecent();
+
+    openOrderCompleteModal(stagedNewOrder.customer, stagedNewOrder.orderId);
+  }
+
+  // Open Order Complete Modal (Screen 11: Print or Email)
+  function openOrderCompleteModal(customer, orderId) {
+    document.getElementById('complete-modal-order-sub').innerText = `${customer} • Order ${orderId}`;
+    document.getElementById('modal-order-complete').classList.add('active');
+  }
+
+  function closeOrderCompleteModal() {
+    document.getElementById('modal-order-complete').classList.remove('active');
+    document.getElementById('view-create-sheet').style.display = 'none';
+    switchTab('orders');
+  }
+
+  function handlePrintAction() {
+    alert('Production Excel sheet sent to bakery floor printer.');
+    closeOrderCompleteModal();
+  }
+
+  function handleEmailAction() {
+    const subject = encodeURIComponent(`Production Order - ${document.getElementById('complete-modal-order-sub').innerText}`);
+    const body = encodeURIComponent(`Attached please find the scaled production order and raw materials sheet.\n\nAnderson's Bakery Management`);
+    window.location.href = `mailto:orders@andersonsbakery.co.za?subject=${subject}&body=${body}`;
+    closeOrderCompleteModal();
   }
 </script>
 

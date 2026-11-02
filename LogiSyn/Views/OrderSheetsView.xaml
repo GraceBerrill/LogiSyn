@@ -1,4 +1,4 @@
-<!-- Adriaan -->
+﻿<!-- Adriaan -->
 <UserControl x:Class="LogiSyn.Views.OrderSheetsView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -218,11 +218,6 @@
                         Style="{StaticResource NavyActionButtonStyle}" 
                         Margin="0,0,18,0"
                         Click="BtnAddProduct_Click"/>
-
-                <Button Content="Save as Excel" 
-                        Style="{StaticResource NavyActionButtonStyle}" 
-                        Margin="0,0,18,0"
-                        Click="BtnSaveExcel_Click"/>
 
                 <Button Content="DONE" 
                         Style="{StaticResource NavyActionButtonStyle}" 
