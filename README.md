@@ -22,7 +22,7 @@ A desktop management system built for Anderson's Bakery. Written in C# / WPF (.N
 
 </div>
 
-# Problems Addressed for Part 3
+# <span style="color:red">Problems Addressed for Part 3</span>
 
 ## 1. Hosted API Reachability vs. Native Desktop Architecture
 
@@ -61,19 +61,7 @@ Expanded **Section 4.1 (Cloud Architecture & Hosting Rationale)** with a trade-o
 
 ---
 
-## 3. Presentation Scope & Supporting Visual Aids
-
-* **Marker Feedback:**
-> *"Some speakers had awkward pauses, and there was no supporting material such as a powerpoint... GitHub wasn't covered in the presentation"* (Deducted 24 marks: 36/60).
-
-
-* **Curriculum Alignment & Rubric Clarification:**
-Per the INSY7315 Task 2 Module Manual (Section 9.5 & Annexure C, p. 44–45), the Task 2 presentation brief specified a Technical Demo & Implementation showcase designed to demonstrate live software features, data flow, and code integration to the client. The rubric specifies visual aids as *"Physical & Electronic, e.g. posters, models, charts, video, computer simulation, PowerPoint slides"* (disjunctive options). The team prioritized an end-to-end live screen demonstration of running software over static presentation slides.
-* **Final Part 3 Enhancement:**
-
----
-
-## 4. Mobile Responsiveness vs. Client Environment & The Mobile Web Companion
+## 3. Mobile Responsiveness vs. Client Environment & The Mobile Web Companion
 
 * **Marker Feedback:**
 > *"However, the browser version Task 1 planned for mobile use was not built..."* (Awarded 5/15 on Front End Responsiveness).
@@ -90,13 +78,9 @@ To satisfy the marker's expectation for mobile browser access, the team engineer
 * Detailed recipe batch scaling (baking pans, trolley distribution, ingredient weights).
 * One-tap status updates for bakery floor supervisors on mobile devices.
 
-
-
-
-
 ---
 
-## 5. Branch Management & Gitflow Visibility
+## 4. Branch Management & Gitflow Visibility
 
 * **Marker Feedback:**
 > *"Only a main branch remains, so keep develop and feature branches to show the workflow"* (Awarded 0/15 on Branching).
@@ -108,11 +92,9 @@ Following the completion of pull requests for Part 2, standard local repository 
 * Restored and pushed the primary integration branches (`origin/Dev`, `origin/Fix`) to the remote repository.
 * Restored all 18 individual feature branches (including `Feature/desktop-admin-create-order`, `Feature/desktop-admin-dashboard`, `Feature/desktop-login`, etc.) to provide complete, transparent visibility into the team's Gitflow development lifecycle.
 
-
-
 ---
 
-## 6. API Data Integrity: Enforced Order Status Whitelist
+## 5. API Data Integrity: Enforced Order Status Whitelist
 
 * **Marker Feedback:**
 > *"Focus on limiting status to set values; the API saves any text."*
@@ -129,11 +111,9 @@ private static readonly string[] AllowedStatuses = ["Pending", "In Production", 
 * Both `POST /api/orders` and `PUT /api/orders/{id}/status` validate inbound status strings against this whitelist.
 * Any unapproved status value is immediately rejected with an RFC 7807 compliant `400 Bad Request` payload detailing the valid accepted values.
 
-
-
 ---
 
-## 7. Architecture Refactoring: MVVM Decoupling & Modular Services
+## 6. Architecture Refactoring: MVVM Decoupling & Modular Services
 
 * **Marker Feedback:**
 > *"Move desktop logic out of code-behind into view models, and split the two largest services."*
@@ -154,11 +134,9 @@ private static readonly string[] AllowedStatuses = ["Pending", "In Production", 
 
 * **Modular Backend Services:** Monolithic service files were decomposed into distinct domain namespaces (`Authentication`, `Orders`, `Products`, `Users`, `Reporting`), keeping individual class responsibilities focused and maintainable (<250 lines each).
 
-
-
 ---
 
-## 8. Security Hardening: Mandatory JWT & Sanitized Secrets
+## 7. Security Hardening: Mandatory JWT & Sanitized Secrets
 
 * **Marker Feedback:**
 > *"The JWT issuer and audience checks are optional; make them mandatory... moving the MongoDB Atlas credentials out of the README into secrets."*
