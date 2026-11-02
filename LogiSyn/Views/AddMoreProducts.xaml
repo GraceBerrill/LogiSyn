@@ -21,13 +21,31 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <!-- 1. Page Title -->
-            <TextBlock Grid.Row="0" 
-                       Text="Adding New Product" 
-                       FontSize="26" 
-                       FontWeight="Bold" 
-                       Foreground="#0F2038" 
-                       Margin="0,0,0,18"/>
+            <!-- 1. Page Title & Close Button -->
+            <Grid Grid.Row="0" Margin="0,0,0,18">
+                <TextBlock Text="Adding New Product" 
+                           FontSize="26" 
+                           FontWeight="Bold" 
+                           Foreground="#0F2038" 
+                           VerticalAlignment="Center"/>
+
+                <!-- Close 'X' Button to dismiss popup without adding anything -->
+                <Button x:Name="BtnClose"
+                        Style="{StaticResource IconButton}"
+                        Width="36" Height="36"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        Click="BtnClose_Click"
+                        ToolTip="Close (Esc)"
+                        Cursor="Hand"
+                        Focusable="False">
+                    <Path Data="{StaticResource IconCloseGeometry}"
+                          Style="{StaticResource IconPath}"
+                          Stroke="#0F2038"
+                          StrokeThickness="2.5"
+                          Width="18" Height="18"/>
+                </Button>
+            </Grid>
 
             <!-- 2. Main Body Grid -->
             <Grid Grid.Row="1">

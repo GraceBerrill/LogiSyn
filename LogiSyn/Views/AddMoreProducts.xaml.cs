@@ -32,6 +32,14 @@ namespace LogiSyn.Views
         }
 
         /********************************************************************************************/
+        // Close 'X' button handler to dismiss without adding anything
+        private void BtnClose_Click(object sender, RoutedEventArgs e)
+        {
+            DialogResult = false;
+            Close();
+        }
+
+        /********************************************************************************************/
         //buttons handdler for add button
         private void BtnAdd_Click(object sender, RoutedEventArgs e)
         {

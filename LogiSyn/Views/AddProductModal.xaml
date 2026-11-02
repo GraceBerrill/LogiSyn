@@ -8,8 +8,16 @@
             CornerRadius="12" 
             Padding="24">
         <StackPanel>
-            <!-- Title -->
-            <TextBlock Text="Add Product" Style="{StaticResource PageTitle}" Margin="0,0,0,20"/>
+            <!-- Title Header with Close Button -->
+            <Grid Margin="0,0,0,20">
+                <TextBlock Text="Add Product" Style="{StaticResource PageTitle}" VerticalAlignment="Center"/>
+                <Button x:Name="CloseButton" Style="{StaticResource IconButton}" Width="32" Height="32"
+                        HorizontalAlignment="Right" VerticalAlignment="Center"
+                        Click="CancelButton_Click" Cursor="Hand" Focusable="False" ToolTip="Close">
+                    <Path Data="{StaticResource IconCloseGeometry}" Style="{StaticResource IconPath}"
+                          Stroke="{StaticResource Navy}" StrokeThickness="2" Width="16" Height="16"/>
+                </Button>
+            </Grid>
 
             <!-- Product Name -->
             <StackPanel Margin="0,0,0,12">
