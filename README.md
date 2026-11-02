@@ -22,7 +22,7 @@ A desktop management system built for Anderson's Bakery. Written in C# / WPF (.N
 
 </div>
 
-#Problems Addressed for Part 3
+# Problems Addressed for Part 3
 
 ## 1. Hosted API Reachability vs. Native Desktop Architecture
 
