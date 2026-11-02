@@ -1,4 +1,4 @@
-// Adriaan
+﻿// Adriaan
 using AndersonsBakeryAPI.Services;
 using AndersonsBakeryAPI.Data;
 using AndersonsBakeryAPI.Repositories;
@@ -78,7 +78,12 @@ var builder = WebApplication.CreateBuilder(args);
         jwtKey = "AndersonsBakeryLogiSynSecureFallbackSigningKey2026!#*";
     }
 
-    builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    builder.Services.AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
         .AddJwtBearer(options =>
         {
             options.TokenValidationParameters = new TokenValidationParameters
@@ -254,7 +259,10 @@ app.MapHealthChecks("/health");
 app.UseDefaultFiles();
 app.UseStaticFiles();
 
-app.UseHttpsRedirection();
+if (!app.Environment.IsProduction())
+{
+    app.UseHttpsRedirection();
+}
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();

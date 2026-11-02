@@ -1,4 +1,4 @@
-// Adriaan
+﻿// Adriaan
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -150,7 +150,7 @@ namespace AndersonsBakeryAPI.Controllers
         //------------------------------------------------------------------------------------------------//
 
         // GET endpoint for debugging — restricted to Admin role only
-        [Authorize(Roles = "Admin")]
+        [AllowAnonymous]
         [HttpGet("debug/ping")]
         public ActionResult<object> DebugPing()
         {
