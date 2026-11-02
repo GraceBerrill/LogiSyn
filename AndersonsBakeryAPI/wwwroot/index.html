@@ -752,54 +752,48 @@
 
     /* Product Detail Modal Content (Screen 6) */
     .detail-modal-title {
-      font-size: 1.35rem;
+      font-size: 1.45rem;
       font-weight: 800;
       color: var(--navy-800);
       margin-bottom: 2px;
     }
 
     .detail-modal-date {
-      font-size: 0.75rem;
+      font-size: 0.78rem;
       color: var(--slate-400);
       margin-bottom: 16px;
     }
 
     .detail-modal-section-title {
-      font-size: 0.82rem;
+      font-size: 0.88rem;
       font-weight: 700;
       color: var(--navy-800);
-      margin-bottom: 8px;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
+      margin-top: 14px;
+      margin-bottom: 6px;
     }
 
     .detail-ingredient-row {
       display: flex;
       justify-content: space-between;
-      padding: 5px 0;
-      font-size: 0.85rem;
-      border-bottom: 1px dashed var(--slate-100);
+      padding: 7px 0;
+      font-size: 0.86rem;
+      border-bottom: 1px solid var(--slate-200);
     }
 
     .detail-method-text {
-      font-size: 0.82rem;
-      color: var(--slate-600);
-      line-height: 1.45;
-      background: var(--slate-50);
-      padding: 10px 12px;
-      border-radius: 8px;
-      margin-top: 6px;
+      font-size: 0.84rem;
+      color: var(--slate-700);
+      line-height: 1.5;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--slate-200);
       margin-bottom: 14px;
     }
 
-    .detail-storage-badge {
-      display: inline-block;
-      font-size: 0.75rem;
-      font-weight: 700;
-      background: var(--slate-100);
-      color: var(--navy-800);
-      padding: 6px 12px;
-      border-radius: 6px;
+    .detail-storage-text {
+      font-size: 0.84rem;
+      color: var(--slate-700);
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--slate-200);
     }
 
     /* Add Product Form (Screen 10) */
@@ -1195,19 +1189,20 @@
     <div class="modal-card">
       <button class="modal-close-btn" onclick="closeProductDetailModal()">✕</button>
       <h2 class="detail-modal-title" id="modal-prod-name">Hotdog Rolls</h2>
-      <div class="detail-modal-date" id="modal-prod-date">Date Added: 24 August 2024</div>
+      <div class="detail-modal-date" id="modal-prod-date">Date Added: 10 August 2024</div>
 
-      <div class="detail-modal-section-title">Ingredients: (24 per batch)</div>
-      <div id="modal-prod-ingredients-list" style="margin-bottom: 16px;">
+      <div class="detail-modal-section-title">Ingredient List Per Quantity</div>
+      <div id="modal-prod-ingredients-list" style="margin-bottom: 12px; border-top: 1px solid var(--slate-300);">
         <!-- Injected dynamically -->
       </div>
 
-      <div class="detail-modal-section-title">Method:</div>
+      <div class="detail-modal-section-title">Method</div>
       <div class="detail-method-text" id="modal-prod-method">
-        Mix water, flour, and yeast for 10 minutes then let ferment for 1 hour then divide and bake for 30 minutes.
+        Mix eggs, flour and salt until combine. Place on baking tray and put into oven at 180 degrees for 20 minutes.
       </div>
 
-      <div class="detail-storage-badge" id="modal-prod-storage">Ambient Room 2</div>
+      <div class="detail-modal-section-title">Storage</div>
+      <div class="detail-storage-text" id="modal-prod-storage">Freezer Room 1</div>
     </div>
   </div>
 
@@ -1837,20 +1832,24 @@
     if (!prod) return;
 
     document.getElementById('modal-prod-name').innerText = prod.productName;
-    document.getElementById('modal-prod-date').innerText = 'Date Added: 24 August 2024';
-    document.getElementById('modal-prod-method').innerText = prod.method || 'Standard mixing and baking procedure.';
-    document.getElementById('modal-prod-storage').innerText = `${prod.storageLocation || 'Ambient'} Room 2`;
+    document.getElementById('modal-prod-date').innerText = 'Date Added: 10 August 2024';
+    document.getElementById('modal-prod-method').innerText = prod.method || 'Mix eggs, flour and salt until combine. Place on baking tray and put into oven at 180 degrees for 20 minutes.';
+    document.getElementById('modal-prod-storage').innerText = `${prod.storageLocation || 'Freezer'} Room 1`;
 
     const ingContainer = document.getElementById('modal-prod-ingredients-list');
     if (prod.ingredients && prod.ingredients.length > 0) {
       ingContainer.innerHTML = prod.ingredients.map(i => `
         <div class="detail-ingredient-row">
-          <span style="color:var(--slate-800); font-weight:600;">${i.ingredientName}:</span>
-          <span style="color:var(--slate-600);">${i.quantity} ${i.unit || ''}</span>
+          <span style="color:var(--slate-800); font-weight:600;">${i.ingredientName}</span>
+          <span style="color:var(--slate-700); font-weight:500;">${i.quantity} ${i.unit || ''}</span>
         </div>
       `).join('');
     } else {
-      ingContainer.innerHTML = `<div style="color:var(--slate-400); font-size:0.8rem;">Standard recipe batch</div>`;
+      ingContainer.innerHTML = `
+        <div class="detail-ingredient-row"><span style="color:var(--slate-800); font-weight:600;">Eggs</span><span style="color:var(--slate-700); font-weight:500;">5</span></div>
+        <div class="detail-ingredient-row"><span style="color:var(--slate-800); font-weight:600;">Flour</span><span style="color:var(--slate-700); font-weight:500;">5 Cups</span></div>
+        <div class="detail-ingredient-row"><span style="color:var(--slate-800); font-weight:600;">Salt</span><span style="color:var(--slate-700); font-weight:500;">1 Cup</span></div>
+      `;
     }
 
     document.getElementById('modal-product-detail').classList.add('active');

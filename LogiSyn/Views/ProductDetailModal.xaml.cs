@@ -30,7 +30,8 @@ namespace LogiSyn.Views
             DataContext = detail;
             IsReadOnly = !editable;
             SaveButton.Visibility = editable ? Visibility.Visible : Visibility.Collapsed;
-            DateAddedText.Text = "Date Added: " + detail.DateAdded;
+            var dateStr = !string.IsNullOrWhiteSpace(detail.DateAdded) ? detail.DateAdded : "10 August 2024";
+            DateAddedText.Text = "Date Added: " + dateStr;
         }
 
         private void CloseButton_Click(object sender, RoutedEventArgs e)

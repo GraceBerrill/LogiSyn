@@ -62,14 +62,14 @@
                         Margin="22,0,22,0">
                     <Grid Margin="5.3,23.3,0,0" VerticalAlignment="Top">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="215"/>
-                            <ColumnDefinition Width="141"/>
-                            <ColumnDefinition Width="77"/>
-                            <ColumnDefinition Width="106"/>
-                            <ColumnDefinition Width="103"/>
-                            <ColumnDefinition Width="82"/>
-                            <ColumnDefinition Width="55"/>
-                            <ColumnDefinition Width="55"/>
+                            <ColumnDefinition Width="2.5*"/>
+                            <ColumnDefinition Width="1.5*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="1.2*"/>
+                            <ColumnDefinition Width="1.2*"/>
+                            <ColumnDefinition Width="75"/>
+                            <ColumnDefinition Width="48"/>
+                            <ColumnDefinition Width="48"/>
                         </Grid.ColumnDefinitions>
                         <TextBlock Grid.Column="0" Text="Product Name" Style="{StaticResource HeadTextSmall}"/>
                         <TextBlock Grid.Column="1" Text="Price Per Unit" Style="{StaticResource HeadTextSmall}"/>
@@ -87,21 +87,21 @@
                                 <Border Style="{StaticResource RowLine}" Height="58">
                                     <Grid Margin="5.3,0,0,0">
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="215"/>
-                                            <ColumnDefinition Width="141"/>
-                                            <ColumnDefinition Width="77"/>
-                                            <ColumnDefinition Width="106"/>
-                                            <ColumnDefinition Width="103"/>
-                                            <ColumnDefinition Width="82"/>
-                                            <ColumnDefinition Width="55"/>
-                                            <ColumnDefinition Width="55"/>
+                                            <ColumnDefinition Width="2.5*"/>
+                                            <ColumnDefinition Width="1.5*"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="1.2*"/>
+                                            <ColumnDefinition Width="1.2*"/>
+                                            <ColumnDefinition Width="75"/>
+                                            <ColumnDefinition Width="48"/>
+                                            <ColumnDefinition Width="48"/>
                                         </Grid.ColumnDefinitions>
                                         <TextBlock Grid.Column="0" Text="{Binding Name}" Style="{StaticResource CellTextSmall}"/>
                                         <TextBlock Grid.Column="1" Text="{Binding Price}" Style="{StaticResource CellTextSmall}"/>
                                         <TextBlock Grid.Column="2" Text="{Binding SellBy}" Style="{StaticResource CellTextSmall}"/>
                                         <TextBlock Grid.Column="3" Text="{Binding BestBefore}" Style="{StaticResource CellTextSmall}"/>
                                         <TextBlock Grid.Column="4" Text="{Binding Storage}" Style="{StaticResource CellTextSmall}"/>
-                                        <Button Grid.Column="5" Content="VIEW" FontSize="21.3"
+                                        <Button Grid.Column="5" Content="View" FontSize="21.3"
                                                 Style="{StaticResource LinkButton}" Click="ViewButton_Click"/>
                                         <Button Grid.Column="6" Style="{StaticResource IconButton}" Width="34" Height="34"
                                                 HorizontalAlignment="Left" Click="EditButton_Click">
@@ -122,10 +122,10 @@
 
                 <!-- UX Empty State Placeholder -->
                 <StackPanel x:Name="EmptyProductsStatePanel"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            Margin="0,60,0,0"
-                            Visibility="Collapsed">
+                             VerticalAlignment="Center"
+                             HorizontalAlignment="Center"
+                             Margin="0,60,0,0"
+                             Visibility="Collapsed">
                     <TextBlock Text="&#xE8B7;"
                                FontFamily="Segoe MDL2 Assets"
                                FontSize="36"
