@@ -380,7 +380,7 @@ namespace AndersonsBakeryAPI.Services
 
             if (validNumbers.Count > 0)
             {
-                return validNumbers[validNumbers.Count - 1];
+                return validNumbers[0];
             }
 
             return 100;
