@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -1779,7 +1779,7 @@
       <div class="list-card" onclick="openProductDetail('${p.productName}')">
         <div class="list-card-left">
           <span class="list-card-title">${p.productName}</span>
-          <span class="list-card-sub">Sell: R${p.pricePerUnit || 20} • ${p.storageLocation || 'Ambient'}</span>
+          <span class="list-card-sub">Sell: R${(parseFloat(p.pricePerUnit) || 20).toFixed(2)} • ${p.storageLocation || 'Ambient'}</span>
         </div>
         <div class="list-card-right">
           <button class="btn-view-pill" onclick="event.stopPropagation(); openProductDetail('${p.productName}')">View</button>
@@ -2035,14 +2035,19 @@
     area.innerHTML = order.productionItems.map(item => {
       let ingRows = '';
       if (item.reqIngredients && item.reqIngredients.length > 0) {
-        ingRows = item.reqIngredients.map(ing => `
+        ingRows = item.reqIngredients.map(ing => {
+          const req = typeof ing.ingredientAmount === 'number' ? ing.ingredientAmount.toFixed(2) : (parseFloat(ing.ingredientAmount || 0) || 0).toFixed(2);
+          const add = ing.additionsAmount ? (typeof ing.additionsAmount === 'number' ? ing.additionsAmount.toFixed(2) : (parseFloat(ing.additionsAmount) || 0).toFixed(2)) : (parseFloat(req) * 1.1).toFixed(2);
+          const used = ing.amountUsed ? (typeof ing.amountUsed === 'number' ? ing.amountUsed.toFixed(2) : (parseFloat(ing.amountUsed) || 0).toFixed(2)) : req;
+          return `
           <tr>
             <td>${ing.ingredientName}</td>
-            <td class="col-req">${ing.ingredientAmount} ${ing.measuredIngredient || 'kg'}</td>
-            <td class="col-add">${ing.additionsAmount || (ing.ingredientAmount * 1.1).toFixed(1)} ${ing.measuredIngredient || 'kg'}</td>
-            <td class="col-used">${ing.amountUsed || ing.ingredientAmount} ${ing.measuredIngredient || 'kg'}</td>
+            <td class="col-req">${req} ${ing.measuredIngredient || 'kg'}</td>
+            <td class="col-add">${add} ${ing.measuredIngredient || 'kg'}</td>
+            <td class="col-used">${used} ${ing.measuredIngredient || 'kg'}</td>
           </tr>
-        `).join('');
+        `;
+        }).join('');
       } else {
         ingRows = `<tr><td colspan="4" style="color:var(--slate-400);">No ingredients specified</td></tr>`;
       }
@@ -2098,13 +2103,17 @@
       productName: pName,
       amount: amount,
       productionLine: 'Production 1',
-      reqIngredients: prod && prod.ingredients ? prod.ingredients.map(i => ({
-        ingredientName: i.ingredientName,
-        ingredientAmount: (i.quantity * (amount / 24)).toFixed(1),
-        additionsAmount: (i.quantity * (amount / 24) * 1.1).toFixed(1),
-        amountUsed: (i.quantity * (amount / 24)).toFixed(1),
-        measuredIngredient: i.unit || 'kg'
-      })) : [{ ingredientName: 'Flour', ingredientAmount: 2.5, additionsAmount: 3.2, amountUsed: 2.5, measuredIngredient: 'kg' }],
+      reqIngredients: prod && prod.ingredients ? prod.ingredients.map(i => {
+        const base = Number((i.quantity * (amount / 24)).toFixed(2));
+        const add = Number((base * 1.1).toFixed(2));
+        return {
+          ingredientName: i.ingredientName,
+          ingredientAmount: base,
+          additionsAmount: add,
+          amountUsed: base,
+          measuredIngredient: i.unit || 'kg'
+        };
+      }) : [{ ingredientName: 'Flour', ingredientAmount: 2.50, additionsAmount: 3.20, amountUsed: 2.50, measuredIngredient: 'kg' }],
       packaging: { pans: Math.ceil(amount / 50), trolleys: Math.ceil(amount / 100) }
     };
 

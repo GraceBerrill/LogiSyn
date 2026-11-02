@@ -95,7 +95,7 @@ namespace LogiSyn.ViewModels
                 Pans = item.packaging.Pans,
                 Trolleys = item.packaging.Trolleys,
                 IngredientsSummary = string.Join(",  ", item.ReqIngredients.Select(i =>
-                    $"{i.IngredientName}: {i.IngredientAmount + i.AdditionsAmount} {i.MeasuredIngredient}"))
+                    $"{i.IngredientName}: {Math.Round(i.IngredientAmount + i.AdditionsAmount, 2):0.##} {i.MeasuredIngredient}"))
             }).ToList();
 
             DisplayItems = new ObservableCollection<ProductionItemDisplayModel>(items);
@@ -103,7 +103,7 @@ namespace LogiSyn.ViewModels
             var rawItems = _currentOrder.RawMaterials.Select(kvp => new ScalingItemDisplayModel
             {
                 Key = kvp.Key,
-                DisplayValue = $"{kvp.Value.Amount} {kvp.Value.Unit}"
+                DisplayValue = $"{Math.Round(kvp.Value.Amount, 2):0.##} {kvp.Value.Unit}"
             }).ToList();
 
             DisplayScaling = new ObservableCollection<ScalingItemDisplayModel>(rawItems);

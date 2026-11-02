@@ -132,8 +132,8 @@ namespace AndersonsBakeryAPI.Services
                             item.ReqIngredients.Add(new Ingredients
                             {
                                 IngredientName = ing.Name,
-                                IngredientAmount = Math.Round(ing.AmountPerUnit * quantity, 3),
-                                AdditionsAmount = Math.Round(ing.AdditionalRatio * quantity, 3),
+                                IngredientAmount = Math.Round(ing.AmountPerUnit * quantity, 2),
+                                AdditionsAmount = Math.Round(ing.AdditionalRatio * quantity, 2),
                                 MeasuredIngredient = ing.Unit ?? "bags",
                                 AmountUsed = 0
                             });
@@ -147,8 +147,8 @@ namespace AndersonsBakeryAPI.Services
                             item.ReqIngredients.Add(new Ingredients
                             {
                                 IngredientName = ing.IngredientName,
-                                IngredientAmount = Math.Round(baseQty * quantity, 3),
-                                AdditionsAmount = Math.Round(baseQty * 0.1 * quantity, 3),
+                                IngredientAmount = Math.Round(baseQty * quantity, 2),
+                                AdditionsAmount = Math.Round(baseQty * 0.1 * quantity, 2),
                                 MeasuredIngredient = ing.Unit ?? "kg",
                                 AmountUsed = 0
                             });
@@ -159,16 +159,16 @@ namespace AndersonsBakeryAPI.Services
                         item.ReqIngredients.Add(new Ingredients
                         {
                             IngredientName = "Flour",
-                            IngredientAmount = Math.Round(0.04 * quantity, 3),
-                            AdditionsAmount = Math.Round(0.005 * quantity, 3),
+                            IngredientAmount = Math.Round(0.04 * quantity, 2),
+                            AdditionsAmount = Math.Round(0.005 * quantity, 2),
                             MeasuredIngredient = "kg",
                             AmountUsed = 0
                         });
                         item.ReqIngredients.Add(new Ingredients
                         {
                             IngredientName = "Yeast",
-                            IngredientAmount = Math.Round(0.01 * quantity, 3),
-                            AdditionsAmount = Math.Round(0.001 * quantity, 3),
+                            IngredientAmount = Math.Round(0.01 * quantity, 2),
+                            AdditionsAmount = Math.Round(0.001 * quantity, 2),
                             MeasuredIngredient = "kg",
                             AmountUsed = 0
                         });

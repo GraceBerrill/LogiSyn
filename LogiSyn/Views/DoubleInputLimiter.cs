@@ -143,6 +143,10 @@ namespace LogiSyn.Views
             {
                 textBox.Text = text.TrimEnd('.');
             }
+            else if (double.TryParse(text, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out double val))
+            {
+                textBox.Text = Math.Round(val, 2).ToString("0.##", CultureInfo.InvariantCulture);
+            }
         }
 
         //------------------------------------------------------------------------------------------------//
@@ -152,7 +156,7 @@ namespace LogiSyn.Views
         {
             if (string.IsNullOrEmpty(text)) return true;
             // Allows numbers with at most one decimal point: "", ".", ".5", "5", "5.", "5.25"
-            return Regex.IsMatch(text, @"^([0-9]+(\.[0-9]*)?|\.[0-9]*)?$");
+            return Regex.IsMatch(text, @"^([0-9]+(\.[0-9]{0,2})?|\.[0-9]{0,2})?$");
         }
 
         //------------------------------------------------------------------------------------------------//
@@ -161,7 +165,7 @@ namespace LogiSyn.Views
         public static bool IsValidDoubleFull(string text)
         {
             if (string.IsNullOrWhiteSpace(text)) return true;
-            return double.TryParse(text, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out double val) && val >= 0;
+            return double.TryParse(text, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out double val) && val >= 0 && Regex.IsMatch(text, @"^([0-9]+(\.[0-9]{0,2})?|\.[0-9]{0,2})?$");
         }
     }
 }

@@ -98,8 +98,8 @@ namespace LogiSyn.Views
                         reqIngredients.Add(new Ingredients
                         {
                             IngredientName = rIng.Name,
-                            IngredientAmount = Math.Round(rIng.AmountPerUnit * qty, 3),
-                            AdditionsAmount = Math.Round(rIng.AdditionalRatio * qty, 3),
+                            IngredientAmount = Math.Round(rIng.AmountPerUnit * qty, 2),
+                            AdditionsAmount = Math.Round(rIng.AdditionalRatio * qty, 2),
                             MeasuredIngredient = rIng.Unit ?? userUnit,
                             AmountUsed = 0
                         });
@@ -122,8 +122,8 @@ namespace LogiSyn.Views
                             reqIngredients.Add(new Ingredients
                             {
                                 IngredientName = pIng.IngredientName,
-                                IngredientAmount = Math.Round(baseAmt * qty, 3),
-                                AdditionsAmount = Math.Round(baseAmt * 0.1 * qty, 3),
+                                IngredientAmount = Math.Round(baseAmt * qty, 2),
+                                AdditionsAmount = Math.Round(baseAmt * 0.1 * qty, 2),
                                 MeasuredIngredient = pIng.Unit ?? userUnit,
                                 AmountUsed = 0
                             });

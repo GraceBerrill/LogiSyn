@@ -247,7 +247,7 @@ namespace SharedLibrary.Model
                 var sheetIngredients = new List<SheetIngredient>();
                 foreach (var ing in pi.ReqIngredients ?? new List<Ingredients>())
                 {
-                    double baseAmt = ing.IngredientAmount;
+                    double baseAmt = Math.Round(ing.IngredientAmount, 2);
                     double additionalAmt = Math.Round(ing.IngredientAmount + ing.AdditionsAmount, 2);
                     string unit = string.IsNullOrWhiteSpace(ing.MeasuredIngredient) ? "kg" : ing.MeasuredIngredient;
 
@@ -256,20 +256,20 @@ namespace SharedLibrary.Model
 
                     if (ing.AmountUsed > 0)
                     {
-                        usedText = isCompleted ? $"{ing.AmountUsed} {unit}".Trim() : ing.AmountUsed.ToString(CultureInfo.InvariantCulture);
+                        usedText = isCompleted ? $"{Math.Round(ing.AmountUsed, 2):0.##} {unit}".Trim() : Math.Round(ing.AmountUsed, 2).ToString("0.##", CultureInfo.InvariantCulture);
                         usedBrush = ing.AmountUsed > additionalAmt ? bad : good;
                     }
                     else if (isCompleted)
                     {
-                        usedText = $"{additionalAmt} {unit}".Trim();
+                        usedText = $"{additionalAmt:0.##} {unit}".Trim();
                         usedBrush = good;
                     }
 
                     sheetIngredients.Add(new SheetIngredient
                     {
                         Name = ing.IngredientName,
-                        Amount = $"{baseAmt} {unit}".Trim(),
-                        Additional = $"{additionalAmt} {unit}".Trim(),
+                        Amount = $"{baseAmt:0.##} {unit}".Trim(),
+                        Additional = $"{additionalAmt:0.##} {unit}".Trim(),
                         Used = usedText,
                         UsedBrush = usedBrush
                     });
@@ -482,7 +482,7 @@ namespace SharedLibrary.Model
                         ? i.AmountUsed
                         : Math.Round(i.IngredientAmount + i.AdditionsAmount, 2);
                     string unit = string.IsNullOrWhiteSpace(i.MeasuredIngredient) ? "kg" : i.MeasuredIngredient;
-                    return $"{i.IngredientName}: {displayAmt} {unit}".Trim();
+                    return $"{i.IngredientName}: {displayAmt:0.##} {unit}".Trim();
                 });
 
                 double pans = completed && item.Packaging?.PansUsed > 0 ? item.Packaging.PansUsed : (item.Packaging?.Pans ?? 0);
@@ -503,7 +503,7 @@ namespace SharedLibrary.Model
 
                 var usedIngredients = (item.ReqIngredients ?? new List<Ingredients>())
                     .Where(i => i.AmountUsed > 0)
-                    .Select(i => $"{i.IngredientName}: {i.AmountUsed} {i.MeasuredIngredient} used (planned {Math.Round(i.IngredientAmount + i.AdditionsAmount, 2)})");
+                    .Select(i => $"{i.IngredientName}: {Math.Round(i.AmountUsed, 2):0.##} {i.MeasuredIngredient} used (planned {Math.Round(i.IngredientAmount + i.AdditionsAmount, 2):0.##})");
                 usageList.AddRange(usedIngredients);
 
                 string usageMetrics = usageList.Count > 0 ? string.Join("   |   ", usageList) : string.Empty;

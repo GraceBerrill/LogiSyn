@@ -20,11 +20,11 @@ namespace AndersonsBakeryAPI.Services
             {
                 foreach (var ing in item.ReqIngredients ?? new List<Ingredients>())
                 {
-                    double totalRequired = ing.IngredientAmount + ing.AdditionsAmount;
+                    double totalRequired = Math.Round(ing.IngredientAmount + ing.AdditionsAmount, 2);
 
                     if (aggregates.TryGetValue(ing.IngredientName, out var existing))
                     {
-                        aggregates[ing.IngredientName] = (existing.Amount + totalRequired, ing.MeasuredIngredient);
+                        aggregates[ing.IngredientName] = (Math.Round(existing.Amount + totalRequired, 2), ing.MeasuredIngredient);
                     }
                     else
                     {
@@ -33,7 +33,7 @@ namespace AndersonsBakeryAPI.Services
                 }
             }
 
-            order.RawMaterials = aggregates.ToDictionary(kvp => kvp.Key, kvp => new RawMaterialValue(kvp.Value.Amount, kvp.Value.Unit));
+            order.RawMaterials = aggregates.ToDictionary(kvp => kvp.Key, kvp => new RawMaterialValue(Math.Round(kvp.Value.Amount, 2), kvp.Value.Unit));
         }
 
         // Email template for order scaling sheet sent to production managers
@@ -60,7 +60,7 @@ namespace AndersonsBakeryAPI.Services
                 sb.AppendLine($"• {item.ProductName}  [{item.ProductionLine}]");
 
                 var ingSummary = string.Join(", ", (item.ReqIngredients ?? new List<Ingredients>()).Select(i =>
-                    $"{i.IngredientName}: {i.IngredientAmount + i.AdditionsAmount} {i.MeasuredIngredient}"));
+                    $"{i.IngredientName}: {Math.Round(i.IngredientAmount + i.AdditionsAmount, 2):0.##} {i.MeasuredIngredient}"));
 
                 sb.AppendLine($"  - Ingredients: {ingSummary}");
                 var pkg = item.Packaging ?? item.packaging ?? new Packaging();
@@ -74,7 +74,7 @@ namespace AndersonsBakeryAPI.Services
 
             foreach (var kvp in order.RawMaterials ?? new Dictionary<string, RawMaterialValue>())
             {
-                sb.AppendLine($"• {kvp.Key}: {kvp.Value.Amount} {kvp.Value.Unit}");
+                sb.AppendLine($"• {kvp.Key}: {Math.Round(kvp.Value.Amount, 2):0.##} {kvp.Value.Unit}");
             }
 
             sb.AppendLine();
