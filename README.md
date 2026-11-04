@@ -156,6 +156,7 @@ That's where LogiSyn comes in. We built a system that keeps track of all incomin
 # Table of Contents
 
 - [YouTube Video Link](#youtube-video-link)
+- [Presentation](#presentation)
 - [Running the System](#running-the-system)
 - [Default Login Credentials](#default-login-credentials)
 - [Roles & Permissions](#roles--permissions)
@@ -167,6 +168,9 @@ That's where LogiSyn comes in. We built a system that keeps track of all incomin
 - [Project Structure](#project-structure)
 - [Branching & CI/CD](#branching--cicd)
 - [AI Declaration](#ai-declaration)
+
+# Presentation
+[View the full presentation (PDF)](Documents/LogiSyn-Expo-2026.pdf)
 
 # YouTube Video Link
 
