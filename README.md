@@ -170,7 +170,7 @@ That's where LogiSyn comes in. We built a system that keeps track of all incomin
 - [AI Declaration](#ai-declaration)
 
 # Presentation
-[View the full presentation (PDF)](Images/LogiSyn_Expo_Presentation.pdf)
+[View the full presentation](Images/LogiSyn_Expo_Presentation.pptx)
 
 # YouTube Video Link
 
